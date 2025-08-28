@@ -5,7 +5,7 @@
 We aim to create a framework that outputs human-readable mathematical proofs from formal proofs. By doing so, we intend to solve one of the major challenges in automated formalization technology: the scarcity of data.
 
 -----
-
+![](<methodology.png>)
 -----
 
 ## How to Use
@@ -16,3 +16,4 @@ We aim to create a framework that outputs human-readable mathematical proofs fro
 4.  Wait for the build to complete. (This may take anywhere from 30 minutes to 2 hours).
 5.  Run `. make_env.sh` to install the necessary modules.
 6.  Run `. Informalize.sh <PATH>` to output the deformalized results to the `Informalization/ExportData/` directory. For `<PATH>`, provide the path to a `.lean` file or a directory containing `.lean` files located under `ExportInfos/LeanExportInfos`.
+
