@@ -1,0 +1,42 @@
+[appliedTactic]
+intro  xnlea 
+[answer]
+Assume that for every natural number \( n \), the value of \( x(n) \) is less than or equal to \( a \). Under this assumption, we will show that the limit of the sequence \( x \) is also less than or equal to \( a \).
+[appliedTactic]
+let y :ℕ → ℝ := (fun _ => a ) 
+[answer]
+Define a new sequence \( y \) that assigns the constant value \( a \) to every natural number.
+[appliedTactic]
+have xnleyn : ∀n, x n ≤ y n := by
+      intro n
+      exact xnlea  n 
+[answer]
+Establish that for every natural number \( n \), the value of the sequence \( x \) at \( n \) is less than or equal to the value of the sequence \( y \) at \( n \), by directly applying the existing inequality that bounds \( x(n) \) by \( a \).
+[appliedTactic]
+intro  n 
+[answer]
+Introduce an arbitrary natural number \( n \). We now aim to show that the value of the function \( x \) at \( n \) is less than or equal to the value of the function \( y \) at \( n \).
+[appliedTactic]
+exact xnlea  n 
+[answer]
+The proof is completed by applying the assumption that for every natural number \( n \), the value of \( x_n \) is less than or equal to \( a \), which directly implies that \( x_n \) is less than or equal to the constant sequence defined by \( a \).
+[appliedTactic]
+have convya : ConvergesTo y a := Converges_Const y a (fun n => rfl ) 
+[answer]
+Establish that the constant sequence defined by always taking the value \( a \) converges to \( a \). This follows from the fact that a sequence which does not change its value trivially approaches that value as it progresses.
+[appliedTactic]
+have convy : IsConverges y := ⟨a, convya ⟩ 
+[answer]
+Establish that the constant sequence \( y \), which takes the value \( a \) for all terms, is convergent. This follows directly from the fact that \( y \) converges to \( a \), confirming that \( y \) satisfies the definition of a convergent sequence.
+[appliedTactic]
+have := Converges_Le x y convx convy  xnleyn 
+[answer]
+Use the fact that if one convergent sequence is less than or equal to another sequence term by term, then the limit of the first sequence is less than or equal to the limit of the second sequence. Applying this to the sequences \( x \) and \( y \), where each term of \( x \) is less than or equal to the corresponding term of \( y \), and both sequences converge, we conclude that the limit of \( x \) is less than or equal to the limit of \( y \).
+[appliedTactic]
+rw [← (Converges_sLim_iff y convy a).1 convya ] 
+[answer]
+The goal of proving that the limit superior of the sequence \( x \) is less than or equal to the real number \( a \) is rewritten by expressing this limit \( a \) as the limit superior of the constant sequence equal to \( a \). This changes the goal to showing that the limit superior of \( x \) is less than or equal to the limit superior of the constant sequence, which is already assumed.
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly applying the established inequality that the limit superior of the sequence \( x \) is less than or equal to the limit superior of the constant sequence \( y \).

@@ -1,0 +1,99 @@
+[applied Tactic]
+have := x_conv_to_a 1 (by norm_num ) 
+
+[answer]
+We will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between the term \( x_n \) and the limit \( a \) is less than 1. Since the sequence \( x \) converges to \( a \), by definition, for any positive number—specifically, for the number 1, which is clearly greater than 0—there exists such an \( n_0 \) ensuring that for all \( n \geq n_0 \), \(|x_n - a| < 1\). This choice is justified by directly applying the definition of convergence with the numerical bound 1.
+[applied Tactic]
+have h2: ∀n ≥ n₀, |x n| < |a| + 1 := by
+      intro n ngen₀
+      have h2₁ := abs_sub_abs_le_abs_sub (x n) a
+      have h2₂ := h1 n ngen₀
+      exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the absolute value of \( x_n \) is less than the absolute value of \( a \) plus one. To prove this, let \( n \) be an arbitrary natural number with \( n \geq n_0 \). By the reverse triangle inequality, we know that the difference between the absolute values satisfies
+\[
+\left|\,|x_n| - |a|\,\right| \leq |x_n - a|.
+\]
+Since it is established that for all such \( n \), the distance \( |x_n - a| < 1 \), we have
+\[
+|\,|x_n| - |a|\,| < 1.
+\]
+This implies
+\[
+|x_n| < |a| + 1,
+\]
+which completes the proof.
+[applied Tactic]
+have : Z.Nonempty := by
+      rw [Finset.Nonempty]
+      apply Exists.intro (|a| + 1)
+      simp [Z ] 
+
+[answer]
+We will show that the set \( Z \) is nonempty by explicitly exhibiting an element that belongs to it. To do so, we consider the number \( |a| + 1 \) as a candidate element of \( Z \). By substituting this value into the defining conditions of the finite set \( Z \), we verify that \( |a| + 1 \) satisfies these conditions and hence belongs to \( Z \). This explicit construction proves that \( Z \) contains at least one element, thereby demonstrating its nonemptiness.
+[applied Tactic]
+have : (|a| + 1) ∈ Z := by simp [Z ] 
+
+[answer]
+We will show that the quantity \( |a| + 1 \) belongs to the finite set \( Z \). By applying simplification techniques related to the definition of the set, it follows directly that \( |a| + 1 \) lies within \( Z \). This completes the proof.
+[applied Tactic]
+have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at  this 
+
+[answer]
+We will show that the quantity \( |a| + 1 \) belongs to the finite set \( Z \). By applying simplification techniques related to the definition of \( Z \), it follows directly that \( |a| + 1 \in Z \). Since \( M \) is defined as the maximum element of \( Z \), it immediately follows that \( |a| + 1 \leq M \). Moreover, by rewriting the definition of the maximum to remove any casting, we clarify that this inequality holds in the standard sense. Thus, we conclude that \( |a| + 1 \) is an element of \( Z \) and is bounded above by its maximum element \( M \), which completes the proof.
+[applied Tactic]
+. have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt  this 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the absolute value of \( x_n \) is bounded above by the maximum element \( M \) of the finite set \( Z \). First, since for all such \( n \), it holds that \( |x_n| < |a| + 1 \), we establish the inequality \( |x_n| < |a| + 1 \). Next, observing the definition of \( Z \), we note that \( |a| + 1 \in Z \). Because \( M \) is defined as the maximum element of \( Z \), this implies \( |a| + 1 \leq M \). Combining these inequalities, we conclude that \( |x_n| < M \). Finally, since \( |x_n| \) is strictly less than \( M \), it follows that \( |x_n| \leq M \), thereby proving the desired inequality for all \( n \geq n_0 \).
+[applied Tactic]
+have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl ⟩ 
+
+[answer]
+We will show that the absolute value of the sequence element \( x_n \) belongs to the finite set \( Z \). By simplifying the definition of \( Z \), this reduces to demonstrating that either there exists an index less than \( n_0 \) for which the absolute value of \( x \) at that index equals \( |x_n| \), or that \( |x_n| = |a| + 1 \). Considering first the case when \( n < n_0 \), we observe that taking \( a = n \) satisfies the condition \( a < n_0 \) and yields \( |x(a)| = |x(n)| \), fulfilling the necessary existence criterion. Thus, the proof is complete by directly exhibiting such an \( a \), confirming that \( |x_n| \in Z \).
+[applied Tactic]
+. push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+
+[answer]
+We will show that for any index \( n \), the absolute value \( |x_n| \) is bounded above by the constant \( M \). To begin, we rewrite the negation of the inequality \( n \geq n_0 \) as \( n < n_0 \). Considering this case, we observe that \( |x_n| \) must belong to the finite set \( Z \), which consists of the absolute values of \( x_k \) for indices \( k < n_0 \) together with the element \( |a| + 1 \). Specifically, if \( n < n_0 \), choosing \( a = n \) ensures \( a < n_0 \) and \( |x(a)| = |x(n)| \), thereby confirming \( |x_n| \in Z \). Since \( M \) is defined as the maximum of the finite set \( Z \), it follows by the properties of finite sets that \( |x_n| \leq M \). Substituting the definition of \( M \) into this inequality, we thus conclude that the absolute value of each sequence element \( x_n \) is bounded above by \( M \).
+[applied Tactic]
+have : ∀ n, |x n| ≤ M := by
+      intro n
+      -- 教科書では明示されていないものの基本は場合わけで考えているはず
+      by_cases h : n ≥ n₀
+      . have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt this
+      . push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+
+[answer]
+We will show that for every natural number \( n \), the absolute value \( |x_n| \) is bounded above by a constant \( M \). To do this, we consider two cases based on whether \( n \) is greater than or equal to a certain threshold \( n_0 \), or less than \( n_0 \). First, if \( n \geq n_0 \), then by assumption \( |x_n| < |a| + 1 \), and since \( |a| + 1 \) belongs to the finite set \( Z \) whose maximum element is \( M \), it follows that \( |x_n| < |a| + 1 \leq M \), and thus \( |x_n| \leq M \). Second, if \( n < n_0 \), then \( |x_n| \) is an element of the finite set \( Z \) consisting of \( |x_k| \) for \( k < n_0 \) together with \( |a| + 1 \). Since \( M \) is defined as the maximum of \( Z \), it follows that \( |x_n| \leq M \) in this case as well. Combining these two cases, we conclude that for every natural number \( n \), the absolute value \( |x_n| \) is bounded above by \( M \), establishing the desired result.

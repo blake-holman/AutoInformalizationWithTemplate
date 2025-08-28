@@ -1,0 +1,117 @@
+[
+  {
+    "AppliedTactic": "intro  h ",
+    "GoalsBefore": "a :  ℝ\n⊢ (∀ ε > 0, |a| < ε) → a = 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\n⊢ a = 0",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that for every positive number \\( \\varepsilon \\), the absolute value of \\( a \\) is less than \\( \\varepsilon \\). From now on, we will show that \\( a = 0 \\)."
+  },
+  {
+    "AppliedTactic": "have abslezero : |a| ≤ 0 := by\n    have := alebByEps |a| 0\n    -- このままだと絶対値までsimpされてしまうのでそれはやらないようにする\n    -- [- theorem]でsimpで用いるtheoremから[]内のものを除くことが可能\n    simp[- abs_nonpos_iff] at this\n    exact this  h ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\n⊢ a = 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  |a| ≤ 0\n⊢ a = 0",
+    "GivenPremises": [
+      "alebByEps : If for every positive number, one real number is less than the other number plus that positive number, then the first number is less than or equal to the second number.",
+      "abs_nonpos_iff : This theorem states that the absolute value of an element is non-positive if and only if the element itself is zero within the context of an additive group and a linear order."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the absolute value of \\( a \\) is less than or equal to zero."
+  },
+  {
+    "AppliedTactic": "have := alebByEps |a|  0 ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\n⊢ |a| ≤ 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nthis :  (∀ ε > 0, |a| < 0 + ε) → |a| ≤ 0\n⊢ |a| ≤ 0",
+    "GivenPremises": [
+      "alebByEps : If for every positive number, one real number is less than the other number plus that positive number, then the first number is less than or equal to the second number."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the absolute value of \\( a \\) is less than or equal to 0. This can be proved by noting that for every positive number, the absolute value of \\( a \\) is less than that positive number added to 0, which implies that the absolute value of \\( a \\) cannot be greater than 0."
+  },
+  {
+    "AppliedTactic": "simp[- abs_nonpos_iff] at  this ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nthis :  (∀ ε > 0, |a| < 0 + ε) → |a| ≤ 0\n⊢ |a| ≤ 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nthis :  (∀ (ε : ℝ), 0 < ε → |a| < ε) → |a| ≤ 0\n⊢ |a| ≤ 0",
+    "GivenPremises": [
+      "abs_nonpos_iff : This theorem states that the absolute value of an element is non-positive if and only if the element itself is zero within the context of an additive group and a linear order."
+    ],
+    "Template": "By simplifying the expression, [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the assumption that for every positive number epsilon, the absolute value of a is less than zero plus epsilon becomes the assumption that for every real number epsilon greater than zero, the absolute value of a is less than epsilon."
+  },
+  {
+    "AppliedTactic": "exact this  h ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nthis :  (∀ (ε : ℝ), 0 < ε → |a| < ε) → |a| ≤ 0\n⊢ |a| ≤ 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that for every positive real number ε, the absolute value of \\(a\\) is less than ε, and that if this condition holds for all positive ε, then the absolute value of \\(a\\) is less than or equal to zero."
+  },
+  {
+    "AppliedTactic": "have : a = 0 := by\n    rw [abs_nonpos_iff] at abslezero\n    exact  abslezero ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  |a| ≤ 0\n⊢ a = 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  |a| ≤ 0\nthis :  a = 0\n⊢ a = 0",
+    "GivenPremises": [
+      "abs_nonpos_iff : This theorem states that the absolute value of an element is non-positive if and only if the element itself is zero within the context of an additive group and a linear order."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( a = 0 \\)."
+  },
+  {
+    "AppliedTactic": "rw [abs_nonpos_iff] at  abslezero ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  |a| ≤ 0\n⊢ a = 0",
+    "GoalsAfter": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  a = 0\n⊢ a = 0",
+    "GivenPremises": [
+      "abs_nonpos_iff : This theorem states that the absolute value of an element is non-positive if and only if the element itself is zero within the context of an additive group and a linear order."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the theorem that states the absolute value of a number is non-positive if and only if the number itself is zero, the assumption that the absolute value of \\( a \\) is less than or equal to zero becomes the assumption that \\( a \\) equals zero."
+  },
+  {
+    "AppliedTactic": "exact  abslezero ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  a = 0\n⊢ a = 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that for every positive number ε, the absolute value of \\(a\\) is less than ε."
+  },
+  {
+    "AppliedTactic": "exact  this ",
+    "GoalsBefore": "a :  ℝ\nh :  ∀ ε > 0, |a| < ε\nabslezero :  |a| ≤ 0\nthis :  a = 0\n⊢ a = 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( a = 0 \\)."
+  }
+]

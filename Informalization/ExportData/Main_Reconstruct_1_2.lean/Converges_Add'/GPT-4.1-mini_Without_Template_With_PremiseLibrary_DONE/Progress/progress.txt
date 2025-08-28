@@ -1,0 +1,22 @@
+[applied Tactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for a given positive number \(\varepsilon\), there exists a natural number \(n_1\) such that for all \(n \geq n_1\), the difference \(|x_n - a|\) is less than \(\frac{\varepsilon}{2}\). Since \(\varepsilon\) is positive, it follows that \(\frac{\varepsilon}{2}\) is also positive, which allows us to apply the definition of the limit or convergence to choose such an \(n_1\). Thus, by selecting \(n_1\) adequately, we ensure that \(|x_n - a| < \frac{\varepsilon}{2}\) for all \(n \geq n_1\), establishing the desired condition.
+[applied Tactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that given the sequence \( y \) converges to \( b \), for any positive \( \varepsilon \), there exists an index \( n_2 \) such that for all \( n \geq n_2 \), the distance between \( y_n \) and \( b \) is less than half of \( \varepsilon \). Since \( \varepsilon \) is positive, it follows that half of \( \varepsilon \) is also positive. Therefore, by the definition of convergence, there must be some \( n_2 \) beyond which all terms \( y_n \) lie within the open ball centered at \( b \) with radius \( \varepsilon/2 \).
+[applied Tactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+
+[answer]
+We will show that the absolute difference between \( x_n + y_n \) and \( a + b \) is less than \( \varepsilon \). To begin, we rewrite the expression inside the absolute value as the sum of the differences \( (x_n - a) \) and \( (y_n - b) \), thereby decomposing the original difference without changing its value. Applying the triangle inequality, we find that the absolute value of this sum is at most the sum of the absolute values, that is, \( |x_n - a| + |y_n - b| \). Next, we consider \( n_0 \) defined as the maximum of \( n_1 \) and \( n_2 \), which ensures \( n_0 \geq n_1 \) and \( n_0 \geq n_2 \). Since \( n \geq n_0 \), it follows by transitivity that \( n \geq n_1 \) and \( n \geq n_2 \), allowing us to use the bounds \( |x_n - a| < \varepsilon/2 \) for \( n \geq n_1 \) and \( |y_n - b| < \varepsilon/2 \) for \( n \geq n_2 \). Summing these inequalities gives \( |x_n - a| + |y_n - b| < \varepsilon/2 + \varepsilon/2 = \varepsilon \), which establishes the desired result.

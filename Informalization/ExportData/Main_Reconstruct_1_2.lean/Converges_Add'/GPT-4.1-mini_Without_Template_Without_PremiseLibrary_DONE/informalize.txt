@@ -1,0 +1,59 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between the sum of the sequences at \( n \) and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+[answer]
+Since \( \varepsilon \) is positive, consider \( \varepsilon/2 \), which is also positive. By the convergence of the sequence \( x \) to \( a \), there exists a natural number \( n_1 \) such that for all \( n \geq n_1 \), the difference between \( x_n \) and \( a \) is less than \( \varepsilon/2 \).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+Since \( \varepsilon \) is positive, it follows that half of \( \varepsilon \) is also positive; thus, the goal that half of \( \varepsilon \) is greater than zero is established.
+[appliedTactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+[answer]
+From the fact that the sequence \(y\) converges to \(b\), and using that half of \(\varepsilon\) is positive, choose a natural number \(n_2\) such that for all indices \(n\) greater than or equal to \(n_2\), the distance between \(y_n\) and \(b\) is less than half of \(\varepsilon\).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+Since \( \varepsilon \) is positive, it follows that half of \( \varepsilon \) is also positive; thus, the goal asserting that half of \( \varepsilon \) is greater than zero is established immediately.
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Define \( n_0 \) as the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+By choosing the specific natural number defined as the maximum of \( n_1 \) and \( n_2 \), it suffices to prove that for every \( n \) greater than or equal to this number, the absolute difference between the sum of the sequences at \( n \) and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume a natural number \( n \) such that \( n \geq n_0 \). From now on, we will show that the absolute difference between the sum of the sequences at \( n \) and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+[answer]
+By calculation, it is shown that the absolute difference between \( x_n + y_n \) and \( a + b \) is at most the sum of the absolute differences between \( x_n \) and \( a \), and between \( y_n \) and \( b \). This sum is less than \( \varepsilon/2 + \varepsilon/2 \), which equals \( \varepsilon \), thus establishing the desired inequality.
+[appliedTactic]
+rw [add_sub_add_comm ] 
+[answer]
+The expression inside the absolute value in the goal was rewritten by rearranging the subtraction of sums into a sum of differences. Specifically, the difference between the sum \( x_n + y_n \) and \( a + b \) was transformed into the sum of the differences \( (x_n - a) + (y_n - b) \), simplifying the structure of the expression to be bounded.
+[appliedTactic]
+apply  abs_add 
+[answer]
+The proof applies the inequality stating that the absolute value of a sum is at most the sum of the absolute values. This immediately establishes that the absolute value of \( (x_n - a) + (y_n - b) \) is less than or equal to the sum of the absolute values of \( x_n - a \) and \( y_n - b \), thereby resolving the goal.
+[appliedTactic]
+have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) 
+[answer]
+Establish that the number \( n_0 \) is at least as large as the maximum of \( n_1 \) and \( n_2 \). This follows directly from the definition of \( n_0 \) as the maximum of \( n_1 \) and \( n_2 \), and the fact that any number is always less than or equal to itself.
+[appliedTactic]
+apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀) ) 
+[answer]
+To prove that the sum of the absolute differences between \( x_n \) and \( a \), and between \( y_n \) and \( b \), is less than the sum of \( \varepsilon/2 \) and \( \varepsilon/2 \), it suffices to show each individual absolute difference is less than \( \varepsilon/2 \) for the appropriate indices. Using the fact that \( n \) is at least the maximum of \( n_1 \) and \( n_2 \), and applying the monotonicity of inequalities under addition, the proof reduces to verifying the separate bounds on each absolute difference. This completes the argument.

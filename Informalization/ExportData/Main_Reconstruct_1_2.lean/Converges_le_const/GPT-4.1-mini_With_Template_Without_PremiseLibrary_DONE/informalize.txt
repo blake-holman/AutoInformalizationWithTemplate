@@ -1,0 +1,42 @@
+[appliedTactic]
+intro  xnlea 
+[answer]
+Assume that for every natural number \( n \), the value \( x(n) \) is less than or equal to \( a \). From now on, we will show that the limit of the sequence \( x \) is less than or equal to \( a \).
+[appliedTactic]
+let y :ℕ → ℝ := (fun _ => a ) 
+[answer]
+Let \( y \) be the constant function from natural numbers to real numbers that assigns the value \( a \) to every input.
+[appliedTactic]
+have xnleyn : ∀n, x n ≤ y n := by
+      intro n
+      exact xnlea  n 
+[answer]
+Show that for every natural number \( n \), the value of \( x_n \) is less than or equal to the value of \( y_n \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is a natural number. From now on, we will show that \( x(n) \leq y(n) \).
+[appliedTactic]
+exact xnlea  n 
+[answer]
+The proof is completed from the assumption that for every natural number \( n \), the value of \( x(n) \) is less than or equal to \( a \).
+[appliedTactic]
+have convya : ConvergesTo y a := Converges_Const y a (fun n => rfl ) 
+[answer]
+Show that the constant sequence \( y \), which is equal to \( a \) for all indices, converges to \( a \). This can be proved by noting that every term of \( y \) is exactly \( a \), so the sequence trivially converges to \( a \).
+[appliedTactic]
+have convy : IsConverges y := ⟨a, convya ⟩ 
+[answer]
+Show that the sequence \( y \), which is constantly equal to \( a \), converges. This can be proved by noting that \( y \) converges to \( a \) by definition, as it is the constant sequence at \( a \), and thus satisfies the convergence property.
+[appliedTactic]
+have := Converges_Le x y convx convy  xnleyn 
+[answer]
+Show that the limit superior of the sequence \( x \) is less than or equal to the limit superior of the sequence \( y \). This can be proved by using the fact that both sequences converge and that each term of \( x \) is less than or equal to the corresponding term of \( y \), which implies the inequality between their limit superiors.
+[appliedTactic]
+rw [← (Converges_sLim_iff y convy a).1 convya ] 
+[answer]
+By using the assumption that the sequence \( y \) converges to \( a \) and the equivalence between a sequence converging to a limit and its sequential limit being equal to that limit, the goal of proving that the sequential limit of \( x \) is less than or equal to \( a \) becomes proving that the sequential limit of \( x \) is less than or equal to the sequential limit of \( y \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that the limit of \( x \) is less than or equal to the limit of the constant sequence \( y \).

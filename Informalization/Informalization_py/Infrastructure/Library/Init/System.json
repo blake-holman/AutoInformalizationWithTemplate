@@ -1,0 +1,146 @@
+{
+  "IO.lean": {
+    "IO": {
+      "type": "definition",
+      "code": "IO : Type → Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev IO : Type → Type := EIO Error",
+      "description": "A type constructor is defined that transforms any type into an input/output type."
+    },
+    "IO.println": {
+      "type": "definition",
+      "code": "IO.println.{u_1} {α : Type u_1} [ToString α] (s : α) : IO Unit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def println [ToString α] (s : α) : IO Unit :=   print ((toString s).push '\\n')",
+      "description": "A function is defined that prints a value of any type that can be converted to a string and returns an input/output type."
+    },
+    "BaseIO": {
+      "type": "definition",
+      "code": "BaseIO : Type → Type",
+      "comment": "An `EIO` monad that cannot throw exceptions. ",
+      "explanatories": {},
+      "fullDefinition": "def BaseIO := EIO Empty",
+      "description": "A type constructor is defined that represents a streamlined input/output monad that does not allow for exceptions."
+    },
+    "IO.Process.run": {
+      "type": "definition",
+      "code": "IO.Process.run (args : IO.Process.SpawnArgs) : IO String",
+      "comment": "Run process to completion and return stdout on success. ",
+      "explanatories": {},
+      "fullDefinition": "def run (args : SpawnArgs) : IO String := do   let out ← output args   if out.exitCode != 0 then     throw <| IO.userError <| \"process '\" ++ args.cmd ++ \"' exited with code \" ++ toString out.exitCode   pure out.stdout",
+      "description": "A function is defined that executes a process with specified arguments and returns the standard output as a string if successful."
+    },
+    "System.FilePath.walkDir": {
+      "type": "definition",
+      "code": "System.FilePath.walkDir (p : System.FilePath) (enter : System.FilePath → IO Bool := fun x => pure true) :\n  IO (Array System.FilePath)",
+      "comment": "Return all filesystem entries of a preorder traversal of all directories satisfying `enter`, starting at `p`.\nSymbolic links are visited as well by default. ",
+      "explanatories": {},
+      "fullDefinition": "partial def walkDir (p : FilePath) (enter : FilePath → IO Bool := fun _ => pure true) : IO (Array FilePath) :=   Prod.snd <$> StateT.run (go p) #[] where   go p := do     if !(← enter p) then       return ()     for d in (← p.readDir) do       modify (·.push d.path)       match (← d.path.metadata.toBaseIO) with       | .ok { type := .symlink, .. } =>         let p' ← FS.realPath d.path         if (← p'.isDir) then           -- do not call `enter` on a non-directory symlink           if (← enter p) then             go p'       | .ok { type := .dir, .. } => go d.path       | .ok _ => pure ()       -- entry vanished, ignore       | .error (.noFileOrDirectory ..) => pure ()       | .error e => throw e",
+      "description": "A function is defined that performs a preorder traversal of a directory and its subdirectories, returning an array of filesystem entries that meet a specified condition."
+    },
+    "System.FilePath.pathExists": {
+      "type": "definition",
+      "code": "System.FilePath.pathExists (p : System.FilePath) : BaseIO Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def pathExists (p : FilePath) : BaseIO Bool :=   return (← p.metadata.toBaseIO).toBool",
+      "description": "A function is defined that checks whether a specified file path exists and returns a boolean value without allowing exceptions."
+    },
+    "IO.FS.readFile": {
+      "type": "definition",
+      "code": "IO.FS.readFile (fname : System.FilePath) : IO String",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def readFile (fname : FilePath) : IO String := do   let h ← Handle.mk fname Mode.read   h.readToEnd",
+      "description": "A function is defined that reads the contents of a file specified by its path and returns the data as a string type within an input/output context."
+    },
+    "unsafeBaseIO": {
+      "type": "definition",
+      "code": "unsafeBaseIO {α : Type} (fn : BaseIO α) : α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] unsafe def unsafeBaseIO (fn : BaseIO α) : α :=   match fn.run () with   | EStateM.Result.ok a _ => a",
+      "description": "A function is defined that executes a base input/output operation and returns its result while emphasizing safety concerns."
+    },
+    "IO.Ref": {
+      "type": "definition",
+      "code": "IO.Ref (α : Type) : Type",
+      "comment": "References ",
+      "explanatories": {},
+      "fullDefinition": "abbrev Ref (α : Type) := ST.Ref IO.RealWorld α",
+      "description": "A type constructor is defined that represents mutable references for any type."
+    }
+  },
+  "FilePath.lean": {
+    "System.FilePath.addExtension": {
+      "type": "definition",
+      "code": "System.FilePath.addExtension (p : System.FilePath) (ext : String) : System.FilePath",
+      "comment": "Appends the extension `ext` to a path `p`.\n\n`ext` should not contain a leading `.`, as this function adds one.\nIf `ext` is the empty string, no `.` is added.\n\nUnlike `System.FilePath.withExtension`, this does not remove any existing extension. ",
+      "explanatories": {},
+      "fullDefinition": "def addExtension (p : FilePath) (ext : String) : FilePath :=   match p.fileName with   | none => p   | some fname => p.withFileName (if ext.isEmpty then fname else fname ++ \".\" ++ ext)",
+      "description": "A function is defined that appends a specified extension to a file path without altering any existing extensions."
+    },
+    "System.FilePath.pathSeparator": {
+      "type": "definition",
+      "code": "System.FilePath.pathSeparator : Char",
+      "comment": "The character that separates directories. In the case where more than one character is possible, `pathSeparator` is the 'ideal' one. ",
+      "explanatories": {},
+      "fullDefinition": "def pathSeparator : Char :=   if isWindows then '\\\\' else '/'",
+      "description": "A constant is defined that represents the character used to separate directories in file paths."
+    },
+    "System.FilePath.extension": {
+      "type": "definition",
+      "code": "System.FilePath.extension (p : System.FilePath) : Option String",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def extension (p : FilePath) : Option String :=   p.fileName.bind fun fname =>     match fname.revPosOf '.' with     | some 0   => none     | some pos => fname.extract (pos + '.') fname.endPos     | none     => none",
+      "description": "A function is defined that retrieves the file extension from a given file path, returning it as an optional string."
+    },
+    "System.FilePath.mk": {
+      "type": "theorem",
+      "code": "System.FilePath.mk (toString : String) : System.FilePath",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A function is stated that creates a file path from a given string representation."
+    },
+    "System.FilePath.parent": {
+      "type": "definition",
+      "code": "System.FilePath.parent (p : System.FilePath) : Option System.FilePath",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def parent (p : FilePath) : Option FilePath :=   let extractParentPath := FilePath.mk <$> p.toString.extract {} <$> posOfLastSep p   if p.isAbsolute then     let lengthOfRootDirectory := if pathSeparators.contains p.toString.front then 1 else 3     if p.toString.length == lengthOfRootDirectory then       -- `p` is a root directory       none     else if posOfLastSep p == String.Pos.mk (lengthOfRootDirectory - 1) then       -- `p` is a direct child of the root       some ⟨p.toString.extract 0 ⟨lengthOfRootDirectory⟩⟩     else       -- `p` is an absolute path with at least two subdirectories       extractParentPath   else     -- `p` is a relative path     extractParentPath",
+      "description": "A function is defined that retrieves the parent directory of a given file path, returning an optional result."
+    }
+  },
+  "ST.lean": {
+    "ST.mkRef": {
+      "type": "definition",
+      "code": "ST.mkRef {σ : Type} {m : Type → Type} [MonadLiftT (ST σ) m] {α : Type} (a : α) : m (ST.Ref σ α)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def mkRef {α : Type} (a : α) : m (Ref σ α) :=  liftM <| Prim.mkRef a @[inline] def Ref.get {α : Type} (r : Ref σ α) : m α := liftM <| Prim.Ref.get r @[inline] def Ref.set {α : Type} (r : Ref σ α) (a : α) : m Unit := liftM <| Prim.Ref.set r a @[inline] def Ref.swap {α : Type} (r : Ref σ α) (a : α) : m α := liftM <| Prim.Ref.swap r a @[inline] unsafe def Ref.take {α : Type} (r : Ref σ α) : m α := liftM <| Prim.Ref.take r @[inline] def Ref.ptrEq {α : Type} (r1 r2 : Ref σ α) : m Bool := liftM <| Prim.Ref.ptrEq r1 r2 @[inline] def Ref.modify {α : Type} (r : Ref σ α) (f : α → α) : m Unit := liftM <| Prim.Ref.modify r f @[inline] def Ref.modifyGet {α : Type} {β : Type} (r : Ref σ α) (f : α → β × α) : m β := liftM <| Prim.Ref.modifyGet r f",
+      "description": "A function is defined that creates a mutable reference in the state monad, allowing for the storage of a value in a specified state context."
+    },
+    "ST.Ref.modify": {
+      "type": "definition",
+      "code": "ST.Ref.modify {σ : Type} {m : Type → Type} [MonadLiftT (ST σ) m] {α : Type} (r : ST.Ref σ α) (f : α → α) : m Unit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def Ref.modify {α : Type} (r : Ref σ α) (f : α → α) : m Unit := liftM <| Prim.Ref.modify r f @[inline] def Ref.modifyGet {α : Type} {β : Type} (r : Ref σ α) (f : α → β × α) : m β := liftM <| Prim.Ref.modifyGet r f",
+      "description": "A function is defined that updates the value of a mutable reference in the state monad using a provided transformation function."
+    }
+  },
+  "Platform.lean": {
+    "System.Platform.isWindows": {
+      "type": "definition",
+      "code": "System.Platform.isWindows : Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def isWindows : Bool := getIsWindows () def isOSX : Bool := getIsOSX () def isEmscripten : Bool := getIsEmscripten ()",
+      "description": "A constant is defined to check whether the current platform is Windows, returning a boolean value."
+    }
+  }
+}

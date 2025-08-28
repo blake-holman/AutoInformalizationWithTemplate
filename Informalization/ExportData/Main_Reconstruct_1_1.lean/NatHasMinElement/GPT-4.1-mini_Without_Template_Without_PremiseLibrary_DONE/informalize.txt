@@ -1,0 +1,66 @@
+[appliedTactic]
+intro  SnotEmpty 
+[answer]
+Assume that the set \( S \) is nonempty. Under this assumption, we will show that there exists an element \( x \) in \( S \) such that \( x \) is less than or equal to every element \( y \) in \( S \).
+[appliedTactic]
+by_contra!  h 
+[answer]
+Assume that for every element \( x \) in the set \( S \), there exists another element \( y \) in \( S \) that is strictly smaller than \( x \), and show that this leads to a contradiction.
+[appliedTactic]
+have :∀ n : ℕ ,(n ∉ S) := by
+      -- forall を固定
+      intro n
+      --数学的帰納法を用いる。
+      induction' n using Nat.strong_induction_on with n ih
+      intro ninS
+      have := h n ninS
+      let ⟨y,⟨yinS,yltn⟩⟩ := this
+      have := ih y yltn
+      -- 矛盾発生
+       contradiction 
+[answer]
+Assume an arbitrary natural number \( n \) and prove by strong induction that \( n \) does not belong to the set \( S \). Using the hypothesis that for every element in \( S \), there exists a smaller element also in \( S \), derive a contradiction by applying the induction hypothesis to this smaller element. This establishes that no natural number is in \( S \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume an arbitrary natural number \( n \). We will now show that this number \( n \) does not belong to the set \( S \).
+[appliedTactic]
+induction' n using Nat.strong_induction_on with n  ih 
+[answer]
+Apply strong induction on the natural number \( n \), assuming that for every natural number less than \( n \), the statement that the number is not in the set \( S \) holds, and then aim to prove that \( n \) itself is not in \( S \).
+[appliedTactic]
+intro  ninS 
+[answer]
+Assume that the natural number \( n \) belongs to the set \( S \). Under this assumption, we aim to derive a contradiction.
+[appliedTactic]
+have := h n  ninS 
+[answer]
+Apply the given property to the element \( n \) in the set \( S \), which states that for every element in \( S \), there exists another element in \( S \) that is smaller. This introduces the existence of an element \( y \) in \( S \) that is less than \( n \), adding this fact to the hypotheses.
+[appliedTactic]
+let ⟨y,⟨yinS,yltn⟩⟩ :=  this 
+[answer]
+From the statement that there exists an element in the set \( S \) smaller than \( n \), introduce such an element \( y \) in \( S \) that is less than \( n \).
+[appliedTactic]
+have := ih y  yltn 
+[answer]
+Apply the induction hypothesis to the element \( y \), which is less than \( n \). Since the induction hypothesis states that no element smaller than \( n \) belongs to the set, this implies that \( y \) is not in the set. This introduces a contradiction because \( y \) was previously assumed to be an element of the set.
+[appliedTactic]
+ contradiction 
+[answer]
+The assumptions imply that there is an element \( n \) in the set \( S \) such that there must exist a smaller element \( y \) in \( S \). However, the induction hypothesis states that all elements smaller than \( n \) are not in \( S \), which contradicts the existence of such a \( y \). This contradiction completes the proof.
+[appliedTactic]
+rw [Set.Nonempty] at  SnotEmpty 
+[answer]
+The assumption that the set \( S \) is nonempty is rewritten to explicitly state that there exists an element \( x \) belonging to \( S \). This reformulation makes the existence of such an element clear in the hypotheses.
+[appliedTactic]
+let ⟨x,xinS⟩ :=  SnotEmpty 
+[answer]
+From the assumption that the set \( S \) is not empty, select an element \( x \) that belongs to \( S \).
+[appliedTactic]
+have := this  x 
+[answer]
+Apply the previously established statement to the specific element \( x \), which shows that \( x \) is not in the set \( S \). This introduces a contradiction because \( x \) was already assumed to be an element of \( S \).
+[appliedTactic]
+ contradiction 
+[answer]
+The assumptions that the element \( x \) both belongs to the set \( S \) and does not belong to \( S \) are contradictory. Therefore, this contradiction completes the proof.

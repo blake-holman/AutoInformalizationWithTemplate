@@ -1,0 +1,123 @@
+[
+  {
+    "AppliedTactic": "intro  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\n⊢ S.Nonempty → ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\n⊢ ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GivenPremises": [],
+    "Result": "Assume that the set \\( S \\) is nonempty. From this assumption, we will show that there exists an element \\( x \\) in \\( S \\) such that \\( x \\) is less than or equal to every element \\( y \\) in \\( S \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "by_contra!  h ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\n⊢ ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ False",
+    "GivenPremises": [],
+    "Result": "Assume that no element in \\( S \\) is minimal; that is, for every element in \\( S \\), there exists another element in \\( S \\) that is smaller. Then derive a contradiction.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have :∀ n : ℕ ,(n ∉ S) := by\n      -- forall を固定\n      intro n\n      --数学的帰納法を用いる。\n      induction' n using Nat.strong_induction_on with n ih\n      intro ninS\n      have := h n ninS\n      let ⟨y,⟨yinS,yltn⟩⟩ := this\n      have := ih y yltn\n      -- 矛盾発生\n       contradiction ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Nat.strong_induction_on : For any property defined for natural numbers, if it holds for all smaller numbers than a given natural number, then it holds for that number itself.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Result": "Establish that every natural number does not belong to the set \\( S \\) by using strong induction. Assume an arbitrary natural number \\( n \\) is not in \\( S \\). Then, from the given property of \\( S \\), find a smaller natural number \\( y \\) that is also not in \\( S \\). Applying the induction hypothesis to \\( y \\) leads to a contradiction. This shows that no natural number can be in \\( S \\).",
+    "Evaluation":"MisInformation"
+  },
+  {
+    "AppliedTactic": "intro  n ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ ∀ (n : ℕ), n ∉ S",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\n⊢ n ∉ S",
+    "GivenPremises": [],
+    "Result": "Assume an arbitrary natural number \\( n \\). We will now prove that this number \\( n \\) does not belong to the set \\( S \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "induction' n using Nat.strong_induction_on with n  ih ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\n⊢ n ∉ S",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\n⊢ n ∉ S",
+    "GivenPremises": [
+      "Nat.strong_induction_on : For any property defined for natural numbers, if it holds for all smaller numbers than a given natural number, then it holds for that number itself."
+    ],
+    "Result": "Apply strong induction on the natural number \\( n \\), assuming that the statement holds for all natural numbers less than \\( n \\), in order to prove it for \\( n \\).",
+    "Evaluation":"Insufficient Information"
+  },
+  {
+    "AppliedTactic": "intro  ninS ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\n⊢ n ∉ S",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\n⊢ False",
+    "GivenPremises": [],
+    "Result": "Assume, for the sake of contradiction, that the natural number \\( n \\) belongs to the set \\( S \\). Under this assumption, we will derive a contradiction.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have := h n  ninS ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\n⊢ False",
+    "GivenPremises": [],
+    "Result": "Apply the given property to the element \\( n \\) in the set \\( S \\), which states that for every element in \\( S \\), there exists another element in \\( S \\) that is smaller. This introduces the existence of some element \\( y \\) in \\( S \\) that is less than \\( n \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "let ⟨y,⟨yinS,yltn⟩⟩ :=  this ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\n⊢ False",
+    "GivenPremises": [],
+    "Result": "From the statement that there exists an element in the set smaller than \\( n \\), introduce such an element \\( y \\) in the set and record the facts that \\( y \\) belongs to the set and that \\( y \\) is less than \\( n \\).",
+    "Evaluation":"Insufficient Information"
+  },
+  {
+    "AppliedTactic": "have := ih y  yltn ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis✝ :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\nthis :  y ∉ S\n⊢ False",
+    "GivenPremises": [],
+    "Result": "Apply the induction hypothesis to the element \\( y \\), which is less than \\( n \\). Since the induction hypothesis states that no element smaller than \\( n \\) belongs to the set, conclude that \\( y \\) is not in the set. This introduces the assumption that \\( y \\) does not belong to the set, which will be used to derive a contradiction.",
+    "Evaluation":"Insufficient Information"
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis✝ :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\nthis :  y ∉ S\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Result": "The assumption that there exists an element \\( y \\) in the set \\( S \\) which is both less than \\( n \\) and not in \\( S \\) contradicts the earlier fact that all elements less than \\( n \\) are not in \\( S \\). This contradiction resolves the proof.",
+    "Evaluation":"MisInformation"
+  },
+  {
+    "AppliedTactic": "rw [Set.Nonempty] at  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GivenPremises": [
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Result": "The assumption that the set \\( S \\) is non-empty is rewritten explicitly to state that there exists an element \\( x \\) belonging to \\( S \\). This makes the non-emptiness condition concrete by introducing the existence of such an element.",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": "let ⟨x,xinS⟩ :=  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\n⊢ False",
+    "GivenPremises": [],
+    "Result": "From the fact that the set \\( S \\) is not empty, choose an element \\( x \\) that belongs to \\( S \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have := this  x ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis✝ :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\nthis :  x ∉ S\n⊢ False",
+    "GivenPremises": [],
+    "Result": "Apply the existing statement that no natural number belongs to the set \\( S \\) to the specific element \\( x \\), which is known to be in \\( S \\). This yields a contradiction by showing that \\( x \\) both belongs and does not belong to \\( S \\).",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis✝ :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\nthis :  x ∉ S\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Result": "The assumptions that the element \\( x \\) both belongs to the set \\( S \\) and does not belong to \\( S \\) are contradictory. This inconsistency allows us to conclude the proof.",
+    "Evaluation":"Correct"
+  }
+]

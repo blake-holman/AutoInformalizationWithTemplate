@@ -1,0 +1,39 @@
+[applied Tactic]
+exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+
+[answer]
+We will show that the set of positive real numbers is not empty by proving that the number 1 belongs to this set. By the definition of the set \( P \) of positive real numbers, an element belongs to \( P \) if and only if it is greater than 0. Therefore, to prove that \( 1 \in P \), it suffices to show that \( 1 > 0 \). This is evident, since 1 is indeed greater than 0. Hence, the set \( P \) is nonempty, as it contains the element 1.
+[applied Tactic]
+have PnotEmpty : P.Nonempty := by
+    exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+
+[answer]
+We will show that the set \( P \) of positive real numbers is not empty by proving that the number 1 belongs to \( P \). By definition, an element belongs to \( P \) if and only if it is greater than 0. Since \( 1 > 0 \) clearly holds, it follows that \( 1 \in P \). Therefore, the set \( P \) contains at least one element and is thus nonempty.
+[applied Tactic]
+have LB: LowerBound P 0 := by
+    intro a h1
+    exact le_of_lt  h1 
+
+[answer]
+We will show that zero is a lower bound for the set of positive real numbers. Let \( a \) be an arbitrary positive real number. By definition, \( a \) is strictly greater than zero. From this, it immediately follows that \( a \) is also greater than or equal to zero. Hence, zero serves as a lower bound for the set of positive real numbers.
+[applied Tactic]
+have PBB : BoundedBelow P := by
+    exact ⟨0, LB ⟩ 
+
+[answer]
+We will show that the set \( P \) of positive real numbers is bounded below by demonstrating that zero serves as a lower bound for \( P \). First, observe that zero is less than or equal to every element in \( P \), since all elements of \( P \) are positive. Additionally, the set \( P \) is nonempty because it contains positive real numbers by definition. Therefore, zero is indeed a lower bound of \( P \), establishing that \( P \) is bounded below.
+[applied Tactic]
+have lbab : LowerBound P (a - b) := by
+    intro p pinP
+    have := h p pinP
+     linarith 
+
+[answer]
+We will show that the difference \( a - b \) is a lower bound for the set of positive real numbers by demonstrating that it does not exceed any element \( p \) in this set. Let \( p \) be an arbitrary positive real number. By the given assumption, we have that \( a < b + p \). Rearranging this inequality, it follows that \( a - b < p \), which implies that \( p \) is greater than or equal to \( a - b \). Since \( p \) was an arbitrary positive element, this establishes that \( a - b \) is indeed a lower bound for the set of positive real numbers, completing the proof.
+[applied Tactic]
+have : a ≤ b := by
+    rw [sInfzero,tsub_le_iff_right,zero_add] at this
+    exact  this 
+
+[answer]
+We will show that \( a \leq b \) by considering the inequality \( a - b \leq 0 \). Observing that zero is the greatest lower bound of the set of positive real numbers, we rewrite the inequality \( a - b \leq \inf \{ x > 0 \} = 0 \) accordingly. Adding zero to \( b \) leaves it unchanged, so the inequality \( a - b \leq 0 \) is equivalent to \( a \leq b \). Thus, the desired inequality \( a \leq b \) holds, completing the proof.

@@ -1,0 +1,55 @@
+{
+  "have : ∀ ε > 0, |a - b| < ε := by\n      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、\n      intro ε εpos\n      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2\n      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)\n      let ⟨n₁,n₁h⟩ := n₁eps\n      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。\n      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)\n      let ⟨n₂,n₂h⟩ := n₂eps\n      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、\n      let n := max n₁ n₂\n      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]\n      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.\n      calc\n        |a - b| = |(a - x n) + (x n - b)| := by\n          rw [add_sub,sub_add_cancel]\n        _ ≤  |x n - a| + |x n - b| := by\n          rw [abs_sub_comm]\n          exact abs_add (a - x n) (x n - b)\n        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))\n        _ = ε := add_halves  ε ": [
+    "add_lt_add.{u_1} {α : Type u_1} [Add α] [Preorder α] [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b c d : α} (h₁ : a < b)\n  (h₂ : c < d) : a + c < b + d",
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2",
+    "le_of_max_le_right.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : b ≤ c",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+    "le_of_max_le_left.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : a ≤ c",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "sub_add_cancel.{u_3} {G : Type u_3} [AddGroup G] (a b : G) : a - b + b = a",
+    "add_halves.{u_2} {α : Type u_2} [LinearOrderedSemifield α] (a : α) : a / 2 + a / 2 = a",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "abs_sub_comm.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a b : α) : |a - b| = |b - a|",
+    "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x",
+    "add_sub.{u_3} {G : Type u_3} [SubNegMonoid G] (a b c : G) : a + (b - c) = a + b - c",
+    "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+  ],
+  "intro ε  εpos ": [],
+  "have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "exact half_pos  εpos ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "let ⟨n₁,n₁h⟩ :=  n₁eps ": [],
+  "have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "let ⟨n₂,n₂h⟩ :=  n₂eps ": [],
+  "let n := max n₁  n₂ ": [
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α"
+  ],
+  "have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] ": [
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+    "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x"
+  ],
+  "rw [ge_iff_le ] ": [
+    "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x"
+  ],
+  "calc\n        |a - b| = |(a - x n) + (x n - b)| := by\n          rw [add_sub,sub_add_cancel]\n        _ ≤  |x n - a| + |x n - b| := by\n          rw [abs_sub_comm]\n          exact abs_add (a - x n) (x n - b)\n        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))\n        _ = ε := add_halves  ε ": [],
+  "rw [add_sub,sub_add_cancel ] ": [
+    "sub_add_cancel.{u_3} {G : Type u_3} [AddGroup G] (a b : G) : a - b + b = a",
+    "add_sub.{u_3} {G : Type u_3} [SubNegMonoid G] (a b c : G) : a + (b - c) = a + b - c"
+  ],
+  "rw [abs_sub_comm ] ": [
+    "abs_sub_comm.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a b : α) : |a - b| = |b - a|"
+  ],
+  "exact abs_add (a - x n) (x n - b ) ": [
+    "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+  ],
+  "exact eq_of_sub_eq_zero (abs_eps_zero (a - b) this ) ": [
+    "eq_of_sub_eq_zero.{u_1} {α : Type u_1} [SubtractionMonoid α] {a b : α} (h : a - b = 0) : a = b",
+    "abs_eps_zero (a : ℝ) : (∀ ε > 0, |a| < ε) → a = 0"
+  ]
+}

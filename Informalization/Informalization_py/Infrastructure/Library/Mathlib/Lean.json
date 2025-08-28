@@ -1,0 +1,542 @@
+{
+  "Json.lean": {
+    "_private..lake.packages.mathlib.Mathlib.Lean.Json.0.Lean.fromJsonPUnit._@..lake.packages.mathlib.Mathlib.Lean.Json._hyg.7": {
+      "type": "definition",
+      "code": "Lean.fromJsonPUnit✝.{u_1} : Json → Except String PUnit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "/- Copyright (c) 2022 Eric Wieser. All rights reserved. Released under Apache 2.0 license as described in the file LICENSE. Authors: Eric Wieser -/ import Mathlib.Mathport.Rename",
+      "description": "This defines a function that converts a JSON object into a unit type wrapped in an exception, indicating success or failure of the operation."
+    },
+    "_private..lake.packages.mathlib.Mathlib.Lean.Json.0.Lean.toJsonPUnit._@..lake.packages.mathlib.Mathlib.Lean.Json._hyg.57": {
+      "type": "definition",
+      "code": "Lean.toJsonPUnit✝.{u_1} : PUnit → Json",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "/- Copyright (c) 2022 Eric Wieser. All rights reserved. Released under Apache 2.0 license as described in the file LICENSE. Authors: Eric Wieser -/ import Mathlib.Mathport.Rename",
+      "description": "This defines a function that converts a unit type into a JSON object."
+    }
+  },
+  "Thunk.lean": {
+    "Thunk.prod": {
+      "type": "definition",
+      "code": "Thunk.prod.{u_1, u_2} {α : Type u_1} {β : Type u_2} (a : Thunk α) (b : Thunk β) : Thunk (α × β)",
+      "comment": "The cartesian product of two thunks. ",
+      "explanatories": {
+        "Thunk.mk": "A thunk is created from a function that takes a unit input and produces a value, to be evaluated only when needed.",
+        "Thunk.get": "Extracting the value from a thunk not only retrieves the stored result but also caches it for efficient future access.",
+        "Prod.mk": "A pair is constructed from two given terms, resulting in a tuple that combines them.",
+        "Add.mk": "This establishes a method to create an addition structure for a type by providing a binary operation that combines two elements of that type."
+      },
+      "fullDefinition": "def prod (a : Thunk α) (b : Thunk β) : Thunk (α × β) := Thunk.mk fun _ => (a.get, b.get)",
+      "description": "This defines a function that creates a thunk representing the cartesian product of two given thunks."
+    },
+    "Thunk.add": {
+      "type": "definition",
+      "code": "Thunk.add.{u_1} {α : Type u_1} [Add α] (a b : Thunk α) : Thunk α",
+      "comment": "The sum of two thunks. ",
+      "explanatories": {
+        "Thunk.mk": "A thunk is created from a function that takes a unit input and produces a value, to be evaluated only when needed.",
+        "Thunk.get": "Extracting the value from a thunk not only retrieves the stored result but also caches it for efficient future access.",
+        "Prod.mk": "A pair is constructed from two given terms, resulting in a tuple that combines them.",
+        "Add.mk": "This establishes a method to create an addition structure for a type by providing a binary operation that combines two elements of that type."
+      },
+      "fullDefinition": "def add [Add α] (a b : Thunk α) : Thunk α := Thunk.mk fun _ => a.get + b.get",
+      "description": "This defines a function that creates a thunk representing the sum of two given thunks."
+    }
+  },
+  "Meta": {
+    "Simp.lean": {
+      "Lean.PHashSet.toList": {
+        "type": "definition",
+        "code": "Lean.PHashSet.toList.{u_1} {α : Type u_1} [BEq α] [Hashable α] (s : PHashSet α) : List α",
+        "comment": null,
+        "explanatories": {
+          "Lean.PersistentHashMap.toList": "A function that converts a persistent hash map into a list of key-value pairs.",
+          "List.map": "This definition describes a function that transforms each element of a list by applying a specified function to it, producing a new list of the transformed elements.",
+          "Array.toList": "This defines a function that converts an array into a list.",
+          "Functor.map": "This defines a function that applies a mapping operation to a value wrapped in a context, transforming it from one type to another while preserving the structure of the context.",
+          "Lean.HashMap.toList": "A function that converts a hash map into a list of key-value pairs."
+        },
+        "fullDefinition": "def Lean.PHashSet.toList [BEq α] [Hashable α] (s : Lean.PHashSet α) : List α :=   s.1.toList.map (·.1)",
+        "description": "This defines a function that converts a hash set into a list containing its elements."
+      },
+      "Lean.Meta.checkTypeIsProp": {
+        "type": "definition",
+        "code": "Lean.Meta.checkTypeIsProp (type : Expr) : MetaM Unit",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "",
+        "description": "This defines a function that checks whether a given expression type is a proposition in the Lean proof assistant."
+      },
+      "Lean.Meta.shouldPreprocess": {
+        "type": "definition",
+        "code": "Lean.Meta.shouldPreprocess (type : Expr) : MetaM Bool",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "",
+        "description": "This defines a function that determines whether a given expression type should undergo preprocessing in the Lean proof assistant."
+      },
+      "Lean.Meta.preprocess": {
+        "type": "definition",
+        "code": "Lean.Meta.preprocess (e type : Expr) (inv isGlobal : Bool) : MetaM (List (Expr × Expr))",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "",
+        "description": "This defines a function that preprocesses a given expression and type, producing a list of pairs of expressions based on specified conditions."
+      },
+      "Lean.Meta.mkSimpTheoremCore": {
+        "type": "definition",
+        "code": "Lean.Meta.mkSimpTheoremCore (origin : Origin) (e : Expr) (levelParams : Array Name) (proof : Expr) (post : Bool)\n  (prio : Nat) (noIndexAtArgs : Bool) : MetaM SimpTheorem",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "",
+        "description": "This defines a function that creates a simplification theorem using a specified origin, expression, proof, and additional parameters."
+      },
+      "Lean.Meta.Simp.mkSimpTheoremsFromConst'": {
+        "type": "definition",
+        "code": "Lean.Meta.Simp.mkSimpTheoremsFromConst' (declName : Name) (post inv : Bool) (prio : Nat) :\n  MetaM (Array Name × Array SimpTheorem)",
+        "comment": "Similar to `mkSimpTheoremsFromConst` except that it also returns the names of the generated\nlemmas.\nRemark: either the length of the arrays is the same,\nor the length of the first one is 0 and the length of the second one is 1. ",
+        "explanatories": {
+          "List.map": "This definition describes a function that transforms each element of a list by applying a specified function to it, producing a new list of the transformed elements.",
+          "Lean.Meta.SimpTheorems.post": "A method for posting simplification theorems into a structure that organizes them into a tree format.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Functor.map": "This defines a function that applies a mapping operation to a value wrapped in a context, transforming it from one type to another while preserving the structure of the context.",
+          "Lean.mkConst": "A function that creates a constant expression given its declaration name and optional universe levels.",
+          "Lean.LocalDecl.type": "A function that retrieves the type associated with a local declaration in a Lean environment.",
+          "Array.push": "The operation adds an element to the end of an array, ensuring efficient performance by utilizing a dynamic array structure.",
+          "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.checkTypeIsProp": "A method for verifying whether a given expression type is a proposition within a specific computational context.",
+          "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.shouldPreprocess": "A method for determining whether a given expression type requires preprocessing within a specific computational context.",
+          "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.preprocess": "A method for preprocessing a given expression and its type, potentially altering them based on whether they are global, and returning a list of modified expressions paired with their corresponding types.",
+          "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.mkSimpTheoremCore": "A method for creating a simplification theorem core with specified parameters, proof, and attributes within a particular computational context.",
+          "Lean.getConstInfo": "An operation that retrieves information about a constant from a monadic environment that supports both state management and error handling.",
+          "Lean.ConstantInfo.levelParams": "A function that extracts the level parameters associated with a given constant's information.",
+          "Lean.Meta.withReducible": "A function that executes a computation with a transparency setting that allows only the unfolding of definitions marked as reducible.",
+          "Lean.Meta.checkTypeIsProp": "This defines a function that checks whether a given expression type is a proposition in the Lean proof assistant.",
+          "Lean.Meta.shouldPreprocess": "This defines a function that determines whether a given expression type should undergo preprocessing in the Lean proof assistant.",
+          "Lean.Meta.preprocess": "This defines a function that preprocesses a given expression and type, producing a list of pairs of expressions based on specified conditions.",
+          "Bool.true": "The statement identifies the boolean value representing true, which is distinct from the logical proposition denoting truth.",
+          "Lean.Meta.mkAuxLemma": "A function that helps generate auxiliary lemmas in a meta programming environment while ensuring that duplicate lemmas are not created by using a cache.",
+          "Lean.Meta.mkSimpTheoremCore": "This defines a function that creates a simplification theorem using a specified origin, expression, proof, and additional parameters.",
+          "Lean.Meta.Origin.decl": "A way to create a global declaration within the environment that can be marked as either posted or invalidated.",
+          "Bool.false": "The boolean value false is a specific representation of the false state in boolean logic.",
+          "Lean.ConstantInfo.type": "A function that retrieves the type expression corresponding to a given constant's information."
+        },
+        "fullDefinition": "def mkSimpTheoremsFromConst' (declName : Name) (post : Bool) (inv : Bool) (prio : Nat) :     MetaM (Array Name × Array SimpTheorem) := do   let cinfo ← getConstInfo declName   let val := mkConst declName (cinfo.levelParams.map mkLevelParam)   withReducible do     let type ← inferType val     checkTypeIsProp type     if inv || (← shouldPreprocess type) then       let mut r := #[]       let mut auxNames := #[]       for (val, type) in (← preprocess val type inv (isGlobal := true)) do         let auxName ← mkAuxLemma cinfo.levelParams type val         auxNames := auxNames.push auxName         r := r.push <| ← mkSimpTheoremCore (.decl declName)           (mkConst auxName (cinfo.levelParams.map mkLevelParam)) #[] (mkConst auxName) post prio           false       return (auxNames, r)     else       return (#[], #[← mkSimpTheoremCore (.decl declName) (mkConst declName <|         cinfo.levelParams.map mkLevelParam) #[] (mkConst declName) post prio false])",
+        "description": "This defines a function that generates simplification theorems from a given constant and returns both the names of the generated lemmas and the theorems themselves."
+      },
+      "Lean.Meta.Simp.addSimpTheorem'": {
+        "type": "definition",
+        "code": "Lean.Meta.Simp.addSimpTheorem' (ext : SimpExtension) (declName : Name) (post inv : Bool) (attrKind : AttributeKind)\n  (prio : Nat) : MetaM (Array Name)",
+        "comment": "Similar to `addSimpTheorem` except that it returns an array of all auto-generated\nsimp-theorems. ",
+        "explanatories": {
+          "Lean.Meta.SimpTheorems.post": "A method for posting simplification theorems into a structure that organizes them into a tree format.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Lean.Meta.Simp.mkSimpTheoremsFromConst'": "This defines a function that generates simplification theorems from a given constant and returns both the names of the generated lemmas and the theorems themselves.",
+          "Lean.ScopedEnvExtension.add": "A process for adding an element to a scoped environment extension within a monadic context that allows for name resolution and environment manipulation.",
+          "Lean.Meta.SimpEntry.thm": "A transformation that converts a simplification theorem into a simplification entry format."
+        },
+        "fullDefinition": "def addSimpTheorem' (ext : SimpExtension) (declName : Name) (post : Bool) (inv : Bool)     (attrKind : AttributeKind) (prio : Nat) : MetaM (Array Name) := do   let (auxNames, simpThms) ← mkSimpTheoremsFromConst' declName post inv prio   for simpThm in simpThms do     ext.add (SimpEntry.thm simpThm) attrKind   return auxNames",
+        "description": "This defines a function that adds a simplification theorem associated with a specific extension and returns an array containing all automatically generated simplification theorems."
+      },
+      "Lean.Meta.Simp.addSimpAttr": {
+        "type": "definition",
+        "code": "Lean.Meta.Simp.addSimpAttr (declName : Name) (ext : SimpExtension) (attrKind : AttributeKind) (post : Bool)\n  (prio : Nat) : MetaM (Array Name)",
+        "comment": "Similar to `AttributeImpl.add` in `mkSimpAttr` except that it doesn't require syntax,\nand returns an array of all auto-generated lemmas. ",
+        "explanatories": {
+          "Lean.Meta.SimpTheorems.post": "A method for posting simplification theorems into a structure that organizes them into a tree format.",
+          "Lean.Meta.SimpTheorems.toUnfold": "A method for retrieving a set of constants and let-declarations that can be unfolded by the simplifier when specific conditions are met.",
+          "Lean.Meta.SimpTheorems.toUnfoldThms": "A method for obtaining a mapping of names to arrays of simplification theorems that should be unfolded during simplification.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Option.some": "This constructs an option type that encapsulates a value of a specified type.",
+          "Lean.Meta.isProp": "A function that determines if a given expression is a proposition, returning true for propositions and false if the expression contains metavariables.",
+          "Lean.getConstInfo": "An operation that retrieves information about a constant from a monadic environment that supports both state management and error handling.",
+          "Bool.false": "The boolean value false is a specific representation of the false state in boolean logic.",
+          "Lean.ScopedEnvExtension.add": "A process for adding an element to a scoped environment extension within a monadic context that allows for name resolution and environment manipulation.",
+          "Lean.Meta.Simp.addSimpTheorem'": "This defines a function that adds a simplification theorem associated with a specific extension and returns an array containing all automatically generated simplification theorems.",
+          "Lean.ConstantInfo.hasValue": "A function that determines whether a given constant's information has an associated value.",
+          "Lean.Meta.getEqnsFor?": "A function that retrieves the equation theorems associated with a specified declaration, allowing for an option to include theorems for nonrecursive definitions.",
+          "Lean.Meta.SimpEntry.toUnfoldThms": "A function that generates a simplification entry based on a name and an array of names that should be unfolded.",
+          "Lean.Meta.hasSmartUnfoldingDecl": "A function that checks if a declaration in a given environment has the characteristic of smart unfolding.",
+          "Lean.Meta.SimpEntry.toUnfold": "A function that retrieves simplification entry data associated with a given name.",
+          "Lean.throwError": "An operation that raises an error with a specific message in a monadic context that supports error handling."
+        },
+        "fullDefinition": "def addSimpAttr (declName : Name) (ext : SimpExtension) (attrKind : AttributeKind)     (post : Bool) (prio : Nat) :     MetaM (Array Name) := do   let info ← getConstInfo declName   if (← isProp info.type) then     addSimpTheorem' ext declName post (inv := false) attrKind prio   else if info.hasValue then     if let some eqns ← getEqnsFor? declName then       let mut auxNames := #[]       for eqn in eqns do         -- Is this list is always empty?         let newAuxNames ← addSimpTheorem' ext eqn post (inv := false) attrKind prio         auxNames := auxNames ++ newAuxNames       ext.add (SimpEntry.toUnfoldThms declName eqns) attrKind       if hasSmartUnfoldingDecl (← getEnv) declName then         ext.add (SimpEntry.toUnfold declName) attrKind       return auxNames     else       ext.add (SimpEntry.toUnfold declName) attrKind       return #[]   else     throwError \"invalid 'simp', it is not a proposition nor a definition (to unfold)\"",
+        "description": "This defines a function that adds a simplification attribute to a given declaration and returns an array of all auto-generated lemmas associated with it."
+      },
+      "Lean.Meta.simpTheoremsOfNames": {
+        "type": "definition",
+        "code": "Lean.Meta.simpTheoremsOfNames (lemmas : List Name := []) (simpOnly : Bool := false) : MetaM SimpTheorems",
+        "comment": "Construct a `SimpTheorems` from a list of names. ",
+        "explanatories": {
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Bool.false": "The boolean value false is a specific representation of the false state in boolean logic.",
+          "List.foldlM": "This definition outlines a function that applies a monadic operation sequentially to each element of a list, starting with an initial value and producing a final result within the context of a monad.",
+          "Lean.Meta.SimpTheorems.addConst": "A method for incorporating a global declaration into a simplification theorems structure with specified attributes and priority."
+        },
+        "fullDefinition": "def simpTheoremsOfNames (lemmas : List Name := []) (simpOnly : Bool := false) :     MetaM SimpTheorems := do   lemmas.foldlM (·.addConst ·)     (← if simpOnly then       simpOnlyBuiltins.foldlM (·.addConst ·) {}     else       getSimpTheorems)",
+        "description": "This defines a function that constructs a collection of simplification theorems from a specified list of names, with an option to include only simplification-related entries."
+      },
+      "Lean.Meta.Simp.Context.ofNames": {
+        "type": "definition",
+        "code": "Lean.Meta.Simp.Context.ofNames (lemmas : List Name := []) (simpOnly : Bool := false)\n  (config : Simp.Config :=\n    { maxSteps := Simp.defaultMaxSteps, maxDischargeDepth := 2, contextual := false, memoize := true,\n      singlePass := false, zeta := true, beta := true, eta := true, etaStruct := EtaStructMode.all, iota := true,\n      proj := true, decide := false, arith := false, autoUnfold := false, dsimp := true, failIfUnchanged := true,\n      ground := false, unfoldPartialApp := false, zetaDelta := false, index := true, implicitDefEqProofs := false }) :\n  MetaM Simp.Context",
+        "comment": "Construct a `Simp.Context` from a list of names. ",
+        "explanatories": {
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Pure.pure": "This defines a function that creates a monadic action that simply returns a given value without performing any additional computations.",
+          "Bool.false": "The boolean value false is a specific representation of the false state in boolean logic.",
+          "Lean.Meta.simpTheoremsOfNames": "This defines a function that constructs a collection of simplification theorems from a specified list of names, with an option to include only simplification-related entries.",
+          "Lean.Meta.getSimpCongrTheorems": "A function that retrieves simplification congruence theorems from the core meta programming environment."
+        },
+        "fullDefinition": "def Simp.Context.ofNames (lemmas : List Name := []) (simpOnly : Bool := false)     (config : Simp.Config := {}) : MetaM Simp.Context := do pure <|   { simpTheorems := #[← simpTheoremsOfNames lemmas simpOnly],     congrTheorems := ← Lean.Meta.getSimpCongrTheorems,     config := config }",
+        "description": "This defines a function that creates a simplification context using a specified list of names and a set of configuration options."
+      },
+      "Lean.Meta.SimpTheorems.contains": {
+        "type": "definition",
+        "code": "Lean.Meta.SimpTheorems.contains (d : SimpTheorems) (declName : Name) : Bool",
+        "comment": "Checks whether `declName` is in `SimpTheorems` as either a lemma or definition to unfold. ",
+        "explanatories": {
+          "Lean.Meta.Origin.decl": "A way to create a global declaration within the environment that can be marked as either posted or invalidated.",
+          "Lean.Meta.SimpTheorems.isLemma": "A method for determining whether a given theorem identifier is classified as a lemma within a set of simplification theorems.",
+          "Lean.Meta.SimpTheorems.isDeclToUnfold": "A method that checks if a specific declaration is marked for unfolding without relying on equational theorems."
+        },
+        "fullDefinition": "def SimpTheorems.contains (d : SimpTheorems) (declName : Name) :=   d.isLemma (.decl declName) || d.isDeclToUnfold declName",
+        "description": "This defines a function that checks if a specific declaration name is included in the collection of simplification theorems used for unfolding in the Lean proof assistant."
+      }
+    },
+    "CongrTheorems.lean": {
+      "Lean.Meta.FastSubsingleton.inst": {
+        "type": "theorem",
+        "code": "Lean.Meta.FastSubsingleton.inst.{u} {α : Sort u} [self : FastSubsingleton α] : Subsingleton α",
+        "comment": "The subsingleton instance. ",
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "This proves that any type that is a fast subsingleton also satisfies the property of being a subsingleton."
+      },
+      "Lean.Meta.FastIsEmpty.inst": {
+        "type": "theorem",
+        "code": "Lean.Meta.FastIsEmpty.inst.{u} {α : Sort u} [self : FastIsEmpty α] : IsEmpty α",
+        "comment": null,
+        "explanatories": {
+          "Lean.Meta.FastSubsingleton.inst": "This proves that any type that is a fast subsingleton also satisfies the property of being a subsingleton."
+        },
+        "fullDefinition": null,
+        "description": "This demonstrates that any type that is classified as a fast empty type must also be an empty type."
+      },
+      "Lean.Meta.FastSubsingleton.mk": {
+        "type": "theorem",
+        "code": "Lean.Meta.FastSubsingleton.mk.{u} {α : Sort u} [inst : Subsingleton α] : FastSubsingleton α",
+        "comment": null,
+        "explanatories": {
+          "Prod.mk": "A pair is constructed from two given terms, resulting in a tuple that combines them.",
+          "Lean.Meta.FastSubsingleton.inst": "This proves that any type that is a fast subsingleton also satisfies the property of being a subsingleton.",
+          "Lean.Meta.FastIsEmpty.inst": "This demonstrates that any type that is classified as a fast empty type must also be an empty type.",
+          "MProd.mk": "This constructs a product type using two elements from different types."
+        },
+        "fullDefinition": null,
+        "description": "This establishes that any type which is a subsingleton can be classified as a fast subsingleton."
+      },
+      "Lean.Meta.FastIsEmpty.mk": {
+        "type": "theorem",
+        "code": "Lean.Meta.FastIsEmpty.mk.{u} {α : Sort u} [inst : IsEmpty α] : FastIsEmpty α",
+        "comment": null,
+        "explanatories": {
+          "Prod.mk": "A pair is constructed from two given terms, resulting in a tuple that combines them.",
+          "Lean.Meta.FastSubsingleton.inst": "This proves that any type that is a fast subsingleton also satisfies the property of being a subsingleton.",
+          "Lean.Meta.FastIsEmpty.inst": "This demonstrates that any type that is classified as a fast empty type must also be an empty type.",
+          "Lean.Meta.FastSubsingleton.mk": "This establishes that any type which is a subsingleton can be classified as a fast subsingleton.",
+          "MProd.mk": "This constructs a product type using two elements from different types."
+        },
+        "fullDefinition": null,
+        "description": "This establishes that any type that is classified as an empty type must also be considered a fast empty type."
+      },
+      "Lean.Meta.withSubsingletonAsFast": {
+        "type": "definition",
+        "code": "Lean.Meta.withSubsingletonAsFast {α : Type} [Inhabited α] (mx : (Expr → Expr) → MetaM α) : MetaM α",
+        "comment": "Runs `mx` in a context where all local `Subsingleton` and `IsEmpty` instances\nhave associated `FastSubsingleton` and `FastIsEmpty` instances.\nThe function passed to `mx` eliminates these instances from expressions,\nsince they are only locally valid inside this context.\n",
+        "explanatories": {
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Pure.pure": "This defines a function that creates a monadic action that simply returns a given value without performing any additional computations.",
+          "Prod.mk": "A pair is constructed from two given terms, resulting in a tuple that combines them.",
+          "Lean.mkAppN": "A function that constructs an expression representing the application of a given function to a specified array of arguments.",
+          "Lean.Meta.mkLambdaFVars": "A function that constructs a lambda expression by abstracting a body term over a given array of free variables and metavariables.",
+          "DoResultPR.pure": "The pure function represents a successful execution of a computation that returns a specified value along with a given state.",
+          "Lean.Meta.FastSubsingleton.inst": "This proves that any type that is a fast subsingleton also satisfies the property of being a subsingleton.",
+          "Lean.Meta.FastIsEmpty.inst": "This demonstrates that any type that is classified as a fast empty type must also be an empty type.",
+          "False.elim": "From a contradiction, any proposition can be inferred, illustrating that if something is false, anything follows.",
+          "Array.filter": "This defines a function that filters elements of an array based on a given predicate, returning a new array of elements that satisfy the condition.",
+          "Lean.LocalInstance.className": "A method that retrieves the class name associated with a local instance in a type system.",
+          "Lean.Meta.forallTelescopeReducing": "A function that processes a universally quantified expression by reducing its type and recursively extracting further quantifiers while optionally cleaning up annotations.",
+          "Lean.Meta.mkAppOptM": "A function that constructs an application of a constant by explicitly specifying which arguments are provided, allowing for optional arguments in the process.",
+          "Option.none": "The construct represents the absence of a value in an option type, signifying that no valid data is present.",
+          "Array.mapM": "This defines a function that applies a monadic transformation to each element of an array, producing a new array within a monadic context.",
+          "Lean.Meta.FastSubsingleton.mk": "This establishes that any type which is a subsingleton can be classified as a fast subsingleton.",
+          "Lean.Meta.FastIsEmpty.mk": "This establishes that any type that is classified as an empty type must also be considered a fast empty type.",
+          "Lean.Meta.withLocalDeclsD": "A function that operates within a local declaration context, allowing for the execution of a continuation with locally declared variables.",
+          "Array.map": "This defines a function that applies a transformation to each element of an array, producing a new array of a potentially different type.",
+          "Lean.Meta.withNewLocalInstances": "A function that temporarily introduces new local instances in a meta programming context for a given computation.",
+          "Lean.Expr.replaceFVars": "A function that replaces specified free variables in an expression with given replacement expressions.",
+          "Functor.map": "This defines a function that applies a mapping operation to a value wrapped in a context, transforming it from one type to another while preserving the structure of the context.",
+          "MProd.mk": "This constructs a product type using two elements from different types."
+        },
+        "fullDefinition": "def withSubsingletonAsFast {α : Type} [Inhabited α] (mx : (Expr → Expr) → MetaM α) : MetaM α := do   let insts1 := (← getLocalInstances).filter fun inst => inst.className == ``Subsingleton   let insts2 := (← getLocalInstances).filter fun inst => inst.className == ``IsEmpty   let mkInst (f : Name) (inst : Expr) : MetaM Expr := do     forallTelescopeReducing (← inferType inst) fun args _ => do       mkLambdaFVars args <| ← mkAppOptM f #[none, mkAppN inst args]   let vals := (← insts1.mapM fun inst => mkInst ``FastSubsingleton.mk inst.fvar)     ++ (← insts2.mapM fun inst => mkInst ``FastIsEmpty.mk inst.fvar)   let tys ← vals.mapM inferType   withLocalDeclsD (tys.map fun ty => (`inst, fun _ => pure ty)) fun args =>     withNewLocalInstances args 0 do       let elim (e : Expr) : Expr := e.replaceFVars args vals       mx elim",
+        "description": "This defines a function that executes a given computation in a context where local instances of certain types are replaced with their faster alternatives."
+      },
+      "Lean.Meta.FastSubsingleton.elim": {
+        "type": "theorem",
+        "code": "Lean.Meta.FastSubsingleton.elim.{u} {α : Sort u} [h : FastSubsingleton α] (a b : α) : a = b",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "This establishes that for any two elements of a type classified as a fast subsingleton, those elements must be equal."
+      },
+      "Lean.Meta.fastSubsingletonElim": {
+        "type": "definition",
+        "code": "Lean.Meta.fastSubsingletonElim (mvarId : MVarId) : MetaM Bool",
+        "comment": "Like `subsingletonElim` but uses `FastSubsingleton` to fail fast. ",
+        "explanatories": {
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Lean.Meta.CongrArgKind.eq": "A specific type of argument in a congruence context that requires a pair of expressions and a proof of their equality.",
+          "Option.some": "This constructs an option type that encapsulates a value of a specified type.",
+          "Lean.observing?": "An operation that observes a monadic computation, returning an optional result in a backtracking context that may also handle exceptions.",
+          "DoResultPR.return": "The early-exit command in a computation returns a specified value along with a state, encapsulating the result in a particular context.",
+          "Alternative.failure": "A function is introduced that provides a mechanism to represent a failure or an empty collection in a context that supports alternatives.",
+          "IsEmpty.false": "If a type is empty, then any element of that type leads to a contradiction.",
+          "False.elim": "From a contradiction, any proposition can be inferred, illustrating that if something is false, anything follows.",
+          "Lean.MVarId.withContext": "A function that executes a computation in the context of a specified metavariable while managing local instances and caching for type class resolution.",
+          "Lean.MVarId.checkNotAssigned": "A function that raises an exception if a specified metavariable has already been assigned a value, providing the name of the tactic that triggered the check.",
+          "Lean.Meta.withReducible": "A function that executes a computation with a transparency setting that allows only the unfolding of definitions marked as reducible.",
+          "Lean.MVarId.getType'": "A function that obtains the type of a specified metavariable after resolving any other metavariables and simplifying it to a basic form.",
+          "Lean.Expr.eq?": "A function that checks if a given expression is an equality and returns the two expressions involved along with a proof of their equality if applicable.",
+          "Lean.Meta.withSubsingletonAsFast": "This defines a function that executes a given computation in a context where local instances of certain types are replaced with their faster alternatives.",
+          "Lean.Meta.mkAppM": "A function that constructs the application of a given constant using an array of expressions while attempting to automatically fill in any implicit arguments before the last one.",
+          "Lean.Meta.FastSubsingleton.elim": "This establishes that for any two elements of a type classified as a fast subsingleton, those elements must be equal.",
+          "Lean.MVarId.assign": "A method that assigns a value to a specified mutable variable without performing any checks for pre-existing assignments or type correctness.",
+          "Bool.true": "The statement identifies the boolean value representing true, which is distinct from the logical proposition denoting truth.",
+          "Option.getD": "This defines a function that retrieves a value from an optional type, returning a specified default value if the optional type is absent.",
+          "Bool.false": "The boolean value false is a specific representation of the false state in boolean logic.",
+          "Array.getD": "This defines a function that retrieves an element from an array at a specified index, returning a default value if the index is invalid."
+        },
+        "fullDefinition": "def fastSubsingletonElim (mvarId : MVarId) : MetaM Bool :=   mvarId.withContext do     let res ← observing? do       mvarId.checkNotAssigned `fastSubsingletonElim       let tgt ← withReducible mvarId.getType'       let some (_, lhs, rhs) := tgt.eq? | failure       -- Note: `mkAppM` uses `withNewMCtxDepth`, which prevents `Sort _` from specializing to `Prop`       let pf ← withSubsingletonAsFast fun elim =>         elim <$> mkAppM ``FastSubsingleton.elim #[lhs, rhs]       mvarId.assign pf       return true     return res.getD false",
+        "description": "This defines a function that performs elimination on a fast subsingleton, allowing for quicker failure during meta computations."
+      }
+    }
+  },
+  "Expr": {
+    "Basic.lean": {
+      "Lean.Name.lastComponentAsString": {
+        "type": "definition",
+        "code": "Lean.Name.lastComponentAsString : Name → String",
+        "comment": "Get the last field of a name as a string.\nDoesn't raise an error when the last component is a numeric field. ",
+        "explanatories": {
+          "Lean.Name.anonymous": "This theorem defines a representation for an anonymous name in a naming system.",
+          "Lean.Name.str": "This theorem describes how to create a composite name by appending a string to an existing name in a hierarchical representation.",
+          "Lean.Name.num": "This describes a method for creating a numerical name, which can be utilized to form hierarchical names for free variables and metavariables.",
+          "ToString.toString": "This defines a function that converts values of a specific type into strings using a provided string conversion instance for that type."
+        },
+        "fullDefinition": "def lastComponentAsString : Name → String   | .str _ s => s   | .num _ n => toString n   | .anonymous => \"\"",
+        "description": "This defines a function that retrieves the last part of a name as a string, handling numeric fields without raising an error."
+      },
+      "Lean.Name.fromComponents": {
+        "type": "definition",
+        "code": "Lean.Name.fromComponents : List Name → Name",
+        "comment": "Build a name from components. For example ``from_components [`foo, `bar]`` becomes\n``` `foo.bar```.\nIt is the inverse of `Name.components` on list of names that have single components. ",
+        "explanatories": {
+          "Lean.Name.anonymous": "This theorem defines a representation for an anonymous name in a naming system.",
+          "Lean.Name.updatePrefix": "A function that updates the prefix of a given name."
+        },
+        "fullDefinition": "def fromComponents : List Name → Name := go .anonymous where   /-- Auxiliary for `Name.fromComponents` -/   go : Name → List Name → Name   | n, []        => n   | n, s :: rest => go (s.updatePrefix n) rest",
+        "description": "This defines a function that constructs a hierarchical name by combining a list of individual components."
+      },
+      "Lean.ConstantInfo.updateConstantVal": {
+        "type": "definition",
+        "code": "Lean.ConstantInfo.updateConstantVal : ConstantInfo → ConstantVal → ConstantInfo",
+        "comment": "Update `ConstantVal` (the data common to all constructors of `ConstantInfo`)\nin a `ConstantInfo`. ",
+        "explanatories": {
+          "Lean.ConstantInfo.defnInfo": "A function that converts a definition value into its associated constant information.",
+          "Lean.ConstantInfo.thmInfo": "A function that produces the constant information associated with a given theorem value.",
+          "Lean.ConstantInfo.axiomInfo": "A function that retrieves the constant information related to a specified axiom value.",
+          "Lean.ConstantInfo.opaqueInfo": "A function that obtains the constant information associated with a given opaque value.",
+          "Lean.ConstantInfo.quotInfo": "A function that provides the constant information associated with a given quotient value.",
+          "Lean.ConstantInfo.inductInfo": "A function that provides the constant information associated with a specific inductive value.",
+          "Lean.ConstantInfo.ctorInfo": "A function that generates the constant information related to a specified constructor value.",
+          "Lean.ConstantInfo.recInfo": "A function that provides the constant information for a specified recursor value.",
+          "Lean.ConstantInfo.toConstantVal": "A function that converts a given constant's information into its corresponding constant value.",
+          "Lean.DefinitionVal.toConstantVal": "A function that converts a given definition value into a corresponding constant value.",
+          "Lean.TheoremVal.toConstantVal": "A function that converts a theorem value into its corresponding constant value.",
+          "Lean.OpaqueVal.toConstantVal": "A function that converts an opaque value into its corresponding constant value."
+        },
+        "fullDefinition": "def updateConstantVal : ConstantInfo → ConstantVal → ConstantInfo   | defnInfo   info, v => defnInfo   {info with toConstantVal := v}   | axiomInfo  info, v => axiomInfo  {info with toConstantVal := v}   | thmInfo    info, v => thmInfo    {info with toConstantVal := v}   | opaqueInfo info, v => opaqueInfo {info with toConstantVal := v}   | quotInfo   info, v => quotInfo   {info with toConstantVal := v}   | inductInfo info, v => inductInfo {info with toConstantVal := v}   | ctorInfo   info, v => ctorInfo   {info with toConstantVal := v}   | recInfo    info, v => recInfo    {info with toConstantVal := v}",
+        "description": "This defines a function that updates the value associated with a constant in its information structure."
+      },
+      "_private.«.lake».packages.mathlib.Mathlib.Lean.Expr.Basic.0.Lean.Expr.getAppAppsAux": {
+        "type": "definition",
+        "code": "Lean.Expr.getAppAppsAux : Expr → Array Expr → Nat → Array Expr",
+        "comment": "Invariant: `i : ℕ` should be less than the size of `as : Array Expr`. ",
+        "explanatories": {
+          "Lean.Expr.app": "A representation of applying a function to an argument in an expression format.",
+          "Array.set!": "This defines a function that updates an element in an array at a specified index, raising an error if the index is invalid.",
+          "Lean.ProjectionFunctionInfo.i": "A function that retrieves the index of the auxiliary projection function from its information."
+        },
+        "fullDefinition": "private def getAppAppsAux : Expr → Array Expr → Nat → Array Expr   | .app f a, as, i => getAppAppsAux f (as.set! i (.app f a)) (i-1)   | _,       as, _ => as",
+        "description": "This defines a function that retrieves application arguments from an expression, given an index and an array of expressions."
+      },
+      "Lean.Expr.rat?": {
+        "type": "definition",
+        "code": "Lean.Expr.rat? (e : Expr) : Option Rat",
+        "comment": "Check if an expression is a \"rational in normal form\",\ni.e. either an integer number in normal form,\nor `n / d` where `n` is an integer in normal form, `d` is a natural number in normal form,\n`d ≠ 1`, and `n` and `d` are coprime (in particular, we check that `(mkRat n d).den = d`).\nIf so returns the rational number.\n",
+        "explanatories": {
+          "Pure.pure": "This defines a function that creates a monadic action that simply returns a given value without performing any additional computations.",
+          "Lean.Expr.isAppOfArity": "A function that checks if a given expression is an application of a constant with a specified name and the correct number of arguments.",
+          "Div.div": "This defines a function that performs division of one element by another for types that implement the division operation.",
+          "Lean.Expr.nat?": "A function that checks if an expression represents a natural number in a specific normal form and returns the number if it does.",
+          "guard": "A function is defined that checks a given proposition and performs no action if true, but results in a failure if false.",
+          "Lean.Expr.int?": "A function that checks if an expression represents an integer numeral in normal form and returns its value if it does."
+        },
+        "fullDefinition": "def rat? (e : Expr) : Option Rat := do   if e.isAppOfArity ``Div.div 4 then     let d ← e.appArg!.nat?     guard (d ≠ 1)     let n ← e.appFn!.appArg!.int?     let q := mkRat n d     guard (q.den = d)     pure q   else     e.int?",
+        "description": "This defines a function that checks whether an expression represents a rational number in normalized form and returns it if so."
+      },
+      "Lean.Expr.ofNat": {
+        "type": "definition",
+        "code": "Lean.Expr.ofNat (α : Expr) (n : Nat) : MetaM Expr",
+        "comment": "Construct the term of type `α` for a given natural number\n(doing typeclass search for the `OfNat` instance required). ",
+        "explanatories": {
+          "Option.none": "The construct represents the absence of a value in an option type, signifying that no valid data is present.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Lean.Meta.mkAppOptM": "A function that constructs an application of a constant by explicitly specifying which arguments are provided, allowing for optional arguments in the process.",
+          "OfNat.ofNat": "This defines a function that converts a natural number into a type defined by the OfNat typeclass, allowing customization of numeric literals based on their type.",
+          "Lean.mkRawNatLit": "A function that produces a representation of a natural number in its unprocessed literal form.",
+          "Int.ofNat": "This asserts that every natural number can be represented as an integer."
+        },
+        "fullDefinition": "def ofNat (α : Expr) (n : Nat) : MetaM Expr := do   mkAppOptM ``OfNat.ofNat #[α, mkRawNatLit n, none]",
+        "description": "This defines a function that constructs a term of a specified type corresponding to a given natural number, including searching for the necessary typeclass instance."
+      },
+      "Lean.Expr.modifyRevArg": {
+        "type": "definition",
+        "code": "Lean.Expr.modifyRevArg (modifier : Expr → Expr) : Nat → Expr → Expr",
+        "comment": null,
+        "explanatories": {
+          "Lean.Expr.app": "A representation of applying a function to an argument in an expression format.",
+          "Lean.ProjectionFunctionInfo.i": "A function that retrieves the index of the auxiliary projection function from its information."
+        },
+        "fullDefinition": "def modifyRevArg (modifier : Expr → Expr) : Nat → Expr → Expr   | 0,     (.app f x) => .app f (modifier x)   | (i+1), (.app f x) => .app (modifyRevArg modifier i f) x   | _, e => e",
+        "description": "This defines a function that applies a specified modification to the arguments of an expression in reverse order."
+      },
+      "Lean.Expr.modifyArg": {
+        "type": "definition",
+        "code": "Lean.Expr.modifyArg (modifier : Expr → Expr) (e : Expr) (i : Nat) (n : Nat := e.getAppNumArgs) : Expr",
+        "comment": "Given `f a₀ a₁ ... aₙ₋₁`, runs `modifier` on the `i`th argument or\nreturns the original expression if out of bounds. ",
+        "explanatories": {
+          "Lean.Expr.modifyRevArg": "This defines a function that applies a specified modification to the arguments of an expression in reverse order.",
+          "Lean.ProjectionFunctionInfo.i": "A function that retrieves the index of the auxiliary projection function from its information."
+        },
+        "fullDefinition": "def modifyArg (modifier : Expr → Expr) (e : Expr) (i : Nat) (n := e.getAppNumArgs) : Expr :=   modifyRevArg modifier (n - i - 1) e",
+        "description": "This defines a function that applies a specified modification to a particular argument of an expression, returning the original expression if the argument index is out of bounds."
+      },
+      "Lean.Expr.getRevArg?": {
+        "type": "definition",
+        "code": "Lean.Expr.getRevArg? : Expr → Nat → Option Expr",
+        "comment": null,
+        "explanatories": {
+          "Option.none": "The construct represents the absence of a value in an option type, signifying that no valid data is present.",
+          "Lean.Expr.app": "A representation of applying a function to an argument in an expression format.",
+          "Lean.Expr.getRevArg!": "A function that retrieves an argument from an expression based on its position in reverse order.",
+          "Lean.ProjectionFunctionInfo.i": "A function that retrieves the index of the auxiliary projection function from its information."
+        },
+        "fullDefinition": "def getRevArg? : Expr → Nat → Option Expr   | app _ a, 0   => a   | app f _, i+1 => getRevArg! f i   | _,       _   => none",
+        "description": "This defines a function that retrieves a specific argument of an expression in reverse order, returning an optional result that indicates whether the argument exists."
+      },
+      "Lean.Expr.getArg?": {
+        "type": "definition",
+        "code": "Lean.Expr.getArg? (e : Expr) (i : Nat) (n : Nat := e.getAppNumArgs) : Option Expr",
+        "comment": "Given `f a₀ a₁ ... aₙ₋₁`, returns the `i`th argument or none if out of bounds. ",
+        "explanatories": {
+          "Lean.Expr.getRevArg?": "This defines a function that retrieves a specific argument of an expression in reverse order, returning an optional result that indicates whether the argument exists.",
+          "Lean.ProjectionFunctionInfo.i": "A function that retrieves the index of the auxiliary projection function from its information."
+        },
+        "fullDefinition": "def getArg? (e : Expr) (i : Nat) (n := e.getAppNumArgs) : Option Expr :=   getRevArg? e (n - i - 1)",
+        "description": "This defines a function that retrieves an argument from a function application expression at a specified index, returning none if the index is out of bounds."
+      },
+      "Lean.Expr.mkDirectProjection": {
+        "type": "definition",
+        "code": "Lean.Expr.mkDirectProjection (e : Expr) (fieldName : Name) : MetaM Expr",
+        "comment": "If `e` has a structure as type with field `fieldName`, `mkDirectProjection e fieldName` creates\nthe projection expression `e.fieldName` ",
+        "explanatories": {
+          "Option.some": "This constructs an option type that encapsulates a value of a specified type.",
+          "Lean.ConstantVal.type": "A function that retrieves the expression type associated with a given constant value.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "Lean.throwError": "An operation that raises an error with a specific message in a monadic context that supports error handling.",
+          "Lean.Expr.getAppFn": "A function that retrieves the main function from a sequence of applied expressions or returns the input if it does not represent an application.",
+          "Lean.Expr.const": "A representation of a constant expression associated with a given declaration name and universal quantification levels.",
+          "Lean.getProjFnForField?": "A function that attempts to obtain the projection function associated with a specific field of a given structure within an environment.",
+          "Lean.mkAppN": "A function that constructs an expression representing the application of a given function to a specified array of arguments.",
+          "Array.push": "The operation adds an element to the end of an array, ensuring efficient performance by utilizing a dynamic array structure."
+        },
+        "fullDefinition": "def mkDirectProjection (e : Expr) (fieldName : Name) : MetaM Expr := do   let type ← whnf (← inferType e)   let .const structName us := type.getAppFn | throwError \"{e} doesn't have a structure as type\"   let some projName := getProjFnForField? (← getEnv) structName fieldName |     throwError \"{structName} doesn't have field {fieldName}\"   return mkAppN (.const projName us) (type.getAppArgs.push e)",
+        "description": "This defines a function that generates a projection expression from a given structure based on a specified field name."
+      },
+      "Lean.Expr.rewrite": {
+        "type": "definition",
+        "code": "Lean.Expr.rewrite (e eq : Expr) : MetaM Expr",
+        "comment": "Rewrites `e` via some `eq`, producing a proof `e = e'` for some `e'`.\n\nRewrites with a fresh metavariable as the ambient goal.\nFails if the rewrite produces any subgoals.\n",
+        "explanatories": {
+          "Option.none": "The construct represents the absence of a value in an option type, signifying that no valid data is present.",
+          "Lean.Meta.MetaM": "A specific type of computation or transformation in a meta programming context.",
+          "not": "The definition describes the boolean negation operation, which produces the opposite truth value of a given boolean input.",
+          "Lean.throwError": "An operation that raises an error with a specific message in a monadic context that supports error handling.",
+          "Lean.Meta.mkFreshExprMVar": "A function that generates a fresh expression metavariable, optionally specifying its type and kind within a meta programming computation context.",
+          "Lean.MVarId.rewrite": "A function that rewrites a specified goal by replacing it with a given expression, optionally considering certain configurations and constraints."
+        },
+        "fullDefinition": "def rewrite (e eq : Expr) : MetaM Expr := do   let ⟨_, eq', []⟩ ← (← mkFreshExprMVar none).mvarId!.rewrite e eq     | throwError \"Expr.rewrite may not produce subgoals.\"   return eq'",
+        "description": "This defines a function that rewrites an expression using an equality, generating a proof of equality with a fresh metavariable while failing if new subgoals arise."
+      }
+    }
+  },
+  "Meta.lean": {
+    "_private.«.lake».packages.mathlib.Mathlib.Lean.Meta.0.Lean.Elab.Tactic.TacticM.runCore": {
+      "type": "definition",
+      "code": "Lean.Elab.Tactic.TacticM.runCore {α : Type} (x : TacticM α) (ctx : Context) (s : State) : TermElabM (α × State)",
+      "comment": null,
+      "explanatories": {
+        "Lean.Elab.Term.TermElabM.run": "A function that executes a term elaboration computation within a specified context and state, returning the result alongside the updated state.",
+        "Lean.Elab.Tactic.run": "A function that executes a tactic within the context of a specific metavariable and returns a list of metavariable identifiers.",
+        "Lean.Elab.Term.TermElabM": "A type that represents a computation for term elaboration, parameterized by a specific type.",
+        "StateRefT'.run": "A function is defined to execute a stateful computation within a monadic context, producing a result along with an updated state."
+      },
+      "fullDefinition": "@[inline] private def TacticM.runCore (x : TacticM α) (ctx : Context) (s : State) :     TermElabM (α × State) :=   x ctx |>.run s",
+      "description": "This defines a function that executes a tactic in a given context and state, returning a result alongside the updated state."
+    },
+    "_private.«.lake».packages.mathlib.Mathlib.Lean.Meta.0.Lean.Elab.Tactic.TacticM.runCore'": {
+      "type": "definition",
+      "code": "Lean.Elab.Tactic.TacticM.runCore' {α : Type} (x : TacticM α) (ctx : Context) (s : State) : TermElabM α",
+      "comment": null,
+      "explanatories": {
+        "Lean.Elab.Term.TermElabM": "A type that represents a computation for term elaboration, parameterized by a specific type.",
+        "Prod.fst": "This defines a function that retrieves the first element from a given pair of values."
+      },
+      "fullDefinition": "@[inline] private def TacticM.runCore' (x : TacticM α) (ctx : Context) (s : State) : TermElabM α :=   Prod.fst <$> x.runCore ctx s",
+      "description": "This defines a function that executes a tactic in a given context and state, returning only the result without the updated state."
+    }
+  },
+  "Name.lean": {
+    "_private.«.lake».packages.mathlib.Mathlib.Lean.Name.0.isBlackListed": {
+      "type": "definition",
+      "code": "isBlackListed (declName : Name) : CoreM Bool",
+      "comment": null,
+      "explanatories": {
+        "Lean.Core.CoreM": "A monadic structure that allows for manipulation of the Lean environment, providing functionality for name generation, environment state, options context, and current namespace management.",
+        "String.startsWith": "This defines a function that checks whether a given string begins with a specified prefix.",
+        "Pure.pure": "This defines a function that creates a monadic action that simply returns a given value without performing any additional computations.",
+        "Bool.true": "The statement identifies the boolean value representing true, which is distinct from the logical proposition denoting truth.",
+        "Lean.MonadEnv.getEnv": "A function that retrieves the current environment state within a monadic context that supports environment operations.",
+        "Lean.Name.isInternalDetail": "A function that checks if a given name is an internal or dynamically generated component.",
+        "Lean.isAuxRecursor": "A function that checks if a given declaration in a specified environment is an auxiliary recursor.",
+        "Lean.isNoConfusion": "A function that determines if a specified declaration in an environment is associated with the no-confusion property.",
+        "Lean.isRec": "A function that checks if a given declaration is recursive within a monadic environment that manages state.",
+        "Lean.Meta.isMatcher": "A function that determines whether a name corresponds to a valid matcher within a specified monadic context."
+      },
+      "fullDefinition": "private def isBlackListed (declName : Name) : CoreM Bool := do   if declName.toString.startsWith \"Lean\" then return true   let env ← getEnv   pure <| declName.isInternalDetail    || isAuxRecursor env declName    || isNoConfusion env declName   <||> isRec declName <||> isMatcher declName",
+      "description": "This defines a function that checks if a declaration name is included in a blacklist and returns a boolean value accordingly."
+    }
+  }
+}

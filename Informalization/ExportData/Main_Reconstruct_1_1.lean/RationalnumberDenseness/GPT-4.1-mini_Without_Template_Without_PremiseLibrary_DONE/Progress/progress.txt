@@ -1,0 +1,261 @@
+[applied Tactic]
+have : ((n + (1 : ℕ)) : ℝ)  > 0 := by
+        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+        right
+        exact  zero_lt_one 
+
+[answer]
+We will show that the sum of a natural number \( n \) and 1, viewed as a real number, is greater than zero. To do this, we rewrite the inequality \( n + 1 > 0 \) in terms of natural numbers and their order properties, reducing the problem to demonstrating that either \( n > 0 \) or \( 1 > 0 \) holds. Since the number 1 is known to be positive, it follows immediately that \( n + 1 > 0 \). The proof is completed by noting the fundamental fact that zero is less than one, thus establishing the positivity of the sum.
+[applied Tactic]
+have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by
+      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by
+        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+        right
+        exact zero_lt_one
+      apply (lt_div_iff this).2
+      rw [zero_mul]
+      exact  zero_lt_one 
+
+[answer]
+We will show that the reciprocal of \( n + 1 \) is positive by first demonstrating that \( n + 1 \) itself is greater than zero. Since \( n \) is a natural number, and 1 is known to be positive, it follows from the order properties of natural numbers that \( n + 1 > 0 \). Having established the positivity of \( n + 1 \), we then consider the inequality \( 0 < \frac{1}{n+1} \). By the equivalence between inequalities involving division and multiplication, this is equivalent to \( 0 \cdot (n + 1) < 1 \). Recognizing that zero times any number is zero, the inequality reduces to \( 0 < 1 \), which is true. Therefore, the reciprocal of \( n + 1 \) is positive, completing the proof.
+[applied Tactic]
+have MnotEmpty : M.Nonempty := by
+      let ⟨m, h1⟩ := archi
+      apply Exists.intro m
+      rw [mul_div,mul_one,Nat.cast_one] at h1
+      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]
+      exact  h1 
+
+[answer]
+We will show that the set \( M \) is nonempty by exhibiting a natural number \( m \) that belongs to \( M \). Starting from the given assumption, there exists a natural number \( n_1 \) such that \((n_1 + 1) \times \frac{1}{n + 1} > x\); let us denote this number by \( m \) and the associated inequality by \( h_1 \). To prove that \( M \) contains an element, it suffices to show that this particular \( m \) satisfies the membership criterion for \( M \). By rewriting the inequality \( h_1 \), we express the product \((m + 1) \times \frac{1}{n + 1}\) as the ratio \(\frac{m + 1}{n + 1}\), which now directly matches the defining condition of \( M \). Unfolding the definition of membership, this reduces the goal to proving the inequality \(\frac{m+1}{n+1} > x\), which follows immediately from the hypothesis \( h_1 \). Hence, the set \( M \) contains at least one element, completing the proof.
+[applied Tactic]
+have xsubqneg: x - q < 0 := by
+      rw [sub_neg]
+      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM
+      simp [q]
+      exact  minM 
+
+[answer]
+We will show that the difference \( x - q \) is negative, which is equivalent to proving that \( x < q \). To do this, we first express the membership condition \( m \in M \) in terms of an inequality involving \( x \). By unpacking the definition of set membership and using the equivalence between inequalities, we rewrite this condition as \( x < \frac{m + 1}{n + 1} \). Next, we identify \( q \) explicitly as the fraction \( \frac{m + 1}{n + 1} \), so that our goal reduces to proving \( x < \frac{m + 1}{n + 1} \). Finally, since \( q \) is constructed from \( m \) and \( n \) as the minimal element satisfying this inequality, we conclude that \( x \) is indeed less than \( q \), completing the proof.
+[applied Tactic]
+have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by
+      ring_nf
+      simp
+      rw [add_mul,one_mul]
+      simp
+      rw [mul_comm ] 
+
+[answer]
+We will show that the difference between \( q \) and the reciprocal of \( n + 1 \) can be expressed as \( m \) divided by \( n + 1 \). To do this, we first rewrite the left-hand side by expanding the rational expressions into explicit multiplications and inverses, which transforms the difference into a product involving the reciprocal of \( n + 1 \) and another term. Next, we simplify the expression by distributing the reciprocal of \( n + 1 \) over the sum and observe that multiplying one by this reciprocal leaves it unchanged. This allows us to rewrite the difference as the product of \( m \) and the reciprocal of \( n + 1 \). Finally, we apply the commutative property of multiplication to swap the factors, confirming that multiplying \( m \) by the reciprocal of \( n + 1 \) is indeed equal to the reciprocal of \( n + 1 \) multiplied by \( m \), as required.
+[applied Tactic]
+have msubinM: (m - 1) ∈ M := by
+        simp only [M, Set.mem_setOf]
+        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意
+        rw [Nat.sub_add_cancel hm]
+        -- h のcastも動かすことで 結論の式と一致する
+        norm_cast at  h 
+
+[answer]
+We will show that if \( m \) belongs to the set \( M \) defined by the property \(\frac{m + 1}{n + 1} > x\), then \( m - 1 \) also belongs to \( M \), assuming \( m \geq 1 \). Starting from the membership condition for \( m - 1 \), we rewrite the expression \(\frac{(m - 1) + 1}{n + 1}\) as \(\frac{m}{n + 1}\), using the fact that adding and then subtracting one natural number from another preserves the original value. Since \(\frac{m}{n + 1} > x\) by assumption, it follows directly that the condition also holds for \( m - 1 \), thereby confirming that \( m - 1 \in M \).
+[applied Tactic]
+apply Nat.sub_lt _ (by norm_num ) 
+
+[answer]
+We will show that for a natural number \( m \), it holds that \( m > m - 1 \). To this end, we use the fact that if two natural numbers are both positive, then their difference is less than the first number. Specifically, since \( m \) is positive, it follows that \( m - 1 \) is less than \( m \). Notably, it is clear that zero is less than one, which supports the base comparison underpinning this reasoning. Thus, the goal reduces to proving the positivity of \( m \), from which the inequality \( m > m - 1 \) immediately follows.
+[applied Tactic]
+have : 0 < (1 : ℕ) := by  norm_num 
+
+[answer]
+We will show that the number one is greater than zero. This follows directly from the observation that zero is less than one, which establishes the desired inequality.
+[applied Tactic]
+. have : 0 < (1 : ℕ) := by norm_num
+          -- 0 < 1, 1 ≤ m より 0 < m が出てくる
+          apply lt_of_lt_of_le this  hm 
+
+[answer]
+We will show that zero is less than \( m \). First, observe that zero is less than one, which establishes the initial inequality. Next, since one is less than or equal to \( m \), it follows by the transitivity of inequalities that zero is less than \( m \). Therefore, we conclude that \( m \) is positive, as required.
+[applied Tactic]
+have : m > m - 1 := by
+        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。
+        apply Nat.sub_lt _ (by norm_num)
+          -- 0 < m を示す
+        . have : 0 < (1 : ℕ) := by norm_num
+          -- 0 < 1, 1 ≤ m より 0 < m が出てくる
+          apply lt_of_lt_of_le this  hm 
+
+[answer]
+We will show that for a natural number \( m \), it holds that \( m > m - 1 \). To this end, we first establish that \( m \) is positive. Starting from the fact that zero is less than one, and given that one is less than or equal to \( m \), it follows by the transitivity of inequalities that zero is less than \( m \). Thus, \( m \) is indeed a positive natural number. Since both \( m \) and 1 are positive, subtracting 1 from \( m \) yields a smaller number, which means \( m - 1 < m \). Therefore, we conclude that \( m > m - 1 \) as required.
+[applied Tactic]
+. have msubinM: (m - 1) ∈ M := by
+        simp only [M, Set.mem_setOf]
+        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意
+        rw [Nat.sub_add_cancel hm]
+        -- h のcastも動かすことで 結論の式と一致する
+        norm_cast at h
+      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる
+      have : m ≤ m - 1 := mmin (m - 1) msubinM
+      -- m > m - 1を示す。
+      have : m > m - 1 := by
+        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。
+        apply Nat.sub_lt _ (by norm_num)
+          -- 0 < m を示す
+        . have : 0 < (1 : ℕ) := by norm_num
+          -- 0 < 1, 1 ≤ m より 0 < m が出てくる
+          apply lt_of_lt_of_le this hm
+      -- ここまでで矛盾発生。
+       linarith 
+
+[answer]
+We will show that if \( m \) belongs to the set \( M \) defined by the property \(\frac{m + 1}{n + 1} > x\), then \( m - 1 \) also belongs to \( M \), assuming \( m \geq 1 \). Starting from the membership condition for \( m - 1 \), we observe that \(\frac{(m - 1) + 1}{n + 1} = \frac{m}{n + 1}\), and since \(\frac{m}{n + 1} > x\), it follows that \( m - 1 \in M \). By the minimality of \( m \) in \( M \), we have \( m \leq m - 1 \) because \( m \) cannot be greater than any element of \( M \), including \( m - 1 \). On the other hand, since \( m \geq 1 \), it follows that \( m \) is positive, and subtracting 1 decreases its value; therefore, \( m > m - 1 \). This contradicts the earlier inequality \( m \leq m - 1 \), producing an inconsistency. Hence, the assumption must be false, and the proof is complete.
+[applied Tactic]
+have : m = 0 := by
+        apply Nat.lt_one_iff.1  hm 
+
+[answer]
+We will show that \( m = 0 \) given that \( m \) is a natural number less than 1. Since the natural numbers are defined as the set \(\{0, 1, 2, \ldots\}\), and \( m < 1 \), the only possible value for \( m \) in this set is 0. Therefore, it follows directly that \( m = 0 \), completing the proof.
+[applied Tactic]
+. push_neg at hm
+      -- m = 0 であることをまず示す
+      have : m = 0 := by
+        apply Nat.lt_one_iff.1 hm
+      -- m を代入
+      rw [this] at h
+      simp at h
+      -- x > 0 と x < 0　で矛盾
+       linarith 
+
+[answer]
+We will show that \( m = 0 \) under the given conditions and reach a contradiction involving \( x \). Starting from the negation of the inequality \( m \geq 1 \), we rewrite it as \( m < 1 \). Since \( m \) is a natural number and the natural numbers are \( \{0, 1, 2, \ldots\} \), it follows that the only natural number less than 1 is 0, hence \( m = 0 \). Substituting this value into the inequality \( x < \frac{m}{n+1} \) yields \( x < \frac{0}{n+1} \), which simplifies to \( x < 0 \). However, this contradicts the assumption that \( x \) is positive. Therefore, the contradiction arising from these assumptions completes the proof.
+[applied Tactic]
+have xposh : ∀ x > 0, ∀ ε > 0, (∃q : ℚ, |x - (q : ℝ)| < ε) := by
+    intro x xpos ε εpos
+    -- 系　1.5 よりある自然数 n に対して 1 / n + 1 < ε なる n が存在する
+    have onediv := OneDivnltEps ε εpos
+    let ⟨n,h⟩ := onediv
+    -- ある自然数m で m + 1 /n + 1 > x が成立する(アルキメデスの原理)
+    -- 1 / n + 1 > 0 を示す
+    have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by
+      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by
+        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+        right
+        exact zero_lt_one
+      apply (lt_div_iff this).2
+      rw [zero_mul]
+      exact zero_lt_one
+    -- アルキメデスの原理よりある 自然数 m で(m + 1)/(n + 1) > x が出てくる
+    have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x xpos
+    -- そのような条件を満たす m の集合を考える
+    let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x}
+    -- M が空でないことをまずいう
+    have MnotEmpty : M.Nonempty := by
+      let ⟨m, h1⟩ := archi
+      apply Exists.intro m
+      rw [mul_div,mul_one,Nat.cast_one] at h1
+      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]
+      exact h1
+    -- よって最小元がある
+    let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M MnotEmpty
+    --その最小元を使ってqを固定する。
+    let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ)
+    apply Exists.intro q
+    -- 以下は教科書では略されているがここからが大変
+    -- x - q が負であることをまず示す
+    have xsubqneg: x - q < 0 := by
+      rw [sub_neg]
+      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM
+      simp [q]
+      exact minM
+    -- 絶対値を外す
+    rw [abs_of_neg xsubqneg]
+    -- 括弧の前のマイナスを中に入れる
+    rw [neg_sub]
+    -- a ≤ b , b < c → a < c を使う。
+    apply lt_of_le_of_lt _ h
+    --しばし変形を行う x を右辺に持っていくために色々な式変形をしている
+    rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg]
+    rw [← sub_eq_add_neg,← sub_le_abc]
+    -- 通分を行う。
+    have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by
+      ring_nf
+      simp
+      rw [add_mul,one_mul]
+      simp
+      rw [mul_comm]
+    rw [h2]
+    -- x < m / (n + 1) と仮定して矛盾を示す。
+    by_contra h
+    push_neg at h
+    -- m ≥ 1 の場合と m < 1 の場合で場合わけを行う。 m - 1 が 自然数であるかどうかが重要
+    -- 自然数は減算に関して閉じていないので場合わけを行い自然数専用のライブラリを使わないと
+    -- 上手く証明することができない。扱いが難しかった。
+    by_cases hm :m ≥ 1
+      -- (m - 1)が M に含まれていることを示す。
+    . have msubinM: (m - 1) ∈ M := by
+        simp only [M, Set.mem_setOf]
+        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意
+        rw [Nat.sub_add_cancel hm]
+        -- h のcastも動かすことで 結論の式と一致する
+        norm_cast at h
+      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる
+      have : m ≤ m - 1 := mmin (m - 1) msubinM
+      -- m > m - 1を示す。
+      have : m > m - 1 := by
+        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。
+        apply Nat.sub_lt _ (by norm_num)
+          -- 0 < m を示す
+        . have : 0 < (1 : ℕ) := by norm_num
+          -- 0 < 1, 1 ≤ m より 0 < m が出てくる
+          apply lt_of_lt_of_le this hm
+      -- ここまでで矛盾発生。
+      linarith
+    -- m < 1 のとき
+    . push_neg at hm
+      -- m = 0 であることをまず示す
+      have : m = 0 := by
+        apply Nat.lt_one_iff.1 hm
+      -- m を代入
+      rw [this] at h
+      simp at h
+      -- x > 0 と x < 0　で矛盾
+       linarith 
+
+[answer]
+We will show that for every positive real number \( x \) and every positive real number \( \varepsilon \), there exists a rational number \( q \) such that the distance between \( x \) and \( q \) is less than \( \varepsilon \). First, since \( \varepsilon > 0 \), we choose a natural number \( n \) such that \(\frac{1}{n+1} < \varepsilon\). Noting that \( n+1 > 0 \) ensures that its reciprocal is positive, we consider the positive real number \(\frac{1}{n+1}\). By the Archimedean property, there exists a natural number \( m \) such that \(\frac{m+1}{n+1} > x\). Define the set \( M \) of all natural numbers \( m \) for which this inequality holds. This set is nonempty because such an \( m \) exists.
+
+Let \( m \) be the minimal element of \( M \), and set \( q = \frac{m+1}{n+1} \), a rational number. By construction, \( q > x \) since \( m \in M \). It remains to show that the distance \(|x - q|\) is less than \( \varepsilon \). Since \( q > x \), we have \(|x - q| = q - x\). To establish \( q - x < \varepsilon \), observe that \( \varepsilon > \frac{1}{n+1} \), so it suffices to prove \( q - x \leq \frac{1}{n+1} \).
+
+Expressing \( q - \frac{1}{n+1} = \frac{m}{n+1} \), the inequality reduces to \( \frac{m}{n+1} \leq x \). Suppose, for contradiction, that \( \frac{m}{n+1} > x \). We consider two cases:
+
+1. If \( m \geq 1 \), then \(\frac{m}{n+1} > x\) implies \(\frac{m-1+1}{n+1} > x\), so \( m - 1 \in M \). But this contradicts the minimality of \( m \).
+
+2. If \( m < 1 \), then since \( m \) is a natural number, \( m = 0 \). This would imply \( x < 0 \), contradicting the positivity of \( x \).
+
+Both cases lead to contradictions; therefore, \( \frac{m}{n+1} \leq x \), and so \( q - x \leq \frac{1}{n+1} < \varepsilon \). Hence, \(|x - q| < \varepsilon\), proving that every positive real number can be approximated arbitrarily closely by rational numbers.
+[applied Tactic]
+have : -x > 0 := by simp; exact  h 
+
+[answer]
+We will show that if \( x \) is negative, then its negation \(-x\) is positive. Starting from the assumption \( x < 0 \), we observe that this is equivalent to the statement \(-x > 0\) by the properties of inequalities. Hence, by directly applying the assumption \( x < 0 \), we conclude that \(-x > 0\), establishing the desired result.
+[applied Tactic]
+. have : -x > 0 := by simp; exact h
+    let ⟨q,h1⟩ := xposh (-x) this ε εpos
+    apply Exists.intro (-q)
+    simp
+    rw [sub_assoc,abs_neg] at h1
+    exact  h1 
+
+[answer]
+We will show that if \( x \) is negative, then for any positive \(\varepsilon\), there exists a rational number within \(\varepsilon\) of \( x \). Since \( x < 0 \), it follows from properties of inequalities that \(-x > 0\). Using the given assumption that for any positive number and any positive \(\varepsilon\) there exists a rational number within \(\varepsilon\) of that number, we apply this to \(-x\) to find a rational number \( q \) such that \(|-x - q| < \varepsilon\). Considering the rational number \(-q\), we aim to show \(|x - (-q)| < \varepsilon\), which simplifies to \(|x + q| < \varepsilon\). Since \(|-x - q| = |x + q|\), the inequality \(|x + q| < \varepsilon\) holds by our choice of \( q \). Hence, \(-q\) is a rational number within \(\varepsilon\) of \( x \), completing the proof.
+[applied Tactic]
+. rw [h]
+    apply Exists.intro 0
+    rw [zero_sub,abs_neg]
+     norm_cast 
+
+[answer]
+We will show that for \( x = 0 \), there exists a rational number \( q \) such that the distance between \( x \) and \( q \) is less than any given positive number \( \varepsilon \). By substituting \( x \) with zero, the problem reduces to finding a rational \( q \) satisfying \( |0 - q| < \varepsilon \). Choosing \( q = 0 \) as a witness, it suffices to verify that \( |0 - 0| < \varepsilon \). Simplifying, this expression becomes \( |-0| \), which equals \( |0| \) due to properties of absolute value. Since \( |0| = 0 \), and \( 0 < \varepsilon \) for any positive \( \varepsilon \), the inequality holds, completing the proof.
+[applied Tactic]
+. exact xposh x h ε  εpos 
+
+[answer]
+We will show that for any positive real number \( x \) and any positive tolerance \( \varepsilon \), there exists a rational number \( q \) such that the distance between \( x \) and \( q \) is less than \( \varepsilon \). To conclude the proof, we directly apply this fundamental fact, which guarantees the existence of such a rational \( q \) given any positive \( x \) and \( \varepsilon \). This establishes the desired approximation and completes the argument.

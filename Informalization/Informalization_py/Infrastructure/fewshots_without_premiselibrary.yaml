@@ -1,0 +1,825 @@
+{
+    "intro" : [
+        {
+            # LeanExportInfos/TargetFile/Basic.leanより
+            "goalsBefore": "a b :  ℕ\n⊢ Even a ∧ Even b → Even (a + b)",
+            "goalsAfter":
+            "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ Even (a + b)",
+            "appliedTactic": "intro ⟨⟨r1, h1⟩ , ⟨r2, h2⟩ ⟩ ",
+            "additionalInfo" : [],
+            "output" : "Assume that there exist natural numbers \\( r_1 \\) and \\( r_2 \\) such that \\( a = r_1 + r_1 \\) and \\( b = r_2 + r_2 \\). From now on, we will show that the sum \\( a + b \\) is even."
+        },
+        {
+            # LeanExportInfos/TargetFile/three.leanより
+            "goalsBefore": "a b :  ℝ\n⊢ a > 2 ∧ b > 3 → a * b + 6 > 3 * a + 2 * b",
+            "goalsAfter":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\n⊢ a * b + 6 > 3 * a + 2 * b",
+            "appliedTactic": "intro ⟨alt2, blt3 ⟩ ",
+            "additionalInfo" : [],
+            "output" : "Assume that \\( a > 2 \\) and \\( b > 3 \\). From now on, we will show that \\( a \\cdot b + 6 > 3 \\cdot a + 2 \\cdot b \\)."
+        }
+    ],
+    "apply" : [
+        {
+            # LeanExportInfos/TargetFile/Basic.leanより
+            "goalsBefore":
+            "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ Even (a + b)",
+            "goalsAfter":
+            "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ a + b = r1 + r2 + (r1 + r2)",
+            "appliedTactic": "apply Exists.intro (r1 + r2 ) ",
+            "additionalInfo" : [],
+            "output" : "From the introduction rule for existential quantifiers, in order to establish that the sum of \\( a \\) and \\( b \\) is even, it suffices to prove that \\( a + b \\) equals \\( r_1 + r_2 + (r_1 + r_2) \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/eight.lean(元ファイル : )より
+            "goalsBefore": "case refine_1\nn :  ℕ\n⊢ 0 < π / 2 ^ (n + 2)",
+            "goalsAfter": "case refine_1\nn :  ℕ\n⊢ 0 < 2 ^ (n + 2)",
+            "appliedTactic": "apply div_pos  pi_pos ",
+            "additionalInfo" : [
+                "div_pos (ha : 0 < a) (hb : 0 < b) : 0 < a / b",
+                "pi_pos : 0 < π"
+            ],
+            "output" : "From the theorems that \\( 0 < \\pi \\) and the positivity of the division operation, in order to establish that \\( 0 < \\frac{\\pi}{2^{n + 2}} \\), it suffices to prove that \\( 0 < 2^{n + 2} \\)."
+        }
+    ],
+
+    "rw_with_remain_goals": [
+        {
+            # LeanExportInfos/TargetFile/three.lean
+            "goalsBefore":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\n⊢ a * b + 6 > 3 * a + 2 * b",
+            "goalsAfter":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\n⊢ 0 < a * b + 6 - (3 * a + 2 * b)",
+            "appliedTactic": "rw [gt_iff_lt, ← sub_pos ] ",
+            "additionalInfo" : [
+                "one_lt_div' : 1 < a / b ↔ b < a",
+                "gt_iff_lt [LT α] {x y : α} : x > y ↔ y < x"
+            ],
+            "output" : "By using the theorem that states an expression \\( x > y \\) is equivalent to \\( y < x \\) and transforming a greater-than comparison into a form involving subtraction, the goal of proving \\( a \\cdot b + 6 > 3 \\cdot a + 2 \\cdot b \\) becomes showing that \\( 0 < a \\cdot b + 6 - (3 \\cdot a + 2 \\cdot b) \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/seven.lean(元ファイル : )より
+            "goalsBefore":
+            "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  b ≠ 0\nsq :  √2 = -↑a / ↑b\nsq2irr :  ∀ (a b : ℤ), √2 ≠ ↑a / ↑b\nthis :  √2 ≠ ↑(-a) / ↑b\n⊢ False",
+            "goalsAfter":
+            "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  b ≠ 0\nsq :  √2 = -↑a / ↑b\nsq2irr :  ∀ (a b : ℤ), √2 ≠ ↑a / ↑b\nthis :  -↑a / ↑b ≠ ↑(-a) / ↑b\n⊢ False",
+            "appliedTactic": "rw [sq] at  this ",
+            "additionalInfo" : [],
+            "output" : "By using the assumption that the square root of 2 equals \\(- \\frac{a}{b}\\), the statement that the square root of 2 is not equal to \\(\\frac{-a}{b}\\) becomes the statement that \\(- \\frac{a}{b}\\) is not equal to \\(\\frac{-a}{b}\\)."
+        }
+    ],
+    "rw_with_no_goals": [
+        {
+            # LeanExportInfos/TargetFile/Basic.leanより 
+            "goalsBefore":
+            "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ a + b = r1 + r2 + (r1 + r2)",
+            "goalsAfter": "no goals",
+            "appliedTactic":
+            "rw [Nat.add_assoc, Nat.add_comm r2, ← Nat.add_assoc, ← Nat.add_assoc, h1, h2, ← Nat.add_assoc ] ",
+            "additionalInfo" : [
+                "add_assoc : ∀ (n m k : Nat), (n + m) + k = n + (m + k)",
+                "add_comm : ∀ (n m : Nat), n + m = m + n"
+            ],
+            "output" : "By using the assumptions that \\( a = r1 + r1 \\) and \\( b = r2 + r2 \\), and applying the associativity and commutativity of addition for natural numbers, we complete the proof."
+        }
+    ],
+
+    "let": [
+        {
+            # LeanExportInfos/TargetFile/two.leanより 
+            "goalsBefore": "a b :  ℤ\nh1 :  -4 ∣ a\nh2 :  -4 ∣ b\n⊢ 8 ∣ a ^ 2 + b ^ 2",
+            "goalsAfter":
+            "a b :  ℤ\nh1 :  -4 ∣ a\nh2 :  -4 ∣ b\nk :  ℤ\nh1' :  a = -4 * k\n⊢ 8 ∣ a ^ 2 + b ^ 2",
+            "appliedTactic": "let ⟨k, h1'⟩ :=  h1 ",
+            "additionalInfo" : [],
+            "output" : "From the assumption that -4 divides \\(a\\), let \\(k\\) be such that \\(a = -4 \\times k\\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/four.lean(元ファイル : )より 
+            "goalsBefore": "n :  ℕ\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+            "goalsAfter":
+            "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+            "appliedTactic": "let p := minFac (n ! + 1 ) ",
+            "additionalInfo" : [
+                "def minFac (n : ℕ) : ℕ :=   if 2 ∣ n then 2 else minFacAux n 3",
+            ],
+            "output" : "Let \\( p \\) be the smallest prime factor of \\( n! + 1 \\)." 
+        }
+    ],
+
+    "have_with_by": [
+        {
+            # LeanExportInfos/TargetFile/one.leanより 
+            "goalsBefore": "n a :  ℕ\nh :  n = 8 * a\n⊢ ∃ b, n = 4 * b",
+            "goalsAfter": "n a :  ℕ\nh :  n = 8 * a\nthis :  n = 4 * (2 * a)\n⊢ ∃ b, n = 4 * b",
+            "appliedTactic": "have : n = 4 * (2 * a)",
+            "additionalInfo" : [],
+            "output" : "Show that \\( n = 4 \\times (2 \\times a) \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/three.leanより 
+            "goalsBefore":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\n⊢ 0 < a * b + 6 - (3 * a + 2 * b)",
+            "goalsAfter":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ 0 < a * b + 6 - (3 * a + 2 * b)",
+            "appliedTactic":
+            "have h1 : (a - 2) * (b - 3) = (a*b + 6) - (3*a + 2*b)",
+            "additionalInfo" : [],
+            "output" : "Show that \\( (a - 2) \\times (b - 3) = (a \\times b + 6) - (3 \\times a + 2 \\times b) \\)."
+        }
+    ],
+    "have_without_by": [
+        {
+            # LeanExportInfos/TargetFile/four.lean(元ファイル : )より 
+            "goalsBefore":
+            "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+            "goalsAfter":
+            "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+            "appliedTactic":
+            "have f1 : n ! + 1 ≠ 1 := Nat.ne_of_gt <| succ_lt_succ <| factorial_pos  _ ",
+            "additionalInfo" : [
+                "factorial_pos : ∀ n, 0 < n !",
+                "succ_lt_succ {n m : Nat} : n < m → succ n < succ m",
+                "ne_of_gt {a b : Nat} (h : b < a) : a ≠ b"
+            ],
+            "output" : "Show that the factorial of \\( n \\) plus 1 is not equal to 1. This can be proved by noting that the factorial of \\( n \\) is always positive, meaning \\( n! \\) is greater than 0. Consequently, \\( n! + 1 \\) is greater than 1, leading to the conclusion that \\( n! + 1 \\neq 1 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/Test.lean(元ファイル : )より
+            "goalsBefore":
+            "case intro.intro.intro.intro\nα :  Type u_1\ninst✝² :  CancelCommMonoidWithZero α\ninst✝¹ :  NormalizationMonoid α\ninst✝ :  GCDMonoid α\nk m n m' n' :  α\nhm' :  m' ∣ m\nhn' :  n' ∣ n\nh :  gcd k (m * n) = m' * n'\n⊢ m' * n' ∣ gcd k m * gcd k n",
+            "goalsAfter":
+            "case intro.intro.intro.intro\nα :  Type u_1\ninst✝² :  CancelCommMonoidWithZero α\ninst✝¹ :  NormalizationMonoid α\ninst✝ :  GCDMonoid α\nk m n m' n' :  α\nhm' :  m' ∣ m\nhn' :  n' ∣ n\nh :  gcd k (m * n) = m' * n'\nhm'n' :  m' * n' ∣ k\n⊢ m' * n' ∣ gcd k m * gcd k n",
+            "appliedTactic": "have hm'n' : m' * n' ∣ k := h ▸ gcd_dvd_left _  _ ",
+            "additionalInfo" : [],
+            "output" : "Show that the product of \\(m'\\) and \\(n'\\) divides \\(k\\). This can be proved by using the fact that the greatest common divisor (gcd) of \\(k\\) and the product \\(m \\times n\\) is equal to \\(m' \\times n'\\). This allows us to conclude that \\(m' \\times n'\\) must divide \\(k\\), as it is essentially the definition given by substituting into the gcd expression."
+        }
+    ],
+
+    "exact": [
+        {
+            # LeanExportInfos/TargetFile/one.leanより 
+            "goalsBefore": "n a :  ℕ\nh :  n = 8 * a\n⊢ n = 8 * a",
+            "goalsAfter": "no goals",
+            "appliedTactic": "exact  h ",
+            "additionalInfo" : [],
+            "output" : "The proof is completed from the assumption that \\( n = 8 \\cdot a \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/three.leanより 
+            "goalsBefore":
+            "case a.h\na b :  ℝ\nalt2 :  0 < a - 2\nblt3 :  0 < b - 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ 0 < a - 2 ∧ 0 < b - 3",
+            "goalsAfter": "no goals",
+            "appliedTactic": "exact ⟨alt2, blt3 ⟩ ",
+            "additionalInfo" : [],
+            "output" : "The proof is completed from the assumptions that \\(a - 2\\) is greater than zero and \\(b - 3\\) is greater than zero."
+        }
+    ],
+
+    "ring": [
+        {
+            # LeanExportInfos/TargetFile/two.leanより 
+            "goalsBefore":
+            "a b :  ℤ\nh1 :  -4 ∣ a\nh2 :  -4 ∣ b\nk :  ℤ\nh1' :  a = -4 * k\nl :  ℤ\nh2' :  b = -4 * l\n⊢ 4 * k * (4 * k) + 4 * l * (4 * l) = 8 * (2 * k ^ 2 + 2 * l ^ 2)",
+            "goalsAfter": "no goals",
+            "appliedTactic": " ring ",
+            "additionalInfo" : [],
+            "output" : "By a simple calculation, the equality is immediately verified."
+        },
+        {
+            "goalsBefore": "a b :  ℕ\nh1 :  ∃ x, a = 2 * x + 1\nh2 :  ∃ y, b = 2 * y + 1\nx :  ℕ\nh1' :  a = 2 * x + 1\ny :  ℕ\nh2' :  b = 2 * y + 1\n⊢∃ z, 2 * x + 1 + (2 * y + 1) = 2 * z",
+            "goalsAfter": "a b :  ℕ\nh1 :  ∃ x, a = 2 * x + 1\nh2 :  ∃ y, b = 2 * y + 1\nx :  ℕ\nh1' :  a = 2 * x + 1\ny :  ℕ\nh2' :  b = 2 * y + 1\n⊢∃ z, 2 + x * 2 + y * 2 = z * 2",
+            "appliedTactic": " ring ",
+            "additionalInfo" : [],
+            "output" : "By a simple calculation, the goal of proving the existence of an integer \\( z \\) such that \\( 2 \\times x + 1 + (2 \\times y + 1) = 2 \\times z \\) becomes the task of proving the existence of an integer \\( z \\) where \\( 2 + x \\times 2 + y \\times 2 = z \\times 2 \\)."
+        }
+    ],
+
+    "left": [
+        {
+            # LeanExportInfos/TargetFile/three.leanより 
+            "goalsBefore":
+            "a b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ 0 < a - 2 ∧ 0 < b - 3 ∨ a - 2 < 0 ∧ b - 3 < 0",
+            "goalsAfter":
+            "case h\na b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ 0 < a - 2 ∧ 0 < b - 3",
+            "appliedTactic": " left ",
+            "additionalInfo" : [],
+            "output" : "Show the case where \\( 0 < a - 2 \\) and \\( 0 < b - 3 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case intro.intro.inr\nm n :  ℤ\nh :  Odd (m + n)\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1) ∨ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "goalsAfter":
+            "case intro.intro.inr.h\nm n :  ℤ\nh :  Odd (m + n)\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1)",
+            "appliedTactic": " left ",
+            "additionalInfo" : [],
+            "output" : Show the case where \\(4\\) divides \\(2m + 1 + (2n + 1)\\)."
+        }
+    ],
+
+    "obtain": [
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore": "a b :  ℤ\nha :  Odd a\nhb :  Odd b\n⊢ 4 ∣ a + b ∨ 4 ∣ a - b",
+            "goalsAfter":
+            "case intro\nb :  ℤ\nhb :  Odd b\nm :  ℤ\n⊢ 4 ∣ 2 * m + 1 + b ∨ 4 ∣ 2 * m + 1 - b",
+            "appliedTactic": "obtain ⟨m, rfl⟩ :=  ha ",
+            "additionalInfo" : [],
+            "output" : "From the assumption that \\( a \\) is odd, let \\( m \\) be an integer such that \\( a = 2m + 1 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case intro.intro.inl.h\nm n :  ℤ\nh :  Even (m - n)\n⊢ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "goalsAfter":
+            "case intro.intro.inl.h.intro\nm n k :  ℤ\nhk :  m - n = k + k\n⊢ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "appliedTactic": "obtain ⟨k, hk⟩ :=  h ",
+            "additionalInfo" : [],
+            "output" : "From the assumption that \\( m - n \\) is an even number, let \\( k \\) be an integer such that \\( m - n = 2k \\)."
+        },
+        
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case intro.intro\nm n :  ℤ\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1) ∨ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "goalsAfter":
+            "case intro.intro.inl\nm n :  ℤ\nh :  Even (m + n)\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1) ∨ 4 ∣ 2 * m + 1 - (2 * n + 1)\n\ncase intro.intro.inr\nm n :  ℤ\nh :  Odd (m + n)\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1) ∨ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "appliedTactic": "obtain h | h := Int.even_or_odd (m + n ) ",
+            "additionalInfo" : [
+                "even_or_odd (n : ℤ) : Even n ∨ Odd n"
+            ],
+            "output" : "Since we can prove that for any integer \\( m + n \\), it is either even or odd by using the theorem that states each integer is either even or odd, we proceed by case analysis on whether \\( m + n \\) is even or odd."
+        }
+    ],
+
+    "right": [
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case intro.intro.inl\nm n :  ℤ\nh :  Even (m + n)\n⊢ 4 ∣ 2 * m + 1 + (2 * n + 1) ∨ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "goalsAfter":
+            "case intro.intro.inl.h\nm n :  ℤ\nh :  Even (m + n)\n⊢ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "appliedTactic": " right ",
+            "additionalInfo" : [],
+            "output" : "Show the case where \\(4\\) divides \\(2 \\times m + 1 - (2 \\times n + 1)\\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/three.leanより 
+            "goalsBefore":
+            "case a\na b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ a - 2 < 0 ∧ b - 3 < 0 ∨ 0 < a - 2 ∧ 0 < b - 3",
+            "goalsAfter":
+            "case a.h\na b :  ℝ\nalt2 :  a > 2\nblt3 :  b > 3\nh1 :  (a - 2) * (b - 3) = a * b + 6 - (3 * a + 2 * b)\n⊢ 0 < a - 2 ∧ 0 < b - 3",
+            "appliedTactic": " right ",
+            "additionalInfo" : [],
+            "output" : "Show the case where both \\(a - 2 > 0\\) and \\(b - 3 > 0\\)."
+        }
+    ],
+
+    "convert": [
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case intro.intro.inl.h.intro\nm n k :  ℤ\nhk :  m - n = k + k\n⊢ 4 ∣ 2 * m + 1 - (2 * n + 1)",
+            "goalsAfter":
+            "case h.e'_4\nm n k :  ℤ\nhk :  m - n = k + k\n⊢ 2 * m + 1 - (2 * n + 1) = 4 * k",
+            "appliedTactic": "convert dvd_mul_right 4 k using  1 ",
+            "additionalInfo" : [
+                "dvd_mul_right (a b : α) : a ∣ a * b",
+            ],
+            "output" : "Since \\( a \\cdot b \\) is divisible by \\( a \\), it suffices to show that \\( 2 \\cdot m + 1 - (2 \\cdot n + 1) \\) is a multiple of 4."
+        },
+        {
+            # .lake/packages/mathlib/Mathlib/Algebra/BigOperators/Group/List.leanより
+            "goalsBefore":
+            "ι :  Type u_1\nα :  Type u_2\nβ :  Type u_3\nM :  Type u_4\nN :  Type u_5\nP :  Type u_6\nG :  Type u_7\ninst✝ :  LeftCancelMonoid M\nL L' :  List M\nh :  L.length = L'.length\nh' :  ∀ i ≤ L.length, (take i L).prod = (take i L').prod\ni :  ℕ\nh₁ :  i < L.length\nh₂ :  i < L'.length\nthis :  (take i L').prod * L[i] = (take i L').prod * L'[i]\n⊢ L.get ⟨i, h₁⟩ = L'.get ⟨i, h₂⟩",
+            "goalsAfter": "no goals",
+            "appliedTactic": "convert mul_left_cancel  this ",
+            "additionalInfo" : [
+                "mul_left_cancel : a * b = a * c → b = c"
+            ],
+            "output" : "Since \\( a \\cdot b = a \\cdot c \\) implies \\( b = c \\) and the equality of the product of the first \\( i+1 \\) elements of \\( L \\) and the product of the \\( i+1 \\)-th element of \\( L \\) with those of \\( L' \\), the proof is completed."
+        }
+    ],
+
+    "rfl": [
+        {
+            # LeanExportInfos/TargetFile/five.leanより 
+            "goalsBefore":
+            "case h.e'_4\nm n k :  ℤ\nhk :  m - n = k + k\n⊢ 2 * 2 * k = 4 * k",
+            "goalsAfter": "no goals",
+            "appliedTactic": " rfl ",
+            "additionalInfo" : [],
+            "output" : "Since the values on both sides of the equation are equal, the proof is completed."
+        }
+    ],
+    "cases": [
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より 
+            "goalsBefore":
+            "E :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr :  r ≠ 0\n⊢ interior (closedBall x r) = ball x r",
+            "goalsAfter":
+            "case inl\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  r < 0\n⊢ interior (closedBall x r) = ball x r\n\ncase inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  0 < r\n⊢ interior (closedBall x r) = ball x r",
+            "appliedTactic": "cases' hr.lt_or_lt with hr  hr ",
+            "additionalInfo" : [
+                "def interior (s : Set X) : Set X :=\n  ⋃₀ { t | IsOpen t ∧ t ⊆ s }",
+                "def closedBall (x : α) (ε : ℝ) :=\n  { y | dist y x ≤ ε }",
+                "def ball (x : α) (ε : ℝ) : Set α :=\n  { y | dist y x < ε }",
+                "Ne.lt_or_lt [LinearOrder α] {x y : α} (h : x ≠ y) : x < y ∨ y < x"
+            ],
+            "output" : "To prove that the interior of the closed ball centered at \\( x \\) with radius \\( r \\) is equal to the open ball centered at \\( x \\) with radius \\( r \\), we proceed by case analysis on whether \\( r \\) is less than zero or greater than zero."
+        },
+        {
+            #  .lake/packages/mathlib/Mathlib/Data/Fin/Basic.lean より
+            "goalsBefore":  "n✝ m n :  ℕ\na b :  Fin (n + 1)\nh :  a < b\n⊢ ∃ k < b, k + 1 ≤ b ∧ b = a + k + 1",
+            "goalsAfter":
+            "case zero\nn m :  ℕ\na b :  Fin (0 + 1)\nh :  a < b\n⊢ ∃ k < b, k + 1 ≤ b ∧ b = a + k + 1\n\ncase succ\nn m n✝ :  ℕ\na b :  Fin (n✝ + 1 + 1)\nh :  a < b\n⊢ ∃ k < b, k + 1 ≤ b ∧ b = a + k + 1",
+            "appliedTactic": "cases  n ",
+            "additionalInfo" : [],
+            "output" : "Prove the existence of \\( k \\) such that \\( k < b \\), \\( k + 1 \\leq b \\), and \\( b = a + k + 1 \\) with mathematical induction on \\( n \\)."
+        }
+    ],
+    "rcases" : [
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より 
+            "goalsBefore":
+            "a b :  ℤ\nh1 :  -4 ∣ a\nh2 :  -4 ∣ b\n⊢ 8 ∣ a ^ 2 + b ^ 2",
+            "goalsAfter":
+            "case intro\na b :  ℤ\nh2 :  -4 ∣ b\nk :  ℤ\nh1' :  a = -4 * k\n⊢ 8 ∣ a ^ 2 + b ^ 2",
+            "appliedTactic":
+            "rcases h1 with ⟨k, h1' ⟩ ",
+            "additionalInfo" : [
+            ],
+            "output" : "From the assumption that -4 divides \\(a\\), let \\(k\\) be such that \\(a = -4 \\times k\\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より 
+            "goalsBefore":
+            "case inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  0 < r\ny :  E\nhy :  y ∈ interior (closedBall x r)\n⊢ y ∈ ball x r",
+            "goalsAfter":
+            "case inr.inl\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝¹ :  r ≠ 0\nhr✝ :  0 < r\ny :  E\nhy :  y ∈ interior (closedBall x r)\nhr :  dist y x < r\n⊢ y ∈ ball x r\n\ncase inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\n⊢ y ∈ ball x (dist y x)",
+            "appliedTactic":
+            "rcases (mem_closedBall.1 <| interior_subset hy).lt_or_eq with (hr | rfl ) ",
+            "additionalInfo" : [
+                "def ball (x : α) (ε : ℝ) : Set α :=\n  { y | dist y x < ε }",
+                "@[match_pattern] def rfl {α : Sort u} {a : α} : Eq a a := Eq.refl a",
+                "interior_subset : interior s ⊆ s",
+                "mem_closedBall : y ∈ closedBall x ε ↔ dist y x ≤ ε"
+            ],
+            "output" : "To prove that a point \\( y \\) lies within the ball centered at \\( x \\) with radius \\( r \\), we proceed by case analysis on whether the distance between \\( y \\) and \\( x \\) is less than \\( r \\) or exactly equal to \\( r \\)."
+        }
+    ],
+    "refine": [
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より 
+            "goalsBefore":
+            "case inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  0 < r\n⊢ interior (closedBall x r) = ball x r",
+            "goalsAfter":
+            "case inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  0 < r\n⊢ interior (closedBall x r) ⊆ ball x r",
+            "appliedTactic":
+            "refine Subset.antisymm ?_  ball_subset_interior_closedBall ",
+            "additionalInfo" : [
+                "ball_subset_interior_closedBall : ball x ε ⊆ interior (closedBall x ε)",
+                "Subset.antisymm {a b : Set α} (h₁ : a ⊆ b) (h₂ : b ⊆ a) : a = b"
+            ],
+            "output" : "To show that the interior of the closed ball centered at \\( x \\) with radius \\( r \\) is equal to the open ball centered at \\( x \\) with radius \\( r \\), it is sufficient to show that each is a subset of the other. Since it has already been demonstrated that the open ball is contained within the interior of the closed ball, it remains to show that the interior of the closed ball is contained within the open ball."
+        },
+        {
+            # LeanExportInfos/TargetFile/eight.lean (元ファイル : )より 
+            "goalsBefore": "case refine_3.bc.hab\nn :  ℕ\n⊢ π / 2 ^ (n + 2) ≤ 1 / 2 ^ n",
+            "goalsAfter":
+            "case refine_3.bc.hab.refine_1\nn :  ℕ\n⊢ 0 < 2 ^ (n + 2)\n\ncase refine_3.bc.hab.refine_2\nn :  ℕ\n⊢ 4 / 2 ^ (n + 2) ≤ 1 / 2 ^ n",
+            "appliedTactic":
+            "refine le_trans ((div_le_div_right ?_).mpr pi_le_four) ? _ ",
+            "additionalInfo" : [
+                "le_trans : ∀ {a b c : α}, a ≤ b → b ≤ c → a ≤ c",
+                "pi_le_four : π ≤ 4",
+                "div_le_div_right (hc : 0 < c) : a / c ≤ b / c ↔ a ≤ b",
+            ],
+            "output":
+            "To show that \\( \\frac{\\pi}{2^{n + 2}} \\leq \\frac{1}{2^n} \\), it is sufficient to prove two inequalities: \\( \\frac{\\pi}{2^{n + 2}} \\leq \\frac{4}{2^{n + 2}} \\) and \\( \\frac{4}{2^{n + 2}} \\leq \\frac{1}{2^n} \\). That is, by noting that \\( \\pi \\) is less than 4, it remains to show that \\( 2^{n + 2} \\) is positive and that \\( \\frac{4}{2^{n + 2}} \\leq \\frac{1}{2^n} \\)."
+        }
+    ],
+
+    "set": [
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より 
+            "goalsBefore":
+            "case inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\n⊢ y ∈ ball x (dist y x)",
+            "goalsAfter":
+            "case inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\nf : ℝ → E :=  fun c => c • (y - x) + x\n⊢ y ∈ ball x (dist y x)",
+            "appliedTactic": "set f : ℝ → E := fun c : ℝ => c • (y - x) +  x ",
+            "additionalInfo" : [],
+            "output":
+            "Let \\( f \\) be defined as a function from real numbers to \\( E \\), given by the formula \\( f(c) = c \\cdot (y - x) + x \\)."
+        },
+        {
+            # .lake/packages/mathlib/Mathlib/Data/List/Cycle.leanより 
+            "goalsBefore":
+            "case h.e'_3.e_n\nα :  Type u_1\ninst✝ :  DecidableEq α\nl✝ :  List α\nx✝ y :  α\nl :  List α\nhl : \n  ∀ (n : ℕ) (x : α),\n    (x :: l).Nodup →\n      ∀ (hn : n < (x :: l).length),\n        (x :: l).prev ((x :: l).nthLe n hn) ⋯ = (x :: l).nthLe ((n + ((x :: l).length - 1)) % (x :: l).length) ⋯\nx :  α\nh :  (x :: y :: l).Nodup\nn :  ℕ\nthis :  ∀ (k : ℕ) (hk : k < (y :: l).length), (y :: l).nthLe k hk = (x :: y :: l).nthLe (k + 1) ⋯\nhn :  n < l.length\n⊢ (n + 1 + 1 + (l.length + 1)) % (l.length + 1 + 1) = (n.succ + l.length) % (l.length + 1) + 1",
+            "goalsAfter":
+            "case h.e'_3.e_n\nα :  Type u_1\ninst✝ :  DecidableEq α\nl✝ :  List α\nx✝ y :  α\nl :  List α\nhl : \n  ∀ (n : ℕ) (x : α),\n    (x :: l).Nodup →\n      ∀ (hn : n < (x :: l).length),\n        (x :: l).prev ((x :: l).nthLe n hn) ⋯ = (x :: l).nthLe ((n + ((x :: l).length - 1)) % (x :: l).length) ⋯\nx :  α\nh :  (x :: y :: l).Nodup\nn :  ℕ\nthis :  ∀ (k : ℕ) (hk : k < (y :: l).length), (y :: l).nthLe k hk = (x :: y :: l).nthLe (k + 1) ⋯\nk : ℕ :=  l.length\nhn :  n < k\n⊢ (n + 1 + 1 + (k + 1)) % (k + 1 + 1) = (n.succ + k) % (k + 1) + 1",
+            "appliedTactic": "set k :=  l.length ",
+            "additionalInfo" : [],
+            "output":
+            "Let \\( k \\) be defined as the length of the list \\( l \\)."
+        }
+    ],
+
+    "suffices_by": [
+        {
+            # LeanExportInfos/TargetFile/six.lean (元ファイル : )より
+            "goalsBefore":
+            "case inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\nf : ℝ → E :=  fun c => c • (y - x) + x\n⊢ y ∈ ball x (dist y x)",
+            "goalsAfter":
+            "case inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\nf : ℝ → E :=  fun c => c • (y - x) + x\n⊢ f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1",
+            "appliedTactic":
+            "suffices f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1 ",
+            "additionalInfo" : [
+                "def closedBall (x : α) (ε : ℝ) :=\n  { y | dist y x ≤ ε }",
+                "def ball (x : α) (ε : ℝ) : Set α :=\n  { y | dist y x < ε }",
+                "dist : α → α → ℝ",
+                "def Icc (a b : α) :=\n  { x | a ≤ x ∧ x ≤ b }"
+
+            ],
+            "output":
+            "Assume that the set of pre-images of the closed ball centered at \\( x \\) with radius equal to the distance between \\( y \\) and \\( x \\), under the function \\( f \\), is a subset of the closed interval from \\(-1\\) to \\(1\\). From now on, we will show that \\( y \\) belongs to the open ball centered at \\( x \\) with radius equal to the distance between \\( y \\) and \\( x \\)."
+        },
+        {
+            #.lake/package/mathlib/Archive/Imo/Imo1988Q6.lean
+            "goalsBefore":
+            "case intro.H_zero\nk :  ℕ\n⊢ ∀ {x : ℕ}, x * x + 0 * 0 = (x * 0 + 1) * k → ∃ d, d ^ 2 = k",
+            "goalsAfter":
+            "case intro.H_zero\nk :  ℕ\n⊢ ∀ (a : ℕ), a * a = k → ∃ d, d * d = k",
+            "appliedTactic": "suffices ∀ a, a * a = k → ∃ d, d * d = k ",
+            "additionalInfo" : [],
+            "output":
+            "Assume that for any natural number \\( a \\), if \\( a \\times a = k \\), then there exists a natural number \\( d \\) such that \\( d \\times d = k \\). From now on, we will show that for any natural number \\( x \\), if \\( x \\times x + 0 \\times 0 = (x \\times 0 + 1) \\times k \\), then there exists a natural number \\( d \\) such that \\( d^2 = k \\)."
+        }
+    ],
+
+    "suffices_from": [
+        {
+            # .lake/packages/mathlib/Mathlib/Order/FixedPoints.lean より
+            "goalsBefore":
+            "α :  Type u\nβ :  Type v\nγ :  Type w\ninst✝ :  CompleteLattice α\nf :  α →o α\np :  α → Prop\nstep :  ∀ (a : α), p a → a ≤ lfp f → p (f a)\ns : Set α :=  {a | a ≤ lfp f ∧ p a}\nhSup :  p (sSup s)\n⊢ p (lfp f)",
+            "goalsAfter":
+            "α :  Type u\nβ :  Type v\nγ :  Type w\ninst✝ :  CompleteLattice α\nf :  α →o α\np :  α → Prop\nstep :  ∀ (a : α), p a → a ≤ lfp f → p (f a)\ns : Set α :=  {a | a ≤ lfp f ∧ p a}\nhSup :  p (sSup s)\n⊢ sSup s = lfp f",
+            "appliedTactic": "suffices sSup s = lfp f from this ▸  hSup ",
+            "additionalInfo" : [
+                "def lfp : (α →o α) →o α where   toFun f := sInf { a | f a ≤ a }   monotone' _ _ hle := sInf_le_sInf fun a ha => (hle a).trans ha",
+                "sSup : Set α → α"
+            ],
+            "output":
+            "Assuming that the supremum of \\( s \\) equals the least fixed point of \\( f \\), \\( p \\) holds for the least fixed point of \\( f \\) can be shown from the fact that \\( p \\) holds for the supremum of \\( s \\) by assumption. Therefore, we will now show that the supremum of \\( s \\) equals the least fixed point of \\( f \\)."
+        },
+        {
+            #.lake/packages/mathlib/Archive/Imo/Imo1972Q5.lean より
+            "goalsBefore":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\ny :  ℝ\nH :  1 < ‖g y‖\nx :  ℝ\nhx :  f x ≠ 0\nk : ℝ :=  ⨆ x, ‖f x‖\nh :  ∀ (x : ℝ), ‖f x‖ ≤ k\nhgy :  0 < ‖g y‖\nk_pos :  0 < k\nthis :  k / ‖g y‖ < k\n⊢ k ≤ k / ‖g y‖",
+            "goalsAfter":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\ny :  ℝ\nH :  1 < ‖g y‖\nx :  ℝ\nhx :  f x ≠ 0\nk : ℝ :=  ⨆ x, ‖f x‖\nh :  ∀ (x : ℝ), ‖f x‖ ≤ k\nhgy :  0 < ‖g y‖\nk_pos :  0 < k\nthis :  k / ‖g y‖ < k\n⊢ ∀ (x : ℝ), ‖f x‖ ≤ k / ‖g y‖",
+            "appliedTactic": "suffices ∀ x, ‖f x‖ ≤ k / ‖g y‖ from ciSup_le  this ",
+            "additionalInfo" : [
+                "ciSup_le [Nonempty ι] {f : ι → α} {c : α} (H : ∀ x, f x ≤ c) : iSup f ≤ c",
+            ],
+            "output":
+            "Assuming that \\( ||f(x)|| \\leq \\frac{k}{||g(y)||} \\) holds for any real number \\( x \\), \\( k \\leq \frac{k}{||g(y)||}\\) can be shown from the fact that if \\( f(x) \\leq c \\) for all \\( x \\), then the supremum of \\( f \\) is also bounded by \\( c \\), along with the assumption that \\( ||f(x)|| \\leq k \\) for any real \\( x \\). Therefore, we will now show that \\( ||f(x)|| \\leq \\frac{k}{||g(y)||} \\) holds for all real numbers \\( x \\)."
+        }
+    ],
+
+    "simp_finish": [
+        {
+            # LeanExportInfos/TargetFile/seven.lean より
+            "goalsBefore":
+            "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  b ≠ 0\nsq :  √2 = -↑a / ↑b\nsq2irr :  ∀ (a b : ℤ), √2 ≠ ↑a / ↑b\nthis :  -↑a / ↑b ≠ ↑(-a) / ↑b\n⊢ False",
+            "goalsAfter": "no goals",
+            "appliedTactic": "simp at  this ",
+            "additionalInfo" : [],
+            "output":
+            "The goal of proving a contradiction is shown straightforward."
+        },
+        {
+            #.lake/package/mathlib/Archive/Imo/Imo1972Q5.lean より
+            "goalsBefore":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  ∀ (y : ℝ), ‖f y‖ ≤ 1\nhf3 :  ∃ x, f x ≠ 0\ny :  ℝ\nhneg :  1 < ‖g y‖\nS : Set ℝ :=  Set.range fun x => ‖f x‖\nk : ℝ :=  sSup S\nhk₁ :  ∀ (x : ℝ), ‖f x‖ ≤ k\nx :  ℝ\n⊢ 2 * (‖f x‖ * ‖g y‖) = ‖2 * f x * g y‖",
+            "goalsAfter": "no goals",
+            "appliedTactic": "simp [abs_mul, mul_assoc ] ",
+            "additionalInfo" : [
+                "mul_assoc : ∀ a b c : G, a * b * c = a * (b * c)", 
+                "abs_mul (a b : α) :",
+            ],
+            "output":
+            "By using the properties of multiplication associativity and the absolute value of a product, the statement that \\(2 \\times (\\|f(x)\\| \\times \\|g(y)\\|) = \\|2 \\times f(x) \\times g(y)\\|\\) is proved straightforward."
+        }
+    ],
+
+    "simp_rw": [
+        {
+            # LeanExportInfos/TargetFile/one.lean より
+            "goalsBefore": "n a :  ℕ\nh :  n = 8 * a\n⊢ n = 4 * 2 * a",
+            "goalsAfter": "n a :  ℕ\nh :  n = 8 * a\n⊢ n = 8 * a",
+            "appliedTactic": " simp ",
+            "additionalInfo" : [],
+            "output":
+            "By simplifying the expression, the goal of proving that \\( n = 4 \\times 2 \\times a \\) is transformed into proving that \\( n = 8 \times a \\)."
+        },
+        {
+            #.lake/package/mathlib/Archive/Imo/Imo1988Q6.lean より
+            "goalsBefore":
+            "case intro\na b k :  ℕ\nhk :  a ^ 2 + b ^ 2 = (a * b + 1) * k\n⊢ ∃ d, d ^ 2 = k",
+            "goalsAfter":
+            "case intro\na b k :  ℕ\nhk :  a * a + b * b = (a * b + 1) * k\n⊢ ∃ d, d ^ 2 = k",
+            "appliedTactic": "simp only [sq] at  hk ",
+            "additionalInfo" : [],
+            "output":
+            "By simplifying the expression using the fact that taking the square of a number can be expressed as multiplying the number by itself, \\(a^2 + b^2 = (a \\times b + 1) \\times k\\) becomes \\(a \\times a + b \\times b = (a \\times b + 1) \\times k\\)."
+        }
+    ],
+
+    "simpa": [
+        {
+            # LeanExportInfos/TargetFile/six.lean より
+            "goalsBefore":
+            "E :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\nf : ℝ → E :=  fun c => c • (y - x) + x\nthis :  f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1\nhfc :  Continuous f\n⊢ 1 ∈ f ⁻¹' interior (closedBall x (dist y x))",
+            "goalsAfter": "no goals",
+            "appliedTactic": "simpa [f ] ",
+            "additionalInfo" : [],
+            "output":
+            "By the definition of the function \\( f \\) and assumptions, the proof is completed."
+        },
+        {
+            # LeanExportInfos/TargetFile/six.lean より
+            "goalsBefore":
+            "case inr.inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx y :  E\nhr✝ :  dist y x ≠ 0\nhr :  0 < dist y x\nhy :  y ∈ interior (closedBall x (dist y x))\nf : ℝ → E :=  fun c => c • (y - x) + x\nc :  ℝ\nhc :  c ∈ f ⁻¹' closedBall x (dist y x)\n⊢ ‖c‖ * dist y x ≤ 1 * dist y x",
+            "goalsAfter": "no goals",
+            "appliedTactic": "simpa [f, dist_eq_norm, norm_smul] using  hc ",
+            "additionalInfo" : [
+                "norm_smul (r : α) (x : β) : ‖r • x‖ = ‖r‖ * ‖x‖"
+            ],
+            "output":
+            "By the definition of the function \\( f \\) and the fact that \\( ||r \\cdot x|| = ||r|| \\cdot ||x|| \\), the proof is completed."
+        }
+    ],
+
+    "dot": [
+        {
+            # LeanExportInfos/TargetFile/six.lean より
+            "goalsBefore":
+            "case inl\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  r < 0\n⊢ interior (closedBall x r) = ball x r\n\ncase inr\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  0 < r\n⊢ interior (closedBall x r) = ball x r",
+            "goalsAfter":
+            "case inl\nE :  Type u_1\ninst✝¹ :  SeminormedAddCommGroup E\ninst✝ :  NormedSpace ℝ E\nx :  E\nr :  ℝ\nhr✝ :  r ≠ 0\nhr :  r < 0\n⊢ interior (closedBall x r) = ball x r",
+            "appliedTactic":
+            "· rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty ] ",
+            "additionalInfo" : [],
+            "output":
+            "We prove the case where \\( r < 0 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/eight.lean より
+            "goalsBefore":
+            "case refine_2\nn :  ℕ\n⊢ π / 2 ^ (n + 2) ≤ 1\n\ncase refine_3\nn :  ℕ\n⊢ sin (π / 2 ^ (n + 2)) + (π / 2 ^ (n + 2)) ^ 3 / 4 ≤ sin (π / 2 ^ (n + 2)) + 1 / (2 ^ n) ^ 3 / 4",
+            "goalsAfter":
+            "case refine_2\nn :  ℕ\n⊢ π / 2 ^ (n + 2) ≤ 1",
+            "appliedTactic":
+            "· rw [div_le_iff']\n      · refine le_trans pi_le_four ?_\n        simp only [show (4 : ℝ) = (2 : ℝ) ^ 2 by norm_num, mul_one]\n        apply pow_le_pow_right (by norm_num)\n        apply le_add_of_nonneg_left; apply Nat.zero_le\n      · apply pow_pos;  norm_num ",
+            "additionalInfo" : [],
+            "output":
+            "We prove the case where \\( \\frac{\\pi}{2^{n+2}} \\leq 1 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/eight.lean より
+            "goalsBefore": "case refine_3.bc.ha.a.hb\nn :  ℕ\n⊢ 0 < 2 ^ n",
+            "goalsAfter": "no goals",
+            "appliedTactic": "· apply pow_pos;  norm_num ",
+            "additionalInfo" : [],
+            "output":
+            "We prove the case where \\( 0 < 2 ^ n \\)."
+        }
+    ],
+
+    "by_contra": [
+        {
+            # LeanExportInfos/TargetFile/seven.lean より
+            "goalsBefore": "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\n⊢ b = 0",
+            "goalsAfter": "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  ¬b = 0\n⊢ False",
+            "appliedTactic": "by_contra  bh ",
+            "additionalInfo" : [],
+            "output":
+            "Assume that \\( b \\) is nonzero and show a contradiction."
+        },
+        {
+            #.lake/package/mathlib/Archive/Imo/Imo1972Q5.lean より
+            "goalsBefore":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\nhf3 :  ∃ x, f x ≠ 0\ny :  ℝ\n⊢ ‖g y‖ ≤ 1",
+            "goalsAfter":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\nhf3 :  ∃ x, f x ≠ 0\ny :  ℝ\nH :  1 < ‖g y‖\n⊢ False",
+            "appliedTactic": "by_contra!  H ",
+            "additionalInfo" : [],
+            "output":
+            "Assume that \\( 1 < ||g y|| \\) and show a contradiction."
+        }
+    ],
+
+    "push_neg": [
+        {
+            #.lake/package/mathlib/Archive/Imo/Imo1988Q6.lean より
+            "goalsBefore":
+            "case intro.H_desc.right.h\nk x y :  ℕ\na✝³ :  0 < x\nhx :  x < y\nh_base :  ¬x ≤ 1\na✝² :  x * x + y * y + 1 = x * y * k\nz :  ℤ\na✝¹ :  z * z - ↑k * ↑x * z + (↑x * ↑x + 1) = 0\na✝ :  z = ↑k * ↑x - ↑y\nx_lt_z :  ↑x < z\n⊢ ↑x * ↑x + 1 < z * ↑y",
+            "goalsAfter":
+            "case intro.H_desc.right.h\nk x y :  ℕ\na✝³ :  0 < x\nhx :  x < y\na✝² :  x * x + y * y + 1 = x * y * k\nz :  ℤ\na✝¹ :  z * z - ↑k * ↑x * z + (↑x * ↑x + 1) = 0\na✝ :  z = ↑k * ↑x - ↑y\nx_lt_z :  ↑x < z\nh_base :  1 < x\n⊢ ↑x * ↑x + 1 < z * ↑y",
+            "appliedTactic": "push_neg at  h_base ",
+            "additionalInfo" : [],
+            "output":
+            "Not \\( x \\leq 1 \\) becomes \\( x > 1 \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/push_neg_test.lean より
+            "goalsBefore":
+            "α :  Sort u_1\nP Q R :  α → Prop\nhyp :  ∀ (x : α), (P x → P x) → Q x → R x\nh :  ¬∀ (x : α), Q x → R x\n⊢ False",
+            "goalsAfter":
+            "α :  Sort u_1\nP Q R :  α → Prop\nhyp :  ∀ (x : α), (P x → P x) → Q x → R x\nh :  ∃ x, Q x ∧ ¬R x\n⊢ False",
+            "appliedTactic": "push_neg at  h ",
+            "additionalInfo" : [],
+            "output":
+            "\\( \\neg \\forall (x : \\alpha), Q(x) \\to R(x) \\) becomes \\( \\exists x, Q(x) \\land \\neg R(x) \\)."
+        }
+    ],
+
+    "norm_num_finish": [
+        {
+            # LeanExportInfos/TargetFile/eight.lean (元ファイル : )より
+            "goalsBefore": "n :  ℕ\n⊢ 0 < 2 ^ (n + 2)",
+            "goalsAfter": "no goals",
+            "appliedTactic": " norm_num ",
+            "additionalInfo" : [],
+            "output" :
+            "It is clear that \\( 0 < 2^{n + 2} \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/eight.lean (元ファイル : )より
+            "goalsBefore": "case refine_3.bc.ha.a.hb.H\nn :  ℕ\n⊢ 0 < 2",
+            "goalsAfter": "no goals",
+            "appliedTactic": " norm_num ",
+            "additionalInfo" : [],
+            "output":
+            "It is clear that \\( 0 < 2 \\)."
+        },
+    ],
+
+    "norm_num_rw": [
+        {
+            # LeanExportInfos/TargetFile/seven.lean より
+            "goalsBefore": "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  b ≠ 0\n⊢ ↑b ≠ 0",
+            "goalsAfter": "a b :  ℤ\nh :  ↑a + ↑b * √2 = 0\nbh :  b ≠ 0\n⊢ ¬b = 0",
+            "appliedTactic": " norm_num ",
+            "additionalInfo" : [],
+            "output":
+            "\\( b \\neq 0 \\) can be immediately become \\( \\neg (b = 0) \\)."
+        },
+        {
+            # LeanExportInfos/TargetFile/norm_num.lean より        
+            "goalsBefore": "a b :  ℕ\nh :  a = b\n⊢ 8 * a = 16 / 2 * b",
+            "goalsAfter": "a b :  ℕ\nh :  a = b\n⊢ a = b",
+            "appliedTactic": " norm_num ",
+            "additionalInfo" : [],
+            "output":
+            "\\( 8 \\cdot a = 16 / 2 \\cdot b \\) can be immediately become \\( a = b \\)."
+        }
+    ],
+
+    "congr": [
+        {
+            # .lake/packages/batteries/Batteries/Data/Rat/Lemmas.lean より
+            "goalsBefore":
+            "n :  Int\nd a :  Nat\na0 :  a ≠ 0\n⊢ mkRat (n * ↑a) (d * a) = mkRat (↑a * n) (a * d)",
+            "goalsAfter":
+            "case e_num\nn :  Int\nd a :  Nat\na0 :  a ≠ 0\n⊢ n * ↑a = ↑a * n\n\ncase e_den\nn :  Int\nd a :  Nat\na0 :  a ≠ 0\n⊢ d * a = a * d",
+            "appliedTactic": "congr  1 ",
+            "additionalInfo" : [],
+            "output":
+            "To prove the equality, it is sufficient to show that \\( n \\cdot a = a \\cdot n \\) and \\( d \\cdot a = a \\cdot d \\)."
+        },
+        {
+            # .lake/packages/mathlib/Mathlib/Data/Set/Image.lean より
+            "goalsBefore":
+            "α :  Type u_1\nβ :  Type u_2\nγ :  Type u_3\nι :  Sort u_4\nι' :  Sort u_5\nf✝ :  α → β\ng✝ :  β → γ\nf g :  α → β\ns :  Set β\nh :  ∀ (x : α), f x = g x\n⊢ f ⁻¹' s = g ⁻¹' s",
+            "goalsAfter":
+            "case h\nα :  Type u_1\nβ :  Type u_2\nγ :  Type u_3\nι :  Sort u_4\nι' :  Sort u_5\nf✝ :  α → β\ng✝ :  β → γ\nf g :  α → β\ns :  Set β\nh :  ∀ (x : α), f x = g x\nx :  α\n⊢ x ∈ f ⁻¹' s ↔ x ∈ g ⁻¹' s",
+            "appliedTactic": "congr with  x ",
+            "additionalInfo" : [],
+            "output":
+            "To prove the equality, it is sufficient to show that for all \\( x \\) in \\( \alpha \\) being in the preimage of \\( f \\) is equivalent to \\( x \\) being in the preimage of \\( g \\)."
+        }
+    ],
+    "linarith" : [
+        {
+            # LeanExportInfos/TargetFile/linarith_test.lean より
+            "goalsBefore": "a b :  ℝ\nh :  ∀ ε > 0, a < b + ε\nih :  b < a\nδ : ℝ :=  a - b\nδpos :  δ > 0\nabeq :  a = b + δ\nh1 :  a > b + δ / 2\nh2 :  a < b + δ / 2\n⊢ False",
+            "goalsAfter": "no goals",
+            "appliedTactic": " linarith ",
+            "additionalInfo" : [],
+            "output":
+            "Since \\( a > b + \\frac{\\delta}{2} \\) and \\( a < b + \\frac{\\delta}{2} \\) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+        },
+        {
+            # LeanExportInfos/TargetFile/linarith_test.lean より
+            "goalsBefore":
+            "A B a b :  ℝ\nha :  a > 0\nhb :  b > 0\nhA :  A = a + 4 * b\nhB :  B = 9 / a + 1 / b\nh :  A < 5 ∧ B < 5\nthis✝ :  A + B < 10\nh2 :  A + B = a + 9 / a + (4 * b + 1 / b)\nh3 :  a + 9 / a ≥ 6\nh4 :  4 * b + 1 / b ≥ 4\nthis :  A + B ≥ 10\n⊢ False",
+            "goalsAfter": "no goals",
+            "appliedTactic": " linarith ",
+            "additionalInfo" : [],
+            "output":
+            "The statement \\ (A + B \\geq 10 \\) contradicts the assumption \\( A + B < 10 \\). Thus, the proof is complete."        
+        },
+        {
+            # .lake/packages/mathlib/Archive/Imo/Imo1972Q5.lean より
+            "goalsBefore":
+            "case intro\nf g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\ny :  ℝ\nH :  1 < ‖g y‖\nx :  ℝ\nhx :  f x ≠ 0\nk : ℝ :=  ⨆ x, ‖f x‖\nh :  ∀ (x : ℝ), ‖f x‖ ≤ k\nhgy :  0 < ‖g y‖\nk_pos :  0 < k\nthis✝ :  k / ‖g y‖ < k\nthis :  k ≤ k / ‖g y‖\n⊢ False",
+            "goalsAfter": "no goals",
+            "appliedTactic": " linarith ",
+            "additionalInfo" : [],
+            "output":
+            "Since the expressions \\( k / ‖g y‖ < k \\) and \\( k \\leq k / ‖g y‖ \\) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."   
+        }     
+    ],
+    "contradiction" : [
+        {
+            # LeanExportInfos/TargetFile/contradiction_test.lean より
+            "goalsBefore":
+            "n :  ℤ\nh :  Even (n ^ 2)\nih :  ¬Even n\nh' :  ¬Odd (n ^ 2)\nk :  ℤ\nkh :  n = 2 * k + 1\nh1 :  n ^ 2 = 2 * (2 * k ^ 2 + 2 * k) + 1\nh2 :  Odd (n ^ 2)\n⊢ False",
+            "goalsAfter": "no goals",
+            "appliedTactic": " contradiction ",
+            "additionalInfo" : [],
+            "output":
+            "Since the assumption that \\( n^2 \\) is both even and odd cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."  
+        },
+        {
+            # .lake/packages/mathlib/Archive/Imo/Imo2011Q5.lean より
+            "goalsBefore":
+            "case inl\nf :  ℤ → ℤ\nhpos :  ∀ (n : ℤ), 0 < f n\nhdvd :  ∀ (m n : ℤ), f (m - n) ∣ f m - f n\nm n :  ℤ\nh_fm_le_fn :  f m ≤ f n\nh_fm_lt_fn :  f m < f n\nd : ℤ :=  f m - f (m - n)\nh_fn_dvd_d :  f n ∣ d\nh_d_lt_fn :  d < f n\nh_neg_d_lt_fn :  -d < f n\nhd :  d > 0\nh₁ :  f n ≤ d\nh₂ :  ¬f n ≤ d\n⊢ d = 0",
+            "goalsAfter": "no goals",
+            "appliedTactic": " contradiction ",
+            "additionalInfo" : [],
+            "output":
+            "Since the expressions \\( f(n) \\leq d \\) and \\(\\neg f(n) \\leq d \\) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."      
+        }
+    ],
+    "induction" : [
+        {
+            # LeanExportInfos/TargetFile/induction_test.lean より
+            "goalsBefore": "n :  ℕ\n⊢ 2 ^ (n + 1) ≥ 2 * (n + 1)",
+            "goalsAfter":
+            "case zero\n⊢ 2 ^ (0 + 1) ≥ 2 * (0 + 1)\n\ncase succ\nk :  ℕ\nkh :  2 ^ (k + 1) ≥ 2 * (k + 1)\n⊢ 2 ^ (k + 1 + 1) ≥ 2 * (k + 1 + 1)",
+            "appliedTactic": "induction' n with k  kh ",
+            "additionalInfo" : [],
+            "output":
+            "Prove \\(2^{n+1} \\geq 2 \\cdot (n+1)\\) with mathematical induction on \\(n\\)."  
+        },
+        {
+            # LeanExportInfos/TargetFile/induction_test.lean より
+            "goalsBefore":
+            "k :  ℕ\nkh :  2 ^ (k + 1) ≥ 2 * (k + 1)\nh1 :  2 ^ (k + 2) ≥ 4 * (k + 1)\n⊢ k * 2 ≤ k * 4",
+            "goalsAfter":
+            "case zero\nkh :  2 ^ (0 + 1) ≥ 2 * (0 + 1)\nh1 :  2 ^ (0 + 2) ≥ 4 * (0 + 1)\n⊢ 0 * 2 ≤ 0 * 4\n\ncase succ\nl :  ℕ\na✝ :  2 ^ (l + 1) ≥ 2 * (l + 1) → 2 ^ (l + 2) ≥ 4 * (l + 1) → l * 2 ≤ l * 4\nkh :  2 ^ (l + 1 + 1) ≥ 2 * (l + 1 + 1)\nh1 :  2 ^ (l + 1 + 2) ≥ 4 * (l + 1 + 1)\n⊢ (l + 1) * 2 ≤ (l + 1) * 4",
+            "appliedTactic": "induction' k with l  _ ",
+            "additionalInfo" : [],
+            "output":
+            "Prove \\( k \\times 2 \\leq k \\times 4 \\) with mathematical induction on \\( k \\)."  
+        },
+    ],
+    "calc" : [
+        {
+            # .lake/packages/mathlib/Archive/Imo/Imo1988Q6.lean より
+            "goalsBefore":
+            "case intro.H_diag.h\nk x :  ℕ\nk_lt_one :  1 < k\n⊢ x * x + x * x < (x * x + 1) * k",
+            "goalsAfter": "no goals",
+            "appliedTactic":
+            "calc\n      x * x + x * x = x * x * 2 := by rw [mul_two]\n      _ ≤ x * x * k := Nat.mul_le_mul_left (x * x) k_lt_one\n      _ < (x * x + 1) * k := by  linarith ",
+            "additionalInfo" : [],
+            "output" :
+            "By calculation, it is shown that \\( x \\cdot x + x \\cdot x = x \\cdot \\cdot 2 \\leq x \\cdot x \\cdot k < (x \\cdot x + 1) \\cdot k \\)."
+        },
+        {
+            # .lake/packages/mathlib/Mathlib/Algebra/Order/BigOperators/Group/Finset.lean より
+            "goalsBefore": " ∏ i ∈ s, f i ≤ ∏ i ∈ t, f i",
+            "goalsAfter": "no goals",
+            "appliedTactic":
+            "calc\n      ∏ i ∈ s, f i ≤ (∏ i ∈ t \\ s, f i) * ∏ i ∈ s, f i :=\n        le_mul_of_one_le_left' <| one_le_prod' <| by simpa only [mem_sdiff, and_imp]\n      _ = ∏ i ∈ t \\ s ∪ s, f i := (prod_union sdiff_disjoint).symm\n      _ = ∏ i ∈ t, f i := by rw [sdiff_union_of_subset h ] ",
+            "additionalInfo" : [],
+            "output":
+            "By calculation, it is shown that \\( \\prod_{i \\in s} f(i) \\leq \\left(\\prod_{i \\in t \\setminus s} f(i)\\right) \\cdot \\prod_{i \\in s} f(i) = \\prod_{i \\in t \\setminus s \\cup s} f(i) = \\prod_{i \\in t} f(i). \\)"
+        },
+        {
+            # .lake/packages/mathlib/Archive/Imo/Imo1972Q5.lean より
+            "goalsBefore":
+            "f g :  ℝ → ℝ\nhf1 :  ∀ (x y : ℝ), f (x + y) + f (x - y) = 2 * f x * g y\nhf2 :  BddAbove (Set.range fun x => ‖f x‖)\ny :  ℝ\nH :  1 < ‖g y‖\nx✝ :  ℝ\nhx :  f x✝ ≠ 0\nk : ℝ :=  ⨆ x, ‖f x‖\nh :  ∀ (x : ℝ), ‖f x‖ ≤ k\nhgy :  0 < ‖g y‖\nk_pos :  0 < k\nthis :  k / ‖g y‖ < k\nx :  ℝ\n⊢ 2 * (‖f x‖ * ‖g y‖) ≤ 2 * k",
+            "goalsAfter": "no goals",
+            "appliedTactic":
+            "calc\n      2 * (‖f x‖ * ‖g y‖) = ‖2 * f x * g y‖ := by simp [abs_mul, mul_assoc]\n      _ = ‖f (x + y) + f (x - y)‖ := by rw [hf1]\n      _ ≤ ‖f (x + y)‖ + ‖f (x - y)‖ := abs_add _ _\n      _ ≤ 2 * k := by linarith [h (x + y), h (x - y) ] ",
+            "additionalInfo" : [],
+            "output":
+            "By calculation, it is shown that \\( 2 * (\\|f(x)\\| * \\|g(y)\\|) = \\|2 * f(x) * g(y)\\| = \\|f(x + y) + f(x - y)\\| \\leq \\|f(x + y)\\| + \\|f(x - y)\\| \\leq 2 * k \\)."
+        }
+    ]
+}

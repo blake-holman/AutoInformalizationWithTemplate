@@ -1,0 +1,93 @@
+[appliedTactic]
+intro  h 
+[answer]
+Assume that for every positive number \( \varepsilon \), \( a \) is less than \( b + \varepsilon \). From now on, we will show that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+let P : Set ℝ := {x : ℝ | x > 0 } 
+[answer]
+Let \( P \) be the set of all real numbers greater than zero.
+[appliedTactic]
+have PnotEmpty : P.Nonempty := by
+    exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+[answer]
+Show that the set of positive real numbers is not empty.
+[appliedTactic]
+exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+[answer]
+The proof is completed from the assumption that the set of positive real numbers is nonempty, demonstrated by the element 1 belonging to this set.
+[appliedTactic]
+rw [Set.mem_setOf ] 
+[answer]
+By using the fact that membership in a set defined by a property is equivalent to the property holding for the element, the goal of proving that 1 belongs to the set of real numbers greater than 0 becomes the goal of proving that 1 is greater than 0.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 1 > 0 \).
+[appliedTactic]
+have LB: LowerBound P 0 := by
+    intro a h1
+    exact le_of_lt  h1 
+[answer]
+Show that zero is a lower bound of the set of positive real numbers by proving that every element of this set is greater than zero.
+[appliedTactic]
+intro a  h1 
+[answer]
+Assume that \( a \) is a positive real number. From now on, we will show that \( a \) is greater than or equal to zero.
+[appliedTactic]
+exact le_of_lt  h1 
+[answer]
+The proof is completed from the theorem that any number less than another is also less than or equal to it, and the assumption that \(a\) is greater than zero.
+[appliedTactic]
+have PBB : BoundedBelow P := by
+    exact ⟨0, LB ⟩ 
+[answer]
+Show that the set \( P \) is bounded below by 0.
+[appliedTactic]
+exact ⟨0, LB ⟩ 
+[answer]
+The proof is completed from the assumptions that zero is an element of the set of positive real numbers and that zero is a lower bound of this set.
+[appliedTactic]
+have lbab : LowerBound P (a - b) := by
+    intro p pinP
+    have := h p pinP
+     linarith 
+[answer]
+Show that the set of positive real numbers is bounded below by the difference \( a - b \).
+[appliedTactic]
+intro p  pinP 
+[answer]
+Assume that \( p \) is a positive real number. From now on, we will show that \( p \) is greater than or equal to \( a - b \).
+[appliedTactic]
+have := h p  pinP 
+[answer]
+Show that \( a \) is less than \( b \) plus \( p \). This can be proved by applying the given property that for every positive number, \( a \) is less than \( b \) plus that number, and since \( p \) is a positive number in the set, the inequality \( a < b + p \) holds.
+[appliedTactic]
+ linarith 
+[answer]
+Since \( a < b + p \) and \( p < a - b \) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.
+[appliedTactic]
+have := Inf_LowerBound PnotEmpty PBB (a - b)  lbab 
+[answer]
+Show that the difference between \( a \) and \( b \) is less than or equal to the greatest lower bound of the set of positive real numbers. This can be proved by applying the property that if a set is nonempty and bounded below, then any lower bound of the set is less than or equal to its greatest lower bound.
+[appliedTactic]
+have sInfzero: sInf P = 0 :=  InfPositiveEqualZero 
+[answer]
+Show that the greatest lower bound of the set of positive real numbers is equal to zero. This can be proved by the fact that the infimum of all positive numbers is zero, since zero is the greatest number that is less than or equal to every positive number.
+[appliedTactic]
+have : a ≤ b := by
+    rw [sInfzero,tsub_le_iff_right,zero_add] at this
+    exact  this 
+[answer]
+Show that \( a \leq b \) by rewriting the inequality involving \( a - b \) and the infimum of the set to conclude the desired relation.
+[appliedTactic]
+rw [sInfzero,tsub_le_iff_right,zero_add] at  this 
+[answer]
+By using the assumption that the infimum of the set of positive real numbers is zero and the properties that relate inequalities involving subtraction and addition, the statement that \( a - b \) is less than or equal to the infimum of the set becomes the statement that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that \(a\) is less than or equal to \(b\).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that \( a \) is less than or equal to \( b \).

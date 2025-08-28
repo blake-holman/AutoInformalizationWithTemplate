@@ -1,0 +1,144 @@
+{
+  "PersistentHashMap.lean": {
+    "Lean.PersistentHashMap.toList": {
+      "type": "definition",
+      "code": "Lean.PersistentHashMap.toList.{u_1, u_2} {α : Type u_1} {β : Type u_2} :\n  {x : BEq α} → {x_1 : Hashable α} → PersistentHashMap α β → List (α × β)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def toList {_ : BEq α} {_ : Hashable α} (m : PersistentHashMap α β) : List (α × β) :=   m.foldl (init := []) fun ps k v => (k, v) :: ps",
+      "description": "A function that converts a persistent hash map into a list of key-value pairs."
+    }
+  },
+  "HashMap.lean": {
+    "Lean.HashMap.toList": {
+      "type": "definition",
+      "code": "Lean.HashMap.toList.{u, v} {α : Type u} {β : Type v} : {x : BEq α} → {x_1 : Hashable α} → HashMap α β → List (α × β)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def toList (m : HashMap α β) : List (α × β) :=   m.fold (init := []) fun r k v => (k, v)::r",
+      "description": "A function that converts a hash map into a list of key-value pairs."
+    },
+    "Lean.HashMap": {
+      "type": "definition",
+      "code": "Lean.HashMap.{u, v} (α : Type u) (β : Type v) [BEq α] [Hashable α] : Type (max 0 u v)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def HashMap (α : Type u) (β : Type v) [BEq α] [Hashable α] :=   { m : HashMapImp α β // m.WellFormed }",
+      "description": "A type representing a hash map that maps keys of one type to values of another type, under specific equality and hashing constraints for the keys."
+    },
+    "Lean.HashMap.contains": {
+      "type": "definition",
+      "code": "Lean.HashMap.contains.{u, v} {α : Type u} {β : Type v} : {x : BEq α} → {x_1 : Hashable α} → HashMap α β → α → Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def contains (m : HashMap α β) (a : α) : Bool :=   match m with   | ⟨ m, _ ⟩ => m.contains a",
+      "description": "A function that checks whether a specific key exists in a hash map."
+    },
+    "Lean.HashMap.insert": {
+      "type": "definition",
+      "code": "Lean.HashMap.insert.{u, v} {α : Type u} {β : Type v} :\n  {x : BEq α} → {x_1 : Hashable α} → HashMap α β → α → β → HashMap α β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def insert (m : HashMap α β) (a : α) (b : β) : HashMap α β :=   match m with   | ⟨ m, hw ⟩ =>     match h:m.insert a b with     | (m', _) => ⟨ m', by have aux := WellFormed.insertWff m a b hw; rw [h] at aux; assumption ⟩",
+      "description": "A function that adds a key-value pair to a hash map, producing a new hash map."
+    },
+    "Lean.HashMap.find!": {
+      "type": "definition",
+      "code": "Lean.HashMap.find!.{u, v} {α : Type u} {β : Type v} :\n  {x : BEq α} → {x_1 : Hashable α} → [inst : Inhabited β] → HashMap α β → α → β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def find! [Inhabited β] (m : HashMap α β) (a : α) : β :=   match m.find? a with   | some b => b   | none   => panic! \"key is not in the map\"",
+      "description": "A function that retrieves the value associated with a specific key in a hash map, assuming the key exists."
+    },
+    "Lean.HashMap.find?": {
+      "type": "definition",
+      "code": "Lean.HashMap.find?.{u, v} {α : Type u} {β : Type v} : {x : BEq α} → {x_1 : Hashable α} → HashMap α β → α → Option β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def find? (m : HashMap α β) (a : α) : Option β :=   match m with   | ⟨ m, _ ⟩ => m.find? a",
+      "description": "A function that attempts to retrieve the value associated with a specific key in a hash map, returning an option type to indicate existence."
+    }
+  },
+  "Name.lean": {
+    "Lean.Name.updatePrefix": {
+      "type": "definition",
+      "code": "Lean.Name.updatePrefix : Name → Name → Name",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def updatePrefix : Name → Name → Name   | anonymous, _    => anonymous   | str _ s,   newP => Name.mkStr newP s   | num _ s,   newP => Name.mkNum newP s",
+      "description": "A function that updates the prefix of a given name."
+    },
+    "Lean.Name.isInternalDetail": {
+      "type": "definition",
+      "code": "Lean.Name.isInternalDetail : Name → Bool",
+      "comment": "Returns true if this a part of name that is internal or dynamically\ngenerated so that it may easily be changed.\n\nGenerally, user code should not explicitly use internal names.\n",
+      "explanatories": {},
+      "fullDefinition": "def isInternalDetail : Name → Bool   | .str p s     =>     s.startsWith \"_\"       || matchPrefix s \"eq_\"       || matchPrefix s \"match_\"       || matchPrefix s \"proof_\"       || p.isInternalOrNum   | .num _ _     => true   | p            => p.isInternalOrNum where   /-- Check that a string begins with the given prefix, and then is only digit characters. -/   matchPrefix (s : String) (pre : String) :=     s.startsWith pre && (s |>.drop pre.length |>.all Char.isDigit)",
+      "description": "A function that checks if a given name is an internal or dynamically generated component."
+    }
+  },
+  "SMap.lean": {
+    "Lean.SMap.contains": {
+      "type": "definition",
+      "code": "Lean.SMap.contains.{u, v} {α : Type u} {β : Type v} [BEq α] [Hashable α] : SMap α β → α → Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[specialize] def contains : SMap α β → α → Bool   | ⟨true, m₁, _⟩, k   => m₁.contains k   | ⟨false, m₁, m₂⟩, k => m₁.contains k || m₂.contains k",
+      "description": "A function that checks whether a specific key exists in a structured map."
+    }
+  },
+  "AssocList.lean": {
+    "Lean.AssocList.find?": {
+      "type": "definition",
+      "code": "Lean.AssocList.find?.{u, v} {α : Type u} {β : Type v} [BEq α] (a : α) : AssocList α β → Option β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def find? [BEq α] (a : α) : AssocList α β → Option β   | nil         => none   | cons k v es => match k == a with     | true  => some v     | false => find? a es",
+      "description": "A function that retrieves an associated value from a list based on a given key, returning an option type to indicate the presence or absence of the value."
+    },
+    "Lean.AssocList.cons": {
+      "type": "theorem",
+      "code": "Lean.AssocList.cons.{u, v} {α : Type u} {β : Type v} (key : α) (value : β) (tail : AssocList α β) : AssocList α β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A construction that creates a new associated list entry by pairing a given key with a value and linking it to an existing list."
+    },
+    "Lean.AssocList.nil": {
+      "type": "theorem",
+      "code": "Lean.AssocList.nil.{u, v} {α : Type u} {β : Type v} : AssocList α β",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "An expression that represents an empty associated list, indicating the absence of any key-value pairs."
+    }
+  },
+  "HashSet.lean": {
+    "Lean.HashSet": {
+      "type": "definition",
+      "code": "Lean.HashSet.{u} (α : Type u) [BEq α] [Hashable α] : Type u",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def HashSet (α : Type u) [BEq α] [Hashable α] :=   { m : HashSetImp α // m.WellFormed }",
+      "description": "A construction that defines a hash set, which is a collection of unique elements based on their hashed values."
+    },
+    "Lean.HashSet.insert": {
+      "type": "definition",
+      "code": "Lean.HashSet.insert.{u} {α : Type u} : {x : BEq α} → {x_1 : Hashable α} → HashSet α → α → HashSet α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def insert (m : HashSet α) (a : α) : HashSet α :=   match m with   | ⟨ m, hw ⟩ => ⟨ m.insert a, WellFormed.insertWff m a hw ⟩",
+      "description": "A function that inserts an element into a hash set, potentially increasing the collection while maintaining its uniqueness based on hashed values."
+    }
+  },
+  "LOption.lean": {
+    "Lean.LOption.some": {
+      "type": "theorem",
+      "code": "Lean.LOption.some.{u} {α : Type u} : α → Lean.LOption α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A construction that creates a non-empty optional value from a given element of a specified type."
+    }
+  }
+}

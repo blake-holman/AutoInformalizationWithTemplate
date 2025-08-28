@@ -1,0 +1,66 @@
+[
+  {
+    "AppliedTactic": "intro s  LB ",
+    "GoalsBefore": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\n⊢ ∀ (s : ℝ), LowerBound S s → s ≤ sInf S",
+    "GoalsAfter": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\n⊢ s ≤ sInf S",
+    "GivenPremises": [
+      "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+    ],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( s \\) is a real number that is a lower bound of the set \\( S \\). From now on, we will show that \\( s \\) is less than or equal to the greatest lower bound of \\( S \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have := Inf_def S SnotEmpty  SBB ",
+    "GoalsBefore": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\n⊢ s ≤ sInf S",
+    "GoalsAfter": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\nthis :  Infimum S (sInf S)\n⊢ s ≤ sInf S",
+    "GivenPremises": [
+      "Inf_def (S : Set ℝ) (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) : Infimum S (sInf S)"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the greatest lower bound of the set \\( S \\) is indeed the infimum of \\( S \\). This can be proved by applying the definition of the infimum, which states that if \\( S \\) is nonempty and bounded below, then the infimum of \\( S \\) is the greatest element that is a lower bound of \\( S \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [Infimum] at  this ",
+    "GoalsBefore": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\nthis :  Infimum S (sInf S)\n⊢ s ≤ sInf S",
+    "GoalsAfter": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\nthis :  LowerBound S (sInf S) ∧ ∀ (y : ℝ), LowerBound S y → y ≤ sInf S\n⊢ s ≤ sInf S",
+    "GivenPremises": [
+      "Infimum (A : Set ℝ) (x : ℝ) : Prop"
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the definition of the infimum, the statement that the infimum of the set \\( S \\) is \\( sInf(S) \\) becomes the statement that \\( sInf(S) \\) is a lower bound of \\( S \\) and that any lower bound of \\( S \\) is less than or equal to \\( sInf(S) \\).",
+    "Evaluation":"Untranslated Expression"
+  },
+  {
+    "AppliedTactic": "apply this.right s  LB ",
+    "GoalsBefore": "S :  Set ℝ\nSnotEmpty :  S.Nonempty\nSBB :  BoundedBelow S\ns :  ℝ\nLB :  LowerBound S s\nthis :  LowerBound S (sInf S) ∧ ∀ (y : ℝ), LowerBound S y → y ≤ sInf S\n⊢ s ≤ sInf S",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the assumption that \\( s \\) is a lower bound of the set \\( S \\) and the fact that the greatest lower bound of \\( S \\) is less than or equal to any lower bound of \\( S \\), it follows that \\( s \\) is less than or equal to the greatest lower bound of \\( S \\), thereby establishing the goal.",
+    "Evaluation":"MisInformation"
+  }
+]

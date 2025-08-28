@@ -1,0 +1,22 @@
+[applied Tactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for all \( n \geq n_1 \), the difference between \( x_n \) and \( a \) is less than half of \( \varepsilon \). Since \( \varepsilon > 0 \), it follows by the theorem that half of a positive number is also positive that \(\frac{\varepsilon}{2} > 0\). Thus, choosing \( n_1 \) such that for all \( n \geq n_1 \), \(|x_n - a| < \frac{\varepsilon}{2}\) holds establishes the desired property without requiring further proof.
+[applied Tactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for the given positive number \( \varepsilon \), there exists an index \( n_2 \) such that for all \( n \geq n_2 \), the sequence terms \( y_n \) lie within \( \frac{\varepsilon}{2} \) of the limit \( b \). Since \( \varepsilon \) is positive, by a standard property that half of a positive number remains positive, it follows that \( \frac{\varepsilon}{2} > 0 \). This ensures that the neighborhood around \( b \) defined by \( \frac{\varepsilon}{2} \) is well-defined and strictly positive, thus completing this part of the argument without requiring further proof.
+[applied Tactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+
+[answer]
+We will show that \( |x_n + y_n - (a + b)| < \varepsilon \) for sufficiently large \( n \). First, observe that by rewriting the expression, we have \( |x_n + y_n - (a + b)| = |(x_n - a) + (y_n - b)| \). Applying the triangle inequality, it follows that this is at most \( |x_n - a| + |y_n - b| \). Since \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), for all \( n \geq n_0 \), we have \( |x_n - a| < \varepsilon/2 \) and \( |y_n - b| < \varepsilon/2 \). Adding these inequalities yields \( |x_n - a| + |y_n - b| < \varepsilon/2 + \varepsilon/2 = \varepsilon \). Therefore, for all \( n \geq n_0 \), the inequality \( |x_n + y_n - (a + b)| < \varepsilon \) holds, completing the proof.

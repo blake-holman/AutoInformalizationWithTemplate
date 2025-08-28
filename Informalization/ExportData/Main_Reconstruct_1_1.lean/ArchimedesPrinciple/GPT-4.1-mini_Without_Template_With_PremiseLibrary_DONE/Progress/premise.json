@@ -1,0 +1,153 @@
+{
+  "intro a apos b  _ ": [],
+  "by_contra!  h ": [],
+  "let C : Set ℝ:= {s : ℝ | ∃ k : ℕ, s =  ((k + (1 : ℕ)) : ℝ ) * a } ": [
+    "Set : This defines a set as a collection of elements belonging to a specific type."
+  ],
+  "have CnotEmpty : C.Nonempty := by\n    -- s = a, k = 0 とすれば成り立つ\n    apply Exists.intro a\n    apply Exists.intro 0\n    rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] ": [
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "CharP.cast_eq_zero : The characteristic of an additive monoid with unity is equal to zero when that characteristic is considered as an element of the monoid.",
+    "zero_add : This theorem establishes that adding zero to any element in an additive structure results in that same element."
+  ],
+  "apply Exists.intro  a ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "apply Exists.intro  0 ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] ": [
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "zero_add : This theorem establishes that adding zero to any element in an additive structure results in that same element."
+  ],
+  "have CUB : BoundedAbove C := by\n    -- b が上界であることを使う\n    have : UpperBound C b := by\n      intro k kinC\n      let ⟨k',k'h⟩ := kinC\n      rw [k'h]\n      exact h k'\n    exact ⟨b, this ⟩ ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "BoundedAbove : A set of real numbers is bounded above if there exists a real number that is an upper bound for the set.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "have : UpperBound C b := by\n      intro k kinC\n      let ⟨k',k'h⟩ := kinC\n      rw [k'h]\n      exact h  k' ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "intro k  kinC ": [],
+  "let ⟨k',k'h⟩ :=  kinC ": [],
+  "rw [k'h ] ": [],
+  "exact h  k' ": [],
+  "exact ⟨b, this ⟩ ": [],
+  "have CSup := ExistSupremum C ⟨CnotEmpty, CUB ⟩ ": [
+    "ExistSupremum : Every nonempty set of real numbers that is bounded above has a supremum."
+  ],
+  "let ⟨x, SupCx⟩ :=  CSup ": [],
+  "have : ∀n : ℕ, ((n + (2 : ℕ )) : ℝ)  * a ≤ x := by\n    intro n\n    -- SupCxの左側　UpperBound C x を上手く使うため、 (n + 1) * a が C の要素であることをいう\n    have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by\n      rw [Set.mem_setOf_eq]\n      apply Exists.intro (n + 1)\n      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]\n      apply Or.inl\n      rw [add_assoc]\n    -- 結果を素直に用いれば示せる\n    apply SupCx.left ((n + 2) * a)  this ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "mul_eq_mul_right_iff : This theorem establishes that in a cancellative monoid with zero, multiplying two elements by the same nonzero factor yields equal results if and only if the two elements are equal or the factor is zero.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element.",
+    "Or.inl : If a proposition is true, then it can be included in a disjunction, demonstrating how to inject it into the logical framework of 'or'.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two."
+  ],
+  "intro  n ": [],
+  "have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by\n      rw [Set.mem_setOf_eq]\n      apply Exists.intro (n + 1)\n      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]\n      apply Or.inl\n      rw [add_assoc ] ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "mul_eq_mul_right_iff : This theorem establishes that in a cancellative monoid with zero, multiplying two elements by the same nonzero factor yields equal results if and only if the two elements are equal or the factor is zero.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element.",
+    "Or.inl : If a proposition is true, then it can be included in a disjunction, demonstrating how to inject it into the logical framework of 'or'.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two."
+  ],
+  "rw [Set.mem_setOf_eq ] ": [
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+  ],
+  "apply Exists.intro (n + 1 ) ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff ] ": [
+    "mul_eq_mul_right_iff : This theorem establishes that in a cancellative monoid with zero, multiplying two elements by the same nonzero factor yields equal results if and only if the two elements are equal or the factor is zero.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two."
+  ],
+  "apply  Or.inl ": [
+    "Or.inl : If a proposition is true, then it can be included in a disjunction, demonstrating how to inject it into the logical framework of 'or'."
+  ],
+  "rw [add_assoc ] ": [
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result."
+  ],
+  "apply SupCx.left ((n + 2) * a)  this ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+  ],
+  "have : ∀n : ℕ, ((n + 1 : ℕ) : ℝ)* a ≤ x - a := by\n    intro n\n    have := this n\n    rw [← one_add_one_eq_two] at this\n    rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at this\n    apply le_tsub_of_add_le_right\n    rw [Nat.cast_add,Nat.cast_one]\n    exact  this ": [
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "le_tsub_of_add_le_right : This theorem asserts that if the sum of an element and another element is less than or equal to a third element, then the first element is less than or equal to the difference between the third element and the second element.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two."
+  ],
+  "have := this  n ": [],
+  "rw [← one_add_one_eq_two] at  this ": [
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two."
+  ],
+  "rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at  this ": [
+    "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added."
+  ],
+  "apply  le_tsub_of_add_le_right ": [
+    "le_tsub_of_add_le_right : This theorem asserts that if the sum of an element and another element is less than or equal to a third element, then the first element is less than or equal to the difference between the third element and the second element."
+  ],
+  "rw [Nat.cast_add,Nat.cast_one ] ": [
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts."
+  ],
+  "exact  this ": [],
+  "have up: UpperBound C (x - a) := by\n    intro l ⟨k, kp⟩\n    have := this k\n    rw [kp,Nat.cast_one]\n    rw [Nat.cast_add,Nat.cast_one] at this\n    exact  this ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts."
+  ],
+  "intro l ⟨k, kp ⟩ ": [],
+  "have := this  k ": [],
+  "rw [kp,Nat.cast_one ] ": [
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid."
+  ],
+  "rw [Nat.cast_add,Nat.cast_one] at  this ": [
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts."
+  ],
+  "have : ∀y, UpperBound C y → x ≤ y :=  SupCx.right ": [
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "have := this (x - a)  up ": [],
+  " linarith ": []
+}

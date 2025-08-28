@@ -1,0 +1,99 @@
+[applied Tactic]
+have s5 : ∀n ≥ n₀, |x n - a| < ε := by
+      intro n ngen₀
+      have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+      exact h1 n (ge_trans ngen₀ n₀gen₁ ) 
+
+[answer]
+We will show that for every natural number \( n \) greater than or equal to \( n_0 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon \). To this end, let \( n \geq n_0 \) be arbitrary. Since \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), it follows that \( n_0 \geq n_1 \). Consequently, \( n \geq n_0 \geq n_1 \), and by the assumed property controlling \( x_n \) for indices greater than or equal to \( n_1 \), we conclude that the absolute value \( |x_n - a| \) is indeed less than \( \varepsilon \), as required.
+[applied Tactic]
+have s6 : ∀n ≥ n₀, |y n - a| < ε := by
+      intro n ngen₀
+      have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+      exact h2 n (ge_trans ngen₀ n₀gen₂ ) 
+
+[answer]
+We will show that for every natural number \( n \) greater than or equal to \( n_0 = \max(n_1, n_2) \), the distance between \( y_n \) and \( a \) is less than \(\varepsilon\). To this end, let \( n \geq n_0 \) be arbitrary. Since \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), it follows that \( n_0 \geq n_2 \). Consequently, because \( n \geq n_0 \), we also have \( n \geq n_2 \). This allows us to apply the existing bound on the sequence \( y_n \) for indices beyond \( n_2 \), concluding that \(|y_n - a| < \varepsilon\). Hence, the desired inequality holds for all such \( n \), completing the proof.
+[applied Tactic]
+have s7 : ∀n ≥ n₀, a - ε < x n ∧ x n ≤ z n ∧ z n ≤ y n ∧ y n < a + ε := by
+      intro n ngen₀
+      repeat (any_goals apply And.intro)
+      . have := s5 n ngen₀
+        rw [abs_lt,lt_tsub_iff_left] at this
+        exact this.left
+      . exact (bet n).left
+      . exact (bet n).right
+      . have := s6 n ngen₀
+        rw [abs_lt,] at this
+        apply lt_add_of_neg_add_lt_left
+        rw [add_comm]
+        exact  this.right 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the inequalities \( a - \varepsilon < x_n \leq z_n \leq y_n < a + \varepsilon \) hold. To this end, let \( n \) be an arbitrary natural number with \( n \geq n_0 \). By the given bounds on the sequences \( x_n \) and \( y_n \), we know that \( x_n > a - \varepsilon \) and \( y_n < a + \varepsilon \). Since \( z_n \) is squeezed between \( x_n \) and \( y_n \), it follows that \( x_n \leq z_n \leq y_n \). Combining these inequalities, we conclude that \( a - \varepsilon < x_n \leq z_n \leq y_n < a + \varepsilon \), as desired.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will prove the proposition by considering each component of the conjunction separately. Specifically, since the original goal is a conjunction of two statements, we split the proof into two subgoals: one to establish the first statement and the other to establish the second. By demonstrating each part individually, we thus conclude the validity of the combined statement.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will prove the proposition that consists of a conjunction of two statements by addressing each component separately. To do this, we first split the original goal into two subgoals, each corresponding to one of the conjuncts. This decomposition allows us to focus on proving each statement individually, thereby establishing the truth of the entire conjunction.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that \( z_n \leq y_n \) and that \( y_n < a + \varepsilon \). To prove the conjunction, we first decompose it into two separate subgoals. The first subgoal establishes that \( z_n \) is less than or equal to \( y_n \), and the second subgoal demonstrates that \( y_n \) is less than \( a + \varepsilon \). By addressing each subgoal individually, we confirm the original conjunction holds.
+[applied Tactic]
+. have := s5 n ngen₀
+        rw [abs_lt,lt_tsub_iff_left] at this
+        exact  this.left 
+
+[answer]
+We will show that for all indices \( n \geq n_0 \), the term \( x_n \) lies within the interval \((a - \varepsilon, a + \varepsilon)\). By hypothesis, for every such \( n \), the distance between \( x_n \) and \( a \) satisfies \(|x_n - a| < \varepsilon\). Rewriting this inequality without the absolute value yields the equivalent double inequality \( a - \varepsilon < x_n < a + \varepsilon \). From this, it directly follows that \( a - \varepsilon < x_n \), establishing the desired lower bound on \( x_n \) relative to \( a \) and \(\varepsilon\), thereby completing the proof.
+[applied Tactic]
+. exact (bet n). left 
+
+[answer]
+We will show that for every natural number \( n \), the inequality \( x_n \leq z_n \) holds. To prove this, we directly apply the given assumption that for all \( n \), the sequence values satisfy \( x_n \leq z_n \leq y_n \). Since \( x_n \leq z_n \) is explicitly stated by the assumption, the inequality is established immediately for each \( n \), thereby completing the proof.
+[applied Tactic]
+. exact (bet n). right 
+
+[answer]
+We will show that for each natural number \( n \), the value of the sequence \( z \) at \( n \) is less than or equal to the value of the sequence \( y \) at \( n \). This follows directly from the given ordering between the sequences, which ensures that \( z_n \leq y_n \) for every \( n \). Hence, the proposition is established by applying this fact for all natural numbers \( n \).
+[applied Tactic]
+. have := s6 n ngen₀
+        rw [abs_lt,] at this
+        apply lt_add_of_neg_add_lt_left
+        rw [add_comm]
+        exact  this.right 
+
+[answer]
+We will show that for all indices \( n \) greater than or equal to \( n_0 \), the term \( y_n \) lies strictly less than \( a + \varepsilon \). Since by hypothesis the absolute difference \( |y_n - a| \) is less than \( \varepsilon \) for such indices, this inequality can be expressed equivalently as the double inequality \(-\varepsilon < y_n - a < \varepsilon\). Focusing on the upper bound, this implies \( y_n - a < \varepsilon \). By rearranging terms and applying the commutative property of addition, this is equivalent to \( y_n < a + \varepsilon \), which matches the goal. Hence, the conclusion follows directly from the initial bound on the distance between \( y_n \) and \( a \).
+[applied Tactic]
+. have := lt_of_le_of_lt this.right.right.left this.right.right.right
+         linarith 
+
+[answer]
+We will show that the difference \( a - z_n \) is greater than \(-\varepsilon\) by using the inequalities that bound \( z_n \) between \( x_n \) and \( y_n \). Since both \( x_n \) and \( y_n \) lie within \(\varepsilon\) of \( a \), it follows that for sufficiently large \( n \), we have \( a - \varepsilon \leq z_n \leq a + \varepsilon \). In particular, this implies \( z_n < a + \varepsilon \) and therefore \( a - z_n > -\varepsilon \). Thus, by combining these bounds and applying straightforward arithmetic reasoning, we conclude the desired inequality for \( a - z_n \).
+[applied Tactic]
+. have := lt_of_lt_of_le this.left this.right.left
+         linarith 
+
+[answer]
+We will show that for sufficiently large \( n \), the terms \( z_n \) lie within \( \varepsilon \) of \( a \). From the given inequalities, we first observe that \( a - \varepsilon < x_n \leq z_n \) by the transitive property of inequalities. Next, since \( z_n \) is bounded above by \( y_n \) and both \( x_n \) and \( y_n \) lie within \( \varepsilon \) of \( a \), it follows that \( z_n \) must also lie within \( \varepsilon \) of \( a \). Thus, combining these bounds and applying straightforward arithmetic reasoning, we conclude that the difference between \( a \) and \( z_n \) is less than \( \varepsilon \), establishing the desired inequality and completing the proof.
+[applied Tactic]
+have s8 : ∀n ≥ n₀, |a - z n| < ε := by
+      intro n ngen₀
+      rw [abs_lt]
+      have := s7 n ngen₀
+      apply And.intro
+      . have := lt_of_le_of_lt this.right.right.left this.right.right.right
+        linarith
+      . have := lt_of_lt_of_le this.left this.right.left
+         linarith 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the distance between \( z_n \) and \( a \) is less than \( \varepsilon \). Equivalently, this means proving that \( a - z_n \) lies strictly between \(-\varepsilon \) and \( \varepsilon \). Given the established inequalities that for all such \( n \), \( x_n > a - \varepsilon \), \( y_n < a + \varepsilon \), and \( z_n \) lies between \( x_n \) and \( y_n \), we use these to bound \( z_n \). Specifically, since \( a - \varepsilon < x_n \leq z_n \leq y_n < a + \varepsilon \), it follows that \( a - z_n > -\varepsilon \) and \( a - z_n < \varepsilon \). By considering these two inequalities separately and applying straightforward reasoning, we conclude that \(|a - z_n| < \varepsilon\) for all \( n \geq n_0 \), which completes the proof.

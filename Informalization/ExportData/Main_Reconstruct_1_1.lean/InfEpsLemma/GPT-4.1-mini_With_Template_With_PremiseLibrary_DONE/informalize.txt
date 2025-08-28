@@ -1,0 +1,272 @@
+[appliedTactic]
+apply  Iff.intro 
+[answer]
+From the principle that two propositions are equivalent if each implies the other, in order to establish that the infimum of \( A \) equals \( a_0 \) if and only if \( a_0 \) is a lower bound of \( A \) and for every positive number \( \varepsilon \), there exists an element of \( A \) less than \( a_0 + \varepsilon \), it suffices to prove both that the infimum equaling \( a_0 \) implies these conditions and that these conditions imply the infimum equals \( a_0 \).
+[appliedTactic]
+. -- (1) -> (2)
+      --仮定を導入し、下限を書き換える
+      intro sinf
+      have a₀InfA := Inf_def A AnotEmpty ABoundedBelow
+      rw [sinf] at a₀InfA
+      rw [Infimum] at a₀InfA
+      --結論の論理積の左右をそれぞれ証明していく
+      apply And.intro
+      . --これは下限の定義から自明
+        apply a₀InfA.left
+      . --結論が偽であると仮定して矛盾することを示す
+        by_contra h
+        --否定を中に入れる
+        push_neg at h
+        --ε を固定する。
+        let ⟨ε,⟨εpos,h1⟩⟩ := h
+        --この時、a₀ + ε が A　の下界になってしまう。ところが、a₀は最大下界であるから矛盾する。
+        --まず、a₀ + εを z とおき、それがAの下界であることを示す。
+        have : LowerBound A (a₀ + ε) := by
+          rw [LowerBound]
+          apply h1
+        --これにより a₀ ≤ a₀ + εが出てくる
+        have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε) this
+        --整理すると ε ≤ 0 が出てくる
+        simp at this
+        --矛盾発生。 linarith tacticsを使う
+         linarith 
+[answer]
+We prove the case where assuming the infimum equals \( a_0 \), it follows that \( a_0 \) is a lower bound of the set and for every positive number \( \varepsilon \), there exists an element in the set less than \( a_0 + \varepsilon \).
+[appliedTactic]
+intro  sinf 
+[answer]
+Assume that the greatest lower bound of the set \( A \) is \( a_0 \). From now on, we will show that \( a_0 \) is a lower bound of \( A \) and that for every positive number \( \varepsilon \), there exists an element of \( A \) less than \( a_0 + \varepsilon \).
+[appliedTactic]
+have a₀InfA := Inf_def A AnotEmpty  ABoundedBelow 
+[answer]
+Show that the value \( a_0 \) is the greatest lower bound of the set \( A \). This can be proved by applying the definition that the infimum of a nonempty set of real numbers bounded below is equal to its greatest lower bound.
+[appliedTactic]
+rw [sinf] at  a₀InfA 
+[answer]
+By using the assumption that the greatest lower bound of the set \( A \) equals \( a_0 \), the statement that \( a_0 \) is an infimum of \( A \) becomes the statement that \( a_0 \) is an infimum of \( A \).
+[appliedTactic]
+rw [Infimum] at  a₀InfA 
+[answer]
+By using the definition that a real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every lower bound of the set, the assumption that a₀ is an infimum of A becomes the statement that a₀ is a lower bound of A and that any lower bound of A is less than or equal to a₀.
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the fact that the conjunction of two propositions is true if both propositions hold individually, in order to establish that the real number \( a_0 \) is a lower bound of the set \( A \) and that for every positive \( \varepsilon \) there exists an element in \( A \) less than \( a_0 + \varepsilon \), it suffices to prove separately that \( a_0 \) is a lower bound of \( A \) and that for every positive \( \varepsilon \), there exists an element in \( A \) less than \( a_0 + \varepsilon \).
+[appliedTactic]
+. --これは下限の定義から自明
+        apply  a₀InfA.left 
+[answer]
+We prove the case where the given real number is a lower bound of the set.
+[appliedTactic]
+apply  a₀InfA.left 
+[answer]
+From the fact that the statement asserting both that \( a_0 \) is a lower bound of \( A \) and that it is the greatest such lower bound is given, in order to establish that \( a_0 \) is a lower bound of \( A \), the first part of this conjunction is applied, completing the proof.
+[appliedTactic]
+. --結論が偽であると仮定して矛盾することを示す
+        by_contra h
+        --否定を中に入れる
+        push_neg at h
+        --ε を固定する。
+        let ⟨ε,⟨εpos,h1⟩⟩ := h
+        --この時、a₀ + ε が A　の下界になってしまう。ところが、a₀は最大下界であるから矛盾する。
+        --まず、a₀ + εを z とおき、それがAの下界であることを示す。
+        have : LowerBound A (a₀ + ε) := by
+          rw [LowerBound]
+          apply h1
+        --これにより a₀ ≤ a₀ + εが出てくる
+        have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε) this
+        --整理すると ε ≤ 0 が出てくる
+        simp at this
+        --矛盾発生。 linarith tacticsを使う
+         linarith 
+[answer]
+We prove the case where for every positive number ε, there exists an element in the set that is less than \( a_0 + \varepsilon \) by assuming the contrary and deriving a contradiction based on the maximality of \( a_0 \) as the greatest lower bound.
+[appliedTactic]
+by_contra  h 
+[answer]
+Assume that there exists some positive number ε for which no element of \( A \) is less than \( a_0 + \varepsilon \), and show a contradiction.
+[appliedTactic]
+push_neg at  h 
+[answer]
+Not all positive numbers ε satisfy that there exists an element a in A less than a₀ plus ε becomes there exists a positive number ε such that every element a in A is at least a₀ plus ε.
+[appliedTactic]
+let ⟨ε,⟨εpos,h1⟩⟩ :=  h 
+[answer]
+Let \(\varepsilon\) be a positive real number such that for every element \(a\) in \(A\), \(a_0 + \varepsilon\) is less than or equal to \(a\).
+[appliedTactic]
+have : LowerBound A (a₀ + ε) := by
+          rw [LowerBound]
+          apply  h1 
+[answer]
+Show that \( a_0 + \varepsilon \) is a lower bound of the set \( A \).
+[appliedTactic]
+rw [LowerBound ] 
+[answer]
+By using the definition that a real number is a lower bound of a set if it is less than or equal to every element in that set, the goal of proving that \( a_0 + \varepsilon \) is a lower bound of \( A \) becomes proving that every element \( a \) in \( A \) satisfies \( a \geq a_0 + \varepsilon \).
+[appliedTactic]
+apply  h1 
+[answer]
+From the assumption that for every element \( a \) in the set \( A \), \( a \) is at least \( a_0 + \varepsilon \), in order to establish that every element \( a \) in \( A \) satisfies \( a \geq a_0 + \varepsilon \), it suffices to apply this assumption directly.
+[appliedTactic]
+have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε)  this 
+[answer]
+Show that \(a_0 + \varepsilon \leq a_0\). This can be proved by using the fact that \(a_0\) is a lower bound of the set \(A\) and that \(a_0 + \varepsilon\) is also a lower bound of \(A\), which implies by the property of \(a_0\) being the greatest lower bound that \(a_0 + \varepsilon\) must be less than or equal to \(a_0\).
+[appliedTactic]
+simp at  this 
+[answer]
+By simplifying the expression, the assumption that the sum of \( a_0 \) and \( \varepsilon \) is less than or equal to \( a_0 \) becomes the assumption that \( \varepsilon \) is less than or equal to zero.
+[appliedTactic]
+ linarith 
+[answer]
+Since the statements that the lower bound of \( A \) is at least \( a_0 + \varepsilon \) and that \( \varepsilon \leq 0 \) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.
+[appliedTactic]
+. -- (2) -> (1)
+      --仮定を導入しておく
+      intro ⟨a₀LowerBoundA, h⟩
+      --Infimumを書き換え
+      apply (Inf_sInf_iff AnotEmpty ABoundedBelow).1
+      rw [Infimum]
+      --任意のAの下界x に対して  x ≤ a₀ であることを言えばいい。
+      --leanでの場合は結論の後者
+      apply And.intro
+      . exact a₀LowerBoundA
+      . --ここからが教科書の証明。
+        --∀ をx で固定し、それがAの下界であると仮定する。
+        intro x xLowerBoundA
+        --x ≤ a₀ でないと仮定する
+        by_contra a₀lex
+        --否定を中に入れる
+        push_neg at a₀lex
+        --εを x - a₀ に固定する。
+        let ε : ℝ := x - a₀
+        --正であることを示す
+        have a₀negxpos : ε  > 0 := by
+          simp only [ε]
+          rw [gt_iff_lt, sub_pos]
+          exact a₀lex
+        -- これを上限の定義の部分に代入する
+        have h1 := h ε a₀negxpos
+        simp at h1
+        -- x が A の下界であることと矛盾することを示す
+        rw [LowerBound] at xLowerBoundA
+        -- a　を固定
+        let ⟨a,⟨ainA, altx⟩⟩ := h1
+        --このa を Aの下界の定義に適用すると a ≥ xが出てくる
+        have : a ≥ x := xLowerBoundA a ainA
+        --これによりxがAの上界であることについて矛盾が発生。
+        simp [ε] at altx
+         linarith 
+[answer]
+We assume that \( a_0 \) is a lower bound of the set \( A \) and that for every positive number \( \varepsilon \), there exists an element of \( A \) less than \( a_0 + \varepsilon \), and then we show that the infimum of \( A \) equals \( a_0 \) by demonstrating that any lower bound of \( A \) must be less than or equal to \( a_0 \).
+[appliedTactic]
+intro ⟨a₀LowerBoundA, h ⟩ 
+[answer]
+Assume that \( a_0 \) is a lower bound of the set \( A \) and that for every positive number \( \varepsilon \), there exists an element \( a \) in \( A \) such that \( a \) is less than \( a_0 + \varepsilon \). From now on, we will show that the greatest lower bound of \( A \) is equal to \( a_0 \).
+[appliedTactic]
+apply (Inf_sInf_iff AnotEmpty ABoundedBelow). 1 
+[answer]
+From the characterization that a real number is the infimum of a nonempty, bounded-below set if and only if it equals the set’s greatest lower bound, and given that the set is nonempty and bounded below, in order to establish that the infimum of the set \( A \) is \( a_0 \), it suffices to prove that \( a_0 \) is the greatest lower bound of \( A \).
+[appliedTactic]
+rw [Infimum ] 
+[answer]
+By using the definition that a real number is the infimum of a set if and only if it is a lower bound of the set and is greater than or equal to every other lower bound, the goal of proving that \( a_0 \) is the infimum of \( A \) becomes proving that \( a_0 \) is a lower bound of \( A \) and that any other lower bound \( y \) of \( A \) satisfies \( y \leq a_0 \).
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the fact that the conjunction of two propositions is true if both propositions are true individually, in order to establish that the given number is a lower bound of the set and that any other lower bound is less than or equal to this number, it suffices to prove these two statements separately.
+[appliedTactic]
+. exact  a₀LowerBoundA 
+[answer]
+We establish that the given real number is indeed a lower bound of the set.
+[appliedTactic]
+exact  a₀LowerBoundA 
+[answer]
+The proof is completed from the assumption that \( a_0 \) is a lower bound of the set \( A \).
+[appliedTactic]
+. --ここからが教科書の証明。
+        --∀ をx で固定し、それがAの下界であると仮定する。
+        intro x xLowerBoundA
+        --x ≤ a₀ でないと仮定する
+        by_contra a₀lex
+        --否定を中に入れる
+        push_neg at a₀lex
+        --εを x - a₀ に固定する。
+        let ε : ℝ := x - a₀
+        --正であることを示す
+        have a₀negxpos : ε  > 0 := by
+          simp only [ε]
+          rw [gt_iff_lt, sub_pos]
+          exact a₀lex
+        -- これを上限の定義の部分に代入する
+        have h1 := h ε a₀negxpos
+        simp at h1
+        -- x が A の下界であることと矛盾することを示す
+        rw [LowerBound] at xLowerBoundA
+        -- a　を固定
+        let ⟨a,⟨ainA, altx⟩⟩ := h1
+        --このa を Aの下界の定義に適用すると a ≥ xが出てくる
+        have : a ≥ x := xLowerBoundA a ainA
+        --これによりxがAの上界であることについて矛盾が発生。
+        simp [ε] at altx
+         linarith 
+[answer]
+We prove that any real number which is a lower bound of the set is less than or equal to \( a_0 \).
+[appliedTactic]
+intro x  xLowerBoundA 
+[answer]
+Assume that \( x \) is a lower bound of the set \( A \). From now on, we will show that \( x \leq a_0 \).
+[appliedTactic]
+by_contra  a₀lex 
+[answer]
+Assume that \( x \) is greater than \( a_0 \) and show a contradiction.
+[appliedTactic]
+push_neg at  a₀lex 
+[answer]
+Not \( x \leq a_0 \) becomes \( a_0 < x \).
+[appliedTactic]
+let ε : ℝ := x -  a₀ 
+[answer]
+Let \(\varepsilon\) be defined as \(x - a_0\).
+[appliedTactic]
+have a₀negxpos : ε  > 0 := by
+          simp only [ε]
+          rw [gt_iff_lt, sub_pos]
+          exact  a₀lex 
+[answer]
+Show that \( \varepsilon \) is greater than zero.
+[appliedTactic]
+simp only [ε ] 
+[answer]
+By simplifying the expression, the goal of proving that \( \varepsilon > 0 \) is transformed into proving that \( x - a_0 > 0 \).
+[appliedTactic]
+rw [gt_iff_lt, sub_pos ] 
+[answer]
+By using the facts that an expression being greater than another is equivalent to the latter being less than the former, and that the positivity of their difference is equivalent to the first being greater than the second, the goal of proving that \( x - a_0 > 0 \) becomes the goal of proving that \( a_0 < x \).
+[appliedTactic]
+exact  a₀lex 
+[answer]
+The proof is completed from the assumption that \( a_0 \) is less than \( x \).
+[appliedTactic]
+have h1 := h ε  a₀negxpos 
+[answer]
+Show that there exists an element \( a \) in the set \( A \) such that \( a \) is less than \( a_0 + \varepsilon \). This can be proved by applying the given property that for every positive number \( \varepsilon \), there is an element in \( A \) smaller than \( a_0 + \varepsilon \), and using the fact that \( \varepsilon = x - a_0 \) is positive.
+[appliedTactic]
+rw [LowerBound] at  xLowerBoundA 
+[answer]
+By using the definition that a real number is a lower bound of a set if it is less than or equal to every element in that set, the assumption that \( x \) is a lower bound of the set \( A \) becomes the statement that every element of \( A \) is greater than or equal to \( x \).
+[appliedTactic]
+let ⟨a,⟨ainA, altx⟩⟩ :=  h1 
+[answer]
+Let \(a\) be an element of \(A\) such that \(a < a_0 + \varepsilon\).
+[appliedTactic]
+have : a ≥ x := xLowerBoundA a  ainA 
+[answer]
+Show that \( a \) is greater than or equal to \( x \). This can be proved by applying the fact that every element of the set \( A \) is at least \( x \), given that \( a \) belongs to \( A \).
+[appliedTactic]
+simp [ε] at  altx 
+[answer]
+By simplifying the expression, the assumption that there exists an element \( a \) in the set \( A \) such that \( a \) is less than \( a_0 + \varepsilon \) becomes the assumption that this element \( a \) is less than \( x \).
+[appliedTactic]
+ linarith 
+[answer]
+Since \( a \geq x \) and \( a < x \) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.

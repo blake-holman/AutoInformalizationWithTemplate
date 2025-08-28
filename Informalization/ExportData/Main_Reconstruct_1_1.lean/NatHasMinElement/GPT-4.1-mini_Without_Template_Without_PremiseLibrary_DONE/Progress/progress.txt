@@ -1,0 +1,15 @@
+[applied Tactic]
+have :∀ n : ℕ ,(n ∉ S) := by
+      -- forall を固定
+      intro n
+      --数学的帰納法を用いる。
+      induction' n using Nat.strong_induction_on with n ih
+      intro ninS
+      have := h n ninS
+      let ⟨y,⟨yinS,yltn⟩⟩ := this
+      have := ih y yltn
+      -- 矛盾発生
+       contradiction 
+
+[answer]
+We will show, by strong induction on the natural number \( n \), that \( n \) does not belong to the set \( S \). Assume as the induction hypothesis that for every natural number less than \( n \), that number is not in \( S \). Now suppose, for the sake of contradiction, that \( n \in S \). By the given property of the set \( S \), there must exist an element \( y \in S \) such that \( y < n \). However, applying the induction hypothesis to \( y \) implies that \( y \notin S \), contradicting the assumption that \( y \in S \). This contradiction shows that \( n \notin S \). Since \( n \) was arbitrary, the result follows that no natural number belongs to \( S \).

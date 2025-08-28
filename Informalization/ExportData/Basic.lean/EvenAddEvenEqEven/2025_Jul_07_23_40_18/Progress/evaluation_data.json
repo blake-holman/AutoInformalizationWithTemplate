@@ -1,0 +1,99 @@
+[
+  {
+    "AppliedTactic": "intro ⟨⟨r1, h1⟩ , ⟨r2, h2⟩ ⟩ ",
+    "GoalsBefore": "a b :  ℕ\n⊢ Even a ∧ Even b → Even (a + b)",
+    "GoalsAfter": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ Even (a + b)",
+    "GivenPremises": [
+      "Even : An element of an additive type is classified as even if it can be represented as the sum of some element with itself."
+    ],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that there exist natural numbers \\( r_1 \\) and \\( r_2 \\) such that \\( a = r_1 + r_1 \\) and \\( b = r_2 + r_2 \\). From now on, we will show that the sum \\( a + b \\) is even."
+  },
+  {
+    "AppliedTactic": "have h1 : a + b = (r1 + r2) + (r1 + r2) := by\n    rw [Nat.add_assoc, Nat.add_comm r2, ← Nat.add_assoc, ← Nat.add_assoc]\n    rw [h1, h2]\n    rw [← Nat.add_assoc ] ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ Even (a + b)",
+    "GoalsAfter": "a b r1 :  ℕ\nh1✝ :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\nh1 :  a + b = r1 + r2 + (r1 + r2)\n⊢ Even (a + b)",
+    "GivenPremises": [
+      "Nat.add_comm : The addition of two natural numbers is commutative, meaning their order does not affect the sum.",
+      "Nat.add_assoc : The sum of three natural numbers is associative, meaning that the grouping of the numbers does not affect the result."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( a + b = r_1 + r_2 + (r_1 + r_2) \\)."
+  },
+  {
+    "AppliedTactic": "rw [Nat.add_assoc, Nat.add_comm r2, ← Nat.add_assoc, ← Nat.add_assoc ] ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ a + b = r1 + r2 + (r1 + r2)",
+    "GoalsAfter": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ a + b = r1 + r1 + r2 + r2",
+    "GivenPremises": [
+      "Nat.add_comm : The addition of two natural numbers is commutative, meaning their order does not affect the sum.",
+      "Nat.add_assoc : The sum of three natural numbers is associative, meaning that the grouping of the numbers does not affect the result."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the commutativity and associativity of addition for natural numbers, the goal of proving that the sum of \\( a \\) and \\( b \\) equals \\( r_1 + r_2 + (r_1 + r_2) \\) is transformed into proving that the sum of \\( a \\) and \\( b \\) equals \\( r_1 + r_1 + r_2 + r_2 \\)."
+  },
+  {
+    "AppliedTactic": "rw [h1, h2 ] ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ a + b = r1 + r1 + r2 + r2",
+    "GoalsAfter": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ r1 + r1 + (r2 + r2) = r1 + r1 + r2 + r2",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equalities that express \\( a \\) as twice \\( r_1 \\) and \\( b \\) as twice \\( r_2 \\), the goal of proving \\( a + b = r_1 + r_1 + r_2 + r_2 \\) becomes proving that \\( r_1 + r_1 + (r_2 + r_2) = r_1 + r_1 + r_2 + r_2 \\)."
+  },
+  {
+    "AppliedTactic": "rw [← Nat.add_assoc ] ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1 :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\n⊢ r1 + r1 + (r2 + r2) = r1 + r1 + r2 + r2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Nat.add_assoc : The sum of three natural numbers is associative, meaning that the grouping of the numbers does not affect the result."
+    ],
+    "Template": "By using [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By using the associativity of addition for natural numbers, we complete the proof."
+  },
+  {
+    "AppliedTactic": "apply (Exists.intro (r1 + r2)  ) ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1✝ :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\nh1 :  a + b = r1 + r2 + (r1 + r2)\n⊢ Even (a + b)",
+    "GoalsAfter": "a b r1 :  ℕ\nh1✝ :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\nh1 :  a + b = r1 + r2 + (r1 + r2)\n⊢ a + b = r1 + r2 + (r1 + r2)",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Even : An element of an additive type is classified as even if it can be represented as the sum of some element with itself."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the introduction rule for existential quantifiers, in order to establish that the sum of \\( a \\) and \\( b \\) is even, it suffices to prove that \\( a + b \\) equals \\( r_1 + r_2 + (r_1 + r_2) \\)."
+  },
+  {
+    "AppliedTactic": "apply  h1 ",
+    "GoalsBefore": "a b r1 :  ℕ\nh1✝ :  a = r1 + r1\nr2 :  ℕ\nh2 :  b = r2 + r2\nh1 :  a + b = r1 + r2 + (r1 + r2)\n⊢ a + b = r1 + r2 + (r1 + r2)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "From [assumptions], we complete the proof.",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "From the assumption that the sum of \\( a \\) and \\( b \\) equals \\( r_1 + r_2 + (r_1 + r_2) \\), we complete the proof."
+  }
+]

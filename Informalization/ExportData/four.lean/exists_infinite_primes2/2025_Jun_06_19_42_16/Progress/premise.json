@@ -1,0 +1,23 @@
+{
+  "let p := minFac (n ! + 1 ) ": [
+    "def minFac (n : ℕ) : ℕ :=   if 2 ∣ n then 2 else minFacAux n 3"
+  ],
+  "have f1 : n ! + 1 ≠ 1 := Nat.ne_of_gt <| succ_lt_succ <| factorial_pos  _ ": [
+    "succ_lt_succ {n m : Nat} : n < m → succ n < succ m",
+    "ne_of_gt {a b : Nat} (h : b < a) : a ≠ b",
+    "factorial_pos : ∀ n, 0 < n !"
+  ],
+  "have pp : Nat.Prime p := minFac_prime  f1 ": [
+    "def Prime (p : ℕ) :=   Irreducible p",
+    "minFac_prime {n : ℕ} (n1 : n ≠ 1) : Prime (minFac n)"
+  ],
+  "have np : n ≤ p :=\n  le_of_not_ge fun h =>\n  have h₁ : p ∣ n ! := dvd_factorial (minFac_pos _) h\n  have h₂ : p ∣ 1 := (Nat.dvd_add_iff_right h₁).2 (minFac_dvd _)\n  pp.not_dvd_one  h₂ ": [
+    "minFac_pos (n : ℕ) : 0 < minFac n",
+    "le_of_not_ge {a b : α} : ¬a ≥ b → a ≤ b",
+    "Prime.not_dvd_one {p : ℕ} (pp : Prime p) : ¬p ∣ 1",
+    "dvd_add_iff_right {k m n : Nat} (h : k ∣ m) : k ∣ n ↔ k ∣ m + n",
+    "dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !",
+    "minFac_dvd (n : ℕ) : minFac n ∣ n"
+  ],
+  "exact ⟨p, np, pp ⟩ ": []
+}

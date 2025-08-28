@@ -1,0 +1,39 @@
+[applied Tactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+
+[answer]
+We will show that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \). To begin, note that since \( 0 < 1 \), the denominator \( |\alpha| + 1 \) is a positive real number. Hence, the quantity \( \frac{\varepsilon}{|\alpha| + 1} \) is well-defined and positive. This establishes the required bound on the distance between \( x_n \) and \( a \) for all \( n \geq n_0 \), as desired.
+[applied Tactic]
+. rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n  nlen₀ 
+
+[answer]
+We will show that \( |\alpha||x_n - a| \leq \frac{|\alpha| \varepsilon}{|\alpha| + 1} \). Since \( |\alpha| > 0 \), multiplying both sides of an inequality by \( |\alpha| \) preserves the inequality, so it suffices to prove that \( |x_n - a| \leq \frac{\varepsilon}{|\alpha| + 1} \). Furthermore, because a strict inequality implies the corresponding non-strict inequality, it is enough to establish that \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \). By assumption, for all \( n \geq n_0 \), we have \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \), which completes the proof.
+[applied Tactic]
+. push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul ] 
+
+[answer]
+We will show that if the absolute value of \(\alpha\) is not greater than zero, then \(\alpha\) must be zero. First, the condition \(\neg(|\alpha| > 0)\) is equivalent to \(|\alpha| \leq 0\). Since the absolute value of any real number is nonnegative, this inequality implies that \(|\alpha| = 0\). By the definition of absolute value, this means \(\alpha = 0\). Using this fact, and recognizing that the absolute value of zero is zero and zero multiplied by any number is zero, we conclude the proof.
+[applied Tactic]
+calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+
+[answer]
+We will show that \( |\alpha \cdot x_n - \alpha \cdot a| < \varepsilon \). Using the distributive property and the multiplicative property of absolute values, we rewrite this as \( |\alpha||x_n - a| \). To establish the desired inequality, we consider two cases based on whether \( |\alpha| > 0 \). If \( |\alpha| > 0 \), then multiplying both sides of the inequality \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \) by the positive number \( |\alpha| \) preserves the inequality, yielding \( |\alpha||x_n - a| \leq \frac{|\alpha| \varepsilon}{|\alpha| + 1} \). By assumption, for all sufficiently large \( n \), we have \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \), which completes this case. If \( |\alpha| \leq 0 \), then by the nonnegativity of absolute value, \( |\alpha| = 0 \) and therefore \( \alpha = 0 \). In this case, \( |\alpha||x_n - a| = 0 < \varepsilon \) trivially holds. Finally, to confirm that \( \frac{|\alpha| \varepsilon}{|\alpha| + 1} < \varepsilon \), we note that since \( \varepsilon > 0 \) and \( |\alpha| + 1 > 0 \), this inequality reduces to \( |\alpha| < |\alpha| + 1 \), which is evidently true. Hence, combining these results, we conclude \( |\alpha \cdot x_n - \alpha \cdot a| < \varepsilon \), as required.

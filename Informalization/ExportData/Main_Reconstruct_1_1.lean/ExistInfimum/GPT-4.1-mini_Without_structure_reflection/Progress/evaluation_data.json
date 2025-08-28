@@ -1,0 +1,1223 @@
+[
+  {
+    "AppliedTactic": "let ⟨c,cinC⟩ :=  CnotEmpty ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( c \\) be an element of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "let B : Set ℝ := {x : ℝ | LowerBound C x } ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Set : This defines a set as a collection of elements belonging to a specific type.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( B \\) be the set of all real numbers that are lower bounds of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "let A : Set ℝ := Set.univ \\  B ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Set : This defines a set as a collection of elements belonging to a specific type.",
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( A \\) be the complement of \\( B \\) in the real numbers."
+  },
+  {
+    "AppliedTactic": "have Dedekind : DedekindCut B A := by\n      repeat (any_goals apply And.intro)\n      . exact CBelow\n      . let S : Set ℝ := {z : ℝ | c < z}\n        have : S.Nonempty := by\n          apply Exists.intro (c + 1)\n          rw [Set.mem_setOf]\n          simp\n        let ⟨z,zinS⟩ := this\n        have cltz : c < z := zinS\n        have zinA : z ∈ A := by\n          have : ¬ LowerBound C z := by\n            rw [LowerBound]\n            push_neg\n            exact ⟨c, cinC, cltz⟩\n          exact ⟨Set.mem_univ z, this⟩\n        exact ⟨z, zinA⟩\n      . rw [Set.inter_comm]\n        exact Set.diff_inter_self\n      . rw [Set.union_comm, Set.diff_union_self,Set.univ_union]\n      . intro b binB a ainA\n        by_contra neblta\n        push_neg at neblta\n        have : LowerBound C a := by\n          intro k kinC\n          have : k ≥ b := binB k kinC\n          apply ge_trans this neblta\n        have : a ∈ A ∩ B := ⟨ainA, this⟩\n        have : a ∉ A ∩ B := by\n          intro h'\n          have : A ∩ B = ∅ := Set.diff_inter_self\n          rw [this] at h'\n          contradiction\n         contradiction ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+      "Set.diff_inter_self : The intersection of the difference of one set from another and the first set itself is empty.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Set.union_comm : The union of two sets is commutative, meaning the order in which the sets are combined does not affect the result.",
+      "Set.inter_comm : The intersection of two sets is commutative, meaning the order of the sets does not affect the result.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.mem_univ : Any element of a type belongs to the universal set of that type.",
+      "Set.univ_union : The union of the universal set with any set is equal to the universal set.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set.",
+      "DedekindCut : A Dedekind cut is a partition of the real numbers into two nonempty sets where every element of the first set is less than every element of the second set, and the first set has no greatest element.",
+      "Set : This defines a set as a collection of elements belonging to a specific type.",
+      "Set.diff_union_self : The union of the difference of one set from another with the second set is equal to the union of both sets.",
+      "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third.",
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the sets \\( B \\) and \\( A \\) form a Dedekind cut by proving that both are nonempty, that their union is the entire set of real numbers, that their intersection is empty, and that every element of \\( B \\) is less than every element of \\( A \\)."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ DedekindCut B A",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B.Nonempty\n\ncase right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty ∧ B ∩ A = ∅ ∧ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type.",
+      "DedekindCut : A Dedekind cut is a partition of the real numbers into two nonempty sets where every element of the first set is less than every element of the second set, and the first set has no greatest element."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that a conjunction is true if and only if both components are true, in order to establish that the pair of sets form a Dedekind cut, it suffices to prove that the first set is nonempty and that the second set is nonempty, their intersection is empty, their union is the entire set of real numbers, and every element of the first set is less than every element of the second set."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty ∧ B ∩ A = ∅ ∧ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty\n\ncase right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅ ∧ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the principle that the conjunction of two propositions holds if each proposition holds individually, in order to establish that the set \\( A \\) is nonempty and that the intersection of \\( B \\) and \\( A \\) is empty, their union is the universal set, and every element of \\( B \\) is less than every element of \\( A \\), it suffices to prove separately that \\( A \\) is nonempty and that the remaining conditions about \\( B \\) and \\( A \\) hold."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "case right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅ ∧ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅\n\ncase right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that the conjunction of two propositions holds if both propositions are true, in order to establish that the intersection of \\( B \\) and \\( A \\) is empty, the union of \\( B \\) and \\( A \\) equals the universal set, and every element of \\( B \\) is less than every element of \\( A \\), it suffices to prove separately that the intersection of \\( B \\) and \\( A \\) is empty and that the union of \\( B \\) and \\( A \\) equals the universal set together with the ordering condition between elements of \\( B \\) and \\( A \\)."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "case right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ ∧ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ\n\ncase right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that the conjunction of two propositions holds if both propositions are true, in order to establish that the union of \\( B \\) and \\( A \\) equals the universal set and that every element of \\( B \\) is less than every element of \\( A \\), it suffices to prove separately that the union of \\( B \\) and \\( A \\) equals the universal set and that for all elements \\( a \\) in \\( B \\) and \\( b \\) in \\( A \\), \\( a \\) is less than \\( b \\)."
+  },
+  {
+    "AppliedTactic": ". exact  CBelow ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B.Nonempty\n\ncase right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty\n\ncase right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅\n\ncase right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ\n\ncase right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B.Nonempty",
+    "GivenPremises": [
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where the set of lower bounds of \\( C \\) is non-empty."
+  },
+  {
+    "AppliedTactic": "exact  CBelow ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B.Nonempty",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the set \\( C \\) is bounded below."
+  },
+  {
+    "AppliedTactic": ". let S : Set ℝ := {z : ℝ | c < z}\n        have : S.Nonempty := by\n          apply Exists.intro (c + 1)\n          rw [Set.mem_setOf]\n          simp\n        let ⟨z,zinS⟩ := this\n        have cltz : c < z := zinS\n        have zinA : z ∈ A := by\n          have : ¬ LowerBound C z := by\n            rw [LowerBound]\n            push_neg\n            exact ⟨c, cinC, cltz⟩\n          exact ⟨Set.mem_univ z, this⟩\n        exact ⟨z, zinA ⟩ ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty\n\ncase right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅\n\ncase right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ\n\ncase right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty",
+    "GivenPremises": [
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove that the set \\( A \\) is non-empty by constructing an element \\( z \\) greater than \\( c \\) that does not serve as a lower bound for \\( C \\), thus showing \\( z \\) belongs to \\( A \\)."
+  },
+  {
+    "AppliedTactic": "let S : Set ℝ := {z : ℝ | c < z } ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A.Nonempty",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ A.Nonempty",
+    "GivenPremises": [
+      "Set : This defines a set as a collection of elements belonging to a specific type."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( S \\) be the set of all real numbers greater than \\( c \\)."
+  },
+  {
+    "AppliedTactic": "have : S.Nonempty := by\n          apply Exists.intro (c + 1)\n          rw [Set.mem_setOf]\n           simp ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ A.Nonempty",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\n⊢ A.Nonempty",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the set of all real numbers greater than \\( c \\) is non-empty by exhibiting \\( c + 1 \\) as an element of this set."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro (c + 1 ) ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ S.Nonempty",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ c + 1 ∈ S",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the introduction rule for existential quantifiers, in order to establish that the set \\( S \\) is non-empty, it suffices to prove that the element \\( c + 1 \\) belongs to \\( S \\)."
+  },
+  {
+    "AppliedTactic": "rw [Set.mem_setOf ] ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ c + 1 ∈ S",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ c < c + 1",
+    "GivenPremises": [
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that an element belongs to the set of all elements satisfying a property if and only if that property holds for the element, the goal of proving that \\( c + 1 \\) is in the set of elements greater than \\( c \\) becomes proving that \\( c < c + 1 \\)."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\n⊢ c < c + 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "[goalsBefore] is proved straightforward.",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "The inequality that \\( c \\) is less than \\( c + 1 \\) is proved straightforward."
+  },
+  {
+    "AppliedTactic": "let ⟨z,zinS⟩ :=  this ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\n⊢ A.Nonempty",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\n⊢ A.Nonempty",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( z \\) be an element of the set \\( S \\)."
+  },
+  {
+    "AppliedTactic": "have cltz : c < z :=  zinS ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\n⊢ A.Nonempty",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ A.Nonempty",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( c \\) is less than \\( z \\). This can be proved by using the fact that \\( z \\) belongs to the set of all real numbers greater than \\( c \\), which directly implies \\( c < z \\)."
+  },
+  {
+    "AppliedTactic": "have zinA : z ∈ A := by\n          have : ¬ LowerBound C z := by\n            rw [LowerBound]\n            push_neg\n            exact ⟨c, cinC, cltz⟩\n          exact ⟨Set.mem_univ z, this ⟩ ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ A.Nonempty",
+    "GoalsAfter": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\nzinA :  z ∈ A\n⊢ A.Nonempty",
+    "GivenPremises": [
+      "Set.mem_univ : Any element of a type belongs to the universal set of that type.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( z \\) belongs to the set \\( A \\) by proving that \\( z \\) is not a lower bound of \\( C \\), using the fact that there exists an element \\( c \\) in \\( C \\) that is less than \\( z \\)."
+  },
+  {
+    "AppliedTactic": "have : ¬ LowerBound C z := by\n            rw [LowerBound]\n            push_neg\n            exact ⟨c, cinC, cltz ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ z ∈ A",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis✝ :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\nthis :  ¬LowerBound C z\n⊢ z ∈ A",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( z \\) is not a lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "rw [LowerBound ] ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ ¬LowerBound C z",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ ¬∀ a ∈ C, a ≥ z",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the definition that a real number is a lower bound of a set if it is less than or equal to every element in that set, the goal of proving that \\( z \\) is not a lower bound of \\( C \\) becomes proving that it is not the case that every element of \\( C \\) is greater than or equal to \\( z \\)."
+  },
+  {
+    "AppliedTactic": " push_neg ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ ¬∀ a ∈ C, a ≥ z",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ ∃ a ∈ C, a < z",
+    "GivenPremises": [],
+    "Template": "[goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Not all elements of \\( C \\) are greater than or equal to \\( z \\) becomes there exists an element in \\( C \\) that is less than \\( z \\)."
+  },
+  {
+    "AppliedTactic": "exact ⟨c, cinC, cltz ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\n⊢ ∃ a ∈ C, a < z",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that \\( c \\) is an element of \\( C \\) and that \\( c \\) is less than \\( z \\)."
+  },
+  {
+    "AppliedTactic": "exact ⟨Set.mem_univ z, this ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis✝ :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\nthis :  ¬LowerBound C z\n⊢ z ∈ A",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Set.mem_univ : Any element of a type belongs to the universal set of that type."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the fact that \\( z \\) belongs to the universal set and the assumption that \\( z \\) is not a lower bound of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "exact ⟨z, zinA ⟩ ",
+    "GoalsBefore": "case right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nS : Set ℝ :=  {z | c < z}\nthis :  S.Nonempty\nz :  ℝ\nzinS :  z ∈ S\ncltz :  c < z\nzinA :  z ∈ A\n⊢ A.Nonempty",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that \\( z \\) is greater than \\( c \\) and that \\( z \\) belongs to the set \\( A \\)."
+  },
+  {
+    "AppliedTactic": ". rw [Set.inter_comm]\n        exact  Set.diff_inter_self ",
+    "GoalsBefore": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅\n\ncase right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ\n\ncase right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where the intersection of the set of lower bounds of \\( C \\) and its complement is empty."
+  },
+  {
+    "AppliedTactic": "rw [Set.inter_comm ] ",
+    "GoalsBefore": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∩ A = ∅",
+    "GoalsAfter": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A ∩ B = ∅",
+    "GivenPremises": [
+      "Set.inter_comm : The intersection of two sets is commutative, meaning the order of the sets does not affect the result."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that the intersection of two sets is commutative, the goal of proving that the intersection of set \\( B \\) and set \\( A \\) is empty becomes the goal of proving that the intersection of set \\( A \\) and set \\( B \\) is empty."
+  },
+  {
+    "AppliedTactic": "exact  Set.diff_inter_self ",
+    "GoalsBefore": "case right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ A ∩ B = ∅",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Set.diff_inter_self : The intersection of the difference of one set from another and the first set itself is empty."
+    ],
+    "Template": "The proof is completed from the theorem(s) that [theorems].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that the intersection of the difference of one set from another and the first set itself is empty."
+  },
+  {
+    "AppliedTactic": ". rw [Set.union_comm, Set.diff_union_self,Set.univ_union ] ",
+    "GoalsBefore": "case right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ\n\ncase right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ",
+    "GivenPremises": [
+      "Set.univ : This defines the universal set for a given type as the set that includes all elements of that type."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where the union of the set of lower bounds of \\( C \\) and its complement equals the entire set of real numbers."
+  },
+  {
+    "AppliedTactic": "rw [Set.union_comm, Set.diff_union_self,Set.univ_union ] ",
+    "GoalsBefore": "case right.right.right.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ B ∪ A = Set.univ",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Set.diff_union_self : The union of the difference of one set from another with the second set is equal to the union of both sets.",
+      "Set.univ_union : The union of the universal set with any set is equal to the universal set."
+    ],
+    "Template": "By using [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By using the commutativity of union, the fact that the union of the difference of one set from another with the second set equals the union of both sets, and that the union of the universal set with any set is the universal set, we complete the proof."
+  },
+  {
+    "AppliedTactic": ". intro b binB a ainA\n        by_contra neblta\n        push_neg at neblta\n        have : LowerBound C a := by\n          intro k kinC\n          have : k ≥ b := binB k kinC\n          apply ge_trans this neblta\n        have : a ∈ A ∩ B := ⟨ainA, this⟩\n        have : a ∉ A ∩ B := by\n          intro h'\n          have : A ∩ B = ∅ := Set.diff_inter_self\n          rw [this] at h'\n          contradiction\n         contradiction ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove that for every element \\( a \\) in \\( B \\) and every element \\( b \\) in \\( A \\), the element \\( a \\) is less than \\( b \\) by contradiction, showing that assuming the opposite leads to a contradiction with the emptiness of the intersection of \\( A \\) and \\( B \\)."
+  },
+  {
+    "AppliedTactic": "intro b binB a  ainA ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\n⊢ ∀ a ∈ B, ∀ b ∈ A, a < b",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\n⊢ b < a",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( b \\) is an element of the set of lower bounds of \\( C \\) and \\( a \\) is an element outside this set. From now on, we will show that \\( b \\) is less than \\( a \\)."
+  },
+  {
+    "AppliedTactic": "by_contra  neblta ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\n⊢ b < a",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  ¬b < a\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Assume that  [hypothesisAfter] and show a contradiction.",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Assume that \\( b \\) is not less than \\( a \\) and show a contradiction."
+  },
+  {
+    "AppliedTactic": "push_neg at  neblta ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  ¬b < a\n⊢ False",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\n⊢ False",
+    "GivenPremises": [],
+    "Template": "[hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Not \\( b < a \\) becomes \\( a \\leq b \\)."
+  },
+  {
+    "AppliedTactic": "have : LowerBound C a := by\n          intro k kinC\n          have : k ≥ b := binB k kinC\n          apply ge_trans this  neblta ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\n⊢ False",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis :  LowerBound C a\n⊢ False",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set.",
+      "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( a \\) is a lower bound of \\( C \\) by proving that for any element \\( k \\) in \\( C \\), \\( k \\) is greater than or equal to \\( b \\), and since \\( a \\leq b \\), it follows that \\( k \\) is greater than or equal to \\( a \\)."
+  },
+  {
+    "AppliedTactic": "intro k  kinC ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\n⊢ LowerBound C a",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nk :  ℝ\nkinC :  k ∈ C\n⊢ k ≥ a",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( k \\) is an element of the set \\( C \\). From now on, we will show that \\( k \\) is greater than or equal to \\( a \\)."
+  },
+  {
+    "AppliedTactic": "have : k ≥ b := binB k  kinC ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nk :  ℝ\nkinC :  k ∈ C\n⊢ k ≥ a",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nk :  ℝ\nkinC :  k ∈ C\nthis :  k ≥ b\n⊢ k ≥ a",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( k \\) is greater than or equal to \\( b \\). This can be proved by using the fact that \\( k \\) is an element of the set \\( C \\) and \\( b \\) is a lower bound of \\( C \\), which means every element of \\( C \\) is at least \\( b \\)."
+  },
+  {
+    "AppliedTactic": "apply ge_trans this  neblta ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nk :  ℝ\nkinC :  k ∈ C\nthis :  k ≥ b\n⊢ k ≥ a",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem that if one element is greater than or equal to a second, and the second is greater than or equal to a third, then the first is greater than or equal to the third, and from the assumptions that \\( k \\) is greater than or equal to \\( b \\) and \\( a \\) is less than or equal to \\( b \\), in order to establish that \\( k \\) is greater than or equal to \\( a \\), the goal is achieved."
+  },
+  {
+    "AppliedTactic": "have : a ∈ A ∩ B := ⟨ainA, this ⟩ ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis :  LowerBound C a\n⊢ False",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝ :  LowerBound C a\nthis :  a ∈ A ∩ B\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( a \\) belongs to the intersection of sets \\( A \\) and \\( B \\). This can be proved by combining the facts that \\( a \\) is in \\( A \\) and that \\( a \\) satisfies the property defining membership in \\( B \\), which is being a lower bound of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "have : a ∉ A ∩ B := by\n          intro h'\n          have : A ∩ B = ∅ := Set.diff_inter_self\n          rw [this] at h'\n           contradiction ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝ :  LowerBound C a\nthis :  a ∈ A ∩ B\n⊢ False",
+    "GoalsAfter": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ :  a ∈ A ∩ B\nthis :  a ∉ A ∩ B\n⊢ False",
+    "GivenPremises": [
+      "Set.diff_inter_self : The intersection of the difference of one set from another and the first set itself is empty.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( a \\) does not belong to the intersection of \\( A \\) and \\( B \\) by using the fact that this intersection is empty, leading to a contradiction."
+  },
+  {
+    "AppliedTactic": "intro  h' ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝ :  LowerBound C a\nthis :  a ∈ A ∩ B\n⊢ a ∉ A ∩ B",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝ :  LowerBound C a\nthis h' :  a ∈ A ∩ B\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( a \\) belongs to the intersection of the sets \\( A \\) and \\( B \\). From now on, we will show that this leads to a contradiction."
+  },
+  {
+    "AppliedTactic": "have : A ∩ B = ∅ :=  Set.diff_inter_self ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝ :  LowerBound C a\nthis h' :  a ∈ A ∩ B\n⊢ False",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ h' :  a ∈ A ∩ B\nthis :  A ∩ B = ∅\n⊢ False",
+    "GivenPremises": [
+      "Set.diff_inter_self : The intersection of the difference of one set from another and the first set itself is empty."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the intersection of the set \\( A \\) and the set \\( B \\) is empty. This can be proved by noting that \\( A \\) is defined as the complement of \\( B \\), so their intersection contains no elements."
+  },
+  {
+    "AppliedTactic": "rw [this] at  h' ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ h' :  a ∈ A ∩ B\nthis :  A ∩ B = ∅\n⊢ False",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ :  a ∈ A ∩ B\nh' :  a ∈ ∅\nthis :  A ∩ B = ∅\n⊢ False",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the assumption that the intersection of the sets \\( A \\) and \\( B \\) is empty, the statement that \\( a \\) belongs to the intersection of \\( A \\) and \\( B \\) becomes the statement that \\( a \\) belongs to the empty set."
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ :  a ∈ A ∩ B\nh' :  a ∈ ∅\nthis :  A ∩ B = ∅\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since the set \\( A \\cap B \\) is both empty and contains the element \\( a \\), this leads to a contradiction. Therefore, we complete the proof."
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "case right.right.right.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nb :  ℝ\nbinB :  b ∈ B\na :  ℝ\nainA :  a ∈ A\nneblta :  a ≤ b\nthis✝¹ :  LowerBound C a\nthis✝ :  a ∈ A ∩ B\nthis :  a ∉ A ∩ B\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since the element \\( a \\) cannot both belong and not belong to the intersection of sets \\( A \\) and \\( B \\) simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+  },
+  {
+    "AppliedTactic": "let Continuous := ContinuityAxiom  Dedekind ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nContinuous : HasMaxElement B ∨ HasMinElement A :=  ContinuityAxiom Dedekind\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let Continuous be the statement that either the set of lower bounds of \\( C \\) has a maximum element or its complement has a minimum element, as guaranteed by the continuity axiom applied to the given Dedekind cut."
+  },
+  {
+    "AppliedTactic": "rcases Continuous with h |  h ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nContinuous : HasMaxElement B ∨ HasMinElement A :=  ContinuityAxiom Dedekind\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\n⊢ ∃ x, Infimum C x\n\ncase inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Infimum : A real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every element in the set."
+    ],
+    "Template": "To prove [goalsBefore], we proceed by case analysis on whether [statement].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "To prove the existence of an infimum for the set \\( C \\), we proceed by case analysis on whether the set of lower bounds of \\( C \\) has a maximum element or its complement has a minimum element."
+  },
+  {
+    "AppliedTactic": ". let ⟨x,⟨xinB,h1⟩⟩ := h\n      apply Exists.intro x\n      apply And.intro\n      . exact xinB\n      . exact  h1 ",
+    "GoalsBefore": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\n⊢ ∃ x, Infimum C x\n\ncase inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Infimum : A real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every element in the set."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where there exists an element that serves as the greatest lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨x,⟨xinB,h1⟩⟩ :=  h ",
+    "GoalsBefore": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( x \\) be an element of \\( B \\) that is greater than or equal to every other element of \\( B \\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  x ",
+    "GoalsBefore": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ Infimum C x",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Infimum : A real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every element in the set."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the principle that to prove the existence of an element with a certain property it suffices to provide a specific example, in order to establish that there exists an infimum of the set \\( C \\), it suffices to prove that the real number \\( x \\) is the infimum of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "case inl\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ Infimum C x",
+    "GoalsAfter": "case inl.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ LowerBound C x\n\ncase inl.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∀ (y : ℝ), LowerBound C y → y ≤ x",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set.",
+      "Infimum : A real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every element in the set."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that a conjunction is true if and only if both components are true, in order to establish that \\( x \\) is the greatest lower bound of the set \\( C \\), it suffices to prove that \\( x \\) is a lower bound of \\( C \\) and that every lower bound of \\( C \\) is less than or equal to \\( x \\)."
+  },
+  {
+    "AppliedTactic": ". exact  xinB ",
+    "GoalsBefore": "case inl.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ LowerBound C x\n\ncase inl.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∀ (y : ℝ), LowerBound C y → y ≤ x",
+    "GoalsAfter": "case inl.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ LowerBound C x",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where \\( x \\) is a lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "exact  xinB ",
+    "GoalsBefore": "case inl.left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ LowerBound C x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( x \\) is an element of the set of all lower bounds of \\( C \\)."
+  },
+  {
+    "AppliedTactic": ". exact  h1 ",
+    "GoalsBefore": "case inl.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∀ (y : ℝ), LowerBound C y → y ≤ x",
+    "GoalsAfter": "case inl.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∀ (y : ℝ), LowerBound C y → y ≤ x",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove that every lower bound of the set \\( C \\) is less than or equal to \\( x \\)."
+  },
+  {
+    "AppliedTactic": "exact  h1 ",
+    "GoalsBefore": "case inl.right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMaxElement B\nx :  ℝ\nxinB :  x ∈ B\nh1 :  ∀ y ∈ B, y ≤ x\n⊢ ∀ (y : ℝ), LowerBound C y → y ≤ x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that for every element y in B, y is less than or equal to x."
+  },
+  {
+    "AppliedTactic": ". let ⟨x ,⟨xinA,h1⟩⟩ := h\n      have : ¬ x ∈ B := by\n        exact Set.not_mem_of_mem_diff xinA\n      have : ∃ c ∈ C, c < x := by\n        have : ¬ LowerBound C x := by exact this\n        rw [LowerBound] at this; push_neg at this\n        apply this\n      let ⟨c,⟨cinC,cltx⟩⟩ := this\n      let z : ℝ := (x + c) / 2\n      have : c < z ∧ z < x := by\n        apply And.intro\n        . apply (lt_div_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_right\n          exact cltx\n        . apply (div_lt_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_left\n          exact cltx\n      have zinA : z ∈ A := by\n        have : ¬ LowerBound C z := by\n          rw [LowerBound]\n          push_neg\n          exact ⟨c, cinC, this.left⟩\n        exact ⟨Set.mem_univ z, this⟩\n      have : x ≤ z := h1 z zinA\n       linarith ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Infimum : A real number is the infimum of a set if it is the greatest lower bound that is less than or equal to every element in the set."
+    ],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where there exists a real number that serves as the greatest lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨x ,⟨xinA,h1⟩⟩ :=  h ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( x \\) be an element of \\( A \\) such that \\( x \\) is less than or equal to every element of \\( A \\)."
+  },
+  {
+    "AppliedTactic": "have : ¬ x ∈ B := by\n        exact Set.not_mem_of_mem_diff  xinA ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis :  x ∉ B\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Set.not_mem_of_mem_diff : If an element belongs to the difference of two sets, then it cannot belong to the second set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( x \\) does not belong to the set \\( B \\)."
+  },
+  {
+    "AppliedTactic": "exact Set.not_mem_of_mem_diff  xinA ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\n⊢ x ∉ B",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Set.not_mem_of_mem_diff : If an element belongs to the difference of two sets, then it cannot belong to the second set."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that an element belonging to the difference of two sets cannot belong to the second set and the assumption that \\( x \\) belongs to the difference of the universal set and the set of lower bounds of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "have : ∃ c ∈ C, c < x := by\n        have : ¬ LowerBound C x := by exact this\n        rw [LowerBound] at this; push_neg at this\n        apply  this ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis :  x ∉ B\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that there exists an element in the set \\( C \\) that is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "have : ¬ LowerBound C x := by exact  this ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis :  x ∉ B\n⊢ ∃ c ∈ C, c < x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ¬LowerBound C x\n⊢ ∃ c ∈ C, c < x",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( x \\) is not a lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "exact  this ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis :  x ∉ B\n⊢ ¬LowerBound C x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( x \\) is not a lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "rw [LowerBound] at  this ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ¬LowerBound C x\n⊢ ∃ c ∈ C, c < x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ¬∀ a ∈ C, a ≥ x\n⊢ ∃ c ∈ C, c < x",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the definition that a real number is a lower bound of a set if it is less than or equal to every element in that set, the statement that \\( x \\) is not a lower bound of \\( C \\) becomes the statement that it is not true that every element of \\( C \\) is greater than or equal to \\( x \\)."
+  },
+  {
+    "AppliedTactic": "push_neg at  this ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ¬∀ a ∈ C, a ≥ x\n⊢ ∃ c ∈ C, c < x",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ a ∈ C, a < x\n⊢ ∃ c ∈ C, c < x",
+    "GivenPremises": [],
+    "Template": "[hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Not all elements of \\( C \\) are greater than or equal to \\( x \\) becomes there exists an element of \\( C \\) that is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "apply  this ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ a ∈ C, a < x\n⊢ ∃ c ∈ C, c < x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "From [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the assumption that there exists an element \\( c \\) in \\( C \\) that is less than \\( x \\), in order to establish that there exists an element in \\( C \\) less than \\( x \\), the goal is immediately satisfied."
+  },
+  {
+    "AppliedTactic": "let ⟨c,⟨cinC,cltx⟩⟩ :=  this ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc :  ℝ\ncinC :  c ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( c \\) be an element of \\( C \\) such that \\( c < x \\)."
+  },
+  {
+    "AppliedTactic": "let z : ℝ := (x + c) /  2 ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( z \\) be the real number defined as the average of \\( x \\) and \\( c \\)."
+  },
+  {
+    "AppliedTactic": "have : c < z ∧ z < x := by\n        apply And.intro\n        . apply (lt_div_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_right\n          exact cltx\n        . apply (div_lt_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_left\n          exact  cltx ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "add_lt_add_left : This theorem establishes that if one element is strictly less than another, then adding a common element to both sides of the inequality preserves that strict relationship.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "mul_add : This theorem states that in a structure where multiplication is left distributive over addition, the product of an element and the sum of two other elements equals the sum of the products of the first element with each of the other two elements.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "add_lt_add_right : This theorem states that if one quantity is less than another, then adding a common right factor to both sides will preserve that inequality under specific additive conditions.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( c < z \\) and \\( z < x \\)."
+  },
+  {
+    "AppliedTactic": "apply  And.intro ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < z ∧ z < x",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < z\n\ncase right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ z < x",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that the conjunction of two statements holds if both statements are true, in order to establish that \\( c < z \\) and \\( z < x \\) simultaneously, it suffices to prove separately that \\( c < z \\) and that \\( z < x \\)."
+  },
+  {
+    "AppliedTactic": ". apply (lt_div_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_right\n          exact  cltx ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < z\n\ncase right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ z < x",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < z",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where \\( c < \\frac{x + c}{2} \\)."
+  },
+  {
+    "AppliedTactic": "apply (lt_div_iff (by norm_num)). 2 ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < z",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c * 2 < x + c",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem relating strict inequalities involving division by a positive number, in order to establish that \\( c \\) is less than the average of \\( x \\) and \\( c \\), it suffices to prove that twice \\( c \\) is less than the sum of \\( x \\) and \\( c \\)."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ 0 < 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that \\( 0 < 2 \\)."
+  },
+  {
+    "AppliedTactic": "rw [← one_add_one_eq_two,mul_add,mul_one ] ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c * 2 < x + c",
+    "GoalsAfter": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c + c < x + c",
+    "GivenPremises": [
+      "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By rewriting the expression using the fact that one plus one equals two, distributing multiplication over addition, and simplifying multiplication by one, the goal of proving \\( c \\cdot 2 < x + c \\) becomes proving \\( c + c < x + c \\)."
+  },
+  {
+    "AppliedTactic": "apply  add_lt_add_right ",
+    "GoalsBefore": "case left\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c + c < x + c",
+    "GoalsAfter": "case left.bc\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < x",
+    "GivenPremises": [
+      "add_lt_add_right : This theorem states that if one quantity is less than another, then adding a common right factor to both sides will preserve that inequality under specific additive conditions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that adding the same quantity to both sides of an inequality preserves the inequality, in order to establish that \\( c + c < x + c \\), it suffices to prove that \\( c < x \\)."
+  },
+  {
+    "AppliedTactic": "exact  cltx ",
+    "GoalsBefore": "case left.bc\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that there exists an element \\( c \\) in \\( C \\) such that \\( c \\) is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": ". apply (div_lt_iff (by norm_num)).2\n          rw [← one_add_one_eq_two,mul_add,mul_one]\n          apply add_lt_add_left\n          exact  cltx ",
+    "GoalsBefore": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ z < x",
+    "GoalsAfter": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ z < x",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where the midpoint between \\( x \\) and \\( c \\) is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "apply (div_lt_iff (by norm_num)). 2 ",
+    "GoalsBefore": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ z < x",
+    "GoalsAfter": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ x + c < x * 2",
+    "GivenPremises": [
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem that dividing by a positive number preserves inequalities, in order to establish that the midpoint between \\( x \\) and \\( c \\) is less than \\( x \\), it suffices to prove that the sum of \\( x \\) and \\( c \\) is less than twice \\( x \\)."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ 0 < 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that \\( 0 < 2 \\)."
+  },
+  {
+    "AppliedTactic": "rw [← one_add_one_eq_two,mul_add,mul_one ] ",
+    "GoalsBefore": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ x + c < x * 2",
+    "GoalsAfter": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ x + c < x + x",
+    "GivenPremises": [
+      "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that one plus one equals two, the distributive property of multiplication over addition, and that multiplying by one leaves an element unchanged, the goal of proving \\( x + c < x \\times 2 \\) becomes proving \\( x + c < x + x \\)."
+  },
+  {
+    "AppliedTactic": "apply  add_lt_add_left ",
+    "GoalsBefore": "case right\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ x + c < x + x",
+    "GoalsAfter": "case right.bc\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < x",
+    "GivenPremises": [
+      "add_lt_add_left : This theorem establishes that if one element is strictly less than another, then adding a common element to both sides of the inequality preserves that strict relationship."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that adding the same quantity to both sides of an inequality preserves the inequality, in order to establish that the sum of \\( x \\) and \\( c \\) is less than the sum of \\( x \\) and itself, it suffices to prove that \\( c \\) is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "exact  cltx ",
+    "GoalsBefore": "case right.bc\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝ :  x ∉ B\nthis :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\n⊢ c < x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( c \\) is less than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "have zinA : z ∈ A := by\n        have : ¬ LowerBound C z := by\n          rw [LowerBound]\n          push_neg\n          exact ⟨c, cinC, this.left⟩\n        exact ⟨Set.mem_univ z, this ⟩ ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\nzinA :  z ∈ A\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [
+      "Set.mem_univ : Any element of a type belongs to the universal set of that type.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set.",
+      "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( z \\) belongs to the set \\( A \\) by proving that \\( z \\) is not a lower bound of \\( C \\) and that \\( z \\) is an element of the universal set."
+  },
+  {
+    "AppliedTactic": "have : ¬ LowerBound C z := by\n          rw [LowerBound]\n          push_neg\n          exact ⟨c, cinC, this.left ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ z ∈ A",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝² :  x ∉ B\nthis✝¹ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis✝ :  c < z ∧ z < x\nthis :  ¬LowerBound C z\n⊢ z ∈ A",
+    "GivenPremises": [
+      "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( z \\) is not a lower bound of the set \\( C \\)."
+  },
+  {
+    "AppliedTactic": "rw [LowerBound ] ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ¬LowerBound C z",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ¬∀ a ∈ C, a ≥ z",
+    "GivenPremises": [
+      "LowerBound : A real number is a lower bound of a set if it is less than or equal to every element in that set."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the definition that a real number is a lower bound of a set if it is less than or equal to every element in that set, the goal of proving that \\( z \\) is not a lower bound of \\( C \\) becomes proving that it is not true that every element of \\( C \\) is greater than or equal to \\( z \\)."
+  },
+  {
+    "AppliedTactic": " push_neg ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ¬∀ a ∈ C, a ≥ z",
+    "GoalsAfter": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ∃ a ∈ C, a < z",
+    "GivenPremises": [],
+    "Template": "[goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Not all elements of \\( C \\) are greater than or equal to \\( z \\) becomes there exists an element of \\( C \\) that is less than \\( z \\)."
+  },
+  {
+    "AppliedTactic": "exact ⟨c, cinC, this.left ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\n⊢ ∃ a ∈ C, a < z",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that \\( c \\) is an element of \\( C \\), \\( c \\) is less than \\( x \\), and the number \\( z \\) lies strictly between \\( c \\) and \\( x \\)."
+  },
+  {
+    "AppliedTactic": "exact ⟨Set.mem_univ z, this ⟩ ",
+    "GoalsBefore": "C :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝² :  x ∉ B\nthis✝¹ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis✝ :  c < z ∧ z < x\nthis :  ¬LowerBound C z\n⊢ z ∈ A",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Set.mem_univ : Any element of a type belongs to the universal set of that type."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the fact that any element belongs to the universal set and the assumption that \\( z \\) is not a lower bound of \\( C \\)."
+  },
+  {
+    "AppliedTactic": "have : x ≤ z := h1 z  zinA ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝¹ :  x ∉ B\nthis✝ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis :  c < z ∧ z < x\nzinA :  z ∈ A\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝² :  x ∉ B\nthis✝¹ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis✝ :  c < z ∧ z < x\nzinA :  z ∈ A\nthis :  x ≤ z\n⊢ ∃ x, Infimum C x",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( x \\) is less than or equal to \\( z \\). This can be proved by applying the property that \\( x \\) is less than or equal to every element in the set \\( A \\), and since \\( z \\) belongs to \\( A \\), it follows that \\( x \\leq z \\)."
+  },
+  {
+    "AppliedTactic": " linarith ",
+    "GoalsBefore": "case inr\nC :  Set ℝ\nCnotEmpty :  C.Nonempty\nCBelow :  BoundedBelow C\nc✝ :  ℝ\ncinC✝ :  c✝ ∈ C\nB : Set ℝ :=  {x | LowerBound C x}\nA : Set ℝ :=  Set.univ \\ B\nDedekind :  DedekindCut B A\nh :  HasMinElement A\nx :  ℝ\nxinA :  x ∈ A\nh1 :  ∀ y ∈ A, x ≤ y\nthis✝² :  x ∉ B\nthis✝¹ :  ∃ c ∈ C, c < x\nc :  ℝ\ncinC :  c ∈ C\ncltx :  c < x\nz : ℝ :=  (x + c) / 2\nthis✝ :  c < z ∧ z < x\nzinA :  z ∈ A\nthis :  x ≤ z\n⊢ ∃ x, Infimum C x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since \\( x \\leq y \\) for all \\( y \\) in \\( A \\) and \\( z \\) is constructed between \\( c \\in C \\) and \\( x \\) such that \\( c < z < x \\), yet \\( z \\in A \\) and \\( x \\leq z \\), this contradicts the minimality of \\( x \\) in \\( A \\). Therefore, we complete the proof."
+  }
+]

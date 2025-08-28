@@ -1,0 +1,103 @@
+[applied Tactic]
+have := x_conv_to_a 1 (by norm_num ) 
+
+[answer]
+We will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the inequality \( |x_n - a| < 1 \) holds. Since the sequence \( x \) converges to \( a \), by the definition of convergence, for the positive number \( \epsilon = 1 \) (noting that \( 1 > 0 \)), there exists \( n_0 \in \mathbb{N} \) such that for all \( n \geq n_0 \), we have \( |x_n - a| < \epsilon = 1 \). This directly establishes the desired bound, completing the proof.
+[applied Tactic]
+have h2: ∀n ≥ n₀, |x n| < |a| + 1 := by
+      intro n ngen₀
+      have h2₁ := abs_sub_abs_le_abs_sub (x n) a
+      have h2₂ := h1 n ngen₀
+      exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the absolute value of \( x_n \) is less than the absolute value of \( a \) plus one. To begin, we use the property that the difference between the absolute values satisfies the inequality \(|\,|x_n| - |a|\,| \leq |x_n - a|\). By the hypothesis, for all \( n \geq n_0 \), we have \( |x_n - a| < 1 \). Combining these two facts, it follows that \(|x_n| - |a| \leq |x_n - a| < 1\). Finally, applying the transitive property of inequalities, we conclude that \(|x_n| < |a| + 1\), which completes the proof.
+[applied Tactic]
+have : Z.Nonempty := by
+      rw [Finset.Nonempty]
+      apply Exists.intro (|a| + 1)
+      simp [Z ] 
+
+[answer]
+We will show that the finite set \( Z \) is non-empty by exhibiting a specific element within it. By definition, to prove that a finite set is non-empty, it suffices to demonstrate the existence of at least one element in the set. Therefore, our goal reduces to showing that there exists an element \( x \in Z \). To this end, it is enough to provide a concrete example of such an element. We claim that the element \( |a| + 1 \) belongs to \( Z \). This follows directly from the construction of the finite set \( Z \), which comprises values of the sequence up to a certain index, together with the bound on the sequence terms beyond that index. Hence, the element \( |a| + 1 \) is indeed contained in \( Z \), establishing that \( Z \) is non-empty as required.
+[applied Tactic]
+have : (|a| + 1) ∈ Z := by simp [Z ] 
+
+[answer]
+We will show that the number obtained by adding 1 to the absolute value of \( a \), namely \(|a| + 1\), is an element of the finite set \( Z \). To see this, we recall that the finite set \( Z \) is constructed using the values of a certain sequence along with an appropriate bound. By applying the definition of this finite set and considering that \(|a|\) is bounded by the elements defining \( Z \), it follows directly that \(|a| + 1\) is contained in \( Z \). Hence, the assertion is established.
+[applied Tactic]
+have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at  this 
+
+[answer]
+We will show that the quantity \(|a| + 1\) is less than or equal to the maximum element \( M \) of the finite set \( Z \), which consists of the absolute values of the first \( n_0 \) terms of the sequence together with the number \(|a| + 1\). First, by construction, \(|a| + 1\) is an element of the set \( Z \) since \( Z \) includes this value explicitly along with the sequence terms. Since \( Z \) is a finite set, it follows from the properties of finite sets that any element of \( Z \) must be less than or equal to its maximum element. Therefore, \(|a| + 1 \leq \max(Z)\). Finally, by identifying the maximum element of \( Z \) as \( M \) by assumption, we conclude that \(|a| + 1 \leq M\), establishing the desired inequality.
+[applied Tactic]
+. have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt  this 
+
+[answer]
+We will show that for all \( n \), the absolute value of \( x_n \) is bounded above by a finite constant \( M \). First, observe that for all \( n \geq n_0 \), the absolute value \(|x_n|\) is bounded by \(|a| + 1\) by assumption. Next, consider the finite set \( Z \) consisting of the absolute values of the first \( n_0 \) terms of the sequence along with the number \(|a| + 1\). By construction, \(|a| + 1\) is an element of \( Z \), and since \( Z \) is finite, its maximum element \( M = \max(Z) \) satisfies \(|a| + 1 \leq M\). Combining these observations, for all \( n \geq n_0 \), we have \(|x_n| \leq |a| + 1 \leq M\), and for \( n < n_0 \), \(|x_n|\) is also bounded by \( M \) as it is included in \( Z \). Therefore, for all \( n \), \(|x_n| \leq M\), completing the proof.
+[applied Tactic]
+have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl ⟩ 
+
+[answer]
+We will show that the absolute value of \( x_n \) belongs to the finite set \( Z \). To this end, we observe that proving \( |x(n)| \in Z \) reduces to demonstrating that either there exists an index \( k < n_0 \) such that \( |x(k)| = |x(n)| \), or that \( |x(n)| = |a| + 1 \). First, we consider the case when such an index \( k < n_0 \) exists for which the absolute value of the sequence at \( k \) equals that at \( n \). Under this assumption, since the element at index \( k \) is by definition equal to itself, it follows that \( |x(n)| \) is indeed an element of \( Z \). Thus, the proof is complete.
+[applied Tactic]
+. push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+
+[answer]
+We prove the case where the index \( n \) is less than \( n_0 \). Our goal is to show that the absolute value \( |x_n| \) belongs to the finite set \( Z \). To do this, we observe that demonstrating \( |x(n)| \in Z \) reduces to showing either there exists an index \( k < n_0 \) such that \( |x(k)| = |x(n)| \), or that \( |x(n)| = |a| + 1 \). First, suppose there exists such a \( k < n_0 \) with \( |x(k)| = |x(n)| \). Since \( |x(k)| \) is by definition an element of \( Z \), it follows immediately that \( |x(n)| \in Z \), completing the proof of this case. Furthermore, since \( Z \) is finite, the absolute value \( |x_n| \) is bounded above by the maximum element of \( Z \). Denoting this maximum by \( M \), we conclude that \( |x_n| \leq M \), as required.
+[applied Tactic]
+have : ∀ n, |x n| ≤ M := by
+      intro n
+      -- 教科書では明示されていないものの基本は場合わけで考えているはず
+      by_cases h : n ≥ n₀
+      . have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt this
+      . push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+
+[answer]
+We will show that for every natural number \( n \), the absolute value \(|x_n|\) is bounded above by a finite constant \( M \). To this end, fix an arbitrary \( n \in \mathbb{N} \) and proceed by cases based on whether \( n \geq n_0 \) or \( n < n_0 \).
+
+First, consider the case \( n \geq n_0 \). By assumption, for all such \( n \), we have \(|x_n| \leq |a| + 1\). Next, define the finite set 
+\[
+Z = \{ |x_k| : k < n_0 \} \cup \{|a| + 1\}.
+\]
+Since \( Z \) is finite and contains \(|a| + 1\), let \( M = \max(Z) \). By construction, we have \(|a| + 1 \leq M\), so for all \( n \geq n_0 \), 
+\[
+|x_n| \leq |a| + 1 \leq M.
+\]
+
+Now consider the case \( n < n_0 \). Since \( n \) is less than \( n_0 \), the term \(|x_n|\) is an element of the finite set \(\{ |x_k| : k < n_0 \}\), which is contained in \( Z \). Hence, \(|x_n| \in Z\) and therefore 
+\[
+|x_n| \leq M.
+\]
+
+Combining both cases, we conclude that for every natural number \( n \), \(|x_n| \leq M\), completing the proof.

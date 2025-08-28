@@ -1,0 +1,139 @@
+[appliedTactic]
+let ⟨a,convxa⟩ :=  conx 
+[answer]
+From the assumption that the sequence \( x \) converges, introduce the limit \( a \) of \( x \) and the statement that \( x \) converges to \( a \).
+[appliedTactic]
+have : ConvergesTo (fun n => α * (x n)) (α*a):= by
+    -- ⭐️ 任意の ε > 0 に対して、
+    intro ε εpos
+    -- ⭐️ n₀ ∈ ℕ で n ≥ n₀ ならば |x_n - a| < ε / (|α| + 1)となるものが存在する
+    let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))
+    -- ⭐️ n ≥ n₀ なら
+    apply Exists.intro n₀
+    intro n nlen₀
+    /-
+      ⭐️
+      |αx_n - αa| = |α||x_n - a| ≤ |α| * ε / (|α| + 1) < ε
+      となるので (c)が示された.
+    -/
+    calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+[answer]
+Demonstrate that the sequence obtained by multiplying each term of the original sequence by the constant \( \alpha \) converges to the product of \( \alpha \) and the limit of the original sequence. This is done by showing that for any positive tolerance, there exists a point in the sequence beyond which the difference between the scaled terms and the scaled limit is less than the tolerance. The proof uses the convergence of the original sequence and properties of absolute values and inequalities to establish that the scaled sequence converges accordingly.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that there exists a natural number \( n_0 \) such that for all \( n \) greater than or equal to \( n_0 \), the difference between \( \alpha \) times the \( n \)-th term of the sequence \( x \) and \( \alpha \) times the limit \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+[answer]
+From the fact that the sequence \(x\) converges to \(a\), choose a natural number \(n_0\) such that for all indices \(n\) greater than or equal to \(n_0\), the distance between \(x_n\) and \(a\) is less than \(\frac{\varepsilon}{|\alpha| + 1}\).
+[appliedTactic]
+ norm_num 
+[answer]
+It is evident that 0 is less than 1.
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+By choosing the specific natural number \( n_0 \), the proof now focuses on showing that for all indices \( n \) greater than or equal to \( n_0 \), the absolute difference between \( \alpha \) times the sequence value at \( n \) and \( \alpha \) times the limit \( a \) is less than \( \varepsilon \). This reduces the original existence claim to verifying this inequality for the fixed \( n_0 \).
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume an arbitrary natural number \( n \) such that \( n \geq n_0 \). We will now show that the absolute difference between \( \alpha \) times the \( n \)-th term of the sequence and \( \alpha \) times the limit \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+[answer]
+By calculation, it is shown that the absolute difference between \( \alpha \cdot x_n \) and \( \alpha \cdot a \) equals the absolute value of \( \alpha \) multiplied by the absolute difference between \( x_n \) and \( a \). This quantity is then bounded above by \( |\alpha| \) times \( \varepsilon \) divided by \( |\alpha| + 1 \). Considering whether \( |\alpha| \) is positive or zero, it follows that this bound is less than \( \varepsilon \). Thus, the difference \( |\alpha \cdot x_n - \alpha \cdot a| \) is shown to be less than \( \varepsilon \).
+[appliedTactic]
+rw [← mul_sub, abs_mul ] 
+[answer]
+The proof rewrites the expression by factoring out the multiplication over subtraction and then applies the property that the absolute value of a product equals the product of the absolute values. This directly establishes that the absolute value of the difference between the scaled terms equals the absolute value of the scalar multiplied by the absolute value of the difference of the original terms, completing the step.
+[appliedTactic]
+rw [← mul_div ] 
+[answer]
+The goal was rewritten by expressing the product of the absolute value of α and the quotient ε divided by the sum of the absolute value of α and 1 as the quotient of the product of the absolute value of α and ε divided by that same sum. This reformulation clarifies the structure of the expression without changing its value.
+[appliedTactic]
+by_cases h1 :|α| >  0 
+[answer]
+We proceed by considering two cases based on whether the absolute value of \( \alpha \) is positive or not. This allows us to analyze the inequality separately under the assumption that the absolute value of \( \alpha \) is greater than zero and under the assumption that it is not.
+[appliedTactic]
+. rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n  nlen₀ 
+[answer]
+We use the fact that multiplying both sides of an inequality by a positive number preserves the inequality. Specifically, since the absolute value of α is positive, we reduce the goal to showing that the absolute difference between \( x_n \) and \( a \) is less than the quotient of ε by the sum of the absolute value of α and one. This follows directly from the given assumption for all \( n \) greater than or equal to \( n_0 \).
+[appliedTactic]
+rw [mul_le_mul_left h1 ] 
+[answer]
+Since the absolute value of α is positive, we can simplify the inequality by dividing both sides of the inequality involving the product with |α| by |α|. This reduces the goal from proving that |α| times the absolute difference between xₙ and a is at most |α| times ε divided by (|α| + 1) to proving directly that the absolute difference between xₙ and a is at most ε divided by (|α| + 1).
+[appliedTactic]
+apply  le_of_lt 
+[answer]
+The proof step reduces the goal of showing that the absolute difference between \( x_n \) and \( a \) is less than or equal to a certain positive quantity to the stronger statement that this difference is strictly less than that quantity, relying on the fact that strict inequality implies the corresponding non-strict inequality.
+[appliedTactic]
+exact h n  nlen₀ 
+[answer]
+The proof is completed by applying the given inequality for all natural numbers greater than or equal to \( n_0 \) to the specific natural number \( n \), which satisfies this condition, thereby establishing the desired bound on the difference between \( x_n \) and \( a \).
+[appliedTactic]
+. push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+We transform the assumption that the absolute value of α is not greater than zero into an equivalent statement that the absolute value of α equals zero, and then simplify the resulting expression accordingly.
+[appliedTactic]
+push_neg at  h1 
+[answer]
+The negation of the statement that the absolute value of α is greater than zero is rewritten as the absolute value of α being less than or equal to zero.
+[appliedTactic]
+simp at  h1 
+[answer]
+By simplifying the hypothesis stating that the absolute value of α is less than or equal to zero, it is concluded that α is equal to zero.
+[appliedTactic]
+rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+Since \( \alpha \) is zero, its absolute value is also zero. Multiplying any expression by zero results in zero. Therefore, the inequality simplifies to zero being less than or equal to zero, which is trivially true, completing the proof.
+[appliedTactic]
+rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num)) ] 
+[answer]
+The goal, which was to prove that the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 is less than ε, was transformed by rearranging and applying properties of multiplication and division. This reduced the goal to showing that the absolute value of α is less than the product of 1 and the sum of the absolute value of α and 1. This step used the fact that the denominator is positive and applied the equivalence between inequalities involving division and multiplication by positive quantities.
+[appliedTactic]
+rw [one_mul ] 
+[answer]
+By applying the fact that multiplying any number by one leaves it unchanged, the inequality involving the absolute value of α multiplied by one times the quantity |α| plus 1 simplifies to the inequality comparing the absolute value of α directly with |α| plus 1.
+[appliedTactic]
+ simp 
+[answer]
+The inequality stating that the absolute value of α is less than the absolute value of α plus one is established immediately.
+[appliedTactic]
+exact Limit_const_mul x conx  α 
+[answer]
+The proof is completed by applying the fact that multiplying a convergent sequence by a constant yields a new sequence whose limit is the constant multiplied by the original limit.

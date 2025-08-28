@@ -1,0 +1,503 @@
+[appliedTactic]
+intro ⟨convxa, convyb ⟩ 
+[answer]
+Assume that the sequence \( x \) converges to \( a \) and the sequence \( y \) converges to \( b \). From now on, we will show that the sequence defined by the pointwise product of \( x \) and \( y \) converges to the product \( a \cdot b \).
+[appliedTactic]
+have m1h: ∃M > 0, ∀n, |x n| ≤ M := by
+      let ⟨m1,h2⟩ := ConvergentSequenceBounded x ⟨a ,convxa⟩
+      -- m1 が0 の場合も考えてm1 と 1 のうち大きいほうを使う
+      apply Exists.intro (max m1 1)
+      rw [UpperBound] at h2
+      simp at h2
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+[answer]
+Establish that there exists a positive real number \( M \) such that for every natural number \( n \), the absolute value of \( x(n) \) is at most \( M \). This is done by first identifying a bound for the sequence \( x \) guaranteed by its convergence, then choosing \( M \) as the larger of this bound and 1 to ensure positivity, and finally verifying that this choice satisfies the required inequalities for all terms of the sequence.
+[appliedTactic]
+let ⟨m1,h2⟩ := ConvergentSequenceBounded x ⟨a ,convxa ⟩ 
+[answer]
+From the fact that the sequence \( x \) converges to \( a \), introduce a real number \( m_1 \) that serves as an upper bound for the set of absolute values of the terms of \( x \).
+[appliedTactic]
+apply Exists.intro (max m1 1 ) 
+[answer]
+By introducing the number defined as the maximum of \( m_1 \) and 1, the proof now focuses on showing that this number is positive and that every term in the sequence \( x \) has an absolute value less than or equal to this number. This step establishes the existence of a positive bound for the absolute values of the sequence \( x \).
+[appliedTactic]
+rw [UpperBound] at  h2 
+[answer]
+The assumption that \( m_1 \) is an upper bound of the set of absolute values of the sequence \( x \) has been rewritten to explicitly state that every element in this set is less than or equal to \( m_1 \). This clarifies that for all values obtained as the absolute value of \( x_n \), they do not exceed \( m_1 \).
+[appliedTactic]
+simp at  h2 
+[answer]
+The hypothesis stating that every element in the set of absolute values of the sequence \( x \) is less than or equal to \( m_1 \) is simplified to directly state that for every natural number \( a \), the absolute value of \( x(a) \) is at most \( m_1 \).
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof is split into two parts corresponding to the two components of the conjunction in the goal. First, it requires showing that the maximum of \( m_1 \) and 1 is greater than zero. Second, it requires demonstrating that for every natural number \( n \), the absolute value of \( x_n \) is bounded above by this maximum. This step establishes that proving both these statements individually will suffice to conclude their conjunction.
+[appliedTactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+[answer]
+We rewrite the goal involving the maximum of \( m_1 \) and 1 to express it as a strict inequality and then show that this maximum is greater than zero by confirming that 1 is positive.
+[appliedTactic]
+rw [gt_iff_lt,lt_max_iff ] 
+[answer]
+The goal of proving that the maximum of \( m_1 \) and 1 is greater than zero is transformed into showing that either \( m_1 \) is greater than zero or 1 is greater than zero, by rewriting the inequality in terms of a less-than relation and applying the characterization of the maximum function.
+[appliedTactic]
+ right 
+[answer]
+Focus on the case where the number 1 is greater than zero.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 0 is less than 1.
+[appliedTactic]
+. intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+[answer]
+We begin by considering an arbitrary natural number \( n \). To show that the absolute value of \( x(n) \) is at most the maximum of \( m_1 \) and 1, we observe that this maximum is at least \( m_1 \). Since the absolute value of \( x(n) \) is already known to be bounded by \( m_1 \), it follows that it is also bounded by the maximum of \( m_1 \) and 1.
+[appliedTactic]
+intro  n 
+[answer]
+Assume an arbitrary natural number \( n \). We will now prove that the absolute value of \( x(n) \) is at most the maximum of \( m_1 \) and 1.
+[appliedTactic]
+rw [le_max_iff ] 
+[answer]
+The goal of showing that the absolute value of \( x_n \) is less than or equal to the maximum of \( m_1 \) and 1 is transformed into the equivalent statement that the absolute value of \( x_n \) is less than or equal to \( m_1 \) or less than or equal to 1.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the absolute value of \( x(n) \) is at most \( m_1 \).
+[appliedTactic]
+exact h2  n 
+[answer]
+The proof is completed by applying the given bound to the specific natural number \( n \), establishing that the absolute value of \( x_n \) is less than or equal to the constant \( m_1 \).
+[appliedTactic]
+let ⟨m1,hm1⟩ :=  m1h 
+[answer]
+From the assumption that there exists a positive bound for the absolute values of the sequence \( x \), introduce a specific positive real number \( m_1 \) that serves as such a bound, meaning that for every natural number \( n \), the absolute value of \( x_n \) is at most \( m_1 \).
+[appliedTactic]
+have m2h : ∃M > 0, ∀n, |y n| ≤ M := by
+      let ⟨m2,h2⟩ := ConvergentSequenceBounded y ⟨b,convyb⟩
+      apply Exists.intro (max m2 1)
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+[answer]
+Establish that there exists a positive bound for the sequence \( y \) by applying the fact that every convergent sequence is bounded. Specifically, use the bound obtained from the convergence of \( y \), then take the maximum of this bound and 1 to ensure positivity. Finally, show that for every term in the sequence \( y \), its absolute value does not exceed this positive bound. This introduces the existence of a positive constant \( M \) such that the absolute value of each term of \( y \) is at most \( M \).
+[appliedTactic]
+let ⟨m2,h2⟩ := ConvergentSequenceBounded y ⟨b,convyb ⟩ 
+[answer]
+Since the sequence \( y \) converges to \( b \), it follows that \( y \) is bounded; thus, there exists a real number \( m_2 \) that serves as an upper bound for the absolute values of the terms of \( y \).
+[appliedTactic]
+apply Exists.intro (max m2 1 ) 
+[answer]
+To prove the existence of a positive bound for the absolute values of the sequence \( y \), it suffices to show that the maximum of \( m_2 \) and 1 is positive and that every term of \( y \) is bounded by this maximum.
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof is split into two separate parts to establish the conjunction: one part aims to show that the maximum of \( m_2 \) and 1 is positive, and the other part aims to demonstrate that for every natural number \( n \), the absolute value of \( y_n \) is bounded above by this maximum.
+[appliedTactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+[answer]
+We rewrite the goal involving the maximum of \( m_2 \) and 1 to express it in terms of inequalities, then conclude that the maximum is greater than zero by showing that 1 is positive.
+[appliedTactic]
+rw [gt_iff_lt,lt_max_iff ] 
+[answer]
+By rewriting the goal using the equivalence between "greater than" and "less than," and then applying the characterization of being less than a maximum as being less than at least one of the two elements, the statement that the maximum of \( m_2 \) and 1 is greater than zero is transformed into the assertion that either \( m_2 \) is positive or 1 is positive.
+[appliedTactic]
+ right 
+[answer]
+Focus on the case where the positive value is 1, thereby reducing the goal to showing that 1 is greater than zero.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 1 is greater than 0.
+[appliedTactic]
+. intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+[answer]
+We introduce an arbitrary natural number \( n \) and use the fact that \( m_2 \) is an upper bound for the set of values \( |y_n| \) to show that \( |y_n| \) is less than or equal to the maximum of \( m_2 \) and 1 by verifying the first condition of the maximum.
+[appliedTactic]
+intro  n 
+[answer]
+Introduce an arbitrary natural number \( n \). The goal is now to show that the absolute value of \( y_n \) is at most the maximum of \( m_2 \) and 1.
+[appliedTactic]
+rw [UpperBound] at  h2 
+[answer]
+The assumption that \( m_2 \) is an upper bound of the set of values \( |y_n| \) for all \( n \) is rewritten to explicitly state that every element in this set is less than or equal to \( m_2 \).
+[appliedTactic]
+simp at  h2 
+[answer]
+The assumption stating that every element in the set of absolute values of the sequence \( y \) is bounded above by \( m_2 \) is simplified to directly express that for every natural number index, the absolute value of \( y \) at that index is at most \( m_2 \).
+[appliedTactic]
+rw [le_max_iff ] 
+[answer]
+The goal of showing that the absolute value of \( y_n \) is less than or equal to the maximum of \( m_2 \) and 1 is transformed into proving that the absolute value of \( y_n \) is less than or equal to \( m_2 \) or less than or equal to 1. This uses the fact that being less than or equal to the maximum of two numbers is equivalent to being less than or equal to at least one of them.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the absolute value of \( y_n \) is at most \( m_2 \).
+[appliedTactic]
+exact h2  n 
+[answer]
+The proof is completed by applying the fact that for every natural number, the absolute value of the sequence \( y \) at that number is bounded above by \( m_2 \), specifically at the index \( n \).
+[appliedTactic]
+let ⟨m2,_⟩ :=  m2h 
+[answer]
+From the assumption that there exists a positive bound for the absolute values of the sequence \( y \), introduce such a bound \( m_2 \) along with the fact that for every natural number \( n \), the absolute value of \( y_n \) is at most \( m_2 \).
+[appliedTactic]
+let M := max (max m1 m2) |b | 
+[answer]
+Define \( M \) as the maximum of the values \( m_1 \), \( m_2 \), and the absolute value of \( b \).
+[appliedTactic]
+have Mgeabsb : M ≥ |b| := le_max_right (max m1 m2) |b | 
+[answer]
+Establish that the value \( M \), defined as the maximum of \( m_1 \), \( m_2 \), and the absolute value of \( b \), is at least as large as the absolute value of \( b \). This follows from the property that any number is less than or equal to the maximum of itself and another number.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Introduce an arbitrary positive real number \( \varepsilon \). Our goal is now to find a point beyond which the values of the sequence formed by multiplying \( x \) and \( y \) differ from the product \( a \cdot b \) by less than \( \varepsilon \).
+[appliedTactic]
+have ε2Mpos : 0 < ε / (2 * M) := by
+      have Mpos : 0 < 2 * M := by
+        rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+        left
+        rw [lt_max_iff]
+        left
+        exact hm1.left
+      apply (lt_div_iff Mpos).2
+      rw [zero_mul]; exact  εpos 
+[answer]
+Establish that the quotient of ε by twice M is positive by first showing that twice M itself is positive, using the positivity of one of the bounds on the sequence x. Then, apply the property relating inequalities and division by a positive number to conclude that ε divided by twice M is greater than zero.
+[appliedTactic]
+have Mpos : 0 < 2 * M := by
+        rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+        left
+        rw [lt_max_iff]
+        left
+        exact  hm1.left 
+[answer]
+Establish that twice the value of \( M \) is positive by using the positivity of one of the components defining \( M \), specifically the positive lower bound associated with \( m_1 \), and the fact that \( M \) is defined as the maximum of positive quantities. This confirms that \( 2 \times M \) is greater than zero.
+[appliedTactic]
+rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff ] 
+[answer]
+The goal of proving that twice the value of \( M \) is positive is transformed into proving that either the maximum of \( m_1 \) and \( m_2 \) is positive or the absolute value of \( b \) is positive. This is done by using the fact that multiplying a positive number by another number yields a positive product if and only if that other number is positive, and by expressing the positivity of \( M \), defined as the maximum of \( m_1 \), \( m_2 \), and the absolute value of \( b \), in terms of the positivity of at least one of these components.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the maximum of \( m_1 \) and \( m_2 \) is strictly greater than zero.
+[appliedTactic]
+rw [lt_max_iff ] 
+[answer]
+The goal of proving that zero is less than the maximum of \( m_1 \) and \( m_2 \) is transformed into proving that zero is less than \( m_1 \) or zero is less than \( m_2 \). This reformulation follows from the fact that a number is less than the maximum of two values if and only if it is less than at least one of those values.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the first positive bound holds; that is, assume that the number \( m_1 \) is greater than zero.
+[appliedTactic]
+exact  hm1.left 
+[answer]
+The proof is completed by directly using the fact that the first part of the given conjunction states that \( m_1 \) is greater than zero.
+[appliedTactic]
+apply (lt_div_iff Mpos). 2 
+[answer]
+By applying the equivalence that relates a strict inequality involving a division by a positive number to an inequality involving multiplication, the goal of proving that zero is less than epsilon divided by twice \( M \) is transformed into proving that zero multiplied by twice \( M \) is less than epsilon.
+[appliedTactic]
+rw [zero_mul ] 
+[answer]
+The goal originally involved showing that zero multiplied by twice a positive bound is less than a positive number ε. By applying the fact that zero times any number equals zero, this expression simplifies to showing that zero is less than ε.
+[appliedTactic]
+exact  εpos 
+[answer]
+The proof is completed by directly using the fact that the given quantity \( \varepsilon \) is greater than zero.
+[appliedTactic]
+have c1 := convxa (ε / (2 * M))  ε2Mpos 
+[answer]
+Establish that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the difference between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{2M} \). This follows from the fact that the sequence \( x \) converges to \( a \), and since \( \frac{\varepsilon}{2M} \) is positive, the convergence guarantees such an \( n_0 \) exists.
+[appliedTactic]
+let ⟨n1,cn1⟩ :=  c1 
+[answer]
+From the existence of a natural number \( n_0 \) such that for all \( n \) greater than or equal to \( n_0 \), the difference between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{2M} \), introduce such a specific \( n_1 \) and record the corresponding property explicitly.
+[appliedTactic]
+have c2 := convyb (ε / (2 * M))  ε2Mpos 
+[answer]
+Establish that there exists an index from which all terms of the sequence \( y \) lie within a distance of \(\frac{\varepsilon}{2M}\) from \( b \). This follows from the fact that the sequence \( y \) converges to \( b \) and the positive quantity \(\frac{\varepsilon}{2M}\) serves as a chosen precision.
+[appliedTactic]
+let ⟨n2,cn2⟩ :=  c2 
+[answer]
+From the assumption that there exists a natural number after which the values of the sequence \(y\) are within a certain small distance from \(b\), introduce such a natural number \(n_2\) and the corresponding property that for all indices greater than or equal to \(n_2\), the values of \(y\) differ from \(b\) by less than that small distance.
+[appliedTactic]
+let n₀ := max n1  n2 
+[answer]
+Define \( n_0 \) as the maximum of the two natural numbers \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+By explicitly providing the specific index \( n_0 \), the proof now focuses on showing that for all indices greater than or equal to \( n_0 \), the difference between the product of the sequences at that index and the product of their limits is less than the given positive number \( \varepsilon \). This step reduces the original existence statement to a universal statement about all sufficiently large indices starting from \( n_0 \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Introduce an arbitrary natural number \( n \) that is at least \( n_0 \). We will now prove that the absolute difference between the value of the product sequence at \( n \) and the product \( a \cdot b \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+      |x n * y n - a * b| = |(x n * y n - x n * b) + (x n * b - a * b)| := by
+        rw [sub_add_sub_cancel]
+      _ ≤ |(x n * y n - x n * b)| + |(x n * b - a * b)| := abs_add _ _
+      _ = |(x n)| * |y n - b| + |x n - a| * |b| := by
+        rw [← sub_mul,← mul_sub,abs_mul,abs_mul]
+      _ ≤ M * |y n - b| + M * |x n - a| := by
+        have m1leM : m1 ≤ M := by
+          rw [le_max_iff]
+          left
+          rw [le_max_iff]
+          left
+          exact le_refl m1
+        have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+          have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+          exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b))
+        have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+          rw [mul_comm]
+          exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a))
+        exact add_le_add k1 k2
+      _ < ε /2 + ε /2 := by
+        have Mpos : 0 < M := by
+          rw [lt_max_iff]; left;
+          rw [lt_max_iff]; left; exact hm1.left
+        have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl n2
+          exact cn2 n (ge_trans ngen₀ n0gen2)
+        have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl n1
+          exact cn1 n (ge_trans ngen₀ n0gen1)
+        have : M * (ε / (2 * M)) = ε / 2 := by
+          have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos)
+          rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm]
+        rw [this] at k1 k2
+        exact add_lt_add k1 k2
+      _ = ε := by
+        exact add_halves  ε 
+[answer]
+By calculation, the difference between the product of the sequences at index \( n \) and the product \( a \cdot b \) is expressed as the sum of two differences. This sum is bounded above by the sum of the absolute values of these differences, which is then rewritten as a sum involving the absolute values of \( x_n \), \( y_n - b \), \( x_n - a \), and \( b \). Using the boundedness of the sequence \( x_n \) and the maximum value \( M \), each term is further bounded by expressions involving \( M \) and the differences \( |y_n - b| \) and \( |x_n - a| \). These bounds are shown to be less than half of the given positive number \( \varepsilon \) each, by choosing \( n \) large enough based on the convergence of \( x_n \) to \( a \) and \( y_n \) to \( b \). Summing these two halves yields a total less than \( \varepsilon \), thereby establishing that the sequence of products converges to \( a \cdot b \).
+[appliedTactic]
+rw [sub_add_sub_cancel ] 
+[answer]
+The proof rewrites the expression for the difference between the product of the sequences and the product of their limits by separating it into the sum of two differences: first, the product of the first sequence term and the difference between the second sequence term and its limit, and second, the product of the difference between the first sequence term and its limit with the limit of the second sequence. This rearrangement sets up the expression for further estimation.
+[appliedTactic]
+rw [← sub_mul,← mul_sub,abs_mul,abs_mul ] 
+[answer]
+The expression involving the difference of products was rewritten by applying the distributive properties of multiplication over subtraction in both directions, and by expressing the absolute value of a product as the product of the absolute values. This transformed the original sum of absolute differences into a sum of products of absolute values, simplifying the expression as required.
+[appliedTactic]
+have m1leM : m1 ≤ M := by
+          rw [le_max_iff]
+          left
+          rw [le_max_iff]
+          left
+          exact le_refl  m1 
+[answer]
+Establish that the value \( m_1 \) is less than or equal to the maximum of \( m_1 \), \( m_2 \), and the absolute value of \( b \) by showing step-by-step that \( m_1 \) is less than or equal to the maximum of \( m_1 \) and \( m_2 \), and then that this maximum is less than or equal to the overall maximum, using the fact that any number is less than or equal to itself.
+[appliedTactic]
+rw [le_max_iff ] 
+[answer]
+The goal of showing that \( m_1 \) is less than or equal to the maximum of \( m_1 \), \( m_2 \), and the absolute value of \( b \) was rewritten to an equivalent statement asserting that \( m_1 \) is less than or equal to either \( m_2 \) or the absolute value of \( b \). This reformulation uses the fact that being less than or equal to a maximum is equivalent to being less than or equal to at least one of the elements forming that maximum.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the value \( m_1 \) is less than or equal to the maximum of \( m_1 \) and \( m_2 \).
+[appliedTactic]
+rw [le_max_iff ] 
+[answer]
+The goal of proving that \( m_1 \) is less than or equal to the maximum of \( m_1 \) and \( m_2 \) is transformed into showing that \( m_1 \) is less than or equal to \( m_1 \) or \( m_1 \) is less than or equal to \( m_2 \). This reformulation uses the fact that an element is less than or equal to the maximum of two values if and only if it is less than or equal to at least one of those values.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the first quantity is less than or equal to itself.
+[appliedTactic]
+exact le_refl  m1 
+[answer]
+The proof is completed by recognizing that the value \( m_1 \) is less than or equal to itself, which follows directly from the reflexive property of the less than or equal relation.
+[appliedTactic]
+have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+          have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+          exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b) ) 
+[answer]
+Establish that the product of the absolute value of \( x_n \) and the absolute difference between \( y_n \) and \( b \) is bounded above by the product of \( M \) and the absolute difference between \( y_n \) and \( b \). This is done by first confirming that the absolute value of \( x_n \) does not exceed \( m_1 \), which in turn is at most \( M \), and then applying the fact that multiplying both sides of this inequality by the non-negative absolute value of \( y_n - b \) preserves the inequality.
+[appliedTactic]
+have : |x n| ≤ M := le_trans (hm1.right n)  m1leM 
+[answer]
+Establish that the absolute value of \( x_n \) is at most \( M \). This is done by first noting from the hypotheses that \( |x_n| \) is bounded above by \( m_1 \), and then applying the fact that \( m_1 \) itself is less than or equal to \( M \). By transitivity of inequalities, it follows that \( |x_n| \leq M \).
+[appliedTactic]
+exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b) ) 
+[answer]
+The proof is completed by applying the fact that multiplying both sides of an inequality by a non-negative quantity preserves the inequality, using that the absolute value of \(y_n - b\) is non-negative and that \(|x_n|\) is at most \(M\). This establishes that the product \(|x_n| \cdot |y_n - b|\) is at most \(M \cdot |y_n - b|\).
+[appliedTactic]
+have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+          rw [mul_comm]
+          exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a) ) 
+[answer]
+Establish that the product of the absolute difference between \( x_n \) and \( a \) with the absolute value of \( b \) is bounded above by the product of \( M \) and the absolute difference between \( x_n \) and \( a \). This is done by rearranging the factors and applying the fact that multiplying both sides of an inequality by a non-negative number preserves the inequality, using that \( M \) is at least as large as the absolute value of \( b \) and that absolute values are non-negative.
+[appliedTactic]
+rw [mul_comm ] 
+[answer]
+The tactic applied the commutativity of multiplication to rewrite the expression so that the factor involving the constant \( b \) appears first. As a result, the goal changed from proving an inequality with the product of the absolute value of the difference between \( x_n \) and \( a \) multiplied by the absolute value of \( b \) on the right, to proving the same inequality with these two factors swapped in order.
+[appliedTactic]
+exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a) ) 
+[answer]
+The inequality involving the product of the absolute value of \( b \) and the absolute difference between \( x_n \) and \( a \) is established by applying the fact that multiplying both sides of an inequality by a non-negative number preserves the inequality, together with the fact that absolute values are non-negative. This completes the proof of the desired inequality.
+[appliedTactic]
+exact add_le_add k1  k2 
+[answer]
+The proof is completed by combining the two inequalities that bound each term separately, thereby establishing that the sum of these terms is less than or equal to the sum of their individual upper bounds.
+[appliedTactic]
+have Mpos : 0 < M := by
+          rw [lt_max_iff]; left;
+          rw [lt_max_iff]; left; exact  hm1.left 
+[answer]
+Establish that the value \( M \) is strictly positive by showing it is greater than zero, using the fact that \( M \) is defined as the maximum of three nonnegative quantities, one of which is known to be positive.
+[appliedTactic]
+rw [lt_max_iff ] 
+[answer]
+The goal of proving that the constant \( M \) is positive was transformed into proving that either the maximum of the two positive bounds \( m_1 \) and \( m_2 \) is positive or the absolute value of \( b \) is positive. This was done by applying the fact that a number is less than the maximum of two values if and only if it is less than at least one of them, thereby expressing the positivity of \( M \) in terms of the positivity of these individual components.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the maximum of the two positive bounds for the sequences \( x \) and \( y \) is strictly greater than zero.
+[appliedTactic]
+rw [lt_max_iff ] 
+[answer]
+The goal of proving that zero is less than the maximum of \( m_1 \) and \( m_2 \) was rewritten to show that zero is less than \( m_1 \) or zero is less than \( m_2 \). This follows from the fact that a number is less than the maximum of two values if and only if it is less than at least one of those values.
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the first positive bound holds; that is, assume that the positive number associated with the sequence \( x \) is greater than zero.
+[appliedTactic]
+exact  hm1.left 
+[answer]
+The proof is completed by directly using the fact that the first part of the assumption states that \( m_1 \) is greater than zero.
+[appliedTactic]
+have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl n2
+          exact cn2 n (ge_trans ngen₀ n0gen2 ) 
+[answer]
+Establish that multiplying the positive constant \( M \) by the absolute difference between the sequence value \( y_n \) and the limit \( b \) is less than \( M \) times the fraction \( \frac{\varepsilon}{2M} \). This is justified by applying the inequality for multiplication by a positive number to the known bound on the difference \( |y_n - b| \) for all indices \( n \) greater than or equal to the maximum of the relevant thresholds.
+[appliedTactic]
+apply (mul_lt_mul_left Mpos). 2 
+[answer]
+Since \( M \) is positive, to prove that \( M \) times the absolute difference between \( y_n \) and \( b \) is less than \( M \) times \( \frac{\varepsilon}{2M} \), it suffices to show that the absolute difference between \( y_n \) and \( b \) itself is less than \( \frac{\varepsilon}{2M} \).
+[appliedTactic]
+have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl  n2 
+[answer]
+Establish that the chosen index \( n_0 \), defined as the maximum of \( n_1 \) and \( n_2 \), is greater than or equal to \( n_2 \). This follows from the properties of the maximum function, which ensures that \( n_0 \) is at least as large as each of its components.
+[appliedTactic]
+rw [ge_iff_le,le_max_iff ] 
+[answer]
+The goal of proving that \( n_0 \) is greater than or equal to \( n_2 \) was rewritten by expressing this inequality in terms of the corresponding less-than-or-equal relation. Then, by applying the characterization of an element being less than or equal to the maximum of two values, the goal was transformed into showing that \( n_2 \) is less than or equal to \( n_1 \) or \( n_2 \) is less than or equal to itself.
+[appliedTactic]
+ right 
+[answer]
+Focus on the case where the second index is less than or equal to itself.
+[appliedTactic]
+exact le_refl  n2 
+[answer]
+The proof is completed by recognizing that the natural number \( n_2 \) is less than or equal to itself, which holds by the reflexivity property of the order relation.
+[appliedTactic]
+exact cn2 n (ge_trans ngen₀ n0gen2 ) 
+[answer]
+The proof is completed by applying the fact that \( n \) is greater than or equal to \( n_2 \), using the known inequalities relating \( n \), \( n_0 \), and \( n_2 \), and then using the assumption that for all indices greater than or equal to \( n_2 \), the difference between the sequence \( y \) at that index and \( b \) is less than the specified bound.
+[appliedTactic]
+have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl n1
+          exact cn1 n (ge_trans ngen₀ n0gen1 ) 
+[answer]
+Establish that multiplying the difference between the \( n \)-th term of the sequence \( x \) and the limit \( a \) by \( M \) is less than \( M \) times the fraction \( \frac{\varepsilon}{2M} \). This follows from the fact that for all indices \( n \) greater than or equal to the maximum of \( n_1 \) and \( n_2 \), the absolute difference between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{2M} \), and since \( M \) is positive, multiplying both sides of this inequality by \( M \) preserves the inequality.
+[appliedTactic]
+apply (mul_lt_mul_left Mpos). 2 
+[answer]
+Since \( M \) is positive, to prove that \( M \) times the absolute difference between \( x_n \) and \( a \) is less than \( M \) times a certain positive quantity, it suffices to show that the absolute difference between \( x_n \) and \( a \) itself is less than that positive quantity.
+[appliedTactic]
+have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl  n1 
+[answer]
+Establish that the value defined as the maximum of \( n_1 \) and \( n_2 \) is at least \( n_1 \) by showing that it is greater than or equal to \( n_1 \) using the properties of the maximum function and the reflexivity of the order relation.
+[appliedTactic]
+rw [ge_iff_le,le_max_iff ] 
+[answer]
+The goal of proving that \( n_0 \) is at least \( n_1 \) was rewritten by expressing the inequality in terms of the equivalent "less than or equal to" relation and then applying the fact that being less than or equal to the maximum of two numbers is equivalent to being less than or equal to at least one of those numbers. As a result, the goal changed to showing that either \( n_1 \) is less than or equal to itself or \( n_1 \) is less than or equal to \( n_2 \).
+[appliedTactic]
+ left 
+[answer]
+Focus on the case where the first index is less than or equal to itself.
+[appliedTactic]
+exact le_refl  n1 
+[answer]
+The proof is completed by recognizing that the natural number \( n_1 \) is less than or equal to itself, which directly satisfies the required inequality.
+[appliedTactic]
+exact cn1 n (ge_trans ngen₀ n0gen1 ) 
+[answer]
+The proof is completed by applying the fact that \( n \) is greater than or equal to \( n_0 \), which itself is greater than or equal to \( n_1 \), thereby establishing that \( n \) is greater than or equal to \( n_1 \). This allows us to conclude that the absolute difference between \( x_n \) and \( a \) is less than the specified positive quantity.
+[appliedTactic]
+have : M * (ε / (2 * M)) = ε / 2 := by
+          have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos)
+          rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm ] 
+[answer]
+Demonstrate that multiplying \( M \) by the fraction \( \frac{\varepsilon}{2M} \) simplifies exactly to \( \frac{\varepsilon}{2} \). This is done by first confirming that \( M \) is nonzero, then applying properties of multiplication, division, and inverses to rewrite and simplify the expression step-by-step until the cancellation of \( M \) and its inverse yields the desired equality.
+[appliedTactic]
+have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos ) 
+[answer]
+Establish that \( M \) is not zero by using the fact that \( M \) is positive.
+[appliedTactic]
+exact Ne.symm (ne_of_lt Mpos ) 
+[answer]
+The proof establishes that \( M \) is not zero by using the fact that \( M \) is strictly greater than zero, which implies it cannot be equal to zero.
+[appliedTactic]
+rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm ] 
+[answer]
+The proof simplifies the expression by rewriting the product of \( M \) and the quotient of \( \varepsilon \) divided by \( 2M \) using properties of multiplication and division. Specifically, it rearranges the factors, replaces division by multiplication with the inverse, cancels the nonzero term \( M \) with its inverse, and uses the fact that multiplying by one leaves the value unchanged. This shows that \( M \times \frac{\varepsilon}{2M} \) equals \( \frac{\varepsilon}{2} \), completing the step.
+[appliedTactic]
+rw [this] at k1  k2 
+[answer]
+The equality expressing that multiplying \( M \) by \(\frac{\varepsilon}{2M}\) equals \(\frac{\varepsilon}{2}\) was substituted into the inequalities involving \( k_1 \) and \( k_2 \). As a result, the upper bounds in these inequalities were simplified from \( M \cdot \frac{\varepsilon}{2M} \) to \(\frac{\varepsilon}{2}\), making the inequalities clearer while leaving the overall goal unchanged.
+[appliedTactic]
+exact add_lt_add k1  k2 
+[answer]
+The proof is completed by combining the two strict inequalities that bound the expressions involving \(x\) and \(y\), showing that the sum of these two quantities is less than the sum of their respective upper bounds.
+[appliedTactic]
+exact add_halves  ε 
+[answer]
+The proof is completed by recognizing that half of ε plus half of ε equals ε.

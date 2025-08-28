@@ -1,0 +1,113 @@
+{
+  "have left : (sSup A = a₀) → (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) := by\n      -- a₀がAの上限であれば、\n      intro ssup\n      -- 書きやすい形に書き換える\n      have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2 ssup\n      -- ⭐️ (2)の前半はもちろん成り立っているので、\n      have lleft : UpperBound A a₀ := ssup.left\n      -- ⭐️ 後半だけ示せばよい。\n      suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by\n        exact ⟨lleft,lright⟩\n      -- ⭐️ もし(2)の後半が成り立っていないと、\n      by_contra h; push_neg at h\n      -- ⭐️ある ε > 0に対して a₀ - ε がAの上界になってしまうので、\n      have : ∃ε > 0, UpperBound A (a₀ - ε) := by\n        let ⟨ε, εpos,h2⟩ := h\n        apply Exists.intro ε\n        apply And.intro\n        . exact εpos\n        . intro k kinA\n          exact h2 k kinA\n      let ⟨ε,εpos,h3⟩ := this\n      -- ⭐️ a₀がAの最小上界である\n      have a₀MinUBA:= ssup.right (a₀ - ε) h3\n      -- ⭐️ という仮定に反する\n       linarith ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Sup_sSup_iff : A real number is the supremum of a nonempty set that is bounded above if and only if it equals the set's least upper bound.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true."
+  ],
+  "intro  ssup ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2  ssup ": [
+    "Sup_sSup_iff : A real number is the supremum of a nonempty set that is bounded above if and only if it equals the set's least upper bound."
+  ],
+  "have lleft : UpperBound A a₀ :=  ssup.left ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+  ],
+  "suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by\n        exact ⟨lleft,lright ⟩ ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "exact ⟨lleft,lright ⟩ ": [],
+  "by_contra  h ": [],
+  "push_neg at  h ": [],
+  "have : ∃ε > 0, UpperBound A (a₀ - ε) := by\n        let ⟨ε, εpos,h2⟩ := h\n        apply Exists.intro ε\n        apply And.intro\n        . exact εpos\n        . intro k kinA\n          exact h2 k  kinA ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "let ⟨ε, εpos,h2⟩ :=  h ": [],
+  "apply Exists.intro  ε ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "apply  And.intro ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  ". exact  εpos ": [],
+  "exact  εpos ": [],
+  ". intro k kinA\n          exact h2 k  kinA ": [
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "intro k  kinA ": [],
+  "exact h2 k  kinA ": [],
+  "let ⟨ε,εpos,h3⟩ :=  this ": [],
+  "have a₀MinUBA:= ssup.right (a₀ - ε)  h3 ": [
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  " linarith ": [],
+  "have right :  (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) → (sSup A = a₀) := by\n      -- ⭐️ a₀が(2)の条件を満たしているとき、\n      intro h1\n      -- Aの任意の上界xに対して a₀ ≤ xであることを言えばよい。\n      suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by\n        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h⟩\n      intro x ub\n      -- ⭐️ もし a₀ ≤ x でないとすると、\n      by_contra h2; push_neg at h2\n      -- ⭐️ ε := a₀ - x\n      let ε := a₀ - x\n      -- ⭐️ >0 となり\n      have εpos : ε > 0 := by\n        rw [gt_iff_lt,sub_pos]; exact h2\n      -- ⭐️ (2) より x = a₀ - ε\n      have : x = a₀ - ε := by ring\n      -- ⭐️ < a なる a ∈ A が存在する\n      have : ∃a ∈ A, x < a := by\n        let ⟨a,ainA,p⟩ := (h1.right ε εpos)\n        rw [this]\n        exact ⟨a, ainA, p⟩\n      -- ⭐️ ことになり、\n      let ⟨a,ainA,xlta⟩ := this\n      -- ⭐️ x が Aの上界であること\n      have := ub a ainA\n      -- ⭐️ に矛盾する。\n       linarith ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Sup_sSup_iff : A real number is the supremum of a nonempty set that is bounded above if and only if it equals the set's least upper bound.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "sub_pos : This theorem states that the positivity of the difference between two elements in an additive group is equivalent to the first element being greater than the second element."
+  ],
+  "intro  h1 ": [
+    "SupSet.sSup : A function that computes the supremum of a given set within a framework of ordered structures."
+  ],
+  "suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by\n        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "Sup_sSup_iff : A real number is the supremum of a nonempty set that is bounded above if and only if it equals the set's least upper bound.",
+    "SupSet.sSup : A function that computes the supremum of a given set within a framework of ordered structures.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "Sup_sSup_iff : A real number is the supremum of a nonempty set that is bounded above if and only if it equals the set's least upper bound."
+  ],
+  "intro x  ub ": [],
+  "by_contra  h2 ": [],
+  "push_neg at  h2 ": [],
+  "let ε := a₀ -  x ": [],
+  "have εpos : ε > 0 := by\n        rw [gt_iff_lt,sub_pos]; exact  h2 ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "sub_pos : This theorem states that the positivity of the difference between two elements in an additive group is equivalent to the first element being greater than the second element."
+  ],
+  "rw [gt_iff_lt,sub_pos ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "sub_pos : This theorem states that the positivity of the difference between two elements in an additive group is equivalent to the first element being greater than the second element."
+  ],
+  "exact  h2 ": [],
+  "have : x = a₀ - ε := by  ring ": [],
+  " ring ": [],
+  "have : ∃a ∈ A, x < a := by\n        let ⟨a,ainA,p⟩ := (h1.right ε εpos)\n        rw [this]\n        exact ⟨a, ainA, p ⟩ ": [
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "let ⟨a,ainA,p⟩ := (h1.right ε εpos ) ": [
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "rw [this ] ": [],
+  "exact ⟨a, ainA, p ⟩ ": [],
+  "let ⟨a,ainA,xlta⟩ :=  this ": [],
+  "have := ub a  ainA ": [],
+  "exact Iff.intro left  right ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true."
+  ]
+}

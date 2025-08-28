@@ -1,0 +1,51 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that there exists a natural number \( n \) such that the reciprocal of \( n + 1 \) is less than \( \varepsilon \).
+[appliedTactic]
+have := ArchimedesPrinciple ε εpos (1 : ℝ) (by norm_num ) 
+[answer]
+Apply the Archimedean property to the positive real number \( \varepsilon \) and the number 1, which guarantees the existence of a natural number \( n \) such that the product of \( n + 1 \) and \( \varepsilon \) is greater than 1. This introduces the statement that there exists such an \( n \) satisfying this inequality as a new fact in the proof.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 1 is greater than 0.
+[appliedTactic]
+let ⟨n, h⟩ :=  this 
+[answer]
+From the existence statement that there is a natural number \( n \) for which \((n + 1) \times \varepsilon > 1\), select such an \( n \) and record the inequality as a new assumption.
+[appliedTactic]
+apply Exists.intro  n 
+[answer]
+By introducing the specific natural number \( n \) that satisfies the given inequality, the goal of proving the existence of a natural number for which the reciprocal of \( n + 1 \) is less than \( \varepsilon \) is reduced to proving this inequality for that particular \( n \).
+[appliedTactic]
+have : ((n + (1 : ℕ)): ℝ) > 0 := by
+    rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+    right
+    exact  zero_lt_one 
+[answer]
+Establish that the sum of \( n \) and 1, considered as a real number, is positive.
+[appliedTactic]
+rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] 
+[answer]
+By rewriting the goal using the equivalence between greater-than and less-than comparisons, expressing natural numbers as real numbers, and applying the characterization of when a sum is positive, the goal of proving that \( n + 1 \) is greater than zero is transformed into showing that either \( n \) is positive or \( 1 \) is positive.
+[appliedTactic]
+ right 
+[answer]
+Focus on the part of the proof where it is necessary to establish that the number one is greater than zero.
+[appliedTactic]
+exact  zero_lt_one 
+[answer]
+The proof is completed by asserting the fact that zero is strictly less than one.
+[appliedTactic]
+apply (div_lt_iff this). 2 
+[answer]
+By applying the equivalence that compares a division inequality to a multiplication inequality when dividing by a positive number, the goal of proving that the reciprocal of \( n + 1 \) is less than \( \varepsilon \) is transformed into proving that 1 is less than the product of \( \varepsilon \) and \( n + 1 \).
+[appliedTactic]
+rw [mul_comm ] 
+[answer]
+The multiplication in the goal was rewritten by swapping the order of the factors, changing the expression from one where the positive real number ε is multiplied on the left by the natural number plus one, to an equivalent expression where the natural number plus one is multiplied on the left by ε. This uses the commutativity of multiplication to restate the inequality with the factors reversed.
+[appliedTactic]
+exact  h 
+[answer]
+The proof is completed by directly using the fact that the product of \( n + 1 \) and \( \varepsilon \) is greater than 1.

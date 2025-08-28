@@ -1,0 +1,86 @@
+[applied Tactic]
+have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the term \( x_n \) lies strictly between \( a - \frac{\varepsilon}{2} \) and \( b + \frac{\varepsilon}{2} \), with the additional inequality \( x_n \leq y_n \) holding. To begin, let \( n_0 = \max\{n_1, n_2\} \) be the index from which the bounds on \( x_n \) and \( y_n \) are valid. By the definition of the maximum, it follows that \( n_0 \geq n_1 \) and \( n_0 \geq n_2 \). Consequently, for any \( n \geq n_0 \), the inequalities bounding the distances \( |x_n - a| < \frac{\varepsilon}{2} \) and \( |y_n - b| < \frac{\varepsilon}{2} \) apply. This implies that \( x_n > a - \frac{\varepsilon}{2} \) and \( y_n < b + \frac{\varepsilon}{2} \). Since it is also given that \( x_n \leq y_n \), we conclude that for all \( n \geq n_0 \), the term \( x_n \) is strictly above \( a - \frac{\varepsilon}{2} \), less than or equal to \( y_n \), and \( y_n \) lies strictly below \( b + \frac{\varepsilon}{2} \), as required.
+[applied Tactic]
+have : ∀ε > 0, a < b + ε := by
+      -- ⭐️ 任意のε > 0 に対して
+      intro ε εpos
+      -- ⭐️ n_1,n_2∈N があって, n≥n_1→|x_n-a|<ϵ/2,n≥n_2→|y_n-b|<ϵ/2
+      let ⟨n₁,h1⟩ := convx (ε / 2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convy (ε / 2) (half_pos εpos)
+      -- ⭐️ n_1,n_2 の大きいほうをn_0 とすれば
+      let n₀ := max n₁ n₂
+      -- ⭐️ n ≥n_0 のとき a-ϵ/2< x_n≤y_n< b+ϵ/2
+      have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact this
+      -- ⭐️ なのでa< b+ϵ となる.
+      have := between n₀ (le_refl n₀)
+      have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left) this.right.right
+      rw [← add_halves ε,← add_assoc,add_comm]
+      apply lt_add_of_neg_add_lt_left
+      rw [add_comm]
+      exact  aepsltbeps 
+
+[answer]
+We will show that for every positive number \(\varepsilon\), the inequality \(a < b + \varepsilon\) holds. Since the sequences \( (x_n) \) and \( (y_n) \) converge to \(a\) and \(b\) respectively, there exist natural numbers \(n_1\) and \(n_2\) such that for all \(n \geq n_1\), the terms \(x_n\) satisfy \(|x_n - a| < \varepsilon/2\), and for all \(n \geq n_2\), the terms \(y_n\) satisfy \(|y_n - b| < \varepsilon/2\). Defining \(n_0 = \max\{n_1, n_2\}\) ensures that these bounds hold simultaneously for all \(n \geq n_0\). Thus, for such \(n\), we have \(a - \varepsilon/2 < x_n \leq y_n < b + \varepsilon/2\). From this chain of inequalities, it follows that \(a - \varepsilon/2 < b + \varepsilon/2\), which upon rearrangement yields \(a < b + \varepsilon\). Hence, \(a\) is strictly less than any number exceeding \(b\) by \(\varepsilon\), which is a key step toward establishing that \(a \leq b\).
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the given conjunction of inequalities involving the sequences \( (x_n) \) and \( (y_n) \) can be established by proving its components separately. Specifically, the original goal, which asserts that \( a - \frac{\varepsilon}{2} < x_n \), \( x_n \leq y_n \), and \( y_n < b + \frac{\varepsilon}{2} \), is split into two subgoals. The first subgoal requires demonstrating the lower bound \( a - \frac{\varepsilon}{2} < x_n \), while the second subgoal combines the inequalities \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \). By verifying these two separate conditions independently, we confirm the original conjunction.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the given conjunction holds by proving each component separately. Specifically, we first establish that \( x_n \leq y_n \). Then, we demonstrate that \( y_n < b + \frac{\varepsilon}{2} \). By splitting the original goal into these two subgoals, we can address each inequality independently, thereby completing the proof of the conjunction.
+[applied Tactic]
+. have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact  this.left 
+
+[answer]
+We will show that for any index \( n \) greater than or equal to the maximum of \( n_1 \) and \( n_2 \), the sequence term \( x_n \) is bounded below by \( a - \frac{\varepsilon}{2} \). To see this, note that by the given property of the sequence \( x \) beyond \( n_1 \), combined with the fact that \( n \geq \max(n_1, n_2) \) implies \( n \geq n_1 \), we have \(|x_n - a| < \frac{\varepsilon}{2}\). Expressing this inequality explicitly, we rewrite \(|x_n - a| < \frac{\varepsilon}{2}\) as the conjunction \(a - \frac{\varepsilon}{2} < x_n < a + \frac{\varepsilon}{2}\). Extracting the lower bound from this conjunction completes the proof, establishing that \( x_n \) is strictly greater than \( a - \frac{\varepsilon}{2} \), as required.
+[applied Tactic]
+. exact xnleyn  n 
+
+[answer]
+We will show that for every natural number \( n \), the value of the sequence \( x \) at \( n \) is less than or equal to the value of the sequence \( y \) at \( n \). This follows directly from the given assumption, which states precisely that \( x_n \leq y_n \) for all natural numbers \( n \). Hence, the inequality between the sequences at index \( n \) holds by straightforward application of this hypothesis, completing the proof.
+[applied Tactic]
+. have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+
+[answer]
+We will show that for the given \( n \), the term \( y_n \) is strictly less than \( b + \frac{\varepsilon}{2} \) by leveraging the given bound on the sequence \( y \). Since \( n \) is at least the maximum of \( n_1 \) and \( n_2 \), and hence at least \( n_2 \), it follows that the absolute difference between \( y_n \) and \( b \) is less than \( \frac{\varepsilon}{2} \). Rewriting this absolute value inequality, we have \( -\frac{\varepsilon}{2} < y_n - b < \frac{\varepsilon}{2} \), from which we isolate the right-hand inequality \( y_n - b < \frac{\varepsilon}{2} \). By adding \( b \) to both sides and applying the commutativity of addition, this inequality can be equivalently expressed as \( y_n < b + \frac{\varepsilon}{2} \). Thus, the proof is complete by directly confirming the desired inequality from the initial bounds.

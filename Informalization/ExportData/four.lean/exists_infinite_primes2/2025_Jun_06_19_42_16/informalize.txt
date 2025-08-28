@@ -1,0 +1,24 @@
+[appliedTactic]
+let p := minFac (n ! + 1 ) 
+[answer]
+Let \( p \) be the smallest prime factor of \( n! + 1 \).
+[appliedTactic]
+have f1 : n ! + 1 ≠ 1 := Nat.ne_of_gt <| succ_lt_succ <| factorial_pos  _ 
+[answer]
+Show that the factorial of \( n \) plus 1 is not equal to 1. This can be proved by noting that the factorial of \( n \) is always positive, meaning \( n! \) is greater than 0. Consequently, \( n! + 1 \) is greater than 1, leading to the conclusion that \( n! + 1 \neq 1 \).
+[appliedTactic]
+have pp : Nat.Prime p := minFac_prime  f1 
+[answer]
+Show that the number \( p \), defined as the smallest factor of \( n! + 1 \), is prime. This can be proved by applying the fact that the smallest factor of any number different from 1 is always prime.
+[appliedTactic]
+have np : n ≤ p :=
+  le_of_not_ge fun h =>
+  have h₁ : p ∣ n ! := dvd_factorial (minFac_pos _) h
+  have h₂ : p ∣ 1 := (Nat.dvd_add_iff_right h₁).2 (minFac_dvd _)
+  pp.not_dvd_one  h₂ 
+[answer]
+Show that \( n \leq p \). This can be proved by assuming the contrary, that \( n > p \), which leads to \( p \) dividing the factorial of \( n \). Using this, one deduces that \( p \) divides 1 by considering the divisibility properties of the minimal factor and the factorial, which contradicts the fact that a prime number cannot divide 1. Therefore, the assumption is false and \( n \leq p \) holds.
+[appliedTactic]
+exact ⟨p, np, pp ⟩ 
+[answer]
+The proof is completed from the assumptions that \(p\) is defined as the smallest prime factor of \(n! + 1\), that \(n! + 1\) is not equal to 1, that \(p\) is prime, and that \(p\) is greater than or equal to \(n\).

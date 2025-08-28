@@ -1,0 +1,103 @@
+{
+  "intro  xnleyn ": [],
+  "have : ∀ε > 0, a < b + ε := by\n      -- ⭐️ 任意のε > 0 に対して\n      intro ε εpos\n      -- ⭐️ n_1,n_2∈N があって, n≥n_1→|x_n-a|<ϵ/2,n≥n_2→|y_n-b|<ϵ/2\n      let ⟨n₁,h1⟩ := convx (ε / 2) (half_pos εpos)\n      let ⟨n₂,h2⟩ := convy (ε / 2) (half_pos εpos)\n      -- ⭐️ n_1,n_2 の大きいほうをn_0 とすれば\n      let n₀ := max n₁ n₂\n      -- ⭐️ n ≥n_0 のとき a-ϵ/2< x_n≤y_n< b+ϵ/2\n      have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by\n        intro n ngen₀\n        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂\n        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂\n        repeat (any_goals apply And.intro)\n        . have := (h1 n (ge_trans ngen₀ n₀gen₁))\n          rw [abs_lt, lt_tsub_iff_left] at this\n          exact this.left\n        . exact xnleyn n\n        . have := h2 n (ge_trans ngen₀ n₀gen₂)\n          rw [abs_lt] at this\n          have := this.right\n          apply lt_add_of_neg_add_lt_left\n          rw [add_comm]\n          exact this\n      -- ⭐️ なのでa< b+ϵ となる.\n      have := between n₀ (le_refl n₀)\n      have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left) this.right.right\n      rw [← add_halves ε,← add_assoc,add_comm]\n      apply lt_add_of_neg_add_lt_left\n      rw [add_comm]\n      exact  aepsltbeps ": [
+    "Max.max : A function computes the maximum of two elements from a specified type.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "lt_add_of_neg_add_lt_left : This theorem states that if the negation of one element added to another is less than a third element, then the first element is also less than the sum of the second and the third elements in an additive group.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third.",
+    "lt_tsub_iff_left : This theorem states that the inequality of an element being less than the difference of two other elements can be equivalently expressed as the sum of one of the elements and an additional term being less than the other original element.",
+    "lt_trans : This theorem shows that in a preorder, if one element is less than a second and the second is less than a third, then the first is also less than the third.",
+    "le_max_right : This theorem asserts that in a linear order, any element is less than or equal to the maximum of itself and another element.",
+    "abs_lt : This theorem characterizes the condition under which the absolute value of an element is less than another element, relating it to a pair of linear inequalities involving both the element and the other element's negation in the context of a linear order and additive group.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+    "le_refl : This theorem confirms that in a preorder, any element is related to itself under the less than or equal relation.",
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+    "add_halves : This theorem asserts that in a linear ordered semifield, the sum of half of any element and half of the same element equals the original element itself.",
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "intro ε  εpos ": [],
+  "let ⟨n₁,h1⟩ := convx (ε / 2) (half_pos εpos ) ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "let ⟨n₂,h2⟩ := convy (ε / 2) (half_pos εpos ) ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "let n₀ := max n₁  n₂ ": [
+    "Max.max : A function computes the maximum of two elements from a specified type."
+  ],
+  "have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by\n        intro n ngen₀\n        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂\n        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂\n        repeat (any_goals apply And.intro)\n        . have := (h1 n (ge_trans ngen₀ n₀gen₁))\n          rw [abs_lt, lt_tsub_iff_left] at this\n          exact this.left\n        . exact xnleyn n\n        . have := h2 n (ge_trans ngen₀ n₀gen₂)\n          rw [abs_lt] at this\n          have := this.right\n          apply lt_add_of_neg_add_lt_left\n          rw [add_comm]\n          exact  this ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "lt_add_of_neg_add_lt_left : This theorem states that if the negation of one element added to another is less than a third element, then the first element is also less than the sum of the second and the third elements in an additive group.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third.",
+    "lt_tsub_iff_left : This theorem states that the inequality of an element being less than the difference of two other elements can be equivalently expressed as the sum of one of the elements and an additional term being less than the other original element.",
+    "le_max_right : This theorem asserts that in a linear order, any element is less than or equal to the maximum of itself and another element.",
+    "abs_lt : This theorem characterizes the condition under which the absolute value of an element is less than another element, relating it to a pair of linear inequalities involving both the element and the other element's negation in the context of a linear order and additive group.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "intro n  ngen₀ ": [],
+  "have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁  n₂ ": [],
+  "have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁  n₂ ": [
+    "le_max_right : This theorem asserts that in a linear order, any element is less than or equal to the maximum of itself and another element."
+  ],
+  "apply  And.intro ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true."
+  ],
+  ". have := (h1 n (ge_trans ngen₀ n₀gen₁))\n          rw [abs_lt, lt_tsub_iff_left] at this\n          exact  this.left ": [],
+  "have := (h1 n (ge_trans ngen₀ n₀gen₁) ) ": [
+    "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third."
+  ],
+  "rw [abs_lt, lt_tsub_iff_left] at  this ": [
+    "abs_lt : This theorem characterizes the condition under which the absolute value of an element is less than another element, relating it to a pair of linear inequalities involving both the element and the other element's negation in the context of a linear order and additive group.",
+    "lt_tsub_iff_left : This theorem states that the inequality of an element being less than the difference of two other elements can be equivalently expressed as the sum of one of the elements and an additional term being less than the other original element."
+  ],
+  "exact  this.left ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+  ],
+  ". exact xnleyn  n ": [],
+  "exact xnleyn  n ": [],
+  ". have := h2 n (ge_trans ngen₀ n₀gen₂)\n          rw [abs_lt] at this\n          have := this.right\n          apply lt_add_of_neg_add_lt_left\n          rw [add_comm]\n          exact  this ": [],
+  "have := h2 n (ge_trans ngen₀ n₀gen₂ ) ": [
+    "ge_trans : This theorem establishes that in a preorder, if one element is greater than or equal to a second element, and the second element is greater than or equal to a third, then the first element is also greater than or equal to the third."
+  ],
+  "rw [abs_lt] at  this ": [
+    "abs_lt : This theorem characterizes the condition under which the absolute value of an element is less than another element, relating it to a pair of linear inequalities involving both the element and the other element's negation in the context of a linear order and additive group."
+  ],
+  "have :=  this.right ": [
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "apply  lt_add_of_neg_add_lt_left ": [
+    "lt_add_of_neg_add_lt_left : This theorem states that if the negation of one element added to another is less than a third element, then the first element is also less than the sum of the second and the third elements in an additive group."
+  ],
+  "rw [add_comm ] ": [
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added."
+  ],
+  "exact  this ": [],
+  "have := between n₀ (le_refl n₀ ) ": [
+    "le_refl : This theorem confirms that in a preorder, any element is related to itself under the less than or equal relation."
+  ],
+  "have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left)  this.right.right ": [
+    "lt_trans : This theorem shows that in a preorder, if one element is less than a second and the second is less than a third, then the first is also less than the third.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+  ],
+  "rw [← add_halves ε,← add_assoc,add_comm ] ": [
+    "add_halves : This theorem asserts that in a linear ordered semifield, the sum of half of any element and half of the same element equals the original element itself.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added."
+  ],
+  "exact  aepsltbeps ": [],
+  "exact alebByEps a b  this ": [
+    "alebByEps : If for every positive number, one real number is less than the other number plus that positive number, then the first number is less than or equal to the second number."
+  ]
+}

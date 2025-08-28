@@ -1,0 +1,61 @@
+[applied Tactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+
+[answer]
+We will show that for a given sequence \( x \) converging to \( a \) and a constant \(\alpha\), one can find a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \). Since the sequence \( x \) converges to \( a \), by definition, for any positive number, there exists such an \( n_0 \). In particular, choosing the positive number \( \frac{\varepsilon}{|\alpha| + 1} \), we use convergence to guarantee the existence of \( n_0 \) satisfying the desired inequality. Note that the quantity \( |\alpha| + 1 \) is strictly positive because 1 is greater than 0 and absolute values are nonnegative, ensuring the denominator is nonzero. Hence, the choice of \( n_0 \) is valid, and this completes the step based on the convergence of the sequence.
+[applied Tactic]
+. rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n  nlen₀ 
+
+[answer]
+We will show that for all indices \( n \) greater than or equal to \( n_0 \), the product \( |\alpha| \cdot |x_n - a| \) is bounded above by \( |\alpha| \) times the given fraction involving \(\varepsilon\). Since \( |\alpha| \) is positive, multiplying both sides of the inequality by this quantity preserves the inequality, allowing us to reduce the problem to proving a corresponding bound on \( |x_n - a| \) without the factor \( |\alpha| \). Moreover, it suffices to prove the strict inequality \( |x_n - a| < \) the specified bound, since a strict inequality implies the corresponding non-strict one. Finally, by applying the given condition for all \( n \geq n_0 \), we directly conclude the desired inequality for \( |x_n - a| \), which completes the proof.
+[applied Tactic]
+. push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul ] 
+
+[answer]
+We will show that if the absolute value of \( \alpha \) is not greater than zero, then a certain inequality involving \( \alpha \) and a sequence converges as claimed. First, we restate the assumption \( |\alpha| \leq 0 \), which immediately implies that \( \alpha = 0 \). Substituting this into the inequality, we use the facts that \( |0| = 0 \) and that zero multiplied by any value is zero, simplifying the inequality to \( 0 \leq 0 \). This equality holds trivially, thereby completing the proof.
+[applied Tactic]
+calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+
+[answer]
+We will show that for all indices \( n \) greater than or equal to \( n_0 \), the inequality 
+\[
+|\alpha| \cdot |x_n - a| < \varepsilon
+\]
+holds under the given conditions. First, by expressing the left-hand side as the product of the absolute values \( |\alpha| \) and \( |x_n - a| \), we rewrite the inequality to 
+\[
+|\alpha| \cdot |x_n - a| \leq |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon.
+\]
+We consider two cases depending on whether \( |\alpha| \) is positive or zero. If \( |\alpha| > 0 \), then multiplying both sides of 
+\[
+|x_n - a| < \frac{\varepsilon}{|\alpha| + 1}
+\]
+by the positive constant \( |\alpha| \) preserves the inequality, and by the hypothesis that \( |x_n - a| \) satisfies this strict bound for \( n \geq n_0 \), the desired inequality follows. On the other hand, if \( |\alpha| \leq 0 \), it must be that \( \alpha = 0 \), which simplifies the left-hand side to zero. In this case, the inequality trivially holds since \( 0 \leq 0 \).
+
+To complete the argument, we establish that the fraction on the right-hand side is well-defined and smaller than \( \varepsilon \). Observing that \( |\alpha| < |\alpha| + 1 \), by positivity of \( |\alpha| + 1 \), we rewrite the inequality 
+\[
+|\alpha| < 1 \cdot (|\alpha| + 1)
+\]
+which clearly holds, confirming the denominator is positive and the fraction is less than \( \varepsilon \). Thus, all steps combined show that 
+\[
+|\alpha| \cdot |x_n - a| < \varepsilon,
+\]
+completing the proof.

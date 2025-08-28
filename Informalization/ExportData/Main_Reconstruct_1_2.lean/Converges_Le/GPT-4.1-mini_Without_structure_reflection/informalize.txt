@@ -1,0 +1,211 @@
+[appliedTactic]
+intro  xnleyn 
+[answer]
+Assume that for every natural number \( n \), the value of \( x(n) \) is less than or equal to the value of \( y(n) \). From now on, we will show that the limit of the sequence \( x \) is less than or equal to the limit of the sequence \( y \).
+[appliedTactic]
+let ⟨a,convxa⟩ :=  convx 
+[answer]
+Let \(a\) be the limit to which the sequence \(x\) converges.
+[appliedTactic]
+let ⟨b,convyb⟩ :=  convy 
+[answer]
+Let \( b \) be the limit of the sequence \( y \).
+[appliedTactic]
+have : ∀ε > 0, a < b + ε := by
+      -- ⭐️ 任意のε > 0 に対して
+      intro ε εpos
+      -- ⭐️ n_1,n_2∈N があって, n≥n_1→|x_n-a|<ϵ/2,n≥n_2→|y_n-b|<ϵ/2
+      let ⟨n₁,h1⟩ := convxa (ε / 2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε / 2) (half_pos εpos)
+      -- ⭐️ n_1,n_2 の大きいほうをn_0 とすれば
+      let n₀ := max n₁ n₂
+      -- ⭐️ n ≥n_0 のとき a-ϵ/2< x_n≤y_n< b+ϵ/2
+      have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact this
+      -- ⭐️ なのでa< b+ϵ となる.
+      have := between n₀ (le_refl n₀)
+      have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left) this.right.right
+      rw [← add_halves ε,← add_assoc,add_comm]
+      apply lt_add_of_neg_add_lt_left
+      rw [add_comm]
+      exact  aepsltbeps 
+[answer]
+Show that for every positive number ε, the value a is less than b plus ε.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that \( a < b + \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := convxa (ε / 2) (half_pos εpos ) 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \).
+[appliedTactic]
+let ⟨n₂,h2⟩ := convyb (ε / 2) (half_pos εpos ) 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the values of the sequence \( y \) are within \( \frac{\varepsilon}{2} \) of \( b \).
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+[answer]
+Show that for every natural number \( n \) greater than or equal to \( n_0 \), the value \( x_n \) lies strictly between \( a - \frac{\varepsilon}{2} \) and \( y_n \), and \( y_n \) lies strictly between \( x_n \) and \( b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that \( a - \frac{\varepsilon}{2} < x_n \leq y_n < b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁  n₂ 
+[answer]
+Show that the maximum of \( n_1 \) and \( n_2 \) is greater than or equal to \( n_1 \). This can be proved by the property of the maximum function which states that the maximum of two numbers is always at least as large as each of the numbers individually.
+[appliedTactic]
+have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁  n₂ 
+[answer]
+Show that \( n_0 \) is greater than or equal to \( n_2 \). This can be proved by noting that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), and by the property of the maximum function, any element is less than or equal to the maximum of itself and another element.
+[appliedTactic]
+repeat (any_goals apply And.intro ) 
+[answer]
+
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the principle that to prove a conjunction it suffices to prove each component separately, in order to establish that \( a - \frac{\varepsilon}{2} < x_n \) and \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \), it suffices to prove both that \( a - \frac{\varepsilon}{2} < x_n \) and that \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the principle that to prove a conjunction it suffices to prove each component separately, in order to establish that \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \), it suffices to prove \( x_n \leq y_n \) and to prove \( y_n < b + \frac{\varepsilon}{2} \) individually.
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+. have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact  this.left 
+[answer]
+We prove the case where \( a - \frac{\varepsilon}{2} < x_n \).
+[appliedTactic]
+have := (h1 n (ge_trans ngen₀ n₀gen₁) ) 
+[answer]
+Show that the absolute difference between \( x_n \) and \( a \) is less than half of \( \varepsilon \). This can be proved by applying the hypothesis that for all indices greater than or equal to \( n_1 \), the absolute difference between \( x_n \) and \( a \) is less than \( \varepsilon/2 \), and using the fact that \( n \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \), combined with the transitivity of the inequality relation.
+[appliedTactic]
+rw [abs_lt, lt_tsub_iff_left] at  this 
+[answer]
+By using the characterization of an absolute value inequality as a conjunction of two linear inequalities and the equivalence that relates an inequality involving a difference to one involving a sum, the assumption that the absolute value of \( x_n - a \) is less than \( \frac{\varepsilon}{2} \) becomes the statement that \( a - \frac{\varepsilon}{2} < x_n \) and \( x_n - a < \frac{\varepsilon}{2} \).
+[appliedTactic]
+exact  this.left 
+[answer]
+The proof is completed from the assumption that the first part of the conjunction holds, which states that \( a - \frac{\varepsilon}{2} < x_n \).
+[appliedTactic]
+. exact xnleyn  n 
+[answer]
+We prove the case where \( x_n \leq y_n \).
+[appliedTactic]
+exact xnleyn  n 
+[answer]
+The proof is completed from the assumption that for every natural number \( n \), the value of the sequence \( x \) at \( n \) is less than or equal to the value of the sequence \( y \) at \( n \).
+[appliedTactic]
+. have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+[answer]
+We prove the case where the value of the sequence \( y \) at index \( n \) is less than \( b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+have := h2 n (ge_trans ngen₀ n₀gen₂ ) 
+[answer]
+Show that the absolute difference between \( y_n \) and \( b \) is less than \( \varepsilon / 2 \). This can be proved by applying the given property for \( y \) at index \( n \), using the fact that \( n \) is greater than or equal to \( n_0 \), which itself is greater than or equal to \( n_2 \), thus ensuring the condition for \( y \) holds by transitivity of inequalities.
+[appliedTactic]
+rw [abs_lt] at  this 
+[answer]
+By using the characterization of an absolute value being less than a positive number as the element lying strictly between the negation of that number and the number itself, the assumption that the absolute value of \( y_n - b \) is less than \( \frac{\varepsilon}{2} \) becomes the assumption that \( y_n - b \) lies strictly between \(-\frac{\varepsilon}{2}\) and \(\frac{\varepsilon}{2}\).
+[appliedTactic]
+have :=  this.right 
+[answer]
+Show that \( y_n - b < \frac{\varepsilon}{2} \). This can be proved by extracting the second part of the conjunction which states that \( y_n - b \) is strictly less than \( \frac{\varepsilon}{2} \).
+[appliedTactic]
+apply  lt_add_of_neg_add_lt_left 
+[answer]
+From the theorem stating that if the negation of one element added to another is less than a third element, then the first element is less than the sum of the second and third elements, in order to establish that \( y_n \) is less than \( b + \frac{\varepsilon}{2} \), it suffices to prove that \(-b + y_n\) is less than \(\frac{\varepsilon}{2}\).
+[appliedTactic]
+rw [add_comm ] 
+[answer]
+By using the commutativity of addition, the goal of proving that the sum of the negation of \( b \) and \( y_n \) is less than \( \frac{\varepsilon}{2} \) becomes the goal of proving that the sum of \( y_n \) and the negation of \( b \) is less than \( \frac{\varepsilon}{2} \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that \( y_n - b \) is less than half of \( \varepsilon \).
+[appliedTactic]
+have := between n₀ (le_refl n₀ ) 
+[answer]
+Show that the inequalities \( a - \frac{\varepsilon}{2} < x_{n_0} \), \( x_{n_0} \leq y_{n_0} \), and \( y_{n_0} < b + \frac{\varepsilon}{2} \) hold simultaneously for the specific index \( n_0 \). This follows by applying the fact that any number is less than or equal to itself to the index \( n_0 \), ensuring that the condition for \( n \geq n_0 \) can be instantiated at \( n_0 \) itself.
+[appliedTactic]
+have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left)  this.right.right 
+[answer]
+Show that \( a - \frac{\varepsilon}{2} < b + \frac{\varepsilon}{2} \). This can be proved by first noting that \( a - \frac{\varepsilon}{2} \) is less than or equal to \( x_{n_0} \), and \( x_{n_0} \) is less than or equal to \( y_{n_0} \), which in turn is less than \( b + \frac{\varepsilon}{2} \); applying the transitive property of inequalities through these comparisons establishes the desired inequality.
+[appliedTactic]
+rw [← add_halves ε,← add_assoc,add_comm ] 
+[answer]
+By using the fact that any real number can be expressed as the sum of its two halves, the associativity of addition, and the commutativity of addition, the goal of proving \( a < b + \varepsilon \) is transformed into proving \( a < \frac{\varepsilon}{2} + \left(b + \frac{\varepsilon}{2}\right) \).
+[appliedTactic]
+apply  lt_add_of_neg_add_lt_left 
+[answer]
+From the theorem that relates inequalities involving sums and negations, in order to establish that \( a \) is less than \( \frac{\varepsilon}{2} + \left(b + \frac{\varepsilon}{2}\right) \), it suffices to prove that the negation of \( \frac{\varepsilon}{2} \) added to \( a \) is less than \( b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+rw [add_comm ] 
+[answer]
+By using the commutativity of addition, the goal of proving that negative half epsilon plus a is less than b plus half epsilon becomes proving that a plus negative half epsilon is less than b plus half epsilon.
+[appliedTactic]
+exact  aepsltbeps 
+[answer]
+The proof is completed from the assumption that \( a - \frac{\varepsilon}{2} \) is less than \( b + \frac{\varepsilon}{2} \).
+[appliedTactic]
+have aleb : a ≤ b := alebByEps a b  this 
+[answer]
+Show that \( a \) is less than or equal to \( b \). This can be proved by using the fact that for every positive number \( \varepsilon \), \( a \) is less than \( b + \varepsilon \), which implies \( a \leq b \).
+[appliedTactic]
+rw [(Converges_sLim_iff x convx a).1 convxa, (Converges_sLim_iff y convy b).1 convyb ] 
+[answer]
+By using the assumptions that the sequences \( x \) and \( y \) converge to \( a \) and \( b \) respectively, and the theorems stating that a convergent sequence converges to its defined limit, the goal of proving that the limit of \( x \) is less than or equal to the limit of \( y \) becomes the simpler goal of proving that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+exact  aleb 
+[answer]
+The proof is completed from the assumption that \( a \) is less than or equal to \( b \).

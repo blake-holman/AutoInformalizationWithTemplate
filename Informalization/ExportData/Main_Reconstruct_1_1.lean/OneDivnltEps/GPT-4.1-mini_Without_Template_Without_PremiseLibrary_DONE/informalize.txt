@@ -1,0 +1,51 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that there exists a natural number \( n \) such that the reciprocal of \( n + 1 \) is less than \( \varepsilon \).
+[appliedTactic]
+have := ArchimedesPrinciple ε εpos (1 : ℝ) (by norm_num ) 
+[answer]
+Apply the Archimedean property of the real numbers to the positive number \( \varepsilon \) and the number 1. This establishes the existence of a natural number \( n \) such that the product of \( (n + 1) \) and \( \varepsilon \) is greater than 1. This fact will be used to show that the reciprocal of \( n + 1 \) is less than \( \varepsilon \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 1 is greater than 0.
+[appliedTactic]
+let ⟨n, h⟩ :=  this 
+[answer]
+From the existence statement that there is a natural number \( n \) for which \((n + 1) \times \varepsilon > 1\), choose such an \( n \) and denote this inequality as a new assumption.
+[appliedTactic]
+apply Exists.intro  n 
+[answer]
+By introducing the specific natural number \( n \) that satisfies the given condition, the goal reduces to proving that the reciprocal of \( n + 1 \) is less than \( \varepsilon \).
+[appliedTactic]
+have : ((n + (1 : ℕ)): ℝ) > 0 := by
+    rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+    right
+    exact  zero_lt_one 
+[answer]
+Establish that the sum of \( n \) and 1, considered as a real number, is greater than zero.
+[appliedTactic]
+rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] 
+[answer]
+The goal of proving that the sum of \( n \) and 1 is greater than zero is transformed into proving that either \( n \) is greater than zero or 1 is greater than zero, by rewriting the inequality using the equivalence between greater-than and less-than relations, applying the properties of natural number addition and casting, and then expressing the positivity of a sum as the positivity of at least one of its terms.
+[appliedTactic]
+ right 
+[answer]
+Focus on the case where the second part of the disjunction holds, specifically that 1 is greater than 0.
+[appliedTactic]
+exact  zero_lt_one 
+[answer]
+The proof is completed by asserting the known fact that zero is less than one.
+[appliedTactic]
+apply (div_lt_iff this). 2 
+[answer]
+By applying the equivalence that compares a division inequality to a multiplication inequality when the divisor is positive, the goal of proving that one divided by \( n + 1 \) is less than \( \varepsilon \) is transformed into proving that one is less than the product of \( \varepsilon \) and \( n + 1 \).
+[appliedTactic]
+rw [mul_comm ] 
+[answer]
+The goal, which was to prove that 1 is less than the product of ε and (n + 1), was transformed by swapping the order of the factors in the multiplication. This changed the goal to proving that 1 is less than the product of (n + 1) and ε, using the commutative property of multiplication.
+[appliedTactic]
+exact  h 
+[answer]
+The proof is completed by directly applying the inequality that the product of \( (n + 1) \) and \( \varepsilon \) is greater than 1.

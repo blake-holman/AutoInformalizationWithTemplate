@@ -1,0 +1,103 @@
+[appliedTactic]
+intro  convxa 
+[answer]
+Assume that the sequence \( x \) converges to \( a \). From now on, we will show that the sequence defined by multiplying each term of \( x \) by \( \alpha \) converges to \( \alpha \) times \( a \).
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of \( \alpha \cdot x(n) - \alpha \cdot a \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+[answer]
+Let \( n_0 \) be such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 0 < 1 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the principle that to prove the existence of an element satisfying a property it suffices to provide a specific example, in order to establish that there exists a natural number from which a certain inequality holds for all larger indices, it suffices to prove that this inequality holds for all indices greater than or equal to the given natural number \( n_0 \).
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of \( \alpha \) times \( x_n \) minus \( \alpha \) times \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+[answer]
+By calculation, it is shown that \( |\alpha \cdot x_n - \alpha \cdot a| = |\alpha| \cdot |x_n - a| \leq |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon. \)
+[appliedTactic]
+rw [← mul_sub, abs_mul ] 
+[answer]
+By using the distributive property of multiplication over subtraction and the fact that the absolute value of a product equals the product of the absolute values, we complete the proof.
+[appliedTactic]
+rw [← mul_div ] 
+[answer]
+By using the fact that multiplying by a quotient can be rewritten as dividing the product by the denominator, the goal of proving that the absolute value of α times the absolute difference between x n and a is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 becomes the goal of proving that the absolute value of α times the absolute difference between x n and a is less than or equal to the absolute value of α times the quantity ε divided by the sum of the absolute value of α and 1.
+[appliedTactic]
+by_cases h1 :|α| >  0 
+[answer]
+To prove that the product of the absolute value of \( \alpha \) and the absolute difference between \( x_n \) and \( a \) is less than or equal to the product of the absolute value of \( \alpha \) and \( \varepsilon \) divided by the sum of the absolute value of \( \alpha \) and 1, we proceed by case analysis on whether the absolute value of \( \alpha \) is greater than zero.
+[appliedTactic]
+. rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n  nlen₀ 
+[answer]
+We prove the case where the product of the absolute value of α and the absolute difference between x at n and a is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and one.
+[appliedTactic]
+rw [mul_le_mul_left h1 ] 
+[answer]
+By using the assumption that the absolute value of α is positive and the theorem that multiplying both sides of an inequality by a positive number preserves the inequality, the goal of proving that the product of the absolute value of α and the absolute difference between x n and a is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and one becomes the goal of proving that the absolute difference between x n and a is less than or equal to ε divided by the sum of the absolute value of α and one.
+[appliedTactic]
+apply  le_of_lt 
+[answer]
+From the fact that a strict inequality implies a non-strict inequality, in order to establish that the absolute value of \( x_n - a \) is at most \( \frac{\varepsilon}{|\alpha| + 1} \), it suffices to prove that the absolute value of \( x_n - a \) is strictly less than \( \frac{\varepsilon}{|\alpha| + 1} \).
+[appliedTactic]
+exact h n  nlen₀ 
+[answer]
+The proof is completed from the assumptions that for all natural numbers greater than or equal to \( n_0 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon \) divided by the sum of the absolute value of \( \alpha \) and one, and that \( n \) is greater than or equal to \( n_0 \).
+[appliedTactic]
+. push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+We simplify the condition that the absolute value of α is not greater than zero and rewrite the goal accordingly.
+[appliedTactic]
+push_neg at  h1 
+[answer]
+Not \( |α| > 0 \) becomes \( |α| \leq 0 \).
+[appliedTactic]
+simp at  h1 
+[answer]
+By simplifying the expression, the assumption that the absolute value of α is less than or equal to zero becomes the assumption that α is equal to zero.
+[appliedTactic]
+rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+By using the assumption that \( \alpha = 0 \) and the facts that the absolute value of zero is zero and that zero multiplied by any number is zero, we complete the proof.
+[appliedTactic]
+rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num)) ] 
+[answer]
+By using the positivity of ε and the fact that the sum of a non-negative number and a positive number is positive, along with the equivalence that multiplying a positive number by another number is less than the positive number if and only if the second number is less than one, and the equivalence relating inequalities involving division by a positive number to inequalities involving multiplication, the goal of proving that the product of the absolute value of α and ε divided by the sum of the absolute value of α and one is less than ε becomes the goal of proving that the absolute value of α is less than the sum of one and the absolute value of α.
+[appliedTactic]
+rw [one_mul ] 
+[answer]
+By using the fact that multiplying any number by one leaves it unchanged, the goal of proving that the absolute value of α is less than one times the quantity of the absolute value of α plus one becomes the goal of proving that the absolute value of α is less than the absolute value of α plus one.
+[appliedTactic]
+ simp 
+[answer]
+The inequality stating that the absolute value of α is less than the absolute value of α plus one is proved straightforward.

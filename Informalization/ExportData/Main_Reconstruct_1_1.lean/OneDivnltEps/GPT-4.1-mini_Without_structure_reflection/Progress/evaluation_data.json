@@ -1,0 +1,169 @@
+[
+  {
+    "AppliedTactic": "intro ε  εpos ",
+    "GoalsBefore": "⊢ ∀ ε > 0, ∃ n, 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( \\varepsilon \\) is a positive real number. From now on, we will show that there exists a natural number \\( n \\) such that the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have := ArchimedesPrinciple ε εpos (1 : ℝ) (by norm_num ) ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GivenPremises": [
+      "ArchimedesPrinciple : For every positive real number, there exists a natural number such that multiplying the sum of that natural number and one by the positive real number exceeds any given positive real number."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number \\( n \\) such that the product of \\( (n + 1) \\) and \\( \\varepsilon \\) is greater than 1. This can be proved by applying the Archimedean property, which states that for any positive real number, one can find a natural number large enough so that when multiplied by this positive number, the result exceeds any given positive real number, in this case 1."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\n⊢ 1 > 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that \\( 1 > 0 \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨n, h⟩ :=  this ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n \\) be a natural number such that \\((n + 1) \\times \\varepsilon > 1\\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  n ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ ∃ n, 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 1 / (↑n + ↑1) < ε",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the principle that to prove the existence of an element satisfying a property it suffices to provide a specific example, in order to establish that there exists a natural number \\( n \\) such that the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\), it suffices to prove that for the given \\( n \\), the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have : ((n + (1 : ℕ)): ℝ) > 0 := by\n    rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n    right\n    exact  zero_lt_one ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 / (↑n + ↑1) < ε",
+    "GivenPremises": [
+      "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity.",
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the sum of \\( n \\) and 1, considered as a real number, is greater than zero."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ ↑n + ↑1 > 0",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 0 < n ∨ 0 < 1",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equivalence between greater-than and less-than, the properties of natural number addition and casting to real numbers, and the fact that a sum is positive if and only if at least one addend is positive, the goal of proving \\( n + 1 > 0 \\) becomes proving that either \\( n > 0 \\) or \\( 1 > 0 \\)."
+  },
+  {
+    "AppliedTactic": " right ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 0 < n ∨ 0 < 1",
+    "GoalsAfter": "case h\nε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 0 < 1",
+    "GivenPremises": [],
+    "Template": "Show the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Show the case where \\(0 < 1\\)."
+  },
+  {
+    "AppliedTactic": "exact  zero_lt_one ",
+    "GoalsBefore": "case h\nε :  ℝ\nεpos :  ε > 0\nthis :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\n⊢ 0 < 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+    ],
+    "Template": "The proof is completed from the theorem(s) that [theorems].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that zero is strictly less than one."
+  },
+  {
+    "AppliedTactic": "apply (div_lt_iff this). 2 ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 / (↑n + ↑1) < ε",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 < ε * (↑n + ↑1)",
+    "GivenPremises": [
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem that dividing by a positive number is less than another number if and only if the numerator is less than the product of the denominator and that number, and the assumption that \\( n + 1 \\) is positive, in order to establish that the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\), it suffices to prove that 1 is less than the product of \\( \\varepsilon \\) and \\( n + 1 \\)."
+  },
+  {
+    "AppliedTactic": "rw [mul_comm ] ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 < ε * (↑n + ↑1)",
+    "GoalsAfter": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 < (↑n + ↑1) * ε",
+    "GivenPremises": [
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that multiplication is commutative, the goal of proving \\(1 < \\varepsilon \\cdot (n + 1)\\) becomes proving \\(1 < (n + 1) \\cdot \\varepsilon\\)."
+  },
+  {
+    "AppliedTactic": "exact  h ",
+    "GoalsBefore": "ε :  ℝ\nεpos :  ε > 0\nthis✝ :  ∃ n, (↑n + ↑1) * ε > 1\nn :  ℕ\nh :  (↑n + ↑1) * ε > 1\nthis :  ↑n + ↑1 > 0\n⊢ 1 < (↑n + ↑1) * ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the product of \\((n + 1)\\) and \\(\\varepsilon\\) is greater than one."
+  }
+]

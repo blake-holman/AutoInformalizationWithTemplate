@@ -1,0 +1,56 @@
+[applied Tactic]
+have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) 
+
+[answer]
+We will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \). Since \( \varepsilon \) is positive, it follows that \( \varepsilon/2 \) is also positive. By the definition of convergence of the sequence \( (x_n) \) to \( a \), given the positive number \( \varepsilon/2 \), there exists such an \( n_0 \) that for all \( n \geq n_0 \), the distance \( |x_n - a| \) is less than \( \varepsilon/2 \). This completes the proof by combining the positivity of \( \varepsilon/2 \) with the convergence assumption.
+[applied Tactic]
+have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) 
+
+[answer]
+We will show that there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), the inequality \( |x_n - b| < \varepsilon/2 \) holds. Since \( \varepsilon \) is positive, it follows from the theorem that \( \varepsilon/2 \) is also positive. By applying the definition of convergence of the sequence \( x_n \) to the limit \( b \) with the positive value \( \varepsilon/2 \), we find such an \( n_2 \) exists. Consequently, for all \( n \geq n_2 \), the absolute difference between \( x_n \) and \( b \) is less than half of \( \varepsilon \), as required.
+[applied Tactic]
+have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] 
+
+[answer]
+We will show that \( n \geq \max(n_1, n_2) \). To do this, we observe that stating \( n \) is greater than or equal to both \( n_1 \) and \( n_2 \) is equivalent to stating that each of these numbers is less than or equal to \( n \). Since the maximum of \( n_1 \) and \( n_2 \) is the greater of the two, it follows that \( \max(n_1, n_2) \leq n \). Therefore, we conclude that \( n \geq \max(n_1, n_2) \), completing the proof.
+[applied Tactic]
+calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+
+[answer]
+We will show that \( |a - b| < \varepsilon \) by estimating it through intermediate terms involving \( x_n \). Observing that \( a - b = (a - x_n) + (x_n - b) \), we apply the triangle inequality to obtain \( |a - b| \leq |a - x_n| + |x_n - b| \). Since the absolute value of the difference is symmetric, we may rewrite this as \( |a - b| \leq |x_n - a| + |x_n - b| \). By choosing \( n \) sufficiently large so that \( |x_n - a| < \varepsilon/2 \) and \( |x_n - b| < \varepsilon/2 \), it follows that \( |a - b| < \varepsilon/2 + \varepsilon/2 = \varepsilon \). This completes the proof.
+[applied Tactic]
+have : ∀ ε > 0, |a - b| < ε := by
+      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、
+      intro ε εpos
+      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2
+      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)
+      let ⟨n₁,n₁h⟩ := n₁eps
+      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。
+      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)
+      let ⟨n₂,n₂h⟩ := n₂eps
+      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、
+      let n := max n₁ n₂
+      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]
+      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.
+      calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+
+[answer]
+We will show that for every positive number \(\varepsilon\), the distance between \(a\) and \(b\) is less than \(\varepsilon\). Assume \(\varepsilon > 0\). By the definition of convergence of the sequence \((x_n)\) to the limit \(a\), there exists a natural number \(n_0\) such that for all \(n \geq n_0\), the distance \(|x_n - a|\) is less than \(\varepsilon/2\). Similarly, since \((x_n)\) also converges to \(b\), there exists a natural number \(n_2\) such that for all \(n \geq n_2\), the distance \(|x_n - b|\) is less than \(\varepsilon/2\). Let \(n = \max(n_0, n_2)\), so that for this \(n\), both inequalities hold simultaneously. Using the triangle inequality, we have
+\[
+|a - b| = |a - x_n + x_n - b| \leq |a - x_n| + |x_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]
+Thus, the distance between \(a\) and \(b\) is less than \(\varepsilon\), completing the proof.

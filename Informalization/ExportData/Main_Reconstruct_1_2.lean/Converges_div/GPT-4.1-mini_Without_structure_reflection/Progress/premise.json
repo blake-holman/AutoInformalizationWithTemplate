@@ -1,0 +1,399 @@
+{
+  "intro  ylimneqzero ": [
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "suffices h1 : IsConverges (1 / y) ∧ Lim.sLim (1 / y) = 1 / (Lim.sLim y) by\n      have := Converges_mul x (1 / y) conx h1.left\n      rw [h1.right,mul_div,mul_one,mul_div,mul_one] at this\n      exact  this ": [
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "Converges_mul : The product of two convergent sequences of real numbers converges to the product of their respective limits.",
+    "IsConverges : A sequence of real numbers is convergent if there exists a real number to which the sequence converges.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "IsConverges : A sequence of real numbers is convergent if there exists a real number to which the sequence converges.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "have := Converges_mul x (1 / y) conx  h1.left ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "Converges_mul : The product of two convergent sequences of real numbers converges to the product of their respective limits."
+  ],
+  "rw [h1.right,mul_div,mul_one,mul_div,mul_one] at  this ": [
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction."
+  ],
+  "exact  this ": [],
+  "let ⟨b,convyb⟩ :=  cony ": [],
+  "have neqzero: b ≠ 0 := by\n      have beqlim: Lim.sLim y = b := by\n        apply LimitUniqueness y\n        . exact Limit_def y cony\n        . exact convyb\n      rw [beqlim] at ylimneqzero\n      exact  ylimneqzero ": [
+    "Limit_def : Every convergent sequence of real numbers converges to its defined limit.",
+    "LimitUniqueness : If a sequence of real numbers converges to two limits, then those two limits must be equal.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "have beqlim: Lim.sLim y = b := by\n        apply LimitUniqueness y\n        . exact Limit_def y cony\n        . exact  convyb ": [
+    "Limit_def : Every convergent sequence of real numbers converges to its defined limit.",
+    "LimitUniqueness : If a sequence of real numbers converges to two limits, then those two limits must be equal.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "apply LimitUniqueness  y ": [
+    "LimitUniqueness : If a sequence of real numbers converges to two limits, then those two limits must be equal.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space.",
+    "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses."
+  ],
+  ". exact Limit_def y  cony ": [
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space.",
+    "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses."
+  ],
+  "exact Limit_def y  cony ": [
+    "Limit_def : Every convergent sequence of real numbers converges to its defined limit."
+  ],
+  ". exact  convyb ": [
+    "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses."
+  ],
+  "exact  convyb ": [],
+  "rw [beqlim] at  ylimneqzero ": [],
+  "exact  ylimneqzero ": [],
+  "have convdiv : ConvergesTo (1 / y) (1 / b) := by\n      have absbpos: |b| > 0 := by\n        rw [gt_iff_lt]\n        exact abs_pos.2 neqzero\n      have h3: ∃n₁, ∀n ≥ n₁, |y n - b| < |b| / 2 := convyb (|b|/2) (half_pos absbpos)\n      let ⟨n₁,h₁⟩ := h3\n      have yngtabsb : ∀n ≥ n₁, |y n| > |b| / 2 := by\n        intro n ngen₁\n        have := h₁ n ngen₁\n        rw [abs_sub_comm] at this\n        have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n)\n        have := lt_of_le_of_lt sub this\n        rw [sub_lt_comm] at this\n        have subhalf : |b| - |b| / 2 = |b| / 2 := by ring\n        rw [subhalf] at this\n        exact this\n      intro ε εpos\n      have h4: ∃n₂, ∀n ≥ n₂, |y n - b| < (|b| * |b| * ε / 2) := by\n        have bbεpos : (|b| * |b| * ε / 2) > 0 := by\n          rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]\n          exact mul_pos absbpos (mul_pos absbpos εpos)\n        exact convyb (|b| * |b| * ε / 2) bbεpos\n\n      let ⟨n₂,h₂⟩ := h4\n      let n₀ := max n₁ n₂\n      have n₀max : max n₁ n₂ ≤ n₀ := by simp\n      have h5 : ∀n ≥ n₀, |(1 / (y n)) - (1 / b)| < ε :=by\n        intro n ngen₀\n        calc\n          |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by\n            rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]\n            rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]\n            rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]\n            exact neqzero; exact yneqzero n\n          _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by\n            have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max\n            have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max\n            rw [abs_mul,mul_comm,mul_div]\n            have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n              have := yngtabsb n (le_trans n₁len₀ ngen₀)\n              have : 1 / |y n| < 2 / |b| := by\n                rw [one_div]\n                apply (lt_div_iff absbpos).2\n                rw [mul_comm]\n                have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n)\n                apply (lt_div_iff absynpos).1\n                rw [div_eq_mul_inv,inv_inv,mul_comm]\n                rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n                exact this\n              rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n              rw [← one_div,mul_div 2,mul_one]\n              have divabsbpos : 1 / |b| > 0 :=by\n                rw [one_div,gt_iff_lt,inv_pos]\n                exact absbpos\n              exact (mul_lt_mul_right divabsbpos).2 this\n            rw [← mul_div,mul_comm]\n            have l1: 2 / (|b| * |b|) > 0 := by\n              rw [gt_iff_lt]\n              have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n              apply (lt_div_iff absbpow).2\n              rw [zero_mul]\n              norm_num\n            exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))\n          _ = ε := by\n            ring_nf\n            rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]\n            rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]\n            repeat (any_goals exact neqzero)\n      apply Exists.intro n₀\n      exact  h5 ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element.",
+    "sub_mul : Subtraction multiplied by an element distributes over multiplication in a non-unital non-associative ring.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element.",
+    "abs_inv : This theorem states that in a linear ordered field, the absolute value of the reciprocal of an element is equal to the reciprocal of the absolute value of that element.",
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation.",
+    "mul_inv : In a commutative division monoid, the inverse of the product of two elements is equal to the product of their individual inverses.",
+    "pow_one : This theorem states that in a monoid, raising an element to the power of one yields the element itself.",
+    "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+    "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+    "abs_nonneg : This theorem asserts that the absolute value of an element is always non-negative in the context of a lattice and additive group.",
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+    "Max.max : A function computes the maximum of two elements from a specified type.",
+    "abs_one : The absolute value of one in a linearly ordered ring is equal to one.",
+    "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group.",
+    "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses.",
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "sub_lt_comm : This theorem states that the inequality involving the difference between two elements compared to a third element is equivalent to a rearranged difference involving the first and third elements in an additive commutative group context.",
+    "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+    "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group.",
+    "pow_add : This theorem asserts that in a monoidal structure, raising an element to the sum of two exponents equals the product of the element raised to each exponent individually.",
+    "abs_mul : The absolute value of the product of two elements in a linearly ordered ring is equal to the product of their absolute values.",
+    "inv_mul_cancel : This theorem asserts that in a group with zero, the product of a nonzero element and its inverse equals one.",
+    "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+    "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "mul_lt_mul_of_le_of_le' : This theorem establishes that if one element is less than or equal to another, and a second element is strictly less than a third positive element, then the product of the first element with the second is less than the product of the second element with the third.",
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+    "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+    "Real.mul_pos : The product of two positive real numbers is also positive."
+  ],
+  "have absbpos: |b| > 0 := by\n        rw [gt_iff_lt]\n        exact abs_pos.2  neqzero ": [
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former."
+  ],
+  "rw [gt_iff_lt ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former."
+  ],
+  "exact abs_pos.2  neqzero ": [
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero."
+  ],
+  "have h3: ∃n₁, ∀n ≥ n₁, |y n - b| < |b| / 2 := convyb (|b|/2) (half_pos absbpos ) ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "let ⟨n₁,h₁⟩ :=  h3 ": [],
+  "have yngtabsb : ∀n ≥ n₁, |y n| > |b| / 2 := by\n        intro n ngen₁\n        have := h₁ n ngen₁\n        rw [abs_sub_comm] at this\n        have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n)\n        have := lt_of_le_of_lt sub this\n        rw [sub_lt_comm] at this\n        have subhalf : |b| - |b| / 2 = |b| / 2 := by ring\n        rw [subhalf] at this\n        exact  this ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group.",
+    "sub_lt_comm : This theorem states that the inequality involving the difference between two elements compared to a third element is equivalent to a rearranged difference involving the first and third elements in an additive commutative group context.",
+    "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group."
+  ],
+  "intro n  ngen₁ ": [],
+  "have := h₁ n  ngen₁ ": [],
+  "rw [abs_sub_comm] at  this ": [
+    "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group."
+  ],
+  "have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n ) ": [
+    "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group."
+  ],
+  "have := lt_of_le_of_lt sub  this ": [
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third."
+  ],
+  "rw [sub_lt_comm] at  this ": [
+    "sub_lt_comm : This theorem states that the inequality involving the difference between two elements compared to a third element is equivalent to a rearranged difference involving the first and third elements in an additive commutative group context."
+  ],
+  "have subhalf : |b| - |b| / 2 = |b| / 2 := by  ring ": [],
+  " ring ": [],
+  "rw [subhalf] at  this ": [],
+  "intro ε  εpos ": [],
+  "have h4: ∃n₂, ∀n ≥ n₂, |y n - b| < (|b| * |b| * ε / 2) := by\n        have bbεpos : (|b| * |b| * ε / 2) > 0 := by\n          rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]\n          exact mul_pos absbpos (mul_pos absbpos εpos)\n        exact convyb (|b| * |b| * ε / 2)  bbεpos ": [
+    "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+    "Real.mul_pos : The product of two positive real numbers is also positive.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "have bbεpos : (|b| * |b| * ε / 2) > 0 := by\n          rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]\n          exact mul_pos absbpos (mul_pos absbpos εpos ) ": [
+    "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+    "Real.mul_pos : The product of two positive real numbers is also positive.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "exact mul_pos absbpos (mul_pos absbpos εpos ) ": [
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "Real.mul_pos : The product of two positive real numbers is also positive."
+  ],
+  "exact convyb (|b| * |b| * ε / 2)  bbεpos ": [],
+  "let ⟨n₂,h₂⟩ :=  h4 ": [],
+  "let n₀ := max n₁  n₂ ": [
+    "Max.max : A function computes the maximum of two elements from a specified type."
+  ],
+  "have n₀max : max n₁ n₂ ≤ n₀ := by  simp ": [
+    "Max.max : A function computes the maximum of two elements from a specified type."
+  ],
+  " simp ": [
+    "Max.max : A function computes the maximum of two elements from a specified type."
+  ],
+  "have h5 : ∀n ≥ n₀, |(1 / (y n)) - (1 / b)| < ε :=by\n        intro n ngen₀\n        calc\n          |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by\n            rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]\n            rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]\n            rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]\n            exact neqzero; exact yneqzero n\n          _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by\n            have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max\n            have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max\n            rw [abs_mul,mul_comm,mul_div]\n            have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n              have := yngtabsb n (le_trans n₁len₀ ngen₀)\n              have : 1 / |y n| < 2 / |b| := by\n                rw [one_div]\n                apply (lt_div_iff absbpos).2\n                rw [mul_comm]\n                have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n)\n                apply (lt_div_iff absynpos).1\n                rw [div_eq_mul_inv,inv_inv,mul_comm]\n                rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n                exact this\n              rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n              rw [← one_div,mul_div 2,mul_one]\n              have divabsbpos : 1 / |b| > 0 :=by\n                rw [one_div,gt_iff_lt,inv_pos]\n                exact absbpos\n              exact (mul_lt_mul_right divabsbpos).2 this\n            rw [← mul_div,mul_comm]\n            have l1: 2 / (|b| * |b|) > 0 := by\n              rw [gt_iff_lt]\n              have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n              apply (lt_div_iff absbpow).2\n              rw [zero_mul]\n              norm_num\n            exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))\n          _ = ε := by\n            ring_nf\n            rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]\n            rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]\n            repeat (any_goals exact neqzero ) ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element.",
+    "sub_mul : Subtraction multiplied by an element distributes over multiplication in a non-unital non-associative ring.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element.",
+    "abs_inv : This theorem states that in a linear ordered field, the absolute value of the reciprocal of an element is equal to the reciprocal of the absolute value of that element.",
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation.",
+    "mul_inv : In a commutative division monoid, the inverse of the product of two elements is equal to the product of their individual inverses.",
+    "pow_one : This theorem states that in a monoid, raising an element to the power of one yields the element itself.",
+    "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+    "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+    "abs_nonneg : This theorem asserts that the absolute value of an element is always non-negative in the context of a lattice and additive group.",
+    "abs_one : The absolute value of one in a linearly ordered ring is equal to one.",
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+    "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group.",
+    "pow_add : This theorem asserts that in a monoidal structure, raising an element to the sum of two exponents equals the product of the element raised to each exponent individually.",
+    "abs_mul : The absolute value of the product of two elements in a linearly ordered ring is equal to the product of their absolute values.",
+    "inv_mul_cancel : This theorem asserts that in a group with zero, the product of a nonzero element and its inverse equals one.",
+    "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element.",
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+    "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "mul_lt_mul_of_le_of_le' : This theorem establishes that if one element is less than or equal to another, and a second element is strictly less than a third positive element, then the product of the first element with the second is less than the product of the second element with the third.",
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+    "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+    "Real.mul_pos : The product of two positive real numbers is also positive."
+  ],
+  "intro n  ngen₀ ": [],
+  "calc\n          |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by\n            rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]\n            rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]\n            rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]\n            exact neqzero; exact yneqzero n\n          _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by\n            have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max\n            have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max\n            rw [abs_mul,mul_comm,mul_div]\n            have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n              have := yngtabsb n (le_trans n₁len₀ ngen₀)\n              have : 1 / |y n| < 2 / |b| := by\n                rw [one_div]\n                apply (lt_div_iff absbpos).2\n                rw [mul_comm]\n                have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n)\n                apply (lt_div_iff absynpos).1\n                rw [div_eq_mul_inv,inv_inv,mul_comm]\n                rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n                exact this\n              rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n              rw [← one_div,mul_div 2,mul_one]\n              have divabsbpos : 1 / |b| > 0 :=by\n                rw [one_div,gt_iff_lt,inv_pos]\n                exact absbpos\n              exact (mul_lt_mul_right divabsbpos).2 this\n            rw [← mul_div,mul_comm]\n            have l1: 2 / (|b| * |b|) > 0 := by\n              rw [gt_iff_lt]\n              have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n              apply (lt_div_iff absbpow).2\n              rw [zero_mul]\n              norm_num\n            exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))\n          _ = ε := by\n            ring_nf\n            rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]\n            rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]\n            repeat (any_goals exact neqzero ) ": [],
+  "rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul ] ": [
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc ] ": [
+    "sub_mul : Subtraction multiplied by an element distributes over multiplication in a non-unital non-associative ring.",
+    "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+  ],
+  "rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm ] ": [
+    "inv_mul_cancel : This theorem asserts that in a group with zero, the product of a nonzero element and its inverse equals one.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "exact  neqzero ": [],
+  "exact yneqzero  n ": [],
+  "have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left  n₀max ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element."
+  ],
+  "have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right  n₀max ": [
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element."
+  ],
+  "rw [abs_mul,mul_comm,mul_div ] ": [
+    "abs_mul : The absolute value of the product of two elements in a linearly ordered ring is equal to the product of their absolute values.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n              have := yngtabsb n (le_trans n₁len₀ ngen₀)\n              have : 1 / |y n| < 2 / |b| := by\n                rw [one_div]\n                apply (lt_div_iff absbpos).2\n                rw [mul_comm]\n                have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n)\n                apply (lt_div_iff absynpos).1\n                rw [div_eq_mul_inv,inv_inv,mul_comm]\n                rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n                exact this\n              rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n              rw [← one_div,mul_div 2,mul_one]\n              have divabsbpos : 1 / |b| > 0 :=by\n                rw [one_div,gt_iff_lt,inv_pos]\n                exact absbpos\n              exact (mul_lt_mul_right divabsbpos).2  this ": [
+    "mul_inv : In a commutative division monoid, the inverse of the product of two elements is equal to the product of their individual inverses.",
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+    "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+    "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+    "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+    "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "have := yngtabsb n (le_trans n₁len₀ ngen₀ ) ": [
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third."
+  ],
+  "have : 1 / |y n| < 2 / |b| := by\n                rw [one_div]\n                apply (lt_div_iff absbpos).2\n                rw [mul_comm]\n                have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n)\n                apply (lt_div_iff absynpos).1\n                rw [div_eq_mul_inv,inv_inv,mul_comm]\n                rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n                exact  this ": [
+    "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+    "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+    "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [one_div ] ": [
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+  ],
+  "apply (lt_div_iff absbpos). 2 ": [
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [mul_comm ] ": [
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "have absynpos : |y n|⁻¹ > 0 := by\n                  rw [gt_iff_lt,inv_pos]\n                  exact abs_pos.2 (yneqzero n ) ": [
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive."
+  ],
+  "rw [gt_iff_lt,inv_pos ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive."
+  ],
+  "exact abs_pos.2 (yneqzero n ) ": [
+    "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero."
+  ],
+  "apply (lt_div_iff absynpos). 1 ": [
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [div_eq_mul_inv,inv_inv,mul_comm ] ": [
+    "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "rw [gt_iff_lt, div_lt_iff (by norm_num)] at  this ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element."
+  ],
+  "rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc ] ": [
+    "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+  ],
+  "rw [← one_div,mul_div 2,mul_one ] ": [
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+  ],
+  "have divabsbpos : 1 / |b| > 0 :=by\n                rw [one_div,gt_iff_lt,inv_pos]\n                exact  absbpos ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+  ],
+  "rw [one_div,gt_iff_lt,inv_pos ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+  ],
+  "exact  absbpos ": [],
+  "exact (mul_lt_mul_right divabsbpos).2  this ": [
+    "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation."
+  ],
+  "rw [← mul_div,mul_comm ] ": [
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "have l1: 2 / (|b| * |b|) > 0 := by\n              rw [gt_iff_lt]\n              have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n              apply (lt_div_iff absbpow).2\n              rw [zero_mul]\n               norm_num ": [
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "Real.mul_pos : The product of two positive real numbers is also positive."
+  ],
+  "have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos  absbpos ": [
+    "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+    "Real.mul_pos : The product of two positive real numbers is also positive."
+  ],
+  "apply (lt_div_iff absbpow). 2 ": [
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [zero_mul ] ": [
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication."
+  ],
+  " norm_num ": [],
+  "exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b) ) ": [
+    "abs_nonneg : This theorem asserts that the absolute value of an element is always non-negative in the context of a lattice and additive group.",
+    "mul_lt_mul_of_le_of_le' : This theorem establishes that if one element is less than or equal to another, and a second element is strictly less than a third positive element, then the product of the first element with the second is less than the product of the second element with the third.",
+    "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third."
+  ],
+  " ring_nf ": [],
+  "rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel ] ": [
+    "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+    "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+  ],
+  "rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul ] ": [
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+  ],
+  "apply Exists.intro  n₀ ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "exact  h5 ": [],
+  ". apply And.intro\n      . exact ⟨(1 / b), convdiv⟩\n      . have l1:= (Converges_sLim_iff (1 / y) ⟨(1 / b), convdiv⟩ (1 / b)).1 convdiv\n        have l2:= (Converges_sLim_iff y cony b).1 convyb\n        rw [l2.symm] at l1\n        exact  l1 ": [
+    "IsConverges : A sequence of real numbers is convergent if there exists a real number to which the sequence converges.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "apply  And.intro ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "IsConverges : A sequence of real numbers is convergent if there exists a real number to which the sequence converges.",
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  ". exact ⟨(1 / b), convdiv ⟩ ": [
+    "IsConverges : A sequence of real numbers is convergent if there exists a real number to which the sequence converges."
+  ],
+  "exact ⟨(1 / b), convdiv ⟩ ": [],
+  ". have l1:= (Converges_sLim_iff (1 / y) ⟨(1 / b), convdiv⟩ (1 / b)).1 convdiv\n        have l2:= (Converges_sLim_iff y cony b).1 convyb\n        rw [l2.symm] at l1\n        exact  l1 ": [
+    "Lim.sLim : This defines a function that assigns a limit to each sequence within a given limit space."
+  ],
+  "have l1:= (Converges_sLim_iff (1 / y) ⟨(1 / b), convdiv⟩ (1 / b)).1  convdiv ": [
+    "Converges_sLim_iff : A convergent sequence of real numbers converges to a given limit if and only if that limit equals its defined limit."
+  ],
+  "have l2:= (Converges_sLim_iff y cony b).1  convyb ": [
+    "Converges_sLim_iff : A convergent sequence of real numbers converges to a given limit if and only if that limit equals its defined limit."
+  ],
+  "rw [l2.symm] at  l1 ": [
+    "Ne.symm : If two elements are not equal to each other, then reversing their order also indicates that they are not equal.",
+    "Eq.symm : Equality is symmetric, meaning that if one element is equal to another, then the second is equal to the first."
+  ],
+  "exact  l1 ": []
+}

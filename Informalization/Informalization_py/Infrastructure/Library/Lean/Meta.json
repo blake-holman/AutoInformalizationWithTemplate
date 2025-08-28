@@ -1,0 +1,440 @@
+{
+  "Basic.lean": {
+    "Lean.Meta.MetaM": {
+      "type": "definition",
+      "code": "Lean.Meta.MetaM (α : Type) : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev MetaM  := ReaderT Context $ StateRefT State CoreM",
+      "description": "A specific type of computation or transformation in a meta programming context."
+    },
+    "Lean.Meta.mkFreshLevelMVar": {
+      "type": "definition",
+      "code": "Lean.Meta.mkFreshLevelMVar : MetaM Level",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def mkFreshLevelMVar : MetaM Level := do   let mvarId ← mkFreshLMVarId   modifyMCtx fun mctx => mctx.addLevelMVarDecl mvarId;   return mkLevelMVar mvarId",
+      "description": "A function that creates a new level metavariable within a meta programming computation context."
+    },
+    "Lean.Meta.mkFreshExprMVar": {
+      "type": "definition",
+      "code": "Lean.Meta.mkFreshExprMVar (type? : Option Expr) (kind : MetavarKind := MetavarKind.natural)\n  (userName : Name := Name.anonymous) : MetaM Expr",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def mkFreshExprMVar (type? : Option Expr) (kind := MetavarKind.natural) (userName := Name.anonymous) : MetaM Expr :=   mkFreshExprMVarImpl type? kind userName",
+      "description": "A function that generates a fresh expression metavariable, optionally specifying its type and kind within a meta programming computation context."
+    },
+    "Lean.Meta.whnfR": {
+      "type": "definition",
+      "code": "Lean.Meta.whnfR (e : Expr) : MetaM Expr",
+      "comment": "`whnf` with reducible transparency.",
+      "explanatories": {},
+      "fullDefinition": "def whnfR (e : Expr) : MetaM Expr :=   withTransparency TransparencyMode.reducible <| whnf e",
+      "description": "A function that computes the weak head normal form of an expression with specific transparency conditions in a meta programming context."
+    },
+    "Lean.Meta.withReducible": {
+      "type": "definition",
+      "code": "Lean.Meta.withReducible.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type} (x : n α) : n α",
+      "comment": "`withReducible x` executes `x` using the reducible transparency setting. In this setting only definitions tagged as `[reducible]` are unfolded. ",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def withReducible (x : n α) : n α :=   withTransparency TransparencyMode.reducible x",
+      "description": "A function that executes a computation with a transparency setting that allows only the unfolding of definitions marked as reducible."
+    },
+    "Lean.Meta.MetaM.run'": {
+      "type": "definition",
+      "code": "Lean.Meta.MetaM.run' {α : Type} (x : MetaM α)\n  (ctx : Meta.Context :=\n    {\n      config :=\n        { foApprox := false, ctxApprox := false, quasiPatternApprox := false, constApprox := false,\n          isDefEqStuckEx := false, unificationHints := true, proofIrrelevance := true, assignSyntheticOpaque := false,\n          offsetCnstrs := true, transparency := TransparencyMode.default, trackZetaDelta := false,\n          etaStruct := EtaStructMode.all, univApprox := true },\n      lctx :=\n        { fvarIdToDecl := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          decls :=\n            { root := PersistentArrayNode.node (Array.mkEmpty PersistentArray.branching.toNat),\n              tail := Array.mkEmpty PersistentArray.branching.toNat, size := 0, shift := PersistentArray.initShift,\n              tailOff := 0 } },\n      localInstances := #[], defEqCtx? := none, synthPendingDepth := 0, canUnfold? := none, univApprox := false,\n      inTypeClassResolution := false })\n  (s : Meta.State :=\n    {\n      mctx :=\n        { depth := 0, levelAssignDepth := 0, mvarCounter := 0,\n          lDepth := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          decls := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          userNames := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          lAssignment := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          eAssignment := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          dAssignment := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray } },\n      cache :=\n        { inferType := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          funInfo := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          synthInstance := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          whnfDefault := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          whnfAll := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          defEqTrans :=\n            { reducible := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              instances := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              default := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              all := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray } },\n          defEqPerm :=\n            { reducible := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              instances := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              default := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n              all := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray } } },\n      zetaDeltaFVarIds := ∅,\n      postponed :=\n        { root := PersistentArrayNode.node (Array.mkEmpty PersistentArray.branching.toNat),\n          tail := Array.mkEmpty PersistentArray.branching.toNat, size := 0, shift := PersistentArray.initShift,\n          tailOff := 0 },\n      diag :=\n        { unfoldCounter := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          heuristicCounter := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          instanceCounter := { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray },\n          synthPendingFailures :=\n            { root := PersistentHashMap.Node.entries PersistentHashMap.mkEmptyEntriesArray } } }) :\n  CoreM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def MetaM.run' (x : MetaM α) (ctx : Context := {}) (s : State := {}) : CoreM α :=   Prod.fst <$> x.run ctx s",
+      "description": "A function that executes a meta programming computation with a specified context and state, returning a result within a core computation framework."
+    },
+    "Lean.Meta.forallTelescope": {
+      "type": "definition",
+      "code": "Lean.Meta.forallTelescope.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type} (type : Expr)\n  (k : Array Expr → Expr → n α) (cleanupAnnotations : Bool := false) : n α",
+      "comment": "Given `type` of the form `forall xs, A`, execute `k xs A`.\nThis combinator will declare local declarations, create free variables for them,\nexecute `k` with updated local context, and make sure the cache is restored after executing `k`.\n\nIf `cleanupAnnotations` is `true`, we apply `Expr.cleanupAnnotations` to each type in the telescope.\n",
+      "explanatories": {},
+      "fullDefinition": "def forallTelescope (type : Expr) (k : Array Expr → Expr → n α) (cleanupAnnotations := false) : n α :=   map2MetaM (fun k => forallTelescopeImp type k cleanupAnnotations) k",
+      "description": "A function that processes a universal quantifier expression by executing a specified continuation with the declared variables while managing the local context and optionally cleaning up annotations."
+    },
+    "Lean.Meta.mkLambdaFVars": {
+      "type": "definition",
+      "code": "Lean.Meta.mkLambdaFVars (xs : Array Expr) (e : Expr) (usedOnly : Bool := false) (usedLetOnly : Bool := true)\n  (etaReduce : Bool := false) (binderInfoForMVars : BinderInfo := BinderInfo.implicit) : MetaM Expr",
+      "comment": "Takes an array `xs` of free variables and metavariables and a\nbody term `e` and creates `fun ..xs => e`, suitably\nabstracting `e` and the types in `xs`. ",
+      "explanatories": {},
+      "fullDefinition": "def mkLambdaFVars (xs : Array Expr) (e : Expr) (usedOnly : Bool := false) (usedLetOnly : Bool := true) (etaReduce : Bool := false) (binderInfoForMVars := BinderInfo.implicit) : MetaM Expr :=   if xs.isEmpty then return e else liftMkBindingM <| MetavarContext.mkLambda xs e usedOnly usedLetOnly etaReduce binderInfoForMVars",
+      "description": "A function that constructs a lambda expression by abstracting a body term over a given array of free variables and metavariables."
+    },
+    "Lean.Meta.whnfD": {
+      "type": "definition",
+      "code": "Lean.Meta.whnfD (e : Expr) : MetaM Expr",
+      "comment": "`whnf` with default transparency.",
+      "explanatories": {},
+      "fullDefinition": "def whnfD (e : Expr) : MetaM Expr :=   withTransparency TransparencyMode.default <| whnf e",
+      "description": "A function that computes the weak head normal form of an expression using default transparency settings in a meta programming context."
+    },
+    "Lean.Meta.forallTelescopeReducing": {
+      "type": "definition",
+      "code": "Lean.Meta.forallTelescopeReducing.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type} (type : Expr)\n  (k : Array Expr → Expr → n α) (cleanupAnnotations : Bool := false) : n α",
+      "comment": "Similar to `forallTelescope`, but given `type` of the form `forall xs, A`,\nit reduces `A` and continues building the telescope if it is a `forall`.\n\nIf `cleanupAnnotations` is `true`, we apply `Expr.cleanupAnnotations` to each type in the telescope.\n",
+      "explanatories": {},
+      "fullDefinition": "def forallTelescopeReducing (type : Expr) (k : Array Expr → Expr → n α) (cleanupAnnotations := false) : n α :=   map2MetaM (fun k => forallTelescopeReducingImp type k cleanupAnnotations) k",
+      "description": "A function that processes a universally quantified expression by reducing its type and recursively extracting further quantifiers while optionally cleaning up annotations."
+    },
+    "Lean.Meta.withLocalDeclsD": {
+      "type": "definition",
+      "code": "Lean.Meta.withLocalDeclsD.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type} [Inhabited α]\n  (declInfos : Array (Name × (Array Expr → n Expr))) (k : Array Expr → n α) : n α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def withLocalDeclsD [Inhabited α] (declInfos : Array (Name × (Array Expr → n Expr))) (k : (xs : Array Expr) → n α) : n α :=   withLocalDecls     (declInfos.map (fun (name, typeCtor) => (name, BinderInfo.default, typeCtor))) k",
+      "description": "A function that operates within a local declaration context, allowing for the execution of a continuation with locally declared variables."
+    },
+    "Lean.Meta.withNewLocalInstances": {
+      "type": "definition",
+      "code": "Lean.Meta.withNewLocalInstances.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type}\n  (fvars : Array Expr) (j : ℕ) : n α → n α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "partial def withNewLocalInstances (fvars : Array Expr) (j : Nat) : n α → n α :=   mapMetaM <| withNewLocalInstancesImpAux fvars j",
+      "description": "A function that temporarily introduces new local instances in a meta programming context for a given computation."
+    },
+    "Lean.MVarId.withContext": {
+      "type": "definition",
+      "code": "Lean.MVarId.withContext.{u_1} {n : Type → Type u_1} [MonadControlT MetaM n] [Monad n] {α : Type} (mvarId : MVarId) :\n  n α → n α",
+      "comment": "Execute `x` using the given metavariable `LocalContext` and `LocalInstances`.\nThe type class resolution cache is flushed when executing `x` if its `LocalInstances` are\ndifferent from the current ones. ",
+      "explanatories": {},
+      "fullDefinition": "def _root_.Lean.MVarId.withContext (mvarId : MVarId) : n α → n α :=   mapMetaM <| withMVarContextImp mvarId",
+      "description": "A function that executes a computation in the context of a specified metavariable while managing local instances and caching for type class resolution."
+    }
+  },
+  "Eval.lean": {
+    "Lean.Meta.evalExpr": {
+      "type": "definition",
+      "code": "Lean.Meta.evalExpr (α : Type) (expectedType value : Expr) (safety : DefinitionSafety := DefinitionSafety.safe) : MetaM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "unsafe def evalExpr (α) (expectedType : Expr) (value : Expr) (safety := DefinitionSafety.safe) : MetaM α :=   evalExprCore (safety := safety) α value fun type => do     unless ← isDefEq type expectedType do       throwError \"unexpected type at `evalExpr` {← mkHasTypeButIsExpectedMsg type expectedType}\"",
+      "description": "A function that evaluates an expression and returns its value as a specified type within a meta programming context, ensuring safety during the evaluation."
+    }
+  },
+  "Tactic": {
+    "Util.lean": {
+      "Lean.MVarId.getType": {
+        "type": "definition",
+        "code": "Lean.MVarId.getType (mvarId : MVarId) : MetaM Expr",
+        "comment": "Get the type the given metavariable. ",
+        "explanatories": {},
+        "fullDefinition": "def _root_.Lean.MVarId.getType (mvarId : MVarId) : MetaM Expr :=   return (← mvarId.getDecl).type",
+        "description": "A function that retrieves the type associated with a specified metavariable in a meta programming context."
+      },
+      "Lean.MVarId.checkNotAssigned": {
+        "type": "definition",
+        "code": "Lean.MVarId.checkNotAssigned (mvarId : MVarId) (tacticName : Name) : MetaM Unit",
+        "comment": "Throw a tactic exception with given tactic name if the given metavariable is assigned. ",
+        "explanatories": {},
+        "fullDefinition": "def _root_.Lean.MVarId.checkNotAssigned (mvarId : MVarId) (tacticName : Name) : MetaM Unit := do   if (← mvarId.isAssigned) then     throwTacticEx tacticName mvarId \"metavariable has already been assigned\"",
+        "description": "A function that raises an exception if a specified metavariable has already been assigned a value, providing the name of the tactic that triggered the check."
+      },
+      "Lean.MVarId.getType'": {
+        "type": "definition",
+        "code": "Lean.MVarId.getType' (mvarId : MVarId) : MetaM Expr",
+        "comment": "Get the type the given metavariable after instantiating metavariables and reducing to\nweak head normal form. ",
+        "explanatories": {},
+        "fullDefinition": "def _root_.Lean.MVarId.getType' (mvarId : MVarId) : MetaM Expr := do   instantiateMVars (← whnf (← mvarId.getType))",
+        "description": "A function that obtains the type of a specified metavariable after resolving any other metavariables and simplifying it to a basic form."
+      }
+    },
+    "Simp": {
+      "BuiltinSimprocs": {
+        "Core.lean": {
+          "reduceDIte": {
+            "type": "definition",
+            "code": "reduceDIte : Lean.Meta.Simp.Simproc",
+            "comment": null,
+            "explanatories": {},
+            "fullDefinition": "builtin_simproc ↓ [simp, seval] reduceDIte (dite _ _ _) := fun e => do   let_expr f@dite α c i tb eb ← e | return .continue   let r ← simp c   if r.expr.isTrue then     let pr    ← r.getProof     let h     := mkApp2 (mkConst ``of_eq_true) c pr     let eNew  := mkApp tb h |>.headBeta     let prNew := mkApp (mkApp5 (mkConst ``dite_cond_eq_true f.constLevels!) α c i tb eb) pr     return .visit { expr := eNew, proof? := prNew }   if r.expr.isFalse then     let pr    ← r.getProof     let h     := mkApp2 (mkConst ``of_eq_false) c pr     let eNew  := mkApp eb h |>.headBeta     let prNew := mkApp (mkApp5 (mkConst ``dite_cond_eq_false f.constLevels!) α c i tb eb) pr     return .visit { expr := eNew, proof? := prNew }   return .continue",
+            "description": "A simplification procedure defined for use in meta programming contexts."
+          }
+        },
+        "Int.lean": {
+          "Int.reduceNeg": {
+            "type": "definition",
+            "code": "Int.reduceNeg : Lean.Meta.Simp.DSimproc",
+            "comment": null,
+            "explanatories": {},
+            "fullDefinition": "builtin_dsimproc [simp, seval] reduceNeg ((- _ : Int)) := fun e => do   unless e.isAppOfArity ``Neg.neg 3 do return .continue   let arg := e.appArg!   if arg.isAppOfArity ``OfNat.ofNat 3 then     -- We return .done to ensure `Neg.neg` is not unfolded even when `ground := true`.     return .done e   else     let some v ← fromExpr? arg | return .continue     if v < 0 then       return .done <| toExpr (- v)     else       return .done <| toExpr v",
+            "description": "A simplification procedure intended for reducing negative integers in meta programming contexts."
+          }
+        }
+      },
+      "SimpTheorems.lean": {
+        "Lean.Meta.SimpTheorems.post": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.post (self : SimpTheorems) : SimpTheoremTree",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "post         : SimpTheoremTree := DiscrTree.empty   lemmaNames   : PHashSet Origin := {}   /--   Constants (and let-declaration `FVarId`) to unfold.   When `zetaDelta := false`, the simplifier will expand a let-declaration if it is in this set.   -/   toUnfold     : PHashSet Name := {}   erased       : PHashSet Origin := {}   toUnfoldThms : PHashMap Name (Array Name) := {}   deriving Inhabited",
+          "description": "A method for posting simplification theorems into a structure that organizes them into a tree format."
+        },
+        "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.checkTypeIsProp": {
+          "type": "definition",
+          "code": "Lean.Meta.checkTypeIsProp (type : Expr) : MetaM Unit",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "private def checkTypeIsProp (type : Expr) : MetaM Unit :=   unless (← isProp type) do     throwError \"invalid 'simp', proposition expected{indentExpr type}\"",
+          "description": "A method for verifying whether a given expression type is a proposition within a specific computational context."
+        },
+        "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.shouldPreprocess": {
+          "type": "definition",
+          "code": "Lean.Meta.shouldPreprocess (type : Expr) : MetaM Bool",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "private partial def shouldPreprocess (type : Expr) : MetaM Bool :=   forallTelescopeReducing type fun _ result => do     if let some (_, lhs, rhs) := result.eq? then       checkBadRewrite lhs rhs       return false     else       return true",
+          "description": "A method for determining whether a given expression type requires preprocessing within a specific computational context."
+        },
+        "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.preprocess": {
+          "type": "definition",
+          "code": "Lean.Meta.preprocess (e type : Expr) (inv isGlobal : Bool) : MetaM (List (Expr × Expr))",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "private partial def preprocess (e type : Expr) (inv : Bool) (isGlobal : Bool) : MetaM (List (Expr × Expr)) :=   go e type where   go (e type : Expr) : MetaM (List (Expr × Expr)) := do   let type ← whnf type   if type.isForall then     forallTelescopeReducing type fun xs type => do       let e := mkAppN e xs       let ps ← go e type       ps.mapM fun (e, type) =>         return (← mkLambdaFVars xs e, ← mkForallFVars xs type)   else if let some (_, lhs, rhs) := type.eq? then     if isGlobal then       checkBadRewrite lhs rhs     if inv then       let type ← mkEq rhs lhs       let e    ← mkEqSymm e       return [(e, type)]     else       return [(e, type)]   else if let some (lhs, rhs) := type.iff? then     if isGlobal then       checkBadRewrite lhs rhs     if inv then       let type ← mkEq rhs lhs       let e    ← mkEqSymm (← mkPropExt e)       return [(e, type)]     else       let type ← mkEq lhs rhs       let e    ← mkPropExt e       return [(e, type)]   else if let some (_, lhs, rhs) := type.ne? then     if inv then       throwError \"invalid '←' modifier in rewrite rule to 'False'\"     if rhs.isConstOf ``Bool.true then       return [(← mkAppM ``Bool.of_not_eq_true #[e], ← mkEq lhs (mkConst ``Bool.false))]     else if rhs.isConstOf ``Bool.false then       return [(← mkAppM ``Bool.of_not_eq_false #[e], ← mkEq lhs (mkConst ``Bool.true))]     let type ← mkEq (← mkEq lhs rhs) (mkConst ``False)     let e    ← mkEqFalse e     return [(e, type)]   else if let some p := type.not? then     if inv then       throwError \"invalid '←' modifier in rewrite rule to 'False'\"     if let some (_, lhs, rhs) := p.eq? then       if rhs.isConstOf ``Bool.true then         return [(← mkAppM ``Bool.of_not_eq_true #[e], ← mkEq lhs (mkConst ``Bool.false))]       else if rhs.isConstOf ``Bool.false then         return [(← mkAppM ``Bool.of_not_eq_false #[e], ← mkEq lhs (mkConst ``Bool.true))]     let type ← mkEq p (mkConst ``False)     let e    ← mkEqFalse e     return [(e, type)]   else if let some (type₁, type₂) := type.and? then     let e₁ := mkProj ``And 0 e     let e₂ := mkProj ``And 1 e     return (← go e₁ type₁) ++ (← go e₂ type₂)   else     if inv then       throwError \"invalid '←' modifier in rewrite rule to 'True'\"     let type ← mkEq type (mkConst ``True)     let e    ← mkEqTrue e     return [(e, type)]",
+          "description": "A method for preprocessing a given expression and its type, potentially altering them based on whether they are global, and returning a list of modified expressions paired with their corresponding types."
+        },
+        "_private.Lean.Meta.Tactic.Simp.SimpTheorems.0.Lean.Meta.mkSimpTheoremCore": {
+          "type": "definition",
+          "code": "Lean.Meta.mkSimpTheoremCore (origin : Origin) (e : Expr) (levelParams : Array Name) (proof : Expr) (post : Bool)\n  (prio : Nat) (noIndexAtArgs : Bool) : MetaM SimpTheorem",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "private def mkSimpTheoremCore (origin : Origin) (e : Expr) (levelParams : Array Name) (proof : Expr) (post : Bool) (prio : Nat) (noIndexAtArgs : Bool) : MetaM SimpTheorem := do   assert! origin != .fvar ⟨.anonymous⟩   let type ← instantiateMVars (← inferType e)   withNewMCtxDepth do     let (_, _, type) ← withReducible <| forallMetaTelescopeReducing type     let type ← whnfR type     let (keys, perm) ←       match type.eq? with       | some (_, lhs, rhs) => pure (← DiscrTree.mkPath lhs simpDtConfig noIndexAtArgs, ← isPerm lhs rhs)       | none => throwError \"unexpected kind of 'simp' theorem{indentExpr type}\"     return { origin, keys, perm, post, levelParams, proof, priority := prio, rfl := (← isRflProof proof) }",
+          "description": "A method for creating a simplification theorem core with specified parameters, proof, and attributes within a particular computational context."
+        },
+        "Lean.Meta.Origin.decl": {
+          "type": "theorem",
+          "code": "Lean.Meta.Origin.decl (declName : Name) (post : Bool := true) (inv : Bool := false) : Origin",
+          "comment": "A global declaration in the environment. ",
+          "explanatories": {},
+          "fullDefinition": null,
+          "description": "A way to create a global declaration within the environment that can be marked as either posted or invalidated."
+        },
+        "Lean.Meta.SimpEntry.thm": {
+          "type": "theorem",
+          "code": "Lean.Meta.SimpEntry.thm : SimpTheorem → SimpEntry",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": null,
+          "description": "A transformation that converts a simplification theorem into a simplification entry format."
+        },
+        "Lean.Meta.SimpTheorems.toUnfold": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.toUnfold (self : SimpTheorems) : PHashSet Name",
+          "comment": "Constants (and let-declaration `FVarId`) to unfold.\nWhen `zetaDelta := false`, the simplifier will expand a let-declaration if it is in this set.\n",
+          "explanatories": {},
+          "fullDefinition": "toUnfold     : PHashSet Name := {}   erased       : PHashSet Origin := {}   toUnfoldThms : PHashMap Name (Array Name) := {}   deriving Inhabited",
+          "description": "A method for retrieving a set of constants and let-declarations that can be unfolded by the simplifier when specific conditions are met."
+        },
+        "Lean.Meta.SimpTheorems.toUnfoldThms": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.toUnfoldThms (self : SimpTheorems) : PHashMap Name (Array Name)",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "toUnfoldThms : PHashMap Name (Array Name) := {}   deriving Inhabited",
+          "description": "A method for obtaining a mapping of names to arrays of simplification theorems that should be unfolded during simplification."
+        },
+        "Lean.Meta.SimpEntry.toUnfoldThms": {
+          "type": "theorem",
+          "code": "Lean.Meta.SimpEntry.toUnfoldThms : Name → Array Name → SimpEntry",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": null,
+          "description": "A function that generates a simplification entry based on a name and an array of names that should be unfolded."
+        },
+        "Lean.Meta.SimpEntry.toUnfold": {
+          "type": "theorem",
+          "code": "Lean.Meta.SimpEntry.toUnfold : Name → SimpEntry",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": null,
+          "description": "A function that retrieves simplification entry data associated with a given name."
+        },
+        "Lean.Meta.SimpTheorems.addConst": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.addConst (s : SimpTheorems) (declName : Name) (post : Bool := true) (inv : Bool := false)\n  (prio : Nat := 1000) : MetaM SimpTheorems",
+          "comment": "Auxiliary method for adding a global declaration to a `SimpTheorems` datastructure. ",
+          "explanatories": {},
+          "fullDefinition": "def SimpTheorems.addConst (s : SimpTheorems) (declName : Name) (post := true) (inv := false) (prio : Nat := eval_prio default) : MetaM SimpTheorems := do   let s := { s with erased := s.erased.erase (.decl declName post inv) }   let simpThms ← mkSimpTheoremsFromConst declName post inv prio   return simpThms.foldl addSimpTheoremEntry s",
+          "description": "A method for incorporating a global declaration into a simplification theorems structure with specified attributes and priority."
+        },
+        "Lean.Meta.SimpTheorems.isLemma": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.isLemma (d : SimpTheorems) (thmId : Origin) : Bool",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "def SimpTheorems.isLemma (d : SimpTheorems) (thmId : Origin) : Bool :=   d.lemmaNames.contains thmId",
+          "description": "A method for determining whether a given theorem identifier is classified as a lemma within a set of simplification theorems."
+        },
+        "Lean.Meta.SimpTheorems.isDeclToUnfold": {
+          "type": "definition",
+          "code": "Lean.Meta.SimpTheorems.isDeclToUnfold (d : SimpTheorems) (declName : Name) : Bool",
+          "comment": "Return `true` if `declName` is tagged to be unfolded using `unfoldDefinition?` (i.e., without using equational theorems). ",
+          "explanatories": {},
+          "fullDefinition": "def SimpTheorems.isDeclToUnfold (d : SimpTheorems) (declName : Name) : Bool :=   d.toUnfold.contains declName",
+          "description": "A method that checks if a specific declaration is marked for unfolding without relying on equational theorems."
+        }
+      },
+      "SimpCongrTheorems.lean": {
+        "Lean.Meta.getSimpCongrTheorems": {
+          "type": "definition",
+          "code": "Lean.Meta.getSimpCongrTheorems : CoreM SimpCongrTheorems",
+          "comment": null,
+          "explanatories": {},
+          "fullDefinition": "def getSimpCongrTheorems : CoreM SimpCongrTheorems :=   return congrExtension.getState (← getEnv)",
+          "description": "A function that retrieves simplification congruence theorems from the core meta programming environment."
+        }
+      }
+    },
+    "Assumption.lean": {
+      "Lean.Meta.findLocalDeclWithType?": {
+        "type": "definition",
+        "code": "Lean.Meta.findLocalDeclWithType? (type : Expr) : MetaM (Option FVarId)",
+        "comment": "Return a local declaration whose type is definitionally equal to `type`. ",
+        "explanatories": {},
+        "fullDefinition": "def findLocalDeclWithType? (type : Expr) : MetaM (Option FVarId) := do   (← getLCtx).findDeclRevM? fun localDecl => do     if localDecl.isImplementationDetail then       return none     else if (← isDefEq type localDecl.type) then       return some localDecl.fvarId     else       return none",
+        "description": "A function that searches for a local declaration with a specific type and returns its identifier if found."
+      }
+    },
+    "Intro.lean": {
+      "Lean.MVarId.intro": {
+        "type": "definition",
+        "code": "Lean.MVarId.intro (mvarId : MVarId) (name : Name) : MetaM (FVarId × MVarId)",
+        "comment": "Introduce one binder using `name` as the the new hypothesis name.\n",
+        "explanatories": {},
+        "fullDefinition": "def _root_.Lean.MVarId.intro (mvarId : MVarId) (name : Name) : MetaM (FVarId × MVarId) := do   let (fvarIds, mvarId) ← mvarId.introN 1 [name]   return (fvarIds[0]!, mvarId)",
+        "description": "A mechanism to introduce a new binder in a meta programming context, assigning a specified name to the hypothesis."
+      }
+    },
+    "AuxLemma.lean": {
+      "Lean.Meta.mkAuxLemma": {
+        "type": "definition",
+        "code": "Lean.Meta.mkAuxLemma (levelParams : List Name) (type value : Expr) : MetaM Name",
+        "comment": "Helper method for creating auxiliary lemmas in the environment.\n\nIt uses a cache that maps `type` to declaration name. The cache is not stored in `.olean` files.\nIt is useful to make sure the same auxiliary lemma is not created over and over again in the same file.\n\nThis method is useful for tactics (e.g., `simp`) that may perform preprocessing steps to lemmas provided by\nusers. For example, `simp` preprocessor may convert a lemma into multiple ones.\n",
+        "explanatories": {},
+        "fullDefinition": "def mkAuxLemma (levelParams : List Name) (type : Expr) (value : Expr) : MetaM Name := do   let env ← getEnv   let s := auxLemmasExt.getState env   let mkNewAuxLemma := do     let auxName := Name.mkNum (env.mainModule ++ `_auxLemma) s.idx     addDecl <| Declaration.thmDecl {       name := auxName       levelParams, type, value     }     modifyEnv fun env => auxLemmasExt.modifyState env fun ⟨idx, lemmas⟩ => ⟨idx + 1, lemmas.insert type (auxName, levelParams)⟩     return auxName   match s.lemmas.find? type with   | some (name, levelParams') => if levelParams == levelParams' then return name else mkNewAuxLemma   | none => mkNewAuxLemma",
+        "description": "A function that helps generate auxiliary lemmas in a meta programming environment while ensuring that duplicate lemmas are not created by using a cache."
+      }
+    },
+    "Rewrite.lean": {
+      "Lean.MVarId.rewrite": {
+        "type": "definition",
+        "code": "Lean.MVarId.rewrite (mvarId : MVarId) (e heq : Expr) (symm : Bool := false)\n  (config : Rewrite.Config :=\n    { transparency := TransparencyMode.reducible, offsetCnstrs := true, occs := Occurrences.all,\n      newGoals := ApplyNewGoals.nonDependentFirst }) :\n  MetaM RewriteResult",
+        "comment": "Rewrite goal `mvarId`\n",
+        "explanatories": {},
+        "fullDefinition": "def _root_.Lean.MVarId.rewrite (mvarId : MVarId) (e : Expr) (heq : Expr)     (symm : Bool := false) (config := { : Rewrite.Config }) : MetaM RewriteResult :=   mvarId.withContext do     mvarId.checkNotAssigned `rewrite     let heqIn := heq     let heqType ← instantiateMVars (← inferType heq)     let (newMVars, binderInfos, heqType) ← forallMetaTelescopeReducing heqType     let heq := mkAppN heq newMVars     let cont (heq heqType : Expr) : MetaM RewriteResult := do       match (← matchEq? heqType) with       | none => throwTacticEx `rewrite mvarId m!\"equality or iff proof expected{indentExpr heqType}\"       | some (α, lhs, rhs) =>         let cont (heq heqType lhs rhs : Expr) : MetaM RewriteResult := do           if lhs.getAppFn.isMVar then             throwTacticEx `rewrite mvarId m!\"pattern is a metavariable{indentExpr lhs}\\nfrom equation{indentExpr heqType}\"           let e ← instantiateMVars e           let eAbst ← withConfig (fun oldConfig => { config, oldConfig with }) <| kabstract e lhs config.occs           unless eAbst.hasLooseBVars do             throwTacticEx `rewrite mvarId m!\"did not find instance of the pattern in the target expression{indentExpr lhs}\"           -- construct rewrite proof           let eNew := eAbst.instantiate1 rhs           let eNew ← instantiateMVars eNew           let eType ← inferType e           let motive := Lean.mkLambda `_a BinderInfo.default α eAbst           unless (← isTypeCorrect motive) do             throwTacticEx `rewrite mvarId \"motive is not type correct\"           unless (← withLocalDeclD `_a α fun a => do isDefEq (← inferType (eAbst.instantiate1 a)) eType) do             -- NB: using motive.arrow? would disallow motives where the dependency             -- can be reduced away             throwTacticEx `rewrite mvarId \"motive is dependent\"           let u1 ← getLevel α           let u2 ← getLevel eType           let eqPrf := mkApp6 (.const ``congrArg [u1, u2]) α eType lhs rhs motive heq           postprocessAppMVars `rewrite mvarId newMVars binderInfos             (synthAssignedInstances := !tactic.skipAssignedInstances.get (← getOptions))           let newMVarIds ← newMVars.map Expr.mvarId! |>.filterM fun mvarId => not <$> mvarId.isAssigned           let otherMVarIds ← getMVarsNoDelayed heqIn           let otherMVarIds := otherMVarIds.filter (!newMVarIds.contains ·)           let newMVarIds := newMVarIds ++ otherMVarIds           pure { eNew := eNew, eqProof := eqPrf, mvarIds := newMVarIds.toList }         match symm with         | false => cont heq heqType lhs rhs         | true  => do           let heq ← mkEqSymm heq           let heqType ← mkEq rhs lhs           cont heq heqType rhs lhs     match heqType.iff? with     | some (lhs, rhs) =>       let heqType ← mkEq lhs rhs       let heq := mkApp3 (mkConst `propext) lhs rhs heq       cont heq heqType     | none =>       cont heq heqType",
+        "description": "A function that rewrites a specified goal by replacing it with a given expression, optionally considering certain configurations and constraints."
+      }
+    },
+    "TryThis.lean": {
+      "Lean.Meta.Tactic.TryThis.addSuggestion": {
+        "type": "definition",
+        "code": "Lean.Meta.Tactic.TryThis.addSuggestion (ref : Syntax) (s : TryThis.Suggestion) (origSpan? : Option Syntax := none)\n  (header : String := \"Try this: \") (codeActionPrefix? : Option String := none) : MetaM Unit",
+        "comment": "Add a \"try this\" suggestion. This has three effects:\n\n* An info diagnostic is displayed saying `Try this: <suggestion>`\n* A widget is registered, saying `Try this: <suggestion>` with a link on `<suggestion>` to apply\n  the suggestion\n* A code action is added, which will apply the suggestion.\n\nThe parameters are:\n* `ref`: the span of the info diagnostic\n* `s`: a `Suggestion`, which contains\n  * `suggestion`: the replacement text;\n  * `preInfo?`: an optional string shown immediately after the replacement text in the widget\n    message (only)\n  * `postInfo?`: an optional string shown immediately after the replacement text in the widget\n    message (only)\n  * `style?`: an optional `Json` object used as the value of the `style` attribute of the\n    suggestion text's element (not the whole suggestion element).\n  * `messageData?`: an optional message to display in place of `suggestion` in the info diagnostic\n    (only). The widget message uses only `suggestion`. If `messageData?` is `none`, we simply use\n    `suggestion` instead.\n  * `toCodeActionTitle?`: an optional function `String → String` describing how to transform the\n    pretty-printed suggestion text into the code action text which appears in the lightbulb menu.\n    If `none`, we simply prepend `\"Try This: \"` to the suggestion text.\n* `origSpan?`: a syntax object whose span is the actual text to be replaced by `suggestion`.\n  If not provided it defaults to `ref`.\n* `header`: a string that begins the display. By default, it is `\"Try this: \"`.\n* `codeActionPrefix?`: an optional string to be used as the prefix of the replacement text if the\n  suggestion does not have a custom `toCodeActionTitle?`. If not provided, `\"Try this: \"` is used.\n",
+        "explanatories": {},
+        "fullDefinition": "def addSuggestion (ref : Syntax) (s : Suggestion) (origSpan? : Option Syntax := none)     (header : String := \"Try this: \") (codeActionPrefix? : Option String := none) : MetaM Unit := do   logInfoAt ref m!\"{header}{s}\"   addSuggestionCore ref #[s] header (isInline := true) origSpan?     (codeActionPrefix? := codeActionPrefix?)",
+        "description": "A function that adds a suggestion for users, displaying an info message and providing a widget and code action to apply the suggested change."
+      }
+    }
+  },
+  "AppBuilder.lean": {
+    "Lean.Meta.mkAppOptM": {
+      "type": "definition",
+      "code": "Lean.Meta.mkAppOptM (constName : Name) (xs : Array (Option Expr)) : MetaM Expr",
+      "comment": "Similar to `mkAppM`, but it allows us to specify which arguments are provided explicitly using `Option` type.\nExample:\nGiven `Pure.pure {m : Type u → Type v} [Pure m] {α : Type u} (a : α) : m α`,\n```\nmkAppOptM `Pure.pure #[m, none, none, a]\n```\nreturns a `Pure.pure` application if the instance `Pure m` can be synthesized, and the universe match.\nNote that,\n```\nmkAppM `Pure.pure #[a]\n```\nfails because the only explicit argument `(a : α)` is not sufficient for inferring the remaining arguments,\nwe would need the expected type. ",
+      "explanatories": {},
+      "fullDefinition": "def mkAppOptM (constName : Name) (xs : Array (Option Expr)) : MetaM Expr := do   withAppBuilderTrace constName xs do withNewMCtxDepth do     let (f, fType) ← mkFun constName     mkAppOptMAux f xs 0 #[] 0 #[] fType",
+      "description": "A function that constructs an application of a constant by explicitly specifying which arguments are provided, allowing for optional arguments in the process."
+    },
+    "Lean.Meta.mkEq": {
+      "type": "definition",
+      "code": "Lean.Meta.mkEq (a b : Expr) : MetaM Expr",
+      "comment": "Return `a = b`. ",
+      "explanatories": {},
+      "fullDefinition": "def mkEq (a b : Expr) : MetaM Expr := do   let aType ← inferType a   let u ← getLevel aType   return mkApp3 (mkConst ``Eq [u]) aType a b",
+      "description": "A function that returns an expression representing the equality of two given expressions."
+    },
+    "Lean.Meta.mkEqRefl": {
+      "type": "definition",
+      "code": "Lean.Meta.mkEqRefl (a : Expr) : MetaM Expr",
+      "comment": "Return a proof of `a = a`. ",
+      "explanatories": {},
+      "fullDefinition": "def mkEqRefl (a : Expr) : MetaM Expr := do   let aType ← inferType a   let u ← getLevel aType   return mkApp2 (mkConst ``Eq.refl [u]) aType a",
+      "description": "A function that returns a proof of the reflexivity of equality for a given expression."
+    },
+    "Lean.Meta.mkAppM": {
+      "type": "definition",
+      "code": "Lean.Meta.mkAppM (constName : Name) (xs : Array Expr) : MetaM Expr",
+      "comment": "Return the application `constName xs`.\nIt tries to fill the implicit arguments before the last element in `xs`.\n\nRemark:\n``mkAppM `arbitrary #[α]`` returns `@arbitrary.{u} α` without synthesizing\nthe implicit argument occurring after `α`.\nGiven a `x : ([Decidable p] → Bool) × Nat`, ``mkAppM `Prod.fst #[x]`` returns `@Prod.fst ([Decidable p] → Bool) Nat x`.\n",
+      "explanatories": {},
+      "fullDefinition": "def mkAppM (constName : Name) (xs : Array Expr) : MetaM Expr := do   withAppBuilderTrace constName xs do withNewMCtxDepth do     let (f, fType) ← mkFun constName     mkAppMArgs f fType xs",
+      "description": "A function that constructs the application of a given constant using an array of expressions while attempting to automatically fill in any implicit arguments before the last one."
+    }
+  },
+  "SynthInstance.lean": {
+    "Lean.Meta.synthInstance": {
+      "type": "definition",
+      "code": "Lean.Meta.synthInstance (type : Expr) (maxResultSize? : Option ℕ := none) : MetaM Expr",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def synthInstance (type : Expr) (maxResultSize? : Option Nat := none) : MetaM Expr :=   catchInternalId isDefEqStuckExceptionId     (do       let result? ← synthInstance? type maxResultSize?       match result? with       | some result => pure result       | none        => throwFailedToSynthesize type)     (fun _ => throwFailedToSynthesize type)",
+      "description": "A function that synthesizes an instance of a given type expression, potentially limiting the size of the result within a meta programming computation context."
+    }
+  },
+  "InferType.lean": {
+    "Lean.Meta.isProp": {
+      "type": "definition",
+      "code": "Lean.Meta.isProp (e : Expr) : MetaM Bool",
+      "comment": "`isProp e` returns `true` if `e` is a proposition.\n\nIf `e` contains metavariables, it may not be possible\nto decide whether is a proposition or not. We return `false` in this\ncase. We considered using `LBool` and retuning `LBool.undef`, but\nwe have no applications for it. ",
+      "explanatories": {},
+      "fullDefinition": "def isProp (e : Expr) : MetaM Bool := do   match (← isPropQuick e) with   | .true  => return true   | .false => return false   | .undef =>     let type ← inferType e     let type ← whnfD type     match type with     | Expr.sort u => return isAlwaysZero (← instantiateLevelMVars u)     | _           => return false",
+      "description": "A function that determines if a given expression is a proposition, returning true for propositions and false if the expression contains metavariables."
+    }
+  },
+  "Eqns.lean": {
+    "Lean.Meta.getEqnsFor?": {
+      "type": "definition",
+      "code": "Lean.Meta.getEqnsFor? (declName : Name) (nonRec : Bool := false) : MetaM (Option (Array Name))",
+      "comment": "Returns equation theorems for the given declaration.\nBy default, we do not create equation theorems for nonrecursive definitions.\nYou can use `nonRec := true` to override this behavior, a dummy `rfl` proof is created on the fly.\n",
+      "explanatories": {},
+      "fullDefinition": "def getEqnsFor? (declName : Name) (nonRec := false) : MetaM (Option (Array Name)) := withLCtx {} {} do   if let some eqs := eqnsExt.getState (← getEnv) |>.map.find? declName then     return some eqs   else if let some eqs ← alreadyGenerated? declName then     return some eqs   else if (← shouldGenerateEqnThms declName) then     for f in (← getEqnsFnsRef.get) do       if let some r ← f declName then         registerEqnThms declName r         return some r     if nonRec then       let some eqThm ← mkSimpleEqThm declName (suffix := Name.mkSimple eqn1ThmSuffix) | return none       let r := #[eqThm]       registerEqnThms declName r       return some r   return none",
+      "description": "A function that retrieves the equation theorems associated with a specified declaration, allowing for an option to include theorems for nonrecursive definitions."
+    }
+  },
+  "WHNF.lean": {
+    "Lean.Meta.hasSmartUnfoldingDecl": {
+      "type": "definition",
+      "code": "Lean.Meta.hasSmartUnfoldingDecl (env : Environment) (declName : Name) : Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def hasSmartUnfoldingDecl (env : Environment) (declName : Name) : Bool :=   env.contains (mkSmartUnfoldingNameFor declName)",
+      "description": "A function that checks if a declaration in a given environment has the characteristic of smart unfolding."
+    }
+  },
+  "Match": {
+    "MatcherInfo.lean": {
+      "Lean.Meta.isMatcher": {
+        "type": "definition",
+        "code": "Lean.Meta.isMatcher {m : Type → Type} [Monad m] [MonadEnv m] (declName : Name) : m Bool",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def isMatcher [Monad m] [MonadEnv m] (declName : Name) : m Bool :=   return isMatcherCore (← getEnv) declName",
+        "description": "A function that determines whether a name corresponds to a valid matcher within a specified monadic context."
+      }
+    }
+  },
+  "CongrTheorems.lean": {
+    "Lean.Meta.CongrArgKind.eq": {
+      "type": "theorem",
+      "code": "Lean.Meta.CongrArgKind.eq : CongrArgKind",
+      "comment": "The lemma contains three parameters for this kind of argument `a_i`, `b_i` and `eq_i : a_i = b_i`.\n`a_i` and `b_i` represent the left and right hand sides, and `eq_i` is a proof for their equality. ",
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A specific type of argument in a congruence context that requires a pair of expressions and a proof of their equality."
+    }
+  }
+}

@@ -1,0 +1,357 @@
+[applied Tactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+
+[answer]
+We will show that the maximum of \( m_1 \) and 1 is greater than zero. To do this, we rewrite the statement \(\max(m_1, 1) > 0\) as an equivalent disjunction that either \( m_1 > 0 \) or \( 1 > 0 \). This equivalence follows from the definition of the maximum and the comparison properties of real numbers. Focusing on the latter condition, it is evident that \( 1 > 0 \), which directly implies the original statement. Therefore, the maximum of \( m_1 \) and 1 is indeed greater than zero.
+[applied Tactic]
+. intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that for an arbitrary natural number \( n \), the absolute value of \( x_n \) is bounded above by the maximum of \( m_1 \) and 1. To do so, we observe that this bound is equivalent to demonstrating that \(|x_n|\) is less than or equal to either \( m_1 \) or 1. Focusing on the case where \(|x_n| \leq m_1\), we apply the given bound directly to the chosen \( n \), which establishes that \(|x_n|\) is indeed less than or equal to \( m_1 \). Hence, we conclude that for all natural numbers \( n \), \(|x_n|\) is bounded above by \(\max(m_1, 1)\), completing the proof.
+[applied Tactic]
+have m1h: ∃M > 0, ∀n, |x n| ≤ M := by
+      let ⟨m1,h2⟩ := ConvergentSequenceBounded x conx
+      -- m1 が0 の場合も考えてm1 と 1 のうち大きいほうを使う
+      apply Exists.intro (max m1 1)
+      rw [UpperBound] at h2
+      simp at h2
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that there exists a positive real number \( M \) such that for every natural number \( n \), the absolute value of \( x_n \) is at most \( M \). Since the sequence \( x \) converges, there exists a real number \( m_1 \) that bounds the absolute values of its terms from above. To ensure the bound is strictly positive, we define \( M = \max(m_1, 1) \). By construction, \( M \) is positive because either \( m_1 > 0 \) or \( 1 > 0 \), and since \( 1 > 0 \) trivially holds, it follows that \( M > 0 \). Next, for any natural number \( n \), we know that \(|x_n| \leq m_1\) by the bounding property of \( m_1 \). Consequently, \(|x_n| \leq M = \max(m_1, 1)\) for all \( n \), which establishes that \( M \) serves as a uniform positive upper bound for the absolute values of the sequence terms. This completes the proof.
+[applied Tactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+
+[answer]
+We will show that the maximum of \( m_2 \) and 1 is greater than zero. To do this, we first express the statement \(\max(m_2, 1) > 0\) equivalently as saying that either \( m_2 > 0 \) or \( 1 > 0 \), based on the characterization of the maximum of two numbers. Focusing on the simpler case where the positive number is 1, we observe that since \(0 < 1\), it follows immediately that the maximum is strictly positive. Therefore, we conclude that \(\max(m_2, 1) > 0\).
+[applied Tactic]
+. intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that for an arbitrary natural number \( n \), the absolute value of the sequence term \( y_n \) is bounded above by the maximum of \( m_2 \) and 1. By hypothesis, \( m_2 \) is an upper bound on the absolute values of all terms in the sequence \( y \), meaning that for every natural number \( a \), we have \( |y_a| \leq m_2 \). Since the maximum of \( m_2 \) and 1 is either \( m_2 \) or 1, showing \( |y_n| \leq \max(m_2,1) \) is equivalent to showing \( |y_n| \leq m_2 \) or \( |y_n| \leq 1 \). Using the given bound, we focus on the case \( |y_n| \leq m_2 \), which holds directly by the assumption for every index \( n \). Thus, we conclude that \( |y_n| \leq \max(m_2,1) \) as required.
+[applied Tactic]
+have m2h : ∃M > 0, ∀n, |y n| ≤ M := by
+      let ⟨m2,h2⟩ := ConvergentSequenceBounded y cony
+      apply Exists.intro (max m2 1)
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that there exists a positive real number \( M \) such that for every natural number \( n \), the absolute value of \( y(n) \) is bounded above by \( M \). Since the sequence \( y \) converges, it follows that it is bounded; hence, there exists a real number \( m_2 \) serving as an upper bound for the absolute values of all terms of \( y \). To ensure positivity, we define \( M \) as the maximum of \( m_2 \) and 1. First, we verify that this maximum is indeed positive. Because \( 1 > 0 \), the maximum \( \max(m_2, 1) \) must be strictly greater than zero. Next, to show that this \( M \) bounds the sequence \( y \), observe that for every natural number \( n \), we have \( |y_n| \leq m_2 \) by the bounding property from the convergence of \( y \). Since \( M \) is the maximum of \( m_2 \) and 1, it follows directly that \( |y_n| \leq M \) for all \( n \). Therefore, \( M = \max(m_2, 1) \) is a positive real number that serves as a uniform bound for the absolute values of the terms of the sequence \( y \).
+[applied Tactic]
+have Mpos : 0 < 2 * M := by
+          rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+          left
+          rw [lt_max_iff]
+          left
+          exact  hm1.left 
+
+[answer]
+We will show that twice the value of \( M \) is positive by leveraging the definition of \( M \) as the maximum of positive quantities. To do this, it suffices to prove that \( M \) itself is positive. Since \( M \) is defined as the maximum among three values—specifically, the maximum of \( m_1 \) and \( m_2 \), and the absolute value of \( b \)—showing \( M > 0 \) reduces to demonstrating that at least one of these values is greater than zero. Consider first the case where the maximum of \( m_1 \) and \( m_2 \) is positive. By the property of maxima, this holds if and only if either \( m_1 > 0 \) or \( m_2 > 0 \). Focusing on the assumption that \( m_1 \) is positive, which bounds the absolute values of the sequence \( x \), we conclude that \( m_1 > 0 \). Therefore, \( M > 0 \), implying that \( 2 \times M > 0 \). This completes the proof that twice the value of \( M \) is positive.
+[applied Tactic]
+have ε2Mpos : 0 < ε / (2 * M) := by
+        have Mpos : 0 < 2 * M := by
+          rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+          left
+          rw [lt_max_iff]
+          left
+          exact hm1.left
+        apply (lt_div_iff Mpos).2
+        rw [zero_mul]; exact  εpos 
+
+[answer]
+We will show that the quotient \(\frac{\varepsilon}{2M}\) is positive by first demonstrating that \(2M > 0\). Since \(M\) is defined as the maximum among the values \(m_1\), \(m_2\), and \(|b|\), it suffices to show that at least one of these is positive. Considering that \(m_1\) bounds the absolute values of the sequence \(x\) and assuming \(m_1 > 0\), we conclude that \(M > 0\), which implies \(2M > 0\). Next, by the property of inequalities involving division by a positive number, proving \(0 < \frac{\varepsilon}{2M}\) is equivalent to proving \(0 \times 2M < \varepsilon\). Since \(0 \times 2M = 0\), this reduces to showing \(0 < \varepsilon\), which holds by assumption. Therefore, \(\frac{\varepsilon}{2M} > 0\) as required.
+[applied Tactic]
+have m1leM : m1 ≤ M := by
+            rw [le_max_iff]
+            left
+            rw [le_max_iff]
+            left
+            exact le_refl  m1 
+
+[answer]
+We will show that \( m_1 \) is less than or equal to the value \( M \), defined as the maximum of \( m_1 \), \( m_2 \), and the absolute value of \( b \). To do this, we note that demonstrating \( m_1 \leq M \) is equivalent to proving that \( m_1 \) is less than or equal to at least one of \( m_1 \), \( m_2 \), or \(|b|\), since being bounded by a maximum implies being bounded by one of the elements within it. Focusing first on the maximum of \( m_1 \) and \( m_2 \), it suffices to show that \( m_1 \leq \max(m_1, m_2) \), which holds if \( m_1 \leq m_1 \) or \( m_1 \leq m_2 \). Considering the reflexive property of the inequality, we have \( m_1 \leq m_1 \), which directly establishes the desired inequality. Thus, \( m_1 \leq M \) as claimed.
+[applied Tactic]
+have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+            have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+            exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b) ) 
+
+[answer]
+We will show that the product \( |x_n| \cdot |y_n - b| \) is bounded above by \( M \cdot |y_n - b| \). To begin, we note that by hypothesis, the absolute value \( |x_n| \) is bounded above by some constant \( m_1 \), and since \( m_1 \leq M \), we conclude that \( |x_n| \leq M \). Next, observing that \( |y_n - b| \) is non-negative, we multiply both sides of the inequality \( |x_n| \leq M \) by \( |y_n - b| \), preserving the inequality. Hence, it follows that \( |x_n| \cdot |y_n - b| \leq M \cdot |y_n - b| \), establishing the desired bound.
+[applied Tactic]
+have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+            rw [mul_comm]
+            exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a) ) 
+
+[answer]
+We will show that the product of the absolute difference \(|x_n - a|\) and the absolute value \(|b|\) is bounded above by the product \(M |x_n - a|\). To do this, we first note that since multiplication is commutative, we can rewrite the expression \(|x_n - a||b|\) as \(|b||x_n - a|\), which simplifies the analysis. Next, we apply the fact that multiplying both sides of an inequality by a non-negative number preserves the inequality; since \(|x_n - a|\) is non-negative, multiplying by \(|b|\) maintains the inequality. Consequently, we conclude that \(|b||x_n - a| \leq M|x_n - a|\), establishing the desired bound. This completes the proof.
+[applied Tactic]
+have Mpos : 0 < M := by
+            rw [lt_max_iff]; left;
+            rw [lt_max_iff]; left; exact  hm1.left 
+
+[answer]
+We will show that the value \( M \), defined as the maximum of the three quantities \( m_1 \), \( m_2 \), and \(|b|\), is strictly positive. To this end, we observe that the inequality \( 0 < M \) holds if and only if \( 0 \) is less than at least one of the three quantities. This reduces the problem to demonstrating that either \( 0 < \max(m_1, m_2) \) or \( 0 < |b| \). Focusing first on the maximum of \( m_1 \) and \( m_2 \), we note that \( 0 < \max(m_1, m_2) \) is equivalent to \( 0 < m_1 \) or \( 0 < m_2 \). By examining the assumptions on these quantities, we consider the case where \( m_1 \) is strictly positive. Indeed, from the given bounds on the sequence \( x_n \), we extract that \( m_1 \) is positive. Therefore, since \( m_1 > 0 \), it follows that \( M = \max(m_1, m_2, |b|) > 0 \), completing the proof.
+[applied Tactic]
+have n0gen2 : n₀ ≥ n2 := by
+              rw [ge_iff_le,le_max_iff]
+              right
+              exact le_refl  n2 
+
+[answer]
+We will show that the chosen index \( n_0 \), defined as \( \max(n_1, n_2) \), satisfies the inequality \( n_0 \geq n_2 \). To establish this, we rewrite the statement \( n_0 \geq n_2 \) as \( n_2 \leq n_0 \), and by the definition of the maximum, this is equivalent to the disjunction \( n_2 \leq n_1 \) or \( n_2 \leq n_2 \). Focusing on the second part of this disjunction, we observe that \( n_2 \leq n_2 \) holds trivially by the reflexivity of the natural number ordering. Therefore, it follows that \( n_0 \geq n_2 \), as desired.
+[applied Tactic]
+have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen2 : n₀ ≥ n2 := by
+              rw [ge_iff_le,le_max_iff]
+              right
+              exact le_refl n2
+            exact cn2 n (ge_trans ngen₀ n0gen2 ) 
+
+[answer]
+We will show that multiplying the positive number \( M \) by the absolute difference \( |y_n - b| \) is less than \( M \) times the quantity \( \frac{\varepsilon}{2M} \). Since \( M > 0 \), it suffices to prove that \( |y_n - b| < \frac{\varepsilon}{2M} \). To this end, consider the index \( n_0 = \max(n_1, n_2) \). By the definition of the maximum, we have \( n_0 \geq n_2 \) because either \( n_2 \leq n_1 \) or \( n_2 \leq n_2 \), and the latter holds trivially by reflexivity. Since \( n \geq n_0 \), it follows that \( n \geq n_2 \), which by the properties of the sequence \( y \) implies \( |y_n - b| < \frac{\varepsilon}{2M} \). Multiplying both sides of this inequality by the positive constant \( M \) preserves the inequality, yielding the desired result \( M|y_n - b| < M \cdot \frac{\varepsilon}{2M} = \frac{\varepsilon}{2} \).
+[applied Tactic]
+have n0gen1 : n₀ ≥ n1 := by
+              rw [ge_iff_le,le_max_iff]
+              left; exact le_refl  n1 
+
+[answer]
+We will show that the chosen index \( n_0 \), defined as the maximum of \( n_1 \) and \( n_2 \), satisfies the inequality \( n_0 \geq n_1 \). To this end, we rewrite the inequality as \( n_1 \leq n_0 \) and observe that since \( n_0 = \max(n_1, n_2) \), it follows that \( n_1 \leq n_0 \) is equivalent to \( n_1 \leq n_1 \) or \( n_1 \leq n_2 \). Focusing on the case \( n_1 \leq n_1 \), we see that this inequality holds trivially. Therefore, \( n_0 \geq n_1 \) as claimed.
+[applied Tactic]
+have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen1 : n₀ ≥ n1 := by
+              rw [ge_iff_le,le_max_iff]
+              left; exact le_refl n1
+            exact cn1 n (ge_trans ngen₀ n0gen1 ) 
+
+[answer]
+We will show that multiplying the positive constant \( M \) by the absolute difference \( |x_n - a| \) is less than \( M \) times the fraction \( \frac{\varepsilon}{2M} \). Since \( M > 0 \), this inequality is equivalent to proving that \( |x_n - a| < \frac{\varepsilon}{2M} \). To establish this, we consider the index \( n_0 = \max(n_1, n_2) \) and note that by definition, \( n_0 \geq n_1 \) because either \( n_1 \leq n_1 \) or \( n_1 \leq n_2 \), and the former holds trivially. Then, for any \( n \geq n_0 \), it follows that \( n \geq n_1 \), and by the given bound on \( |x_n - a| \), we conclude that \( |x_n - a| < \frac{\varepsilon}{2M} \). Multiplying both sides of this inequality by the positive constant \( M \) preserves the inequality, yielding \( M |x_n - a| < M \cdot \frac{\varepsilon}{2M} = \frac{\varepsilon}{2} \), as required.
+[applied Tactic]
+have : M ≠ 0 := by
+              exact Ne.symm (ne_of_lt Mpos ) 
+
+[answer]
+We will show that \( M \) is not zero by leveraging the fact that \( M \) is strictly positive. Since \( M > 0 \), it follows immediately that \( M \neq 0 \), as zero is not strictly positive. Thus, the positivity of \( M \) directly implies that \( M \) is nonzero, completing the proof.
+[applied Tactic]
+have : M * (ε / (2 * M)) = ε / 2 := by
+            have : M ≠ 0 := by
+              exact Ne.symm (ne_of_lt Mpos)
+            rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm ] 
+
+[answer]
+We will show that multiplying \( M \) by the fraction \( \frac{\varepsilon}{2M} \) simplifies precisely to \( \frac{\varepsilon}{2} \). Since \( M \) is strictly positive, it follows that \( M \neq 0 \), which justifies the use of multiplicative inverses in our simplification. Starting with the expression \( M \times \frac{\varepsilon}{2M} \), we rewrite the division by \( 2M \) as multiplication by the inverse of \( 2M \). By commutativity and associativity of multiplication, we rearrange terms to group \( M \) and its inverse \( \frac{1}{M} \), whose product is 1. This reduces the expression to \( \varepsilon \times \frac{1}{2} \), which equals \( \frac{\varepsilon}{2} \). Hence, the equality is established as required.
+[applied Tactic]
+calc
+        |x n * y n - a * b| = |(x n * y n - x n * b) + (x n * b - a * b)| := by
+          rw [sub_add_sub_cancel]
+        _ ≤ |(x n * y n - x n * b)| + |(x n * b - a * b)| := abs_add _ _
+        _ = |(x n)| * |y n - b| + |x n - a| * |b| := by
+          rw [← sub_mul,← mul_sub,abs_mul,abs_mul]
+        _ ≤ M * |y n - b| + M * |x n - a| := by
+          have m1leM : m1 ≤ M := by
+            rw [le_max_iff]
+            left
+            rw [le_max_iff]
+            left
+            exact le_refl m1
+          have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+            have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+            exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b))
+          have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+            rw [mul_comm]
+            exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a))
+          exact add_le_add k1 k2
+        _ < ε /2 + ε /2 := by
+          have Mpos : 0 < M := by
+            rw [lt_max_iff]; left;
+            rw [lt_max_iff]; left; exact hm1.left
+          have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen2 : n₀ ≥ n2 := by
+              rw [ge_iff_le,le_max_iff]
+              right
+              exact le_refl n2
+            exact cn2 n (ge_trans ngen₀ n0gen2)
+          have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen1 : n₀ ≥ n1 := by
+              rw [ge_iff_le,le_max_iff]
+              left; exact le_refl n1
+            exact cn1 n (ge_trans ngen₀ n0gen1)
+          have : M * (ε / (2 * M)) = ε / 2 := by
+            have : M ≠ 0 := by
+              exact Ne.symm (ne_of_lt Mpos)
+            rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm]
+          rw [this] at k1 k2
+          exact add_lt_add k1 k2
+        _ = ε := by
+          exact add_halves  ε 
+
+[answer]
+We will show that for sequences \((x_n)\) and \((y_n)\) converging to \(a\) and \(b\) respectively, the product sequence \((x_n y_n)\) converges to \(a b\). Starting with the absolute difference \(|x_n y_n - a b|\), we rewrite it as \(|x_n y_n - x_n b + x_n b - a b|\), which is bounded above by \(|x_n(y_n - b)| + |(x_n - a) b|\) by the triangle inequality. Applying the property that the absolute value of a product equals the product of the absolute values, this expression becomes \(|x_n| \cdot |y_n - b| + |x_n - a| \cdot |b|\).
+
+Next, we define a positive constant \(M = \max(m_1, m_2, |b|)\), where \(m_1\) and \(m_2\) bound \(|x_n|\) and \(|y_n|\) respectively. Since \(m_1 \leq M\) by definition, it follows that \(|x_n| \leq M\), and thus \(|x_n| \cdot |y_n - b| \leq M |y_n - b|\). Similarly, by commutativity and positivity, \(|x_n - a||b| \leq M |x_n - a|\).
+
+To show convergence, let \(\varepsilon > 0\) be given. Because \(x_n \to a\) and \(y_n \to b\), there exist indices \(n_1, n_2\) such that for all \(n \geq n_0 = \max(n_1, n_2)\), we have \(|x_n - a| < \frac{\varepsilon}{2M}\) and \(|y_n - b| < \frac{\varepsilon}{2M}\). Multiplying these inequalities by the positive constant \(M\), we obtain \(M |x_n - a| < \frac{\varepsilon}{2}\) and \(M |y_n - b| < \frac{\varepsilon}{2}\).
+
+Summing the two inequalities yields
+\[
+|x_n y_n - a b| \leq |x_n| |y_n - b| + |x_n - a| |b| \leq M |y_n - b| + M |x_n - a| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]
+
+Thus, for all \(n \geq n_0\), the absolute difference \(|x_n y_n - a b|\) is less than \(\varepsilon\), establishing that \(x_n y_n \to a b\) as \(n\) tends to infinity.
+[applied Tactic]
+have muleps : ∀ε > 0,∃n₀, ∀n ≥ n₀, |(x n)*(y n) - a * b| < ε := by
+      intro ε εpos
+      have ε2Mpos : 0 < ε / (2 * M) := by
+        have Mpos : 0 < 2 * M := by
+          rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+          left
+          rw [lt_max_iff]
+          left
+          exact hm1.left
+        apply (lt_div_iff Mpos).2
+        rw [zero_mul]; exact εpos
+      -- ⭐️　あるn_0 があってn ≥ n_0 ならば |x_n-a|,|y_n-b|<ϵ/2M
+      have c1 := convxa (ε / (2 * M)) ε2Mpos
+      let ⟨n1,cn1⟩ := c1
+      have c2 := convyb (ε / (2 * M)) ε2Mpos
+      let ⟨n2,cn2⟩ := c2
+      let n₀ := max n1 n2
+      apply Exists.intro n₀
+      intro n ngen₀
+      calc
+        |x n * y n - a * b| = |(x n * y n - x n * b) + (x n * b - a * b)| := by
+          rw [sub_add_sub_cancel]
+        _ ≤ |(x n * y n - x n * b)| + |(x n * b - a * b)| := abs_add _ _
+        _ = |(x n)| * |y n - b| + |x n - a| * |b| := by
+          rw [← sub_mul,← mul_sub,abs_mul,abs_mul]
+        _ ≤ M * |y n - b| + M * |x n - a| := by
+          have m1leM : m1 ≤ M := by
+            rw [le_max_iff]
+            left
+            rw [le_max_iff]
+            left
+            exact le_refl m1
+          have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+            have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+            exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b))
+          have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+            rw [mul_comm]
+            exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a))
+          exact add_le_add k1 k2
+        _ < ε /2 + ε /2 := by
+          have Mpos : 0 < M := by
+            rw [lt_max_iff]; left;
+            rw [lt_max_iff]; left; exact hm1.left
+          have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen2 : n₀ ≥ n2 := by
+              rw [ge_iff_le,le_max_iff]
+              right
+              exact le_refl n2
+            exact cn2 n (ge_trans ngen₀ n0gen2)
+          have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+            apply (mul_lt_mul_left Mpos).2
+            have n0gen1 : n₀ ≥ n1 := by
+              rw [ge_iff_le,le_max_iff]
+              left; exact le_refl n1
+            exact cn1 n (ge_trans ngen₀ n0gen1)
+          have : M * (ε / (2 * M)) = ε / 2 := by
+            have : M ≠ 0 := by
+              exact Ne.symm (ne_of_lt Mpos)
+            rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm]
+          rw [this] at k1 k2
+          exact add_lt_add k1 k2
+        _ = ε := by
+          exact add_halves  ε 
+
+[answer]
+We will show that if the sequences \((x_n)\) and \((y_n)\) converge to limits \(a\) and \(b\) respectively, then their product sequence \((x_n y_n)\) converges to the product \(a b\). Let \(\varepsilon > 0\) be given arbitrarily. To proceed, we first observe that the quantity \(\frac{\varepsilon}{2M}\) is positive, where \(M = \max(m_1, m_2, |b|)\) with \(m_1\) and \(m_2\) chosen as bounds for \(|x_n|\) and \(|y_n|\). Since by assumption at least one of these bounds (for example, \(m_1\)) is positive, it follows that \(M > 0\) and consequently \(\frac{\varepsilon}{2M} > 0\).
+
+By the convergence of \((x_n)\) to \(a\), there exists an index \(n_1\) such that for all \(n \geq n_1\), \(|x_n - a| < \frac{\varepsilon}{2M}\). Similarly, since \((y_n)\) converges to \(b\), there exists an index \(n_2\) such that for all \(n \geq n_2\), \(|y_n - b| < \frac{\varepsilon}{2M}\). Setting \(n_0 = \max(n_1, n_2)\) ensures that both inequalities hold simultaneously for all \(n \geq n_0\).
+
+Now, for any \(n \geq n_0\), consider the absolute difference
+\[
+|x_n y_n - a b| = |x_n y_n - x_n b + x_n b - a b| \leq |x_n(y_n - b)| + |(x_n - a) b|.
+\]
+Applying properties of absolute value, this is bounded by
+\[
+|x_n| \cdot |y_n - b| + |x_n - a| \cdot |b|.
+\]
+Since \(|x_n| \leq m_1 \leq M\) and \(|b| \leq M\), we have
+\[
+|x_n y_n - a b| \leq M |y_n - b| + M |x_n - a| = M\big( |y_n - b| + |x_n - a| \big).
+\]
+
+Using the bounds on \(|x_n - a|\) and \(|y_n - b|\), it follows that
+\[
+|x_n y_n - a b| < M \left(\frac{\varepsilon}{2M} + \frac{\varepsilon}{2M}\right) = M \cdot \frac{\varepsilon}{M} = \varepsilon.
+\]
+
+Hence, for all \(n \geq n_0\), the inequality \(|x_n y_n - a b| < \varepsilon\) holds, establishing that the product sequence \((x_n y_n)\) converges to \(a b\) as \(n\) tends to infinity.
+[applied Tactic]
+. exact Limit_def (x * y) ⟨(a * b), muleps ⟩ 
+
+[answer]
+We will show that the sequence formed by multiplying the terms of two given convergent sequences converges to the product of their respective limits. To do this, we apply the definition of convergence directly to the product sequence. Using the provided estimate for the difference between the product sequence terms and the product of the limits, we demonstrate that for any given positive epsilon, there exists an index beyond which the absolute difference is less than epsilon. This establishes that the product sequence converges to the product of the individual limits, completing the proof.
+[applied Tactic]
+have l1 : Lim.sLim x = a := by
+          exact (Converges_sLim_iff x conx a).1  convxa 
+
+[answer]
+We will show that the limit assigned to the sequence \( x \) by the limit function coincides with the value \( a \) to which \( x \) converges. By the definition of convergence, the sequence \( x \) converges to \( a \) if and only if, for every positive epsilon, the terms of \( x \) eventually lie within epsilon of \( a \). Utilizing this characterization, we apply the equivalence stating that the limit function assigns to \( x \) precisely the value to which it converges. Since \( x \) converges to \( a \) by hypothesis, it follows that the limit assigned by the limit function to \( x \) is exactly \( a \), completing the proof.
+[applied Tactic]
+have l2 : Lim.sLim y = b := by
+          exact (Converges_sLim_iff y cony b).1  convyb 
+
+[answer]
+We will show that the limit of the sequence \( y \) is equal to \( b \). Since \( y \) converges to \( b \), by the characterization of convergence, this directly implies that the limit of \( y \) is \( b \). Thus, the proposition follows immediately from the definition of convergence.
+[applied Tactic]
+. intro ε εpos
+        have l1 : Lim.sLim x = a := by
+          exact (Converges_sLim_iff x conx a).1 convxa
+        have l2 : Lim.sLim y = b := by
+          exact (Converges_sLim_iff y cony b).1 convyb
+        rw [l1,l2]
+        exact muleps ε  εpos 
+
+[answer]
+We will show that the product of two convergent sequences converges to the product of their limits. Assume an arbitrary positive real number \( \varepsilon \). Since the sequence \( x \) converges to \( a \), by definition, there exists an index beyond which all terms of \( x \) lie within \( \varepsilon \) of \( a \), establishing that the limit assigned to \( x \) is indeed \( a \). Similarly, because \( y \) converges to \( b \), it follows by the same characterization that the limit of \( y \) is \( b \). Substituting these limits, we rewrite the goal as showing that for some index \( n_0 \), all terms of the product sequence beyond \( n_0 \) satisfy \( |x_n y_n - a b| < \varepsilon \). Finally, using the convergence properties and the given condition, we find such an index \( n_0 \) where this holds, thereby proving that the product sequence converges to the product of the limits \( a b \).
+[applied Tactic]
+have : Lim.sLim (x * y) = Lim.sLim x * Lim.sLim y := by
+      apply LimitUniqueness (x * y)
+      . exact Limit_def (x * y) ⟨(a * b), muleps⟩
+      . intro ε εpos
+        have l1 : Lim.sLim x = a := by
+          exact (Converges_sLim_iff x conx a).1 convxa
+        have l2 : Lim.sLim y = b := by
+          exact (Converges_sLim_iff y cony b).1 convyb
+        rw [l1,l2]
+        exact muleps ε  εpos 
+
+[answer]
+We will show that the product of two convergent sequences converges to the product of their respective limits. Let \( (x_n) \) and \( (y_n) \) be sequences converging to limits \( a \) and \( b \), respectively. Given an arbitrary positive number \( \varepsilon \), by the definition of convergence there exist indices beyond which all terms of \( x_n \) lie within \(\varepsilon\) of \( a \) and all terms of \( y_n \) lie within \(\varepsilon\) of \( b \). Using these properties, we consider the sequence formed by the products \( x_n y_n \) and estimate the difference \( |x_n y_n - a b| \). By applying the triangle inequality and the convergence of \( x_n \) and \( y_n \), we find an index \( n_0 \) such that for all \( n > n_0 \), this difference is less than \( \varepsilon \). This shows that the product sequence \( (x_n y_n) \) converges to \( ab \), and by the uniqueness of limits, the limit of the product sequence equals the product of the limits of the individual sequences, completing the proof.

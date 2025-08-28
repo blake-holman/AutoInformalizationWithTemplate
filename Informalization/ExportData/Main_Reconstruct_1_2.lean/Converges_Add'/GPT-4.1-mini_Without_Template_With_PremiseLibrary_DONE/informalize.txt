@@ -1,0 +1,59 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that there exists a natural number \( n_0 \) such that for all \( n \) greater than or equal to \( n_0 \), the distance between the sum of the sequences at \( n \) and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+[answer]
+From the fact that \( \varepsilon \) is positive, choose a natural number \( n_1 \) such that for all \( n \) greater than or equal to \( n_1 \), the difference between \( x_n \) and \( a \) is less than half of \( \varepsilon \).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+Since ε is positive, it follows that half of ε is also positive; therefore, the goal that half of ε is greater than zero is established.
+[appliedTactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+[answer]
+From the fact that the sequence \( y \) converges to \( b \), and since half of \( \varepsilon \) is positive, let \( n_2 \) be such that for all indices \( n \) greater than or equal to \( n_2 \), the distance between \( y_n \) and \( b \) is less than half of \( \varepsilon \).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+Since \( \varepsilon \) is positive, it follows that half of \( \varepsilon \) is also positive; therefore, the goal that half of \( \varepsilon \) is greater than zero is established.
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Define \( n_0 \) as the larger of the two natural numbers \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+To prove the existence of a natural number from which the sum of the sequences stays within ε of the sum of their limits, it suffices to consider the specific natural number defined as the maximum of the two given indices. The goal is then to show that for all indices greater than or equal to this maximum, the sum of the sequence values is within ε of the sum of the limits.
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume a natural number \( n \) that is at least as large as \( n_0 \). Under this assumption, we will show that the absolute difference between the sum of the sequences at \( n \) and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+[answer]
+By calculation, it is shown that the absolute difference between \( x_n + y_n \) and \( a + b \) is at most the sum of the absolute differences between \( x_n \) and \( a \), and between \( y_n \) and \( b \). This sum is less than \( \varepsilon/2 + \varepsilon/2 \), which equals \( \varepsilon \).
+[appliedTactic]
+rw [add_sub_add_comm ] 
+[answer]
+The expression inside the absolute value on the left side of the goal is rewritten by regrouping the terms: instead of the difference between the sum of two values and the sum of two limits, it is expressed as the sum of the differences of each value and its corresponding limit. This rearrangement clarifies the structure of the expression without changing its value.
+[appliedTactic]
+apply  abs_add 
+[answer]
+By applying the triangle inequality, it is established that the absolute value of the sum of the differences \( x_n - a \) and \( y_n - b \) is less than or equal to the sum of their absolute values. This directly resolves the current goal.
+[appliedTactic]
+have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) 
+[answer]
+Establish that the number \( n_0 \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \). This is justified by recognizing that \( n_0 \) is defined as this maximum, so it is trivially at least as large as itself.
+[appliedTactic]
+apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀) ) 
+[answer]
+By applying the property that the sum of two strictly smaller quantities is less than the sum of their respective larger bounds, and using the fact that \( n \) is at least as large as both \( n_1 \) and \( n_2 \) through the transitive relationships involving the maximum of \( n_1 \) and \( n_2 \), it follows that the sum of the absolute differences between \( x_n \) and \( a \), and between \( y_n \) and \( b \), is less than the sum of the two halves of \( \varepsilon \). This completes the proof of the desired inequality.

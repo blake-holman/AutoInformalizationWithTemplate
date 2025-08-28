@@ -1,0 +1,523 @@
+[appliedTactic]
+let ⟨c,cinC⟩ :=  CnotEmpty 
+[answer]
+From the fact that the set \( C \) is nonempty, choose an element \( c \) that belongs to \( C \).
+[appliedTactic]
+let B : Set ℝ := {x : ℝ | LowerBound C x } 
+[answer]
+Define the set \( B \) to be the collection of all real numbers that serve as lower bounds for the set \( C \).
+[appliedTactic]
+let A : Set ℝ := Set.univ \  B 
+[answer]
+Define the set \( A \) to be the complement of the set \( B \) within the real numbers; that is, \( A \) consists of all real numbers that are not lower bounds of \( C \).
+[appliedTactic]
+have Dedekind : DedekindCut B A := by
+      repeat (any_goals apply And.intro)
+      . exact CBelow
+      . let S : Set ℝ := {z : ℝ | c < z}
+        have : S.Nonempty := by
+          apply Exists.intro (c + 1)
+          rw [Set.mem_setOf]
+          simp
+        let ⟨z,zinS⟩ := this
+        have cltz : c < z := zinS
+        have zinA : z ∈ A := by
+          have : ¬ LowerBound C z := by
+            rw [LowerBound]
+            push_neg
+            exact ⟨c, cinC, cltz⟩
+          exact ⟨Set.mem_univ z, this⟩
+        exact ⟨z, zinA⟩
+      . rw [Set.inter_comm]
+        exact Set.diff_inter_self
+      . rw [Set.union_comm, Set.diff_union_self,Set.univ_union]
+      . intro b binB a ainA
+        by_contra neblta
+        push_neg at neblta
+        have : LowerBound C a := by
+          intro k kinC
+          have : k ≥ b := binB k kinC
+          apply ge_trans this neblta
+        have : a ∈ A ∩ B := ⟨ainA, this⟩
+        have : a ∉ A ∩ B := by
+          intro h'
+          have : A ∩ B = ∅ := Set.diff_inter_self
+          rw [this] at h'
+          contradiction
+         contradiction 
+[answer]
+Construct a Dedekind cut by showing that the sets \( B \) and \( A \) form a partition of the real numbers with the following properties: 
+
+- First, demonstrate that \( B \) is nonempty by exhibiting an element greater than a chosen element \( c \) in \( C \), and that this element belongs to \( A \) because it is not a lower bound of \( C \).
+
+- Next, verify that the intersection of \( A \) and \( B \) is empty and that their union covers all real numbers.
+
+- Finally, prove that every element of \( B \) is less than every element of \( A \) by contradiction, using the definition of lower bounds and the emptiness of the intersection.
+
+This establishes that \( B \) and \( A \) satisfy the conditions of a Dedekind cut.
+[appliedTactic]
+repeat (any_goals apply And.intro ) 
+[answer]
+
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof is split into two parts corresponding to the conjunction that needs to be established. First, it requires proving that the set \( B \) is nonempty. Second, it requires proving that the set \( A \) is nonempty, that \( B \) and \( A \) are disjoint, that their union covers the entire space, and that every element of \( B \) is less than every element of \( A \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof step splits the original goal, which is a conjunction of two statements, into two separate subgoals. The first subgoal requires proving that the set \( A \) is nonempty, and the second subgoal requires proving that the intersection of sets \( B \) and \( A \) is empty, the union of \( B \) and \( A \) equals the entire space, and every element of \( B \) is less than every element of \( A \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof goal, which was a conjunction of three statements, is now split into two separate subgoals: one to prove that the intersection of the two sets is empty, and another to prove that their union equals the entire space and that every element of the first set is less than every element of the second set. This follows from the principle that to prove a conjunction, it suffices to prove each part individually.
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+The proof is split into two separate parts: first, to show that the union of the sets \( B \) and \( A \) equals the entire universal set, and second, to demonstrate that every element of \( B \) is strictly less than every element of \( A \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+. exact  CBelow 
+[answer]
+We conclude that the set of lower bounds of \( C \) is nonempty by directly using the fact that \( C \) is bounded below.
+[appliedTactic]
+exact  CBelow 
+[answer]
+The proof is completed by establishing that the set of lower bounds of \( C \) is not empty.
+[appliedTactic]
+. let S : Set ℝ := {z : ℝ | c < z}
+        have : S.Nonempty := by
+          apply Exists.intro (c + 1)
+          rw [Set.mem_setOf]
+          simp
+        let ⟨z,zinS⟩ := this
+        have cltz : c < z := zinS
+        have zinA : z ∈ A := by
+          have : ¬ LowerBound C z := by
+            rw [LowerBound]
+            push_neg
+            exact ⟨c, cinC, cltz⟩
+          exact ⟨Set.mem_univ z, this⟩
+        exact ⟨z, zinA ⟩ 
+[answer]
+We demonstrate that the set \( A \) is nonempty by explicitly constructing an element in \( A \). Starting from the real number \( c \) in \( C \), we consider the set of real numbers greater than \( c \), which is nonempty since it contains \( c + 1 \). Selecting any such number \( z \) greater than \( c \), we show that \( z \) does not serve as a lower bound for \( C \) because \( c \) is an element of \( C \) that is less than \( z \). Therefore, \( z \) belongs to \( A \), confirming that \( A \) contains at least one element.
+[appliedTactic]
+let S : Set ℝ := {z : ℝ | c < z } 
+[answer]
+Define the set \( S \) as the collection of all real numbers greater than \( c \).
+[appliedTactic]
+have : S.Nonempty := by
+          apply Exists.intro (c + 1)
+          rw [Set.mem_setOf]
+           simp 
+[answer]
+Demonstrate that the set of all real numbers greater than \( c \) is not empty by explicitly providing the element \( c + 1 \) and verifying that it belongs to this set.
+[appliedTactic]
+apply Exists.intro (c + 1 ) 
+[answer]
+By introducing the specific element \( c + 1 \), it suffices to show that this element belongs to the set of all real numbers greater than \( c \), thereby demonstrating that this set is nonempty.
+[appliedTactic]
+rw [Set.mem_setOf ] 
+[answer]
+The goal of proving that \( c + 1 \) belongs to the set of all real numbers greater than \( c \) is rewritten by applying the definition of membership in such a set. This changes the goal from stating that \( c + 1 \) is in the set to directly stating the inequality \( c < c + 1 \).
+[appliedTactic]
+ simp 
+[answer]
+The inequality that \( c \) is less than \( c + 1 \) is established immediately by simplification, completing the proof of this statement.
+[appliedTactic]
+let ⟨z,zinS⟩ :=  this 
+[answer]
+From the fact that the set \( S \) is nonempty, introduce an element \( z \) that belongs to \( S \).
+[appliedTactic]
+have cltz : c < z :=  zinS 
+[answer]
+Establish that the real number \( c \) is less than the real number \( z \). This follows directly from the fact that \( z \) belongs to the set of all real numbers greater than \( c \), confirming the inequality \( c < z \).
+[appliedTactic]
+have zinA : z ∈ A := by
+          have : ¬ LowerBound C z := by
+            rw [LowerBound]
+            push_neg
+            exact ⟨c, cinC, cltz⟩
+          exact ⟨Set.mem_univ z, this ⟩ 
+[answer]
+Establish that the element \( z \) belongs to the set \( A \) by showing that \( z \) is not a lower bound of the set \( C \). This is done by demonstrating the existence of an element \( c \) in \( C \) that is less than \( z \), confirming that \( z \) cannot serve as a lower bound. Since \( A \) is defined as all real numbers not in the set of lower bounds of \( C \), and \( z \) is a real number, it follows that \( z \) is in \( A \).
+[appliedTactic]
+have : ¬ LowerBound C z := by
+            rw [LowerBound]
+            push_neg
+            exact ⟨c, cinC, cltz ⟩ 
+[answer]
+Establish that \( z \) is not a lower bound of the set \( C \) by showing there exists an element \( c \) in \( C \) that is less than \( z \).
+[appliedTactic]
+rw [LowerBound ] 
+[answer]
+The goal of proving that \( z \) is not a lower bound of the set \( C \) is rewritten to explicitly state that it is not true that every element of \( C \) is greater than or equal to \( z \).
+[appliedTactic]
+ push_neg 
+[answer]
+The statement that every element of the set is at least \( z \) is negated, which is transformed into the existence of an element in the set that is less than \( z \).
+[appliedTactic]
+exact ⟨c, cinC, cltz ⟩ 
+[answer]
+The proof is completed by providing the element \( c \) from the set \( C \), which belongs to \( C \) and is less than \( z \), thereby establishing the existence of an element in \( C \) that is smaller than \( z \).
+[appliedTactic]
+exact ⟨Set.mem_univ z, this ⟩ 
+[answer]
+The proof is completed by showing that \( z \) belongs to the universal set and that \( z \) is not a lower bound of \( C \), thereby establishing that \( z \) is an element of the set defined as the complement of the lower bounds of \( C \).
+[appliedTactic]
+exact ⟨z, zinA ⟩ 
+[answer]
+The proof is completed by demonstrating that the set \( A \) is nonempty, using the element \( z \) which is greater than \( c \) and belongs to \( A \).
+[appliedTactic]
+. rw [Set.inter_comm]
+        exact  Set.diff_inter_self 
+[answer]
+We rewrite the intersection of the two sets by switching their order, then conclude that their intersection is empty because the difference between a universal set and a subset has no elements in common with that subset.
+[appliedTactic]
+rw [Set.inter_comm ] 
+[answer]
+The goal of proving that the intersection of the set of lower bounds of \( C \) with its complement is empty was rewritten by swapping the order of the intersection. This reformulates the goal to showing that the intersection of the complement of the lower bounds with the set of lower bounds is empty.
+[appliedTactic]
+exact  Set.diff_inter_self 
+[answer]
+The proof is completed by recognizing that the intersection of the set difference between the universal set and \( B \) with \( B \) itself is empty.
+[appliedTactic]
+. rw [Set.union_comm, Set.diff_union_self,Set.univ_union ] 
+[answer]
+We rewrite the union of the set of lower bounds of \( C \) and its complement in the universal set by using the commutativity of union, the fact that the union of a set and its difference with another set equals the universal set, and the property that the union of the universal set with any set is the universal set. This simplifies the expression of the union to the universal set itself.
+[appliedTactic]
+rw [Set.union_comm, Set.diff_union_self,Set.univ_union ] 
+[answer]
+By applying the commutativity of union, the fact that the union of a set difference with the subtracted set equals the union of the original sets, and that the union of the universal set with any set is the universal set itself, we conclude that the union of the set of lower bounds of \( C \) and its complement equals the entire universal set. This completes the proof.
+[appliedTactic]
+. intro b binB a ainA
+        by_contra neblta
+        push_neg at neblta
+        have : LowerBound C a := by
+          intro k kinC
+          have : k ≥ b := binB k kinC
+          apply ge_trans this neblta
+        have : a ∈ A ∩ B := ⟨ainA, this⟩
+        have : a ∉ A ∩ B := by
+          intro h'
+          have : A ∩ B = ∅ := Set.diff_inter_self
+          rw [this] at h'
+          contradiction
+         contradiction 
+[answer]
+We assume arbitrary elements \( b \) in the set of lower bounds of \( C \) and \( a \) outside this set, and proceed by contradiction assuming that \( b \) is not less than \( a \). From this assumption, we deduce that \( a \) must be a lower bound of \( C \), which implies that \( a \) belongs to both the set of all elements and the set of lower bounds, i.e., their intersection. However, this intersection is empty by definition, leading to a contradiction. Therefore, the original assumption is false, confirming that every element in the set of lower bounds is strictly less than every element outside it.
+[appliedTactic]
+intro b binB a  ainA 
+[answer]
+Assume that \( b \) is an element of the set \( B \) and \( a \) is an element of the set \( A \). From now on, we will show that \( b \) is less than \( a \).
+[appliedTactic]
+by_contra  neblta 
+[answer]
+Assume that \( b \) is not less than \( a \) and show a contradiction.
+[appliedTactic]
+push_neg at  neblta 
+[answer]
+The assumption that \( b \) is not less than \( a \) is rewritten as \( a \) is less than or equal to \( b \).
+[appliedTactic]
+have : LowerBound C a := by
+          intro k kinC
+          have : k ≥ b := binB k kinC
+          apply ge_trans this  neblta 
+[answer]
+Establish that \( a \) is a lower bound of the set \( C \) by showing that for every element \( k \) in \( C \), \( k \) is greater than or equal to \( b \), and since \( a \) is less than or equal to \( b \), it follows that \( k \) is also greater than or equal to \( a \).
+[appliedTactic]
+intro k  kinC 
+[answer]
+Assume an arbitrary element \( k \) belonging to the set \( C \). Our goal is now to show that this element \( k \) is greater than or equal to \( a \).
+[appliedTactic]
+have : k ≥ b := binB k  kinC 
+[answer]
+Establish that \( k \) is greater than or equal to \( b \) by applying the fact that \( b \) is a lower bound of the set containing \( k \). Since \( k \) belongs to the set and \( b \) is a lower bound for it, it follows that \( k \geq b \).
+[appliedTactic]
+apply ge_trans this  neblta 
+[answer]
+By using the transitivity of the inequality relation, since \( k \) is greater than or equal to \( b \) and \( b \) is greater than or equal to \( a \), it follows that \( k \) is greater than or equal to \( a \). This completes the proof.
+[appliedTactic]
+have : a ∈ A ∩ B := ⟨ainA, this ⟩ 
+[answer]
+Establish that the element \( a \) belongs to the intersection of the sets \( A \) and \( B \) by combining the facts that \( a \) is in \( A \) and that \( a \) satisfies the property defining membership in \( B \). This creates a new assumption that \( a \) lies in both \( A \) and \( B \) simultaneously.
+[appliedTactic]
+have : a ∉ A ∩ B := by
+          intro h'
+          have : A ∩ B = ∅ := Set.diff_inter_self
+          rw [this] at h'
+           contradiction 
+[answer]
+Assume, for the sake of contradiction, that the element \( a \) belongs to both sets \( A \) and \( B \) simultaneously. Since \( A \) is defined as the complement of \( B \), their intersection is empty. Therefore, \( a \) cannot be in both \( A \) and \( B \) at the same time. This contradiction establishes that \( a \) does not belong to the intersection of \( A \) and \( B \).
+[appliedTactic]
+intro  h' 
+[answer]
+Assume, for the sake of contradiction, that \( a \) belongs to the intersection of the two sets \( A \) and \( B \). Under this assumption, we aim to derive a contradiction.
+[appliedTactic]
+have : A ∩ B = ∅ :=  Set.diff_inter_self 
+[answer]
+Establish that the intersection of the set \( A \) and the set \( B \) is empty. This follows from the fact that \( A \) is defined as the complement of \( B \) within the universal set, so no element can belong to both \( A \) and \( B \) simultaneously.
+[appliedTactic]
+rw [this] at  h' 
+[answer]
+By substituting the fact that the intersection of the sets \( A \) and \( B \) is empty into the statement that \( a \) belongs to this intersection, it follows that \( a \) must belong to the empty set.
+[appliedTactic]
+ contradiction 
+[answer]
+The assumption that the element \( a \) belongs simultaneously to both the set \( A \) and the set \( B \), which are known to have no elements in common, leads to a contradiction. Therefore, the proof is complete.
+[appliedTactic]
+ contradiction 
+[answer]
+The assumption that the element \( a \) both belongs and does not belong to the intersection of the two sets leads to a contradiction. Therefore, the proof is complete.
+[appliedTactic]
+let Continuous := ContinuityAxiom  Dedekind 
+[answer]
+By applying the continuity property associated with the given partition of the real numbers, conclude that either the set of lower bounds of \( C \) has a greatest element or its complement has a least element.
+[appliedTactic]
+rcases Continuous with h |  h 
+[answer]
+We consider two cases based on whether the set of lower bounds of \( C \) has a greatest element or the complement set has a least element, and proceed with the proof separately in each case.
+[appliedTactic]
+. let ⟨x,⟨xinB,h1⟩⟩ := h
+      apply Exists.intro x
+      apply And.intro
+      . exact xinB
+      . exact  h1 
+[answer]
+We extract an element \( x \) from the set of lower bounds of \( C \) that attains the maximum of this set. Then, we show that this \( x \) belongs to the set of lower bounds and satisfies the property required to be the greatest lower bound of \( C \). Consequently, we establish the existence of an element that serves as the infimum of \( C \).
+[appliedTactic]
+let ⟨x,⟨xinB,h1⟩⟩ :=  h 
+[answer]
+From the assumption that the set \( B \) has a maximum element, let \( x \) be this maximum element of \( B \); that is, \( x \) belongs to \( B \) and every element of \( B \) is less than or equal to \( x \).
+[appliedTactic]
+apply Exists.intro  x 
+[answer]
+To prove that there exists a real number that serves as the greatest lower bound of the set \( C \), it is sufficient to show that the specific real number \( x \) satisfies this property.
+[appliedTactic]
+apply  And.intro 
+[answer]
+The tactic splits the original goal, which asserts a conjunction, into two separate goals: first, to show that \( x \) is a lower bound of the set \( C \), and second, to prove that for every real number \( y \), if \( y \) is a lower bound of \( C \), then \( y \) is less than or equal to \( x \).
+[appliedTactic]
+. exact  xinB 
+[answer]
+The proof is completed by directly confirming that the element \( x \) belongs to the set of lower bounds of \( C \), thereby establishing that \( x \) is indeed a lower bound of \( C \).
+[appliedTactic]
+exact  xinB 
+[answer]
+The proof is completed by showing that the element \( x \) belongs to the set of lower bounds of \( C \).
+[appliedTactic]
+. exact  h1 
+[answer]
+We conclude the proof by directly applying the fact that every element serving as a lower bound for the set \( C \) is less than or equal to the element \( x \).
+[appliedTactic]
+exact  h1 
+[answer]
+The proof is completed by establishing that for every real number that serves as a lower bound of the set \( C \), it does not exceed the element \( x \) of the set \( B \).
+[appliedTactic]
+. let ⟨x ,⟨xinA,h1⟩⟩ := h
+      have : ¬ x ∈ B := by
+        exact Set.not_mem_of_mem_diff xinA
+      have : ∃ c ∈ C, c < x := by
+        have : ¬ LowerBound C x := by exact this
+        rw [LowerBound] at this; push_neg at this
+        apply this
+      let ⟨c,⟨cinC,cltx⟩⟩ := this
+      let z : ℝ := (x + c) / 2
+      have : c < z ∧ z < x := by
+        apply And.intro
+        . apply (lt_div_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_right
+          exact cltx
+        . apply (div_lt_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_left
+          exact cltx
+      have zinA : z ∈ A := by
+        have : ¬ LowerBound C z := by
+          rw [LowerBound]
+          push_neg
+          exact ⟨c, cinC, this.left⟩
+        exact ⟨Set.mem_univ z, this⟩
+      have : x ≤ z := h1 z zinA
+       linarith 
+[answer]
+We begin by selecting an element \( x \) from the set \( A \) that attains its minimum. Since \( x \) is in \( A \), it is not in the set \( B \) of lower bounds for \( C \). From this, we deduce that \( x \) is not a lower bound of \( C \), so there must exist an element \( c \) in \( C \) that is strictly less than \( x \). We then define \( z \) as the midpoint between \( c \) and \( x \). By construction, \( z \) lies strictly between \( c \) and \( x \). Because \( z \) is greater than \( c \), it cannot be a lower bound of \( C \), so \( z \) belongs to \( A \). Using the minimality of \( x \) in \( A \), we conclude that \( x \leq z \). However, this contradicts the fact that \( z < x \), leading to a contradiction that will be resolved in the subsequent steps.
+[appliedTactic]
+let ⟨x ,⟨xinA,h1⟩⟩ :=  h 
+[answer]
+From the assumption that the set \( A \) has a minimum element, let \( x \) be this minimum element of \( A \), so that \( x \) belongs to \( A \) and is less than or equal to every other element in \( A \).
+[appliedTactic]
+have : ¬ x ∈ B := by
+        exact Set.not_mem_of_mem_diff  xinA 
+[answer]
+Establish that the element \( x \), which belongs to the set \( A \), does not belong to the set \( B \) by using the fact that \( A \) is defined as the complement of \( B \).
+[appliedTactic]
+exact Set.not_mem_of_mem_diff  xinA 
+[answer]
+Since \( x \) belongs to the difference between the universal set and the set of lower bounds of \( C \), it follows that \( x \) is not an element of the set of lower bounds. This directly establishes the required conclusion.
+[appliedTactic]
+have : ∃ c ∈ C, c < x := by
+        have : ¬ LowerBound C x := by exact this
+        rw [LowerBound] at this; push_neg at this
+        apply  this 
+[answer]
+Establish that there exists an element in the set \( C \) which is strictly less than \( x \). This follows from the fact that \( x \) is not a lower bound of \( C \), meaning there must be some element of \( C \) smaller than \( x \).
+[appliedTactic]
+have : ¬ LowerBound C x := by exact  this 
+[answer]
+Establish that \( x \) is not a lower bound of the set \( C \) by directly using the previously known fact that \( x \) does not belong to the set of all lower bounds of \( C \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly establishing that the element \( x \) is not a lower bound of the set \( C \).
+[appliedTactic]
+rw [LowerBound] at  this 
+[answer]
+The statement that \( x \) is not a lower bound of the set \( C \) is rewritten explicitly as the existence of some element in \( C \) that is less than \( x \). This clarifies that \( x \) does not satisfy the condition of being less than or equal to every element in \( C \).
+[appliedTactic]
+push_neg at  this 
+[answer]
+The statement that not every element of \( C \) is greater than or equal to \( x \) is rewritten as the existence of an element in \( C \) that is strictly less than \( x \).
+[appliedTactic]
+apply  this 
+[answer]
+The proof concludes by directly invoking the existing statement that there is an element in the set \( C \) that is less than \( x \), thereby establishing the required existence without further steps.
+[appliedTactic]
+let ⟨c,⟨cinC,cltx⟩⟩ :=  this 
+[answer]
+From the statement that there exists an element of the set \( C \) which is less than \( x \), select such an element \( c \) in \( C \) satisfying \( c < x \).
+[appliedTactic]
+let z : ℝ := (x + c) /  2 
+[answer]
+Define a new real number \( z \) as the average of \( x \) and \( c \), that is, \( z = \frac{x + c}{2} \).
+[appliedTactic]
+have : c < z ∧ z < x := by
+        apply And.intro
+        . apply (lt_div_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_right
+          exact cltx
+        . apply (div_lt_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_left
+          exact  cltx 
+[answer]
+Establish that the number halfway between \( c \) and \( x \), defined as \( z = \frac{x + c}{2} \), lies strictly between \( c \) and \( x \); that is, show that \( c < z < x \).
+[appliedTactic]
+apply  And.intro 
+[answer]
+The tactic splits the original goal, which is to prove that the value \( z \) lies strictly between \( c \) and \( x \), into two separate subgoals: one to show that \( c \) is less than \( z \), and another to show that \( z \) is less than \( x \). This corresponds to proving each part of the conjunction individually.
+[appliedTactic]
+. apply (lt_div_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_right
+          exact  cltx 
+[answer]
+We establish that the number \( c \) is less than the midpoint between \( c \) and \( x \) by applying the fact that a number is less than the average of itself and a larger number. This follows from the strict inequality between \( c \) and \( x \), confirming that \( c \) is indeed less than their average.
+[appliedTactic]
+apply (lt_div_iff (by norm_num)). 2 
+[answer]
+By applying the equivalence that relates an inequality involving a division to one involving multiplication—specifically, that comparing a number to a quotient is equivalent to comparing its product with the divisor to the numerator— the goal of proving that \( c \) is less than the midpoint between \( x \) and \( c \) is transformed into proving that twice \( c \) is less than the sum of \( x \) and \( c \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 0 is less than 2.
+[appliedTactic]
+rw [← one_add_one_eq_two,mul_add,mul_one ] 
+[answer]
+The tactic rewrites the expression involving multiplication by 2 by replacing 2 with the sum of one plus one, then distributing the multiplication over addition, and simplifying the multiplication by one. As a result, the goal of proving that twice \( c \) is less than \( x + c \) is transformed into proving that the sum of \( c \) and \( c \) is less than \( x + c \).
+[appliedTactic]
+apply  add_lt_add_right 
+[answer]
+The tactic uses the property that adding the same quantity to both sides of an inequality preserves the inequality. Specifically, to prove that the sum of \( c + c \) is less than \( x + c \), it suffices to show that \( c \) is less than \( x \).
+[appliedTactic]
+exact  cltx 
+[answer]
+The proof is completed by directly using the established fact that the element \( c \) is less than \( x \).
+[appliedTactic]
+. apply (div_lt_iff (by norm_num)).2
+          rw [← one_add_one_eq_two,mul_add,mul_one]
+          apply add_lt_add_left
+          exact  cltx 
+[answer]
+We show that the number halfway between \( x \) and \( c \), defined as their average, is strictly less than \( x \) by using the fact that \( c \) is less than \( x \). This follows from the property that dividing the difference between \( x \) and \( c \) by two preserves the inequality, confirming that the midpoint lies strictly below \( x \).
+[appliedTactic]
+apply (div_lt_iff (by norm_num)). 2 
+[answer]
+The tactic uses the equivalence between a division inequality and a multiplication inequality when dividing by a positive number. Specifically, to prove that the average of \( x \) and \( c \) is less than \( x \), it suffices to show that the sum \( x + c \) is less than twice \( x \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 0 is less than 2.
+[appliedTactic]
+rw [← one_add_one_eq_two,mul_add,mul_one ] 
+[answer]
+The tactic rewrites the expression on the right side of the inequality by replacing the number two with the sum of one plus one, then distributes multiplication over addition, and finally simplifies the product of any number with one to that number itself. As a result, the goal of proving that \( x + c \) is less than \( x \) multiplied by two is transformed into proving that \( x + c \) is less than \( x + x \).
+[appliedTactic]
+apply  add_lt_add_left 
+[answer]
+The tactic uses the property that adding the same quantity to both sides of an inequality preserves the inequality. Thus, to prove that the sum of \( x \) and \( c \) is less than the sum of \( x \) and itself, it suffices to show that \( c \) is less than \( x \).
+[appliedTactic]
+exact  cltx 
+[answer]
+The proof is completed by directly using the fact that the element \( c \) is less than \( x \).
+[appliedTactic]
+have zinA : z ∈ A := by
+        have : ¬ LowerBound C z := by
+          rw [LowerBound]
+          push_neg
+          exact ⟨c, cinC, this.left⟩
+        exact ⟨Set.mem_univ z, this ⟩ 
+[answer]
+Establish that the number \( z \), defined as the midpoint between \( c \) and \( x \), belongs to the set \( A \) by showing that \( z \) is not a lower bound of the set \( C \). This is done by demonstrating the existence of an element in \( C \) that is less than \( z \), and noting that \( z \) is an element of the universal set.
+[appliedTactic]
+have : ¬ LowerBound C z := by
+          rw [LowerBound]
+          push_neg
+          exact ⟨c, cinC, this.left ⟩ 
+[answer]
+Establish that the number \( z \) is not a lower bound of the set \( C \) by showing there exists an element \( c \) in \( C \) that is less than \( z \).
+[appliedTactic]
+rw [LowerBound ] 
+[answer]
+The goal, which was to show that the number \( z \) is not a lower bound for the set \( C \), is rewritten to state explicitly that it is not true that every element of \( C \) is greater than or equal to \( z \). This reformulation clarifies that there exists some element in \( C \) smaller than \( z \).
+[appliedTactic]
+ push_neg 
+[answer]
+The negation of the statement that every element of \( C \) is at least \( z \) is rewritten as the existence of an element in \( C \) that is less than \( z \).
+[appliedTactic]
+exact ⟨c, cinC, this.left ⟩ 
+[answer]
+The proof is completed by providing the element \( c \) from the set \( C \), confirming that \( c \) belongs to \( C \), and using the fact that \( c \) is less than \( z \). This establishes the existence of an element in \( C \) that is less than \( z \), fulfilling the goal.
+[appliedTactic]
+exact ⟨Set.mem_univ z, this ⟩ 
+[answer]
+The proof is completed by showing that the element \( z \) belongs to the set \( A \) because \( z \) is in the universal set and it is not a lower bound of \( C \).
+[appliedTactic]
+have : x ≤ z := h1 z  zinA 
+[answer]
+Establish that \( x \) is less than or equal to \( z \) by applying the property that \( x \) is a lower bound for every element in the set \( A \). Since \( z \) is an element of \( A \), it follows directly that \( x \leq z \).
+[appliedTactic]
+ linarith 
+[answer]
+Given that \( z \) lies strictly between \( c \) and \( x \), and \( z \) is an element of the set \( A \), the assumption that \( x \leq z \) contradicts the fact that \( z < x \). This contradiction resolves the goal, completing the proof that there exists an infimum of the set \( C \).

@@ -1,0 +1,210 @@
+[appliedTactic]
+intro a apos b  _ 
+[answer]
+Assume that \( a \) and \( b \) are positive real numbers. We now aim to show that there exists a natural number \( n \) such that the product of \( a \) and one more than \( n \) is greater than \( b \).
+[appliedTactic]
+by_contra!  h 
+[answer]
+Assume that for every natural number \( n \), the product of \( (n + 1) \) and \( a \) is less than or equal to \( b \), and show a contradiction.
+[appliedTactic]
+let C : Set ℝ:= {s : ℝ | ∃ k : ℕ, s =  ((k + (1 : ℕ)) : ℝ ) * a } 
+[answer]
+Define the set \( C \) to consist of all real numbers that can be expressed as the product of a positive integer plus one and the number \( a \).
+[appliedTactic]
+have CnotEmpty : C.Nonempty := by
+    -- s = a, k = 0 とすれば成り立つ
+    apply Exists.intro a
+    apply Exists.intro 0
+    rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+[answer]
+Demonstrate that the set \( C \) is not empty by explicitly providing an element of \( C \). Specifically, show that the element obtained by taking \( s = a \) with \( k = 0 \) belongs to \( C \), confirming the existence of such an element and thus establishing that \( C \) contains at least one member.
+[appliedTactic]
+apply Exists.intro  a 
+[answer]
+By applying the introduction rule for existence, to prove that the set \( C \) is nonempty, it suffices to show that the element \( a \) belongs to \( C \).
+[appliedTactic]
+apply Exists.intro  0 
+[answer]
+To prove that \( a \) belongs to the set defined by numbers of the form \( (k + 1) \cdot a \) for some natural number \( k \), it suffices to exhibit a specific value of \( k \) that satisfies this property. Choosing \( k = 0 \), it remains to show that \( a \) equals \( (0 + 1) \cdot a \).
+[appliedTactic]
+rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+[answer]
+The proof rewrites the expression for \( a \) by recognizing that multiplying \( a \) by one leaves it unchanged, and that adding zero to zero does not alter the value. This confirms that \( a \) can be expressed as the product of \( a \) and the sum of zero and one, completing the proof.
+[appliedTactic]
+have CUB : BoundedAbove C := by
+    -- b が上界であることを使う
+    have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h k'
+    exact ⟨b, this ⟩ 
+[answer]
+Establish that the set \( C \) is bounded above by showing that the real number \( b \) serves as an upper bound for \( C \). This is done by demonstrating that every element of \( C \) is less than or equal to \( b \), thereby confirming the existence of an upper bound for \( C \).
+[appliedTactic]
+have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h  k' 
+[answer]
+Demonstrate that \( b \) is an upper bound of the set \( C \) by showing that for every element \( k \) in \( C \), the value associated with \( k \) does not exceed \( b \). This is done by taking an arbitrary element of \( C \), expressing it in terms of an integer \( k' \), and then applying the given inequality to conclude that this element is less than or equal to \( b \).
+[appliedTactic]
+intro k  kinC 
+[answer]
+Assume an element \( k \) belonging to the set \( C \). Our goal is now to show that this element \( k \) is less than or equal to \( b \).
+[appliedTactic]
+let ⟨k',k'h⟩ :=  kinC 
+[answer]
+From the fact that \(k\) belongs to the set \(C\), introduce a natural number \(k'\) such that \(k\) equals \((k' + 1) \times a\).
+[appliedTactic]
+rw [k'h ] 
+[answer]
+The proof replaces the expression \( k \) in the goal with its explicit form as a multiple of \( a \) indexed by a natural number \( k' \), thereby changing the goal to showing that this specific multiple of \( a \) is less than or equal to \( b \).
+[appliedTactic]
+exact h  k' 
+[answer]
+The proof is completed by applying the given inequality to the specific natural number corresponding to \( k' \), thereby establishing that the value \((k' + 1) \cdot a\) is less than or equal to \( b \).
+[appliedTactic]
+exact ⟨b, this ⟩ 
+[answer]
+The proof is completed by demonstrating that the set is bounded above using \( b \) as an upper bound and confirming this fact from the given assumption.
+[appliedTactic]
+have CSup := ExistSupremum C ⟨CnotEmpty, CUB ⟩ 
+[answer]
+Establish that the set \( C \), which is nonempty and bounded above, has a supremum. This follows from the fact that every nonempty set of real numbers that is bounded above possesses a least upper bound. Introducing this supremum into the proof allows further reasoning about the set \( C \).
+[appliedTactic]
+let ⟨x, SupCx⟩ :=  CSup 
+[answer]
+From the existence of a supremum for the set \( C \), introduce a real number \( x \) that serves as the supremum of \( C \).
+[appliedTactic]
+have : ∀n : ℕ, ((n + (2 : ℕ )) : ℝ)  * a ≤ x := by
+    intro n
+    -- SupCxの左側　UpperBound C x を上手く使うため、 (n + 1) * a が C の要素であることをいう
+    have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc]
+    -- 結果を素直に用いれば示せる
+    apply SupCx.left ((n + 2) * a)  this 
+[answer]
+Establish that for every natural number \( n \), the product of \( (n + 2) \) and \( a \) is less than or equal to \( x \). This is done by showing that each such product belongs to the set \( C \), using the fact that \( (n + 1) \times a \) is an element of \( C \), and then applying the property that \( x \) is an upper bound of \( C \) to conclude the desired inequality.
+[appliedTactic]
+intro  n 
+[answer]
+Assume an arbitrary natural number \( n \). We will now prove that the expression obtained by multiplying \( a \) by \( n + 2 \) is less than or equal to \( x \).
+[appliedTactic]
+have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc ] 
+[answer]
+Demonstrate that the expression obtained by adding two to the natural number \( n \), then multiplying by \( a \), belongs to the set defined by all numbers of the form \( (k + 1) \times a \) for some natural number \( k \). This is done by explicitly exhibiting \( n + 1 \) as the witness \( k \) that satisfies the set's defining property, confirming that the given expression is indeed an element of the set.
+[appliedTactic]
+rw [Set.mem_setOf_eq ] 
+[answer]
+The goal of proving that a certain expression is an element of the set \( C \) is rewritten to explicitly state that there exists an integer \( k \) such that this expression equals the defining form of elements in \( C \). In other words, membership in the set is expressed by the existence of such a \( k \) satisfying the equality.
+[appliedTactic]
+apply Exists.intro (n + 1 ) 
+[answer]
+By introducing the specific element \( n + 1 \) as a witness, the goal reduces to proving that the expression involving \( n + 2 \) multiplied by \( a \) equals the expression involving \( (n + 1) + 1 \) multiplied by \( a \).
+[appliedTactic]
+rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff ] 
+[answer]
+The tactic rewrites the expression involving multiplication by distributing and simplifying the natural number casts and sums. It transforms the goal of proving the equality between two scaled terms into a statement that either a certain equality involving sums of natural numbers holds or that the scalar factor is zero. This step uses the fact that multiplying by a nonzero factor preserves equality, so the equality of the products is equivalent to the equality of the factors or the scalar being zero.
+[appliedTactic]
+apply  Or.inl 
+[answer]
+The proof proceeds by asserting the left side of the disjunction as true, thereby reducing the goal to proving the equality involving \( n \) and the sums of ones.
+[appliedTactic]
+rw [add_assoc ] 
+[answer]
+The proof proceeds by applying the associativity of addition to rewrite the expression involving the sum of \( n \), 1, and 1. This rearrangement shows that adding 1 and 1 first, then adding \( n \), is equivalent to adding \( n \) and 1 first, followed by adding 1, thereby simplifying the goal and completing the step.
+[appliedTactic]
+apply SupCx.left ((n + 2) * a)  this 
+[answer]
+By applying the property that characterizes the supremum as an upper bound of the set, it follows directly that the element \((n + 2) \times a\), which belongs to the set, is less than or equal to the supremum \( x \). This completes the proof of the required inequality.
+[appliedTactic]
+have : ∀n : ℕ, ((n + 1 : ℕ) : ℝ)* a ≤ x - a := by
+    intro n
+    have := this n
+    rw [← one_add_one_eq_two] at this
+    rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at this
+    apply le_tsub_of_add_le_right
+    rw [Nat.cast_add,Nat.cast_one]
+    exact  this 
+[answer]
+Establish that for every natural number \( n \), the product of \( (n + 1) \) and \( a \) is less than or equal to \( x - a \). This is done by starting from the given inequality involving \( (n + 2) \times a \) and \( x \), rewriting and rearranging the expression to isolate \( (n + 1) \times a \), and then applying the property that if the sum of two terms is at most a third term, one term is at most the difference between the third term and the other term.
+[appliedTactic]
+intro  n 
+[answer]
+Introduce an arbitrary natural number \( n \). We will now prove that the product of \( (n + 1) \) and \( a \) is less than or equal to \( x \) minus \( a \).
+[appliedTactic]
+have := this  n 
+[answer]
+Apply the existing statement that for every natural number \( n \), the expression \((n + 2) \times a\) is less than or equal to \( x \) to the specific number \( n \). This introduces the inequality \((n + 2) \times a \leq x\) as a new fact in the proof.
+[appliedTactic]
+rw [← one_add_one_eq_two] at  this 
+[answer]
+The statement involving the sum of a natural number and two has been rewritten to explicitly show that two is the sum of one and one. This clarifies the expression by replacing the number two with the sum of one plus one, without changing the inequality or the goal to be proved.
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at  this 
+[answer]
+The expression stating that the product of the sum of \( n \) and \( 1 + 1 \) with \( a \) is less than or equal to \( x \) is rewritten by expanding and rearranging the addition inside the parentheses. This transforms it into the sum of the product of \( n + 1 \) and \( a \) plus \( a \), which is still less than or equal to \( x \).
+[appliedTactic]
+apply  le_tsub_of_add_le_right 
+[answer]
+Since the sum of \((n + 1) \cdot a\) and \(a\) is less than or equal to \(x\), it follows that \((n + 1) \cdot a\) is less than or equal to the difference between \(x\) and \(a\).
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one ] 
+[answer]
+The tactic rewrites the expressions involving the sum of natural numbers cast into real numbers by replacing the cast of a sum with the sum of casts and by substituting the cast of one with the real number one. This simplifies the goal by expressing the sum inside the cast explicitly as the sum of the individual casts, making the inequality clearer and more directly comparable.
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly applying the established inequality that states for every natural number \( n \), the expression \((n + 1) \cdot a + a\) is less than or equal to \( x \).
+[appliedTactic]
+have up: UpperBound C (x - a) := by
+    intro l ⟨k, kp⟩
+    have := this k
+    rw [kp,Nat.cast_one]
+    rw [Nat.cast_add,Nat.cast_one] at this
+    exact  this 
+[answer]
+Demonstrate that the number \( x - a \) is an upper bound for the set consisting of all numbers of the form \((k + 1) \times a\) by showing that for any element in this set, it does not exceed \( x - a \).
+[appliedTactic]
+intro l ⟨k, kp ⟩ 
+[answer]
+Assume an element \( l \) of the set and a natural number \( k \) such that \( l \) equals \((k + 1)\) times \( a \). We now aim to show that this element \( l \) is less than or equal to \( x - a \).
+[appliedTactic]
+have := this  k 
+[answer]
+Apply the existing inequality involving the variable \( k \) to obtain a specific bound for the expression \((k + 1) \times a\), showing that it is less than or equal to \( x - a \). This introduces a concrete inequality relating \( k \) and \( x \) into the proof, which can then be used to establish the desired inequality for \( l \).
+[appliedTactic]
+rw [kp,Nat.cast_one ] 
+[answer]
+The expression for \( l \) was rewritten by replacing the natural number one cast into the real numbers with the real number one itself, changing the goal to show that the product of the sum of the natural number \( k \) and one, multiplied by \( a \), is less than or equal to \( x - a \).
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one] at  this 
+[answer]
+The natural numbers involved in the expressions were rewritten by explicitly replacing the cast of a sum and the cast of one with their corresponding sums and identity elements in the real numbers. This simplification was applied to the relevant hypothesis, making the inequality clearer by expressing the sum inside the cast as a sum of casts, so the goal now directly compares the sum of the cast of \( k \) and the number one multiplied by \( a \) to the expression \( x - a \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly confirming that the expression involving \(k\) and \(a\) is less than or equal to the difference between \(x\) and \(a\), as stated in the current assumption.
+[appliedTactic]
+have : ∀y, UpperBound C y → x ≤ y :=  SupCx.right 
+[answer]
+Establish that for any real number \( y \) that serves as an upper bound of the set \( C \), the supremum \( x \) is less than or equal to \( y \). This follows from the defining property of the supremum, which states that it is the least upper bound of the set.
+[appliedTactic]
+have := this (x - a)  up 
+[answer]
+Use the fact that \( x - a \) is an upper bound of the set \( C \) to apply the property that \( x \) is the least upper bound of \( C \). This implies that \( x \) must be less than or equal to any upper bound of \( C \), including \( x - a \). Consequently, conclude that \( x \leq x - a \), which sets up a contradiction given that \( a > 0 \).
+[appliedTactic]
+ linarith 
+[answer]
+The assumption that the supremum \( x \) of the set is less than or equal to \( x - a \), while \( a \) is positive, leads to a contradiction because a number cannot be less than or equal to itself minus a positive quantity. Therefore, the proof is complete.

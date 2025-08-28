@@ -1,0 +1,235 @@
+{
+  "intro x ε  εpos ": [],
+  "have xposh : ∀ x > 0, ∀ ε > 0, (∃q : ℚ, |x - (q : ℝ)| < ε) := by\n    intro x xpos ε εpos\n    -- 系　1.5 よりある自然数 n に対して 1 / n + 1 < ε なる n が存在する\n    have onediv := OneDivnltEps ε εpos\n    let ⟨n,h⟩ := onediv\n    -- ある自然数m で m + 1 /n + 1 > x が成立する(アルキメデスの原理)\n    -- 1 / n + 1 > 0 を示す\n    have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact zero_lt_one\n    -- アルキメデスの原理よりある 自然数 m で(m + 1)/(n + 1) > x が出てくる\n    have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x xpos\n    -- そのような条件を満たす m の集合を考える\n    let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x}\n    -- M が空でないことをまずいう\n    have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact h1\n    -- よって最小元がある\n    let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M MnotEmpty\n    --その最小元を使ってqを固定する。\n    let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ)\n    apply Exists.intro q\n    -- 以下は教科書では略されているがここからが大変\n    -- x - q が負であることをまず示す\n    have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact minM\n    -- 絶対値を外す\n    rw [abs_of_neg xsubqneg]\n    -- 括弧の前のマイナスを中に入れる\n    rw [neg_sub]\n    -- a ≤ b , b < c → a < c を使う。\n    apply lt_of_le_of_lt _ h\n    --しばし変形を行う x を右辺に持っていくために色々な式変形をしている\n    rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg]\n    rw [← sub_eq_add_neg,← sub_le_abc]\n    -- 通分を行う。\n    have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm]\n    rw [h2]\n    -- x < m / (n + 1) と仮定して矛盾を示す。\n    by_contra h\n    push_neg at h\n    -- m ≥ 1 の場合と m < 1 の場合で場合わけを行う。 m - 1 が 自然数であるかどうかが重要\n    -- 自然数は減算に関して閉じていないので場合わけを行い自然数専用のライブラリを使わないと\n    -- 上手く証明することができない。扱いが難しかった。\n    by_cases hm :m ≥ 1\n      -- (m - 1)が M に含まれていることを示す。\n    . have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n      linarith\n    -- m < 1 のとき\n    . push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ": [
+    "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "NatHasMinElement : Every nonempty set of natural numbers contains a smallest element that is less than or equal to all other elements in the set.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+    "Set : This defines a set as a collection of elements belonging to a specific type.",
+    "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero.",
+    "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second.",
+    "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder.",
+    "neg_sub : The negation of the difference between two elements in a subtraction monoid is equal to the difference of the second element from the first.",
+    "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero.",
+    "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+    "abs_of_neg : This theorem establishes that if an element is negative within a lattice and additive group, then its absolute value is equal to the negation of the element.",
+    "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "ArchimedesPrinciple : For every positive real number, there exists a natural number such that multiplying the sum of that natural number and one by the positive real number exceeds any given positive real number.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+    "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+    "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+    "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "OneDivnltEps : For every positive real number, there exists a natural number such that the reciprocal of one more than that natural number is less than the given positive number.",
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "sub_eq_add_neg : Subtracting an element from another is equivalent to adding the negative of that element.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity."
+  ],
+  "intro x xpos ε  εpos ": [],
+  "have onediv := OneDivnltEps ε  εpos ": [
+    "OneDivnltEps : For every positive real number, there exists a natural number such that the reciprocal of one more than that natural number is less than the given positive number."
+  ],
+  "let ⟨n,h⟩ :=  onediv ": [],
+  "have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact  zero_lt_one ": [
+    "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity.",
+    "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero.",
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact  zero_lt_one ": [
+    "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+    "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity.",
+    "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+  ],
+  "rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive."
+  ],
+  " right ": [],
+  "exact  zero_lt_one ": [
+    "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+  ],
+  "apply (lt_div_iff this). 2 ": [
+    "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+  ],
+  "rw [zero_mul ] ": [
+    "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication."
+  ],
+  "have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x  xpos ": [
+    "ArchimedesPrinciple : For every positive real number, there exists a natural number such that multiplying the sum of that natural number and one by the positive real number exceeds any given positive real number."
+  ],
+  "let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x } ": [
+    "Set : This defines a set as a collection of elements belonging to a specific type."
+  ],
+  "have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact  h1 ": [
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+    "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+  ],
+  "let ⟨m, h1⟩ :=  archi ": [],
+  "apply Exists.intro  m ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+  ],
+  "rw [mul_div,mul_one,Nat.cast_one] at  h1 ": [
+    "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid."
+  ],
+  "rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one ] ": [
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+  ],
+  "exact  h1 ": [],
+  "let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M  MnotEmpty ": [
+    "NatHasMinElement : Every nonempty set of natural numbers contains a smallest element that is less than or equal to all other elements in the set."
+  ],
+  "let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ ) ": [],
+  "apply Exists.intro  q ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact  minM ": [
+    "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element.",
+    "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+    "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+  ],
+  "rw [sub_neg ] ": [
+    "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element."
+  ],
+  "rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at  minM ": [
+    "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+    "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+  ],
+  "simp [q ] ": [],
+  "exact  minM ": [],
+  "rw [abs_of_neg xsubqneg ] ": [
+    "abs_of_neg : This theorem establishes that if an element is negative within a lattice and additive group, then its absolute value is equal to the negation of the element."
+  ],
+  "rw [neg_sub ] ": [
+    "neg_sub : The negation of the difference between two elements in a subtraction monoid is equal to the difference of the second element from the first."
+  ],
+  "apply lt_of_le_of_lt _  h ": [
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third."
+  ],
+  "rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg ] ": [
+    "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+    "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero."
+  ],
+  "rw [← sub_eq_add_neg,← sub_le_abc ] ": [
+    "sub_eq_add_neg : Subtracting an element from another is equivalent to adding the negative of that element.",
+    "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero."
+  ],
+  "have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm ] ": [
+    "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself."
+  ],
+  " ring_nf ": [],
+  " simp ": [],
+  "rw [add_mul,one_mul ] ": [
+    "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+    "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself."
+  ],
+  "rw [mul_comm ] ": [
+    "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+  ],
+  "rw [h2 ] ": [],
+  "by_contra  h ": [],
+  "push_neg at  h ": [],
+  "by_cases hm :m ≥  1 ": [],
+  ". have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n       linarith ": [],
+  "have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at  h ": [
+    "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element.",
+    "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second."
+  ],
+  "simp only [M, Set.mem_setOf ] ": [
+    "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+  ],
+  "rw [Nat.sub_add_cancel hm ] ": [
+    "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second."
+  ],
+  "have : m ≤ m - 1 := mmin (m - 1)  msubinM ": [],
+  "have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ": [
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+  ],
+  "apply Nat.sub_lt _ (by norm_num ) ": [],
+  " norm_num ": [],
+  ". have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ": [],
+  "have : 0 < (1 : ℕ) := by  norm_num ": [],
+  "apply lt_of_lt_of_le this  hm ": [
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+  ],
+  " linarith ": [],
+  ". push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ": [],
+  "push_neg at  hm ": [],
+  "have : m = 0 := by\n        apply Nat.lt_one_iff.1  hm ": [
+    "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero."
+  ],
+  "apply Nat.lt_one_iff.1  hm ": [
+    "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero."
+  ],
+  "rw [this] at  h ": [],
+  "simp at  h ": [],
+  "rcases lt_trichotomy x 0 with h | h |  h ": [
+    "lt_trichotomy : This theorem establishes that in a linear order, for any two elements, one of the following must be true: the first is less than the second, they are equal, or the second is less than the first."
+  ],
+  ". have : -x > 0 := by simp; exact h\n    let ⟨q,h1⟩ := xposh (-x) this ε εpos\n    apply Exists.intro (-q)\n    simp\n    rw [sub_assoc,abs_neg] at h1\n    exact  h1 ": [],
+  "have : -x > 0 := by simp; exact  h ": [],
+  "exact  h ": [],
+  "let ⟨q,h1⟩ := xposh (-x) this ε  εpos ": [],
+  "apply Exists.intro (-q ) ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "rw [sub_assoc,abs_neg] at  h1 ": [
+    "sub_assoc : Negating a real number minus another real number equals the negation of their sum.",
+    "abs_neg : This theorem states that the absolute value of the negation of an element is equal to the absolute value of the element itself in the context of a lattice and additive group."
+  ],
+  ". rw [h]\n    apply Exists.intro 0\n    rw [zero_sub,abs_neg]\n     norm_cast ": [],
+  "rw [h ] ": [],
+  "apply Exists.intro  0 ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "rw [zero_sub,abs_neg ] ": [
+    "zero_sub : In a sub-negative monoid, subtracting any element from zero results in the negation of that element.",
+    "abs_neg : This theorem states that the absolute value of the negation of an element is equal to the absolute value of the element itself in the context of a lattice and additive group."
+  ],
+  ". exact xposh x h ε  εpos ": [],
+  "exact xposh x h ε  εpos ": []
+}

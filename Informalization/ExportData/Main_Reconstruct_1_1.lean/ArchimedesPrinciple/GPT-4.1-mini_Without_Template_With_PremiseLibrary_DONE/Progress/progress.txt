@@ -1,0 +1,77 @@
+[applied Tactic]
+have CnotEmpty : C.Nonempty := by
+    -- s = a, k = 0 とすれば成り立つ
+    apply Exists.intro a
+    apply Exists.intro 0
+    rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+
+[answer]
+We will show that the set \( C \) is nonempty by exhibiting an explicit element of \( C \). According to the definition, elements of \( C \) are numbers of the form \( (k+1) \cdot a \) for some natural number \( k \). By taking \( k = 0 \), we consider the element \( (0+1) \cdot a = 1 \cdot a \). Since multiplying \( a \) by one leaves it unchanged, it follows that \( a = (0+1) \cdot a \), and hence \( a \in C \). This demonstrates that \( C \) contains at least one element, establishing that \( C \) is not empty.
+[applied Tactic]
+have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h  k' 
+
+[answer]
+We will show that \( b \) is an upper bound of the set \( C \) by proving that for every element \( k \) in \( C \), the inequality \( k \leq b \) holds. To this end, let \( k \) be an arbitrary element of \( C \). By the definition of \( C \), there exists a natural number \( k' \) such that \( k = (k' + 1) \cdot a \). Substituting this expression for \( k \) into our goal, it suffices to show that \((k' + 1) \cdot a \leq b\). Finally, applying the given inequality for this specific \( k' \), we conclude that \((k' + 1) \cdot a \leq b\), thereby demonstrating that \( b \) serves as an upper bound for all elements of \( C \).
+[applied Tactic]
+have CUB : BoundedAbove C := by
+    -- b が上界であることを使う
+    have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h k'
+    exact ⟨b, this ⟩ 
+
+[answer]
+We will show that the set \( C \) is bounded above by proving that the real number \( b \) serves as an upper bound for \( C \). To do this, let \( k \) be an arbitrary element of \( C \). By the definition of \( C \), there exists a natural number \( k' \) such that \( k = (k' + 1) \cdot a \). Therefore, it suffices to show that \((k' + 1) \cdot a \leq b\). Using the given inequality associated with \( k' \), we conclude that \((k' + 1) \cdot a \leq b\). Since this holds for an arbitrary element \( k \) in \( C \), it follows that every element of \( C \) is less than or equal to \( b \), and hence \( b \) is an upper bound for \( C \). This establishes that \( C \) is bounded above, completing the proof.
+[applied Tactic]
+have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc ] 
+
+[answer]
+We will show that for any natural number \( n \), the expression \((n + 2) \times a\) belongs to the set \( C = \{ (k + 1) \times a \mid k \in \mathbb{N} \} \). By definition of membership in \( C \), this amounts to demonstrating the existence of a natural number \( k \) such that \((n + 2) \times a = (k + 1) \times a\). Choosing \( k = n + 1 \) as a witness, the goal reduces to proving the equality \((n + 2) \times a = ((n + 1) + 1) \times a\). By properties of multiplication over natural numbers, this equality holds if and only if either the scalar \( a \) is zero or the factors satisfy \( n + 2 = (n + 1) + 1 \). Focusing on the latter, the associativity of addition in the natural numbers ensures that \((n + 1) + 1 = n + (1 + 1) = (n + 2)\), confirming the equality of the factors. Hence, the chosen witness \( k = n + 1 \) satisfies the defining property of the set \( C \), and thus \((n + 2) \times a\) indeed belongs to \( C \).
+[applied Tactic]
+have : ∀n : ℕ, ((n + (2 : ℕ )) : ℝ)  * a ≤ x := by
+    intro n
+    -- SupCxの左側　UpperBound C x を上手く使うため、 (n + 1) * a が C の要素であることをいう
+    have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc]
+    -- 結果を素直に用いれば示せる
+    apply SupCx.left ((n + 2) * a)  this 
+
+[answer]
+We will show that for every natural number \( n \), the product \((n + 2) \times a\) is less than or equal to \( x \). To this end, consider the set \( C = \{ (k + 1) \times a \mid k \in \mathbb{N} \} \). Our aim is to prove that \((n + 2) \times a\) belongs to \( C \). By the definition of membership, this means there exists a natural number \( k \) such that \((n + 2) \times a = (k + 1) \times a\). Choosing \( k = n + 1 \), we observe that \((k + 1) \times a = ((n + 1) + 1) \times a\), and by the associativity of addition on natural numbers, \((n + 1) + 1 = n + 2\), so the equality holds. Consequently, \((n + 2) \times a\) indeed lies in \( C \). Since \( x \) is an upper bound of \( C \), it follows that \((n + 2) \times a \leq x\). This establishes the desired inequality for all natural numbers \( n \), completing the proof.
+[applied Tactic]
+have : ∀n : ℕ, ((n + 1 : ℕ) : ℝ)* a ≤ x - a := by
+    intro n
+    have := this n
+    rw [← one_add_one_eq_two] at this
+    rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at this
+    apply le_tsub_of_add_le_right
+    rw [Nat.cast_add,Nat.cast_one]
+    exact  this 
+
+[answer]
+We will show that for every natural number \( n \), the product \((n+1) \cdot a\) is less than or equal to \( x - a \). To begin, we fix an arbitrary natural number \( n \) and recall the given inequality \((n+2) \cdot a \leq x\). Noting that \( n + 2 = n + (1 + 1) \), we rewrite the left-hand side as \((n + 1 + 1) \cdot a\), which expands to \((n + 1) \cdot a + a\). Thus, we have \((n + 1) \cdot a + a \leq x\). Since the sum of \((n + 1) \cdot a\) and \( a \) does not exceed \( x \), it follows by rearrangement that \((n + 1) \cdot a \leq x - a\). This completes the proof.
+[applied Tactic]
+have up: UpperBound C (x - a) := by
+    intro l ⟨k, kp⟩
+    have := this k
+    rw [kp,Nat.cast_one]
+    rw [Nat.cast_add,Nat.cast_one] at this
+    exact  this 
+
+[answer]
+We will show that the number \( x - a \) serves as an upper bound for the set of all numbers of the form \((k + 1) \times a\), where \( k \) is a natural number. To this end, let \( l \) be an arbitrary element of the set such that \( l = (k + 1) \times a \). By rewriting the sum inside the product and interpreting the natural number casts into real numbers, we express \( l \) as \((k + 1) \cdot a\) with \(1\) and \(k\) considered as real numbers. Using the existing inequality involving \( k \), we establish that \((k + 1) \cdot a \leq x - a\). This shows that no element \( l \) of the set exceeds \( x - a \), proving that \( x - a \) is indeed an upper bound for the set.

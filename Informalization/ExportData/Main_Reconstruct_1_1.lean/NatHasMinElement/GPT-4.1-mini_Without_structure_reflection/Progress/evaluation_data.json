@@ -1,0 +1,176 @@
+[
+  {
+    "AppliedTactic": "intro  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\n⊢ S.Nonempty → ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\n⊢ ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that the set \\( S \\) is nonempty. From now on, we will show that there exists an element \\( x \\) in \\( S \\) such that for every element \\( y \\) in \\( S \\), \\( x \\) is less than or equal to \\( y \\)."
+  },
+  {
+    "AppliedTactic": "by_contra!  h ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\n⊢ ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Assume that  [hypothesisAfter] and show a contradiction.",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Assume that for every element \\( x \\) in \\( S \\), there exists a smaller element \\( y \\) in \\( S \\), and show a contradiction."
+  },
+  {
+    "AppliedTactic": "have :∀ n : ℕ ,(n ∉ S) := by\n      -- forall を固定\n      intro n\n      --数学的帰納法を用いる。\n      induction' n using Nat.strong_induction_on with n ih\n      intro ninS\n      have := h n ninS\n      let ⟨y,⟨yinS,yltn⟩⟩ := this\n      have := ih y yltn\n      -- 矛盾発生\n       contradiction ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Nat.strong_induction_on : For any property defined for natural numbers, if it holds for all smaller numbers than a given natural number, then it holds for that number itself.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that every natural number is not an element of the set \\( S \\) by using strong induction and deriving a contradiction from the assumption that an element belongs to \\( S \\)."
+  },
+  {
+    "AppliedTactic": "intro  n ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\n⊢ ∀ (n : ℕ), n ∉ S",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\n⊢ n ∉ S",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is an arbitrary natural number. From now on, we will show that \\( n \\) does not belong to the set \\( S \\)."
+  },
+  {
+    "AppliedTactic": "induction' n using Nat.strong_induction_on with n  ih ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\n⊢ n ∉ S",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\n⊢ n ∉ S",
+    "GivenPremises": [
+      "Nat.strong_induction_on : For any property defined for natural numbers, if it holds for all smaller numbers than a given natural number, then it holds for that number itself."
+    ],
+    "Template": "Prove [goalsBefore] with mathematical induction on [existingVariable].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[existingVariable]": "This token appears in templates for tactic  that reference existing variables. Replace it with the name of the existing variable referenced in the tactic."
+    },
+    "Result": "Prove that \\( n \\) does not belong to the set \\( S \\) using strong induction on \\( n \\)."
+  },
+  {
+    "AppliedTactic": "intro  ninS ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\n⊢ n ∉ S",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is an element of the set \\( S \\). From now on, we will show that this assumption leads to a contradiction."
+  },
+  {
+    "AppliedTactic": "have := h n  ninS ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists an element \\( y \\) in the set \\( S \\) such that \\( y \\) is less than \\( n \\). This follows directly from the assumption that for every element in \\( S \\), there is another element in \\( S \\) that is smaller."
+  },
+  {
+    "AppliedTactic": "let ⟨y,⟨yinS,yltn⟩⟩ :=  this ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( y \\) be an element of \\( S \\) such that \\( y \\) is less than \\( n \\)."
+  },
+  {
+    "AppliedTactic": "have := ih y  yltn ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\n⊢ False",
+    "GoalsAfter": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis✝ :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\nthis :  y ∉ S\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( y \\) is not an element of the set \\( S \\). This can be proved by applying the induction hypothesis to \\( y \\), using the facts that \\( y \\) is less than \\( n \\) and that the induction hypothesis states no elements less than \\( n \\) belong to \\( S \\)."
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "case h\nS :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nn :  ℕ\nih :  ∀ m < n, m ∉ S\nninS :  n ∈ S\nthis✝ :  ∃ y ∈ S, y < n\ny :  ℕ\nyinS :  y ∈ S\nyltn :  y < n\nthis :  y ∉ S\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since the element \\( y \\) is both in the set and not in the set simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+  },
+  {
+    "AppliedTactic": "rw [Set.Nonempty] at  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  S.Nonempty\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GivenPremises": [
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the definition that a set is non-empty if and only if there exists an element in the set, the assumption that the set \\( S \\) is non-empty becomes the existence of an element \\( x \\) such that \\( x \\) belongs to \\( S \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨x,xinS⟩ :=  SnotEmpty ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( x \\) be an element of the set \\( S \\)."
+  },
+  {
+    "AppliedTactic": "have := this  x ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\n⊢ False",
+    "GoalsAfter": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis✝ :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\nthis :  x ∉ S\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the element \\( x \\) is not in the set \\( S \\). This can be proved by applying the existing statement that no natural number belongs to \\( S \\) to the specific element \\( x \\)."
+  },
+  {
+    "AppliedTactic": " contradiction ",
+    "GoalsBefore": "S :  Set ℕ\nSnotEmpty :  ∃ x, x ∈ S\nh :  ∀ x ∈ S, ∃ y ∈ S, y < x\nthis✝ :  ∀ (n : ℕ), n ∉ S\nx :  ℕ\nxinS :  x ∈ S\nthis :  x ∉ S\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since the assumptions that \\( x \\) belongs to the set and that \\( x \\) does not belong to the set cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+  }
+]

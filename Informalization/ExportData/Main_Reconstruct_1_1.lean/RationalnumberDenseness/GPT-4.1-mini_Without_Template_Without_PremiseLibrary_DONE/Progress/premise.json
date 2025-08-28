@@ -1,0 +1,238 @@
+{
+  "intro x ε  εpos ": [],
+  "have xposh : ∀ x > 0, ∀ ε > 0, (∃q : ℚ, |x - (q : ℝ)| < ε) := by\n    intro x xpos ε εpos\n    -- 系　1.5 よりある自然数 n に対して 1 / n + 1 < ε なる n が存在する\n    have onediv := OneDivnltEps ε εpos\n    let ⟨n,h⟩ := onediv\n    -- ある自然数m で m + 1 /n + 1 > x が成立する(アルキメデスの原理)\n    -- 1 / n + 1 > 0 を示す\n    have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact zero_lt_one\n    -- アルキメデスの原理よりある 自然数 m で(m + 1)/(n + 1) > x が出てくる\n    have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x xpos\n    -- そのような条件を満たす m の集合を考える\n    let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x}\n    -- M が空でないことをまずいう\n    have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact h1\n    -- よって最小元がある\n    let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M MnotEmpty\n    --その最小元を使ってqを固定する。\n    let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ)\n    apply Exists.intro q\n    -- 以下は教科書では略されているがここからが大変\n    -- x - q が負であることをまず示す\n    have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact minM\n    -- 絶対値を外す\n    rw [abs_of_neg xsubqneg]\n    -- 括弧の前のマイナスを中に入れる\n    rw [neg_sub]\n    -- a ≤ b , b < c → a < c を使う。\n    apply lt_of_le_of_lt _ h\n    --しばし変形を行う x を右辺に持っていくために色々な式変形をしている\n    rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg]\n    rw [← sub_eq_add_neg,← sub_le_abc]\n    -- 通分を行う。\n    have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm]\n    rw [h2]\n    -- x < m / (n + 1) と仮定して矛盾を示す。\n    by_contra h\n    push_neg at h\n    -- m ≥ 1 の場合と m < 1 の場合で場合わけを行う。 m - 1 が 自然数であるかどうかが重要\n    -- 自然数は減算に関して閉じていないので場合わけを行い自然数専用のライブラリを使わないと\n    -- 上手く証明することができない。扱いが難しかった。\n    by_cases hm :m ≥ 1\n      -- (m - 1)が M に含まれていることを示す。\n    . have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n      linarith\n    -- m < 1 のとき\n    . push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ": [
+    "lt_of_lt_of_le.{u} {α : Type u} [Preorder α] {a b c : α} : a < b → b ≤ c → a < c",
+    "OneDivnltEps (ε : ℝ) : ε > 0 → ∃ n, 1 / (↑n + ↑1) < ε",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "mul_comm.{u_1} {G : Type u_1} [CommMagma G] (a b : G) : a * b = b * a",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n",
+    "sub_neg.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : a - b < 0 ↔ a < b",
+    "neg_sub.{u_1} {α : Type u_1} [SubtractionMonoid α] (a b : α) : -(a - b) = b - a",
+    "Nat.sub_lt {n m : ℕ} : 0 < n → 0 < m → n - m < n",
+    "add_mul.{x} {R : Type x} [Mul R] [Add R] [RightDistribClass R] (a b c : R) : (a + b) * c = a * c + b * c",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1",
+    "Set.Nonempty.{u} {α : Type u} (s : Set α) : Prop",
+    "abs_of_neg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] {a : α}\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (h : a < 0) : |a| = -a",
+    "one_mul.{u} {M : Type u} [MulOneClass M] (a : M) : 1 * a = a",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "mul_div.{u_3} {G : Type u_3} [DivInvMonoid G] (a b c : G) : a * (b / c) = a * b / c",
+    "NatHasMinElement (S : Set ℕ) : S.Nonempty → ∃ x ∈ S, ∀ y ∈ S, x ≤ y",
+    "lt_of_le_of_lt.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b < c → a < c",
+    "mul_one.{u} {M : Type u} [MulOneClass M] (a : M) : a * 1 = a",
+    "Set.{u} (α : Type u) : Type u",
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x",
+    "sub_eq_add_neg.{u_1} {G : Type u_1} [SubNegMonoid G] (a b : G) : a - b = a + -b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a",
+    "Nat.lt_one_iff {n : ℕ} : n < 1 ↔ n = 0",
+    "Nat.cast_one.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑1 = 1",
+    "add_assoc.{u_1} {G : Type u_1} [AddSemigroup G] (a b c : G) : a + b + c = a + (b + c)",
+    "add_comm.{u_1} {G : Type u_1} [AddCommMagma G] (a b : G) : a + b = b + a",
+    "sub_le_abc (a b c : ℝ) : a - b ≤ c ↔ a - b - c ≤ 0",
+    "ArchimedesPrinciple (a : ℝ) : a > 0 → ∀ b > 0, ∃ n, (↑n + ↑1) * a > b",
+    "add_pos_iff.{u} {α : Type u} [CanonicallyOrderedAddCommMonoid α] {a b : α} : 0 < a + b ↔ 0 < a ∨ 0 < b",
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "Nat.cast_lt.{u_1} {α : Type u_1} [AddMonoidWithOne α] [PartialOrder α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] [ZeroLEOneClass α] [CharZero α] {m n : ℕ} :\n  ↑m < ↑n ↔ m < n",
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b",
+    "Nat.cast_zero.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑0 = 0",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Nat.sub_add_cancel {n m : ℕ} (h : m ≤ n) : n - m + m = n"
+  ],
+  "intro x xpos ε  εpos ": [],
+  "have onediv := OneDivnltEps ε  εpos ": [
+    "OneDivnltEps (ε : ℝ) : ε > 0 → ∃ n, 1 / (↑n + ↑1) < ε"
+  ],
+  "let ⟨n,h⟩ :=  onediv ": [],
+  "have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact  zero_lt_one ": [
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1",
+    "Nat.cast_lt.{u_1} {α : Type u_1} [AddMonoidWithOne α] [PartialOrder α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] [ZeroLEOneClass α] [CharZero α] {m n : ℕ} :\n  ↑m < ↑n ↔ m < n",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "Nat.cast_zero.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑0 = 0",
+    "add_pos_iff.{u} {α : Type u} [CanonicallyOrderedAddCommMonoid α] {a b : α} : 0 < a + b ↔ 0 < a ∨ 0 < b"
+  ],
+  "have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact  zero_lt_one ": [
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1",
+    "Nat.cast_lt.{u_1} {α : Type u_1} [AddMonoidWithOne α] [PartialOrder α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] [ZeroLEOneClass α] [CharZero α] {m n : ℕ} :\n  ↑m < ↑n ↔ m < n",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "Nat.cast_zero.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑0 = 0",
+    "add_pos_iff.{u} {α : Type u} [CanonicallyOrderedAddCommMonoid α] {a b : α} : 0 < a + b ↔ 0 < a ∨ 0 < b"
+  ],
+  "rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] ": [
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "add_pos_iff.{u} {α : Type u} [CanonicallyOrderedAddCommMonoid α] {a b : α} : 0 < a + b ↔ 0 < a ∨ 0 < b"
+  ],
+  " right ": [],
+  "exact  zero_lt_one ": [
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1"
+  ],
+  "apply (lt_div_iff this). 2 ": [
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b"
+  ],
+  "rw [zero_mul ] ": [
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0"
+  ],
+  "have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x  xpos ": [
+    "ArchimedesPrinciple (a : ℝ) : a > 0 → ∀ b > 0, ∃ n, (↑n + ↑1) * a > b"
+  ],
+  "let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x } ": [
+    "Set.{u} (α : Type u) : Type u"
+  ],
+  "have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact  h1 ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Set.Nonempty.{u} {α : Type u} (s : Set α) : Prop",
+    "Nat.cast_one.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑1 = 1",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "mul_div.{u_3} {G : Type u_3} [DivInvMonoid G] (a b c : G) : a * (b / c) = a * b / c",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "mul_one.{u} {M : Type u} [MulOneClass M] (a : M) : a * 1 = a",
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x"
+  ],
+  "let ⟨m, h1⟩ :=  archi ": [],
+  "apply Exists.intro  m ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "rw [mul_div,mul_one,Nat.cast_one] at  h1 ": [
+    "Nat.cast_one.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑1 = 1",
+    "mul_one.{u} {M : Type u} [MulOneClass M] (a : M) : a * 1 = a"
+  ],
+  "rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one ] ": [
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n"
+  ],
+  "exact  h1 ": [],
+  "let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M  MnotEmpty ": [
+    "NatHasMinElement (S : Set ℕ) : S.Nonempty → ∃ x ∈ S, ∀ y ∈ S, x ≤ y"
+  ],
+  "let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ ) ": [],
+  "apply Exists.intro  q ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact  minM ": [
+    "Nat.cast_one.{u_1} {R : Type u_1} [AddMonoidWithOne R] : ↑1 = 1",
+    "Nat.cast_add.{u_1} {R : Type u_1} [AddMonoidWithOne R] (m n : ℕ) : ↑(m + n) = ↑m + ↑n",
+    "sub_neg.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : a - b < 0 ↔ a < b",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x"
+  ],
+  "rw [sub_neg ] ": [
+    "sub_neg.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : a - b < 0 ↔ a < b"
+  ],
+  "rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at  minM ": [
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x"
+  ],
+  "simp [q ] ": [],
+  "exact  minM ": [],
+  "rw [abs_of_neg xsubqneg ] ": [
+    "abs_of_neg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] {a : α}\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (h : a < 0) : |a| = -a"
+  ],
+  "rw [neg_sub ] ": [
+    "neg_sub.{u_1} {α : Type u_1} [SubtractionMonoid α] (a b : α) : -(a - b) = b - a"
+  ],
+  "apply lt_of_le_of_lt _  h ": [
+    "lt_of_le_of_lt.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b < c → a < c"
+  ],
+  "rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg ] ": [
+    "sub_le_abc (a b c : ℝ) : a - b ≤ c ↔ a - b - c ≤ 0",
+    "add_comm.{u_1} {G : Type u_1} [AddCommMagma G] (a b : G) : a + b = b + a"
+  ],
+  "rw [← sub_eq_add_neg,← sub_le_abc ] ": [
+    "sub_eq_add_neg.{u_1} {G : Type u_1} [SubNegMonoid G] (a b : G) : a - b = a + -b",
+    "sub_le_abc (a b c : ℝ) : a - b ≤ c ↔ a - b - c ≤ 0"
+  ],
+  "have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm ] ": [
+    "add_mul.{x} {R : Type x} [Mul R] [Add R] [RightDistribClass R] (a b c : R) : (a + b) * c = a * c + b * c",
+    "mul_comm.{u_1} {G : Type u_1} [CommMagma G] (a b : G) : a * b = b * a",
+    "one_mul.{u} {M : Type u} [MulOneClass M] (a : M) : 1 * a = a"
+  ],
+  " ring_nf ": [],
+  " simp ": [],
+  "rw [add_mul,one_mul ] ": [
+    "add_mul.{x} {R : Type x} [Mul R] [Add R] [RightDistribClass R] (a b c : R) : (a + b) * c = a * c + b * c",
+    "one_mul.{u} {M : Type u} [MulOneClass M] (a : M) : 1 * a = a"
+  ],
+  "rw [mul_comm ] ": [
+    "mul_comm.{u_1} {G : Type u_1} [CommMagma G] (a b : G) : a * b = b * a"
+  ],
+  "rw [h2 ] ": [],
+  "by_contra  h ": [],
+  "push_neg at  h ": [],
+  "by_cases hm :m ≥  1 ": [],
+  ". have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n       linarith ": [],
+  "have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at  h ": [
+    "Nat.sub_add_cancel {n m : ℕ} (h : m ≤ n) : n - m + m = n",
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a"
+  ],
+  "simp only [M, Set.mem_setOf ] ": [
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a"
+  ],
+  "rw [Nat.sub_add_cancel hm ] ": [
+    "Nat.sub_add_cancel {n m : ℕ} (h : m ≤ n) : n - m + m = n"
+  ],
+  "have : m ≤ m - 1 := mmin (m - 1)  msubinM ": [],
+  "have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ": [
+    "lt_of_lt_of_le.{u} {α : Type u} [Preorder α] {a b c : α} : a < b → b ≤ c → a < c",
+    "Nat.sub_lt {n m : ℕ} : 0 < n → 0 < m → n - m < n"
+  ],
+  "apply Nat.sub_lt _ (by norm_num ) ": [
+    "Nat.sub_lt {n m : ℕ} : 0 < n → 0 < m → n - m < n"
+  ],
+  " norm_num ": [],
+  ". have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ": [],
+  "have : 0 < (1 : ℕ) := by  norm_num ": [],
+  "apply lt_of_lt_of_le this  hm ": [
+    "lt_of_lt_of_le.{u} {α : Type u} [Preorder α] {a b c : α} : a < b → b ≤ c → a < c"
+  ],
+  " linarith ": [],
+  ". push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ": [],
+  "push_neg at  hm ": [],
+  "have : m = 0 := by\n        apply Nat.lt_one_iff.1  hm ": [
+    "Nat.lt_one_iff {n : ℕ} : n < 1 ↔ n = 0"
+  ],
+  "apply Nat.lt_one_iff.1  hm ": [
+    "Nat.lt_one_iff {n : ℕ} : n < 1 ↔ n = 0"
+  ],
+  "rw [this] at  h ": [],
+  "simp at  h ": [],
+  "rcases lt_trichotomy x 0 with h | h |  h ": [
+    "lt_trichotomy.{u} {α : Type u} [LinearOrder α] (a b : α) : a < b ∨ a = b ∨ b < a"
+  ],
+  ". have : -x > 0 := by simp; exact h\n    let ⟨q,h1⟩ := xposh (-x) this ε εpos\n    apply Exists.intro (-q)\n    simp\n    rw [sub_assoc,abs_neg] at h1\n    exact  h1 ": [],
+  "have : -x > 0 := by simp; exact  h ": [],
+  "exact  h ": [],
+  "let ⟨q,h1⟩ := xposh (-x) this ε  εpos ": [],
+  "apply Exists.intro (-q ) ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "rw [sub_assoc,abs_neg] at  h1 ": [
+    "abs_neg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a : α) : |(-a)| = |a|",
+    "sub_assoc (a b : ℝ) : -b - a = -(b + a)"
+  ],
+  ". rw [h]\n    apply Exists.intro 0\n    rw [zero_sub,abs_neg]\n     norm_cast ": [],
+  "rw [h ] ": [],
+  "apply Exists.intro  0 ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "rw [zero_sub,abs_neg ] ": [
+    "zero_sub.{u_3} {G : Type u_3} [SubNegMonoid G] (a : G) : 0 - a = -a",
+    "abs_neg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a : α) : |(-a)| = |a|"
+  ],
+  ". exact xposh x h ε  εpos ": [],
+  "exact xposh x h ε  εpos ": []
+}

@@ -1,0 +1,83 @@
+[applied Tactic]
+calc
+        |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+          rw [add_sub_add_comm]
+          apply abs_add
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+
+[answer]
+We will show that for sequences \( (x_n) \) and \( (y_n) \) converging to limits \( a \) and \( b \) respectively, the absolute difference between the sum \( x_n + y_n \) and the sum of their limits \( a + b \) can be made arbitrarily small. Starting with the difference \( |(x_n + y_n) - (a + b)| \), we rewrite this expression as \( |(x_n - a) + (y_n - b)| \), thereby isolating the deviations of each sequence from its limit. By applying the triangle inequality, we deduce that this is less than or equal to the sum of the absolute differences \( |x_n - a| + |y_n - b| \). Next, we define \( n_0 \) as the maximum of the indices \( n_1 \) and \( n_2 \), which serve as bounds beyond which \( |x_n - a| \) and \( |y_n - b| \) are each less than half of an arbitrary positive number \( \varepsilon \). Since \( n_0 \geq \max(n_1, n_2) \), for all \( n \geq n_0 \), both inequalities hold simultaneously. Accordingly, the sum \( |x_n - a| + |y_n - b| \) is less than \( \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon \), which establishes that the absolute difference \( |(x_n + y_n) - (a + b)| \) is bounded above by \( \varepsilon \). This completes the proof.
+[applied Tactic]
+have : IsConverges (x + y) := by
+      let ⟨a, convxa⟩ := conx
+      let ⟨b, convyb⟩ := cony
+      apply Exists.intro (a + b)
+      intro ε εpos
+      let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos)
+      let n₀ := max n₁ n₂
+      apply Exists.intro n₀
+      intro n nlen₀
+      calc
+        |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+          rw [add_sub_add_comm]
+          apply abs_add
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+
+[answer]
+We will show that the sequence formed by adding two convergent sequences \( x \) and \( y \) converges to the sum of their limits. Suppose \( x \) converges to \( a \) and \( y \) converges to \( b \). To establish that \( x + y \) converges to \( a + b \), let \( \varepsilon > 0 \) be arbitrary. Since \( x \) converges to \( a \), there exists \( n_1 \in \mathbb{N} \) such that for all \( n \geq n_1 \), the inequality \( |x_n - a| < \frac{\varepsilon}{2} \) holds. Similarly, because \( y \) converges to \( b \), there exists \( n_2 \in \mathbb{N} \) such that for all \( n \geq n_2 \), we have \( |y_n - b| < \frac{\varepsilon}{2} \). Define \( n_0 = \max(n_1, n_2) \). Then for every \( n \geq n_0 \), both inequalities hold simultaneously, which implies
+\[
+| (x_n + y_n) - (a + b) | = |(x_n - a) + (y_n - b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]
+Thus, by the definition of convergence, the sequence \( x + y \) converges to \( a + b \), completing the proof.
+[applied Tactic]
+. exact Limit_def (x + y)  this 
+
+[answer]
+We will show that the sequence obtained by adding two given convergent sequences also converges to the sum of their limits. To prove this, we apply the definition of the limit directly to the sum sequence. Specifically, since both original sequences \(x_n\) and \(y_n\) converge, their limits exist, and by the properties of limits, the sequence formed by \(x_n + y_n\) converges to the sum of these limits. Thus, the sequence formed by adding the two given sequences converges to its limit as desired.
+[applied Tactic]
+calc
+        |(x + y) n - (Lim.sLim x + Lim.sLim y)| = |(x n -Lim.sLim x ) + (y n - Lim.sLim y)| := by
+          rw [Pi.add_apply,add_sub_add_comm]
+        _ ≤ |x n - Lim.sLim x| + |y n - Lim.sLim y| := abs_add _ _
+        _ = |x n - a| + |y n - b| := by
+          have h1: Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa
+          have h2: Lim.sLim y = b := (Converges_sLim_iff y cony b).1 convyb
+          rw [h1, h2]
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+
+[answer]
+We will show that the absolute difference between the \( n \)-th term of the sum sequence \( (x_n + y_n) \) and the sum of the limits \( a + b \) can be made arbitrarily small. First, note that since the sequence \( x \) converges to \( a \), we have \(\lim_{n \to \infty} x_n = a\), and similarly, since \( y \) converges to \( b \), \(\lim_{n \to \infty} y_n = b\). By rewriting the expression, we observe that the difference \(|(x_n + y_n) - (a + b)|\) equals \(|(x_n - a) + (y_n - b)|\), which is at most \(|x_n - a| + |y_n - b|\) by the triangle inequality. Defining \( n_0 = \max\{n_1, n_2\} \), where for all \( n \geq n_1 \), \(|x_n - a| < \varepsilon/2 \) and for all \( n \geq n_2 \), \(|y_n - b| < \varepsilon/2 \), it follows that for all \( n \geq n_0 \), the sum \(|x_n - a| + |y_n - b|\) is less than \(\varepsilon/2 + \varepsilon/2 = \varepsilon\). Hence, we conclude that \(|(x_n + y_n) - (a + b)| < \varepsilon\) for all sufficiently large \( n \), completing the proof that the sum sequence converges to \( a + b \).
+[applied Tactic]
+. intro ε εpos
+      let ⟨a, convxa⟩ := conx
+      let ⟨b, convyb⟩ := cony
+      let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos)
+      let n₀ := max n₁ n₂
+      apply Exists.intro n₀
+      intro n nlen₀
+      calc
+        |(x + y) n - (Lim.sLim x + Lim.sLim y)| = |(x n -Lim.sLim x ) + (y n - Lim.sLim y)| := by
+          rw [Pi.add_apply,add_sub_add_comm]
+        _ ≤ |x n - Lim.sLim x| + |y n - Lim.sLim y| := abs_add _ _
+        _ = |x n - a| + |y n - b| := by
+          have h1: Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa
+          have h2: Lim.sLim y = b := (Converges_sLim_iff y cony b).1 convyb
+          rw [h1, h2]
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+
+[answer]
+We will show that if the sequences \( x \) and \( y \) converge to limits \( a \) and \( b \) respectively, then the sequence \( x + y \) converges to \( a + b \). To this end, let \( \varepsilon > 0 \) be given arbitrarily. Since \( x \) converges to \( a \), there exists a natural number \( n_1 \) such that for all \( n \geq n_1 \), the inequality \(|x_n - a| < \varepsilon/2\) holds. Similarly, since \( y \) converges to \( b \), there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), we have \(|y_n - b| < \varepsilon/2\). Define \( n_0 = \max\{n_1, n_2\} \); then for all \( n \geq n_0 \), both inequalities hold simultaneously. Now, consider the absolute difference of the sum sequence from the sum of the limits: \(|(x_n + y_n) - (a + b)| = |(x_n - a) + (y_n - b)|\). By the triangle inequality, this is bounded above by \(|x_n - a| + |y_n - b|\), which is less than \(\varepsilon/2 + \varepsilon/2 = \varepsilon\) for all \( n \geq n_0\). Hence, the sequence \( x + y \) converges to \( a + b \), completing the proof.

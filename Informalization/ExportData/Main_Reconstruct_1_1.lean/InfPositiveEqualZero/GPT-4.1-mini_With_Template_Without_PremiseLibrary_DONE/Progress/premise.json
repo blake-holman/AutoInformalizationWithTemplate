@@ -1,0 +1,89 @@
+{
+  "let P : Set ℝ := {x : ℝ | x > 0 } ": [
+    "Set.{u} (α : Type u) : Type u"
+  ],
+  "have PnotEmpty : P.Nonempty := by\n    have : 1 ∈ P := by\n      rw [Set.mem_setOf]\n      norm_num\n    exact ⟨1, this ⟩ ": [
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a",
+    "Set.Nonempty.{u} {α : Type u} (s : Set α) : Prop"
+  ],
+  "have : 1 ∈ P := by\n      rw [Set.mem_setOf]\n       norm_num ": [
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a"
+  ],
+  "rw [Set.mem_setOf ] ": [
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a"
+  ],
+  " norm_num ": [],
+  "exact ⟨1, this ⟩ ": [],
+  "have LB: LowerBound P 0 := by\n    intro a h1\n    exact le_of_lt  h1 ": [
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b",
+    "LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "intro a  h1 ": [],
+  "exact le_of_lt  h1 ": [
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b"
+  ],
+  "have PBB : BoundedBelow P := by\n    exact ⟨0, LB ⟩ ": [
+    "BoundedBelow (A : Set ℝ) : Prop"
+  ],
+  "exact ⟨0, LB ⟩ ": [],
+  "have gezero: sInf P ≥ 0 := Inf_LowerBound PnotEmpty PBB 0  LB ": [
+    "InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α",
+    "Inf_LowerBound {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) (s : ℝ) : LowerBound S s → s ≤ sInf S"
+  ],
+  "have negtzero: ¬sInf P > 0 := by\n    intro gtzero\n    -- ⭐️ (1 /2) inf P ∈ P だから\n    have : (1 / 2) * (sInf P) ∈ P := by\n      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]\n      apply (lt_div_iff (by norm_num)).2\n      rw [zero_mul]\n      exact gtzero\n    -- ⭐️ (1 /2) inf P ≥ inf P でなければならない。\n    have : (1 /2) * (sInf P) ≥ (sInf P) := Element_ge_Inf PnotEmpty PBB ((1 /2) * (sInf P)) this\n    -- ⭐️これより inf P ≤ 0 となり、\n    rw [ge_iff_le,div_mul_comm,mul_one,le_div_iff (by norm_num), ← one_add_one_eq_two,mul_add,mul_one,add_le_iff_nonpos_right] at this\n    -- ⭐️ inf P > 0　としたことに矛盾する。\n     linarith ": [
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "one_add_one_eq_two.{u_1} {R : Type u_1} [AddMonoidWithOne R] : 1 + 1 = 2",
+    "mul_add.{x} {R : Type x} [Mul R] [Add R] [LeftDistribClass R] (a b c : R) : a * (b + c) = a * b + a * c",
+    "le_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a ≤ b / c ↔ a * c ≤ b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "mul_one.{u} {M : Type u} [MulOneClass M] (a : M) : a * 1 = a",
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x",
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "div_mul_comm.{u_1} {α : Type u_1} [DivisionCommMonoid α] (a b c : α) : a / b * c = c / b * a",
+    "Element_ge_Inf {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) (s : ℝ) : s ∈ S → s ≥ sInf S",
+    "inf (A : Set ℝ) : sInf A = if h : A.Nonempty ∧ BoundedBelow A then choose ⋯ else -1",
+    "add_le_iff_nonpos_right.{u_1} {α : Type u_1} [AddZeroClass α] [LE α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1]\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (a : α) {b : α} : a + b ≤ a ↔ b ≤ 0",
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b",
+    "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x"
+  ],
+  "intro  gtzero ": [],
+  "have : (1 / 2) * (sInf P) ∈ P := by\n      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]\n      apply (lt_div_iff (by norm_num)).2\n      rw [zero_mul]\n      exact  gtzero ": [
+    "Set.mem_setOf_eq.{u} {α : Type u} {x : α} {p : α → Prop} : (x ∈ {y | p y}) = p x",
+    "mul_one.{u} {M : Type u} [MulOneClass M] (a : M) : a * 1 = a",
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "div_mul_comm.{u_1} {α : Type u_1} [DivisionCommMonoid α] (a b c : α) : a / b * c = c / b * a",
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b"
+  ],
+  "rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one ] ": [
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "div_mul_comm.{u_1} {α : Type u_1} [DivisionCommMonoid α] (a b c : α) : a / b * c = c / b * a",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "apply (lt_div_iff (by norm_num)). 2 ": [
+    "lt_div_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : a < b / c ↔ a * c < b",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "rw [zero_mul ] ": [
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "exact  gtzero ": [],
+  "have : (1 /2) * (sInf P) ≥ (sInf P) := Element_ge_Inf PnotEmpty PBB ((1 /2) * (sInf P))  this ": [
+    "Element_ge_Inf {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) (s : ℝ) : s ∈ S → s ≥ sInf S"
+  ],
+  "rw [ge_iff_le,div_mul_comm,mul_one,le_div_iff (by norm_num), ← one_add_one_eq_two,mul_add,mul_one,add_le_iff_nonpos_right] at  this ": [
+    "add_le_iff_nonpos_right.{u_1} {α : Type u_1} [AddZeroClass α] [LE α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1]\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (a : α) {b : α} : a + b ≤ a ↔ b ≤ 0",
+    "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x"
+  ],
+  " linarith ": [],
+  "push_neg at  negtzero ": [],
+  "exact le_antisymm negtzero  gezero ": [
+    "le_antisymm.{u} {α : Type u} [PartialOrder α] {a b : α} : a ≤ b → b ≤ a → a = b"
+  ]
+}

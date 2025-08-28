@@ -1,0 +1,18 @@
+{
+  "Lean.ScopedEnvExtension.add": {
+    "type": "definition",
+    "code": "Lean.ScopedEnvExtension.add {m : Type → Type} {α β σ : Type} [Monad m] [MonadResolveName m] [MonadEnv m]\n  (ext : ScopedEnvExtension α β σ) (b : β) (kind : AttributeKind := AttributeKind.global) : m Unit",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def ScopedEnvExtension.add [Monad m] [MonadResolveName m] [MonadEnv m] (ext : ScopedEnvExtension α β σ) (b : β) (kind := AttributeKind.global) : m Unit := do   let ns ← getCurrNamespace   modifyEnv (ext.addCore · b kind ns)",
+    "description": "A process for adding an element to a scoped environment extension within a monadic context that allows for name resolution and environment manipulation."
+  },
+  "Lean.ScopedEnvExtension.getState": {
+    "type": "definition",
+    "code": "Lean.ScopedEnvExtension.getState {σ α β : Type} [Inhabited σ] (ext : ScopedEnvExtension α β σ) (env : Environment) : σ",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def ScopedEnvExtension.getState [Inhabited σ] (ext : ScopedEnvExtension α β σ) (env : Environment) : σ :=   match ext.ext.getState env |>.stateStack with   | top :: _ => top.state   | _        => unreachable!",
+    "description": "A function for retrieving the current state from a scoped environment extension given a specific environment."
+  }
+}

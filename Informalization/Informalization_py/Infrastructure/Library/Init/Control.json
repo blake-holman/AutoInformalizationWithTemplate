@@ -1,0 +1,268 @@
+{
+  "Id.lean": {
+    "Id": {
+      "type": "definition",
+      "code": "Id.{u} (type : Type u) : Type u",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def Id (type : Type u) : Type u := type",
+      "description": "A type is defined that represents identity values for any given type."
+    },
+    "Id.run": {
+      "type": "definition",
+      "code": "Id.run.{u_1} {α : Type u_1} (x : Id α) : α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "protected def run (x : Id α) : α := x",
+      "description": "A function is defined that retrieves the underlying value from an identity type for any given type."
+    }
+  },
+  "Basic.lean": {
+    "Alternative.failure": {
+      "type": "definition",
+      "code": "Alternative.failure.{u, v} {f : Type u → Type v} [self : Alternative f] {α : Type u} : f α",
+      "comment": "Produces an empty collection or recoverable failure.  The `<|>` operator collects values or recovers\nfrom failures. See `Alternative` for more details.\n",
+      "explanatories": {},
+      "fullDefinition": "failure : {α : Type u} → f α   /--   Depending on the `Alternative` instance, collects values or recovers from `failure`s by   returning the leftmost success. Can be written using the `<|>` operator syntax.   -/   orElse  : {α : Type u} → f α → (Unit → f α) → f α",
+      "description": "A function is introduced that provides a mechanism to represent a failure or an empty collection in a context that supports alternatives."
+    },
+    "guard": {
+      "type": "definition",
+      "code": "guard.{v} {f : Type → Type v} [Alternative f] (p : Prop) [Decidable p] : f Unit",
+      "comment": "If the proposition `p` is true, does nothing, else fails (using `failure`).\n",
+      "explanatories": {},
+      "fullDefinition": "@[always_inline, inline] def guard {f : Type → Type v} [Alternative f] (p : Prop) [Decidable p] : f Unit :=   if p then pure () else failure",
+      "description": "A function is defined that checks a given proposition and performs no action if true, but results in a failure if false."
+    }
+  },
+  "Option.lean": {
+    "OptionT.run": {
+      "type": "definition",
+      "code": "OptionT.run.{u, v} {m : Type u → Type v} {α : Type u} (x : OptionT m α) : m (Option α)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def OptionT.run {m : Type u → Type v} {α : Type u} (x : OptionT m α) : m (Option α) :=   x",
+      "description": "A function is defined to execute an option transformer, resulting in a computation that yields an option within a monadic context."
+    },
+    "OptionT.mk": {
+      "type": "definition",
+      "code": "OptionT.mk.{u, v} {m : Type u → Type v} {α : Type u} (x : m (Option α)) : OptionT m α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "protected def mk (x : m (Option α)) : OptionT m α :=   x",
+      "description": "A function is defined to create an option transformer from a computation that produces an option."
+    }
+  },
+  "Lawful": {
+    "Basic.lean": {
+      "LawfulMonad.mk'": {
+        "type": "theorem",
+        "code": "LawfulMonad.mk'.{u, v} (m : Type u → Type v) [Monad m] (id_map : ∀ {α : Type u} (x : m α), id <$> x = x)\n  (pure_bind : ∀ {α β : Type u} (x : α) (f : α → m β), pure x >>= f = f x)\n  (bind_assoc : ∀ {α β γ : Type u} (x : m α) (f : α → m β) (g : β → m γ), x >>= f >>= g = x >>= fun x => f x >>= g)\n  (map_const : ∀ {α β : Type u} (x : α) (y : m β), Functor.mapConst x y = Function.const β x <$> y := by intros; rfl)\n  (seqLeft_eq :\n    ∀ {α β : Type u} (x : m α) (y : m β),\n      (SeqLeft.seqLeft x fun x => y) = do\n        let a ← x\n        let _ ← y\n        pure a := by\n    intros; rfl)\n  (seqRight_eq :\n    ∀ {α β : Type u} (x : m α) (y : m β),\n      (SeqRight.seqRight x fun x => y) = do\n        let _ ← x\n        y := by\n    intros; rfl)\n  (bind_pure_comp :\n    ∀ {α β : Type u} (f : α → β) (x : m α),\n      (do\n          let y ← x\n          pure (f y)) =\n        f <$> x := by\n    intros; rfl)\n  (bind_map :\n    ∀ {α β : Type u} (f : m (α → β)) (x : m α),\n      (do\n          let x_1 ← f\n          x_1 <$> x) =\n        Seq.seq f fun x_1 => x := by\n    intros; rfl) :\n  LawfulMonad m",
+        "comment": "An alternative constructor for `LawfulMonad` which has more\ndefaultable fields in the common case.\n",
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "An alternative constructor for a lawful monad is provided, detailing how certain properties and behaviors of the monadic operations should relate to one another."
+      },
+      "LawfulFunctor.comp_map": {
+        "type": "theorem",
+        "code": "LawfulFunctor.comp_map.{u, v} {f : Type u → Type v} [Functor f] [self : LawfulFunctor f] {α β γ : Type u} (g : α → β)\n  (h : β → γ) (x : f α) : (h ∘ g) <$> x = h <$> g <$> x",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The composition of two functions applied to a functor is shown to equal the functorial application of the individual functions applied sequentially to the functor."
+      },
+      "LawfulFunctor.id_map": {
+        "type": "theorem",
+        "code": "LawfulFunctor.id_map.{u, v} {f : Type u → Type v} [Functor f] [self : LawfulFunctor f] {α : Type u} (x : f α) :\n  id <$> x = x",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The identity function applied to a functor's value is demonstrated to be equivalent to the original value itself."
+      },
+      "LawfulMonad.bind_pure_comp": {
+        "type": "theorem",
+        "code": "LawfulMonad.bind_pure_comp.{u, v} {m : Type u → Type v} [Monad m] [self : LawfulMonad m] {α β : Type u} (f : α → β)\n  (x : m α) :\n  (do\n      let a ← x\n      pure (f a)) =\n    f <$> x",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The relationship between the monadic binding of a value followed by a pure function and the functorial application of that function to the value is established as being equivalent."
+      }
+    },
+    "Instances.lean": {
+      "StateT.run_monadLift": {
+        "type": "theorem",
+        "code": "StateT.run_monadLift.{u, u_1, u_2} {m : Type u → Type u_1} {n : Type u → Type u_2} {α σ : Type u} [Monad m]\n  [MonadLiftT n m] (x : n α) (s : σ) :\n  (monadLift x).run s = do\n    let a ← monadLift x\n    pure (a, s)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The behavior of lifting a monadic value in a stateful context is shown to result in a pair consisting of the lifted value and the original state."
+      },
+      "ReaderT.run_monadLift": {
+        "type": "theorem",
+        "code": "ReaderT.run_monadLift.{u_1, u_2, u_3} {n : Type u_1 → Type u_2} {m : Type u_1 → Type u_3} {α ρ : Type u_1}\n  [MonadLiftT n m] (x : n α) (ctx : ρ) : (monadLift x).run ctx = monadLift x",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The result shows that lifting a monadic value within a reader context returns the same lifted value when evaluated with a given context."
+      },
+      "StateT.run_monadMap": {
+        "type": "theorem",
+        "code": "StateT.run_monadMap.{u, u_1, u_2} {m : Type u → Type u_1} {n : Type u → Type u_2} {σ α : Type u} [Monad m]\n  [MonadFunctor n m] (f : {β : Type u} → n β → n β) (x : StateT σ m α) (s : σ) :\n  (monadMap f x).run s = monadMap f (x.run s)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates that mapping a function over a stateful monadic computation results in a computation that, when evaluated with the original state, behaves the same as applying the function to the result of the original computation."
+      },
+      "ReaderT.run_monadMap": {
+        "type": "theorem",
+        "code": "ReaderT.run_monadMap.{u, u_1, u_2} {n : Type u → Type u_1} {m : Type u → Type u_2} {ρ α : Type u} [MonadFunctor n m]\n  (f : {β : Type u} → n β → n β) (x : ReaderT ρ m α) (ctx : ρ) : (monadMap f x).run ctx = monadMap f (x.run ctx)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem establishes that applying a function to a reader monadic computation results in a computation that behaves the same when evaluated with a given context as if the function had been applied directly to the output of the original computation."
+      },
+      "StateT.ext": {
+        "type": "theorem",
+        "code": "StateT.ext.{u_1, u_2} {σ : Type u_1} {m : Type u_1 → Type u_2} {α : Type u_1} {x y : StateT σ m α}\n  (h : ∀ (s : σ), x.run s = y.run s) : x = y",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem states that if two stateful computations yield the same result for every possible initial state, then the computations are considered equal."
+      },
+      "ExceptT.ext": {
+        "type": "theorem",
+        "code": "ExceptT.ext.{u_1, u_2} {ε : Type u_1} {m : Type u_1 → Type u_2} {α : Type u_1} {x y : ExceptT ε m α}\n  (h : x.run = y.run) : x = y",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem asserts that if two computations in a contextual monad yield the same result, then the computations themselves are equal."
+      },
+      "ReaderT.ext": {
+        "type": "theorem",
+        "code": "ReaderT.ext.{u_1, u_2} {ρ : Type u_1} {m : Type u_1 → Type u_2} {α : Type u_1} {x y : ReaderT ρ m α}\n  (h : ∀ (ctx : ρ), x.run ctx = y.run ctx) : x = y",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem asserts that if two reader computations produce the same result for every possible input context, then the computations are equal."
+      },
+      "StateT.run_pure": {
+        "type": "theorem",
+        "code": "StateT.run_pure.{u_1, u_2} {m : Type u_1 → Type u_2} {α σ : Type u_1} [Monad m] (a : α) (s : σ) :\n  (pure a).run s = pure (a, s)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates that running a pure monadic value in a stateful context results in a pair containing the value and the original state."
+      },
+      "ExceptT.run_pure": {
+        "type": "theorem",
+        "code": "ExceptT.run_pure.{u_1, u_2} {m : Type u_1 → Type u_2} {α ε : Type u_1} [Monad m] (x : α) :\n  (pure x).run = pure (Except.ok x)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem establishes that running a pure value within a context produces a result that encapsulates the value as a successful outcome in the exception monad."
+      },
+      "ReaderT.run_pure": {
+        "type": "theorem",
+        "code": "ReaderT.run_pure.{u_1, u_2} {m : Type u_1 → Type u_2} {α ρ : Type u_1} [Monad m] (a : α) (ctx : ρ) :\n  (pure a).run ctx = pure a",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates that running a pure value within a reader context yields the same pure value when evaluated with any context."
+      },
+      "StateT.run_bind": {
+        "type": "theorem",
+        "code": "StateT.run_bind.{u_1, u_2} {m : Type u_1 → Type u_2} {σ α β : Type u_1} [Monad m] (x : StateT σ m α)\n  (f : α → StateT σ m β) (s : σ) :\n  (x >>= f).run s = do\n    let p ← x.run s\n    (f p.fst).run p.snd",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates how binding a stateful computation to a function results in a new computation that processes both the state and the output of the initial computation appropriately."
+      },
+      "ExceptT.run_bind": {
+        "type": "theorem",
+        "code": "ExceptT.run_bind.{u_1, u_2} {m : Type u_1 → Type u_2} {ε α β : Type u_1} {f : α → ExceptT ε m β} [Monad m]\n  (x : ExceptT ε m α) :\n  (x >>= f).run = do\n    let x ← x.run\n    match x with\n      | Except.ok x => (f x).run\n      | Except.error e => pure (Except.error e)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates how binding an exception monadic value to a function yields a result that either continues with the function's outcome if successful or returns an error if the initial value was an error."
+      },
+      "ReaderT.run_bind": {
+        "type": "theorem",
+        "code": "ReaderT.run_bind.{u_1, u_2} {m : Type u_1 → Type u_2} {ρ α β : Type u_1} [Monad m] (x : ReaderT ρ m α)\n  (f : α → ReaderT ρ m β) (ctx : ρ) :\n  (x >>= f).run ctx = do\n    let a ← x.run ctx\n    (f a).run ctx",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem establishes that binding a reader monadic value to a function results in the execution of the original value followed by applying the function to the obtained result, both in the context of a given environment."
+      },
+      "StateT.run_map": {
+        "type": "theorem",
+        "code": "StateT.run_map.{u, u_1} {m : Type u → Type u_1} {α β σ : Type u} [Monad m] [LawfulMonad m] (f : α → β)\n  (x : StateT σ m α) (s : σ) : (f <$> x).run s = (fun p => (f p.fst, p.snd)) <$> x.run s",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem establishes that mapping a function over a stateful computation yields the same result as applying the function to the output of the computation while keeping the state unchanged."
+      },
+      "ExceptT.run_map": {
+        "type": "theorem",
+        "code": "ExceptT.run_map.{u_1, u_2} {m : Type u_1 → Type u_2} {α β ε : Type u_1} [Monad m] [LawfulMonad m] (f : α → β)\n  (x : ExceptT ε m α) : (f <$> x).run = Except.map f <$> x.run",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem shows that mapping a function over a computation that might fail results in a computation that applies the function to successful outcomes while preserving the failure structure."
+      },
+      "ReaderT.run_map": {
+        "type": "theorem",
+        "code": "ReaderT.run_map.{u_1, u_2} {m : Type u_1 → Type u_2} {α β ρ : Type u_1} [Monad m] (f : α → β) (x : ReaderT ρ m α)\n  (ctx : ρ) : (f <$> x).run ctx = f <$> x.run ctx",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": null,
+        "description": "The theorem demonstrates that mapping a function over a reader monadic value yields the same result as applying the function to the output of the value when evaluated in a specific context."
+      }
+    }
+  },
+  "State.lean": {
+    "StateT": {
+      "type": "definition",
+      "code": "StateT.{u, v} (σ : Type u) (m : Type u → Type v) (α : Type u) : Type (max u v)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def StateT (σ : Type u) (m : Type u → Type v) (α : Type u) : Type (max u v) :=   σ → m (α × σ)",
+      "description": "A type is defined that encapsulates stateful computations transforming a given state type and an effectful computation type into a new type."
+    },
+    "StateT.run": {
+      "type": "definition",
+      "code": "StateT.run.{u, v} {σ : Type u} {m : Type u → Type v} {α : Type u} (x : StateT σ m α) (s : σ) : m (α × σ)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def StateT.run {σ : Type u} {m : Type u → Type v} {α : Type u} (x : StateT σ m α) (s : σ) : m (α × σ) :=   x s",
+      "description": "A function is defined that executes a stateful computation by providing it with an initial state, producing a result along with the updated state."
+    }
+  },
+  "Except.lean": {
+    "ExceptT.mk": {
+      "type": "definition",
+      "code": "ExceptT.mk.{u, v} {ε : Type u} {m : Type u → Type v} {α : Type u} (x : m (Except ε α)) : ExceptT ε m α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def ExceptT.mk {ε : Type u} {m : Type u → Type v} {α : Type u} (x : m (Except ε α)) : ExceptT ε m α := x",
+      "description": "A function is defined to create an exception transformer from a computation that yields either a value or an error."
+    },
+    "ExceptT.run": {
+      "type": "definition",
+      "code": "ExceptT.run.{u, v} {ε : Type u} {m : Type u → Type v} {α : Type u} (x : ExceptT ε m α) : m (Except ε α)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def ExceptT.run {ε : Type u} {m : Type u → Type v} {α : Type u} (x : ExceptT ε m α) : m (Except ε α) := x",
+      "description": "A function is defined to execute an exception transformer and return a computation that may produce either a value or an error."
+    }
+  },
+  "StateRef.lean": {
+    "StateRefT'.run": {
+      "type": "definition",
+      "code": "StateRefT'.run {ω σ : Type} {m : Type → Type} [Monad m] [MonadLiftT (ST ω) m] {α : Type} (x : StateRefT' ω σ m α)\n  (s : σ) : m (α × σ)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def StateRefT'.run {ω σ : Type} {m : Type → Type} [Monad m] [MonadLiftT (ST ω) m] {α : Type} (x : StateRefT' ω σ m α) (s : σ) : m (α × σ) := do   let ref ← ST.mkRef s   let a ← x ref   let s ← ref.get   pure (a, s)",
+      "description": "A function is defined to execute a stateful computation within a monadic context, producing a result along with an updated state."
+    }
+  }
+}

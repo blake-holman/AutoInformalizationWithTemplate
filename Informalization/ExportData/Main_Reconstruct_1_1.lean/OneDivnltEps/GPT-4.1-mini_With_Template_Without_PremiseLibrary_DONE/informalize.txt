@@ -1,0 +1,51 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that there exists a natural number \( n \) such that the reciprocal of \( n + 1 \) is less than \( \varepsilon \).
+[appliedTactic]
+have := ArchimedesPrinciple ε εpos (1 : ℝ) (by norm_num ) 
+[answer]
+Show that there exists a natural number \( n \) such that the product of \( n+1 \) and \( \varepsilon \) is greater than 1. This can be proved by applying the Archimedean principle, which states that for any positive real number \( \varepsilon \) and any positive real number \( b \), there exists a natural number \( n \) such that \((n+1) \varepsilon > b\); here, \( b \) is taken to be 1.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 1 > 0 \).
+[appliedTactic]
+let ⟨n, h⟩ :=  this 
+[answer]
+Let \( n \) be such that \((n + 1) \times \varepsilon > 1\).
+[appliedTactic]
+apply Exists.intro  n 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that there exists a natural number \( n \) such that the reciprocal of \( n + 1 \) is less than \( \varepsilon \), it suffices to prove that \( \frac{1}{n + 1} < \varepsilon \) for the given \( n \).
+[appliedTactic]
+have : ((n + (1 : ℕ)): ℝ) > 0 := by
+    rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]
+    right
+    exact  zero_lt_one 
+[answer]
+Show that the sum of \( n \) and 1, considered as a real number, is greater than zero.
+[appliedTactic]
+rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] 
+[answer]
+By using the equivalence between greater-than and less-than comparisons, the casting of natural numbers and zero to real numbers, and the characterization that a sum is positive if and only if at least one of its terms is positive, the goal of proving that the sum of \( n \) and 1 is greater than zero becomes proving that either \( n \) is greater than zero or 1 is greater than zero.
+[appliedTactic]
+ right 
+[answer]
+Show the case where \(0 < 1\).
+[appliedTactic]
+exact  zero_lt_one 
+[answer]
+The proof is completed from the fact that zero is less than one.
+[appliedTactic]
+apply (div_lt_iff this). 2 
+[answer]
+From the theorem that relates the inequality of a division to a product when the divisor is positive, and the assumption that \( n + 1 \) is greater than zero, in order to establish that the reciprocal of \( n + 1 \) is less than \( \varepsilon \), it suffices to prove that 1 is less than the product of \( \varepsilon \) and \( n + 1 \).
+[appliedTactic]
+rw [mul_comm ] 
+[answer]
+By using the commutativity of multiplication, the goal of proving that 1 is less than ε times (n plus 1) becomes the goal of proving that 1 is less than (n plus 1) times ε.
+[appliedTactic]
+exact  h 
+[answer]
+The proof is completed from the assumption that the product of \((n + 1)\) and \(\varepsilon\) is greater than one.

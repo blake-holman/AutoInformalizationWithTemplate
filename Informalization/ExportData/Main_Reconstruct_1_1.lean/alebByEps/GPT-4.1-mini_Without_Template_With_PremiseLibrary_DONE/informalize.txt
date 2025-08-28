@@ -1,0 +1,93 @@
+[appliedTactic]
+intro  h 
+[answer]
+Assume that for every positive number \( \varepsilon \), the number \( a \) is less than \( b + \varepsilon \). We will now show that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+let P : Set ℝ := {x : ℝ | x > 0 } 
+[answer]
+Define the set \( P \) as the collection of all real numbers greater than zero.
+[appliedTactic]
+have PnotEmpty : P.Nonempty := by
+    exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+[answer]
+Establish that the set of all positive real numbers is not empty by demonstrating that the number 1 belongs to this set.
+[appliedTactic]
+exact ⟨1, (show 1 ∈ P by rw [Set.mem_setOf]; norm_num) ⟩ 
+[answer]
+The proof is completed by demonstrating that the set of positive real numbers is not empty, specifically by showing that the number 1 belongs to this set.
+[appliedTactic]
+rw [Set.mem_setOf ] 
+[answer]
+By applying the definition of set membership, the goal of showing that 1 belongs to the set of real numbers greater than zero is transformed into the equivalent goal of proving that 1 is greater than zero.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 1 is greater than 0.
+[appliedTactic]
+have LB: LowerBound P 0 := by
+    intro a h1
+    exact le_of_lt  h1 
+[answer]
+Establish that zero is a lower bound of the set of positive real numbers by showing that for any element in this set, zero is less than or equal to that element.
+[appliedTactic]
+intro a  h1 
+[answer]
+Assume an arbitrary positive real number \( a \) from the given set. Our goal is now to show that this number \( a \) is greater than or equal to zero.
+[appliedTactic]
+exact le_of_lt  h1 
+[answer]
+The proof is completed by applying the fact that since \(a\) is strictly greater than zero, it follows that \(a\) is also greater than or equal to zero.
+[appliedTactic]
+have PBB : BoundedBelow P := by
+    exact ⟨0, LB ⟩ 
+[answer]
+Establish that the set \( P \) is bounded below by confirming the existence of a real number (specifically zero) that serves as a lower bound for all elements of \( P \).
+[appliedTactic]
+exact ⟨0, LB ⟩ 
+[answer]
+The proof is completed by demonstrating that the set of positive real numbers has a lower bound, specifically zero, thereby establishing that the set is bounded below.
+[appliedTactic]
+have lbab : LowerBound P (a - b) := by
+    intro p pinP
+    have := h p pinP
+     linarith 
+[answer]
+Establish that the difference \( a - b \) is a lower bound for the set of positive real numbers by showing that \( a - b \) is less than or equal to every element in that set.
+[appliedTactic]
+intro p  pinP 
+[answer]
+Assume an arbitrary real number \( p \) that belongs to the set of positive real numbers. We will now show that this number \( p \) is greater than or equal to the difference \( a - b \).
+[appliedTactic]
+have := h p  pinP 
+[answer]
+Apply the assumption that for every positive number, \( a \) is less than \( b \) plus that number, to the specific positive number \( p \). This establishes that \( a \) is less than \( b + p \), which is then added as a new fact in the proof.
+[appliedTactic]
+ linarith 
+[answer]
+Since \( p \) is positive and \( a \) is less than \( b \) plus \( p \), it follows that \( p \) must be at least \( a - b \). This completes the proof of the inequality.
+[appliedTactic]
+have := Inf_LowerBound PnotEmpty PBB (a - b)  lbab 
+[answer]
+Establish that the difference between \( a \) and \( b \) is less than or equal to the greatest lower bound of the set of positive real numbers. This follows from the fact that the set is nonempty and bounded below, and that \( a - b \) is itself a lower bound of this set.
+[appliedTactic]
+have sInfzero: sInf P = 0 :=  InfPositiveEqualZero 
+[answer]
+Establish that the greatest lower bound of the set of all positive real numbers is zero. This follows from the fact that the set of positive real numbers is bounded below and nonempty, and its infimum is known to be zero. Adding this equality to the context allows further reasoning about the relationship between \(a\) and \(b\).
+[appliedTactic]
+have : a ≤ b := by
+    rw [sInfzero,tsub_le_iff_right,zero_add] at this
+    exact  this 
+[answer]
+Use the fact that the greatest lower bound of the set of positive real numbers is zero to rewrite the inequality involving the difference \( a - b \) as an inequality involving \( a \) and \( b \). Specifically, by substituting the greatest lower bound with zero and applying the equivalence between inequalities on differences and sums, conclude that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+rw [sInfzero,tsub_le_iff_right,zero_add] at  this 
+[answer]
+By substituting the infimum of the set of positive real numbers with zero and applying the equivalence that relates the inequality involving a difference to an inequality involving a sum, the statement that \( a - b \) is less than or equal to the infimum becomes the statement that \( a \) is less than or equal to \( b \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly applying the established fact that \(a\) is less than or equal to \(b\).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed by directly establishing that \( a \) is less than or equal to \( b \) based on the existing assumptions.

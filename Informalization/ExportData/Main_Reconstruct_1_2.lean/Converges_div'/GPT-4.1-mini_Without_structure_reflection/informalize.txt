@@ -1,0 +1,402 @@
+[appliedTactic]
+intro ⟨convxa, convyb ⟩ 
+[answer]
+Assume that the sequence \( x \) converges to \( a \) and the sequence \( y \) converges to \( b \). From now on, we will show that the sequence defined by dividing \( x \) by \( y \) converges to the quotient \( a / b \).
+[appliedTactic]
+suffices h1 : ConvergesTo (fun n ↦ 1 / (y n)) (1 / b) by
+      have := Converges_mul' x (1 / y) a (1 / b) ⟨convxa,h1⟩
+      rw [mul_div,mul_one,mul_div,mul_one] at this
+      exact  this 
+[answer]
+Assume that the sequence defined by taking the reciprocal of each term of \( y \) converges to the reciprocal of \( b \). From now on, we will show that the sequence defined by the term-wise division of \( x \) by \( y \) converges to the quotient of \( a \) by \( b \).
+[appliedTactic]
+have := Converges_mul' x (1 / y) a (1 / b) ⟨convxa,h1 ⟩ 
+[answer]
+Show that the sequence obtained by multiplying \( x \) by the reciprocal of \( y \) converges to the product of \( a \) and the reciprocal of \( b \). This can be proved by applying the fact that if two sequences converge to respective limits, then their term-by-term product converges to the product of those limits.
+[appliedTactic]
+rw [mul_div,mul_one,mul_div,mul_one] at  this 
+[answer]
+By using the properties that multiplying by one leaves an element unchanged and that multiplying by a quotient can be expressed as division of a product, the statement that the sequence formed by multiplying \( x \) and the reciprocal of \( y \) converges to the product of \( a \) and the reciprocal of \( b \) becomes the statement that the sequence formed by dividing \( x \) by \( y \) converges to the quotient of \( a \) by \( b \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that the sequence defined by dividing \(x\) by \(y\) converges to the quotient of their limits \(a\) divided by \(b\).
+[appliedTactic]
+have absbpos: |b| > 0 := by
+      rw [gt_iff_lt]
+      exact abs_pos.2  bnotzero 
+[answer]
+Show that the absolute value of \( b \) is greater than zero.
+[appliedTactic]
+rw [gt_iff_lt ] 
+[answer]
+By using the fact that an expression being greater than zero is equivalent to zero being less than that expression, the goal of proving that the absolute value of \( b \) is greater than zero becomes the goal of proving that zero is less than the absolute value of \( b \).
+[appliedTactic]
+exact abs_pos.2  bnotzero 
+[answer]
+The proof is completed from the theorem that the absolute value of a number is positive if and only if the number is not zero, and the assumption that \( b \) is not zero.
+[appliedTactic]
+have h3: ∃n₁, ∀n ≥ n₁, |y n - b| < |b| / 2 := convyb (|b|/2) (half_pos absbpos ) 
+[answer]
+Show that there exists a natural number \( n_1 \) such that for all \( n \geq n_1 \), the distance between \( y(n) \) and \( b \) is less than half the absolute value of \( b \). This can be proved by applying the fact that the sequence \( y \) converges to \( b \), together with the fact that half of a positive number is also positive.
+[appliedTactic]
+let ⟨n₁,h₁⟩ :=  h3 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the distance between \( y_n \) and \( b \) is less than half the absolute value of \( b \).
+[appliedTactic]
+have yngtabsb : ∀n ≥ n₁, |y n| > |b| / 2 := by
+      intro n ngen₁
+      have := h₁ n ngen₁
+      rw [abs_sub_comm] at this
+      have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n)
+      have := lt_of_le_of_lt sub this
+      rw [sub_lt_comm] at this
+      have subhalf : |b| - |b| / 2 = |b| / 2 := by ring
+      rw [subhalf] at this
+      exact  this 
+[answer]
+Show that for all natural numbers \( n \) greater than or equal to \( n_1 \), the absolute value of \( y(n) \) is greater than half the absolute value of \( b \).
+[appliedTactic]
+intro n  ngen₁ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_1 \). From now on, we will show that the absolute value of \( y(n) \) is greater than half the absolute value of \( b \).
+[appliedTactic]
+have := h₁ n  ngen₁ 
+[answer]
+Show that the absolute value of \( y n - b \) is less than half the absolute value of \( b \). This follows directly from the assumption that for all \( n \) greater than or equal to \( n_1 \), the absolute difference between \( y n \) and \( b \) is less than half the absolute value of \( b \), and since \( n \) satisfies this condition, the statement holds.
+[appliedTactic]
+rw [abs_sub_comm] at  this 
+[answer]
+By using the fact that the absolute value of the difference between two elements is symmetric, the statement that the absolute value of \( y(n) - b \) is less than half the absolute value of \( b \) becomes the statement that the absolute value of \( b - y(n) \) is less than half the absolute value of \( b \).
+[appliedTactic]
+have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n ) 
+[answer]
+Show that the difference between the absolute value of \( b \) and the absolute value of \( y(n) \) is less than or equal to the absolute value of the difference between \( b \) and \( y(n) \). This can be proved by applying the property that, for any two real numbers, the absolute value of their difference bounds the difference of their absolute values from above.
+[appliedTactic]
+have := lt_of_le_of_lt sub  this 
+[answer]
+Show that the difference between the absolute value of \( b \) and the absolute value of \( y_n \) is less than half the absolute value of \( b \). This can be proved by combining the inequality that the difference between the absolute values is at most the absolute value of their difference with the fact that the absolute value of the difference between \( b \) and \( y_n \) is less than half the absolute value of \( b \), which together imply the desired strict inequality.
+[appliedTactic]
+rw [sub_lt_comm] at  this 
+[answer]
+By using the fact that an inequality involving the difference between two elements can be rewritten by swapping the order of subtraction, the statement that the difference between the absolute value of \( b \) and the absolute value of \( y n \) is less than half the absolute value of \( b \) becomes the statement that the difference between the absolute value of \( b \) and half the absolute value of \( b \) is less than the absolute value of \( y n \).
+[appliedTactic]
+have subhalf : |b| - |b| / 2 = |b| / 2 := by  ring 
+[answer]
+Show that the difference between the absolute value of \( b \) and half of the absolute value of \( b \) equals half of the absolute value of \( b \).
+[appliedTactic]
+ ring 
+[answer]
+By a simple calculation, the equality stating that the difference between the absolute value of \( b \) and half of it equals half of the absolute value of \( b \) is immediately verified.
+[appliedTactic]
+rw [subhalf] at  this 
+[answer]
+By using the fact that subtracting half of the absolute value of \( b \) from the absolute value of \( b \) equals half of the absolute value of \( b \), the inequality stating that the absolute value of \( b \) minus half of the absolute value of \( b \) is less than the absolute value of \( y_n \) becomes the inequality stating that half of the absolute value of \( b \) is less than the absolute value of \( y_n \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that the absolute value of \(y_n\) is greater than half the absolute value of \(b\).
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon > 0 \). From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between the reciprocal of \( y_n \) and the reciprocal of \( b \) is less than \( \varepsilon \).
+[appliedTactic]
+have h4: ∃n₂, ∀n ≥ n₂, |y n - b| < (|b| * |b| * ε / 2) := by
+      have bbεpos : (|b| * |b| * ε / 2) > 0 := by
+        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]
+        exact mul_pos absbpos (mul_pos absbpos εpos)
+      exact convyb (|b| * |b| * ε / 2)  bbεpos 
+[answer]
+Show that there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), the difference between \( y_n \) and \( b \) is less than the product of the square of the absolute value of \( b \) and \( \varepsilon \) divided by 2.
+[appliedTactic]
+have bbεpos : (|b| * |b| * ε / 2) > 0 := by
+        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]
+        exact mul_pos absbpos (mul_pos absbpos εpos ) 
+[answer]
+Show that the product of the absolute value of \( b \) squared, multiplied by \( \varepsilon \) and divided by 2, is greater than zero.
+[appliedTactic]
+rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc ] 
+[answer]
+By using the equivalence between greater-than and less-than comparisons and the relationship that compares an element to a quotient involving a positive divisor, the goal of proving that the product of the absolute value of \( b \) squared and half of \( \varepsilon \) is greater than zero becomes proving that zero is less than the product of the absolute value of \( b \) and the product of the absolute value of \( b \) and \( \varepsilon \).
+[appliedTactic]
+exact mul_pos absbpos (mul_pos absbpos εpos ) 
+[answer]
+The proof is completed from the assumptions that the absolute value of \( b \) is greater than zero and that \( \varepsilon \) is greater than zero, using the fact that the product of positive real numbers is positive.
+[appliedTactic]
+exact convyb (|b| * |b| * ε / 2)  bbεpos 
+[answer]
+The proof is completed from the assumptions that the sequence \( y \) converges to \( b \), that \( b \) is nonzero and its absolute value is positive, and that the product of the square of the absolute value of \( b \) and half of \( \varepsilon \) is positive.
+[appliedTactic]
+let ⟨n₂,h₂⟩ :=  h4 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the distance between \( y_n \) and \( b \) is less than \( |b|^2 \) times \( \varepsilon \) divided by 2.
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+have n₀max : max n₁ n₂ ≤ n₀ := by  simp 
+[answer]
+Show that the maximum of \( n_1 \) and \( n_2 \) is less than or equal to \( n_0 \).
+[appliedTactic]
+ simp 
+[answer]
+The statement that the maximum of \( n_1 \) and \( n_2 \) is less than or equal to \( n_0 \) is proved straightforward.
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the assumption that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), in order to establish the existence of some \( n_0 \) such that for all \( n \geq n_0 \), the difference between the reciprocal of \( y_n \) and the reciprocal of \( b \) is less than \( \varepsilon \), it suffices to prove that for all \( n \geq n_0 \), this difference is less than \( \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between the reciprocal of \( y_n \) and the reciprocal of \( b \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+      |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by
+        rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]
+        rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]
+        rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]
+        exact bnotzero; exact yneqzero n
+      _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by
+        have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max
+        have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max
+        rw [abs_mul,mul_comm,mul_div]
+        have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by
+          have := yngtabsb n (le_trans n₁len₀ ngen₀)
+          have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact this
+          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]
+          rw [← one_div,mul_div 2,mul_one]
+          have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact absbpos
+          exact (mul_lt_mul_right divabsbpos).2 this
+        rw [← mul_div,mul_comm]
+        have l1: 2 / (|b| * |b|) > 0 := by
+          rw [gt_iff_lt]
+          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos
+          apply (lt_div_iff absbpow).2
+          rw [zero_mul]
+          norm_num
+        exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))
+      _ = ε := by
+        ring_nf
+        rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]
+        rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]
+        repeat (any_goals exact bnotzero ) 
+[answer]
+By calculation, it is shown that \( \left| \frac{1}{y_n} - \frac{1}{b} \right| = \frac{1}{|y_n| \cdot |b|} \cdot |y_n - b| < \frac{2}{|b|^2} \cdot \frac{|b|^2 \varepsilon}{2} = \varepsilon. \)
+[appliedTactic]
+rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul ] 
+[answer]
+By using the commutativity of multiplication, the fact that multiplying by one leaves an element unchanged, and the equivalence between division and multiplication by the inverse, the goal of proving that the absolute value of the difference between the reciprocals of \( y(n) \) and \( b \) equals the product of the absolute value of their difference and the reciprocal of the absolute value of their product becomes the statement that the absolute value of \( (y(n))^{-1} - b^{-1} \) equals the absolute value of \( y(n) - b \) multiplied by the reciprocal of the absolute value of \( y(n) \cdot b \).
+[appliedTactic]
+rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc ] 
+[answer]
+By using the properties that the absolute value of a product equals the product of the absolute values, the inverse of a product equals the product of the inverses in reverse order, the distributive property of multiplication over subtraction, and the fact that a nonzero element multiplied by its inverse is the identity, the expression for the absolute difference of the inverses of \( y_n \) and \( b \) is transformed from the difference of their inverses to an expression involving the product of their inverses and the difference \( y_n - b \), changing the goal from proving \( |(y_n)^{-1} - b^{-1}| = |y_n - b| \cdot |y_n \cdot b|^{-1} \) to proving \( |(y_n)^{-1} - b^{-1}| = |b^{-1} - b \cdot (y_n)^{-1} \cdot b^{-1}| \).
+[appliedTactic]
+rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm ] 
+[answer]
+By using the commutativity and associativity of multiplication, the fact that multiplying a nonzero element by its inverse yields one, and the symmetry of the absolute value of a difference, the goal of proving an equality involving the absolute value of the difference between the inverses of two terms transforms into the goal of proving that the constant \( b \) is nonzero.
+[appliedTactic]
+exact  bnotzero 
+[answer]
+The proof is completed from the assumption that \( b \) is nonzero.
+[appliedTactic]
+exact yneqzero  n 
+[answer]
+The proof is completed from the assumption that for every natural number \( n \), the value of \( y(n) \) is not zero.
+[appliedTactic]
+have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left  n₀max 
+[answer]
+Show that \( n_1 \) is less than or equal to \( n_0 \). This can be proved by using the fact that if the maximum of \( n_1 \) and \( n_2 \) is less than or equal to \( n_0 \), then \( n_1 \) must also be less than or equal to \( n_0 \).
+[appliedTactic]
+have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right  n₀max 
+[answer]
+Show that \( n_2 \) is less than or equal to \( n_0 \). This can be proved by using the fact that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), so if the maximum of \( n_1 \) and \( n_2 \) is less than or equal to \( n_0 \), then in particular \( n_2 \) must be less than or equal to \( n_0 \).
+[appliedTactic]
+rw [abs_mul,mul_comm,mul_div ] 
+[answer]
+By using the facts that the absolute value of a product equals the product of the absolute values, that multiplication is commutative, and that division can be expressed as multiplication by the reciprocal, the goal of proving that one divided by the absolute value of the product of \( y(n) \) and \( b \) times the absolute value of \( y(n) - b \) is less than a certain expression becomes proving that the absolute value of \( y(n) - b \) times one divided by the product of the absolute values of \( y(n) \) and \( b \) is less than that expression.
+[appliedTactic]
+have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by
+          have := yngtabsb n (le_trans n₁len₀ ngen₀)
+          have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact this
+          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]
+          rw [← one_div,mul_div 2,mul_one]
+          have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact absbpos
+          exact (mul_lt_mul_right divabsbpos).2  this 
+[answer]
+Show that the reciprocal of the product of the absolute values of \( y(n) \) and \( b \) is less than twice the reciprocal of the square of the absolute value of \( b \).
+[appliedTactic]
+have := yngtabsb n (le_trans n₁len₀ ngen₀ ) 
+[answer]
+Show that the absolute value of \( y(n) \) is greater than half the absolute value of \( b \). This can be proved by applying the given property that holds for all \( n \) greater than or equal to \( n_1 \), and using the fact that \( n \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \), which itself is greater than or equal to \( n_1 \) by the transitivity of inequalities.
+[appliedTactic]
+have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact  this 
+[answer]
+Show that the reciprocal of the absolute value of \( y(n) \) is less than twice the reciprocal of the absolute value of \( b \).
+[appliedTactic]
+rw [one_div ] 
+[answer]
+By using the fact that the reciprocal of a number is equal to its inverse, the goal of proving that one divided by the absolute value of \( y(n) \) is less than two divided by the absolute value of \( b \) becomes proving that the inverse of the absolute value of \( y(n) \) is less than two divided by the absolute value of \( b \).
+[appliedTactic]
+apply (lt_div_iff absbpos). 2 
+[answer]
+From the theorem relating inequalities involving division by a positive number and the assumption that the absolute value of \( b \) is positive, in order to establish that the reciprocal of the absolute value of \( y_n \) is less than twice the reciprocal of the absolute value of \( b \), it suffices to prove that the product of the reciprocal of the absolute value of \( y_n \) and the absolute value of \( b \) is less than 2.
+[appliedTactic]
+rw [mul_comm ] 
+[answer]
+By using the fact that multiplication is commutative, the goal of proving that the product of the reciprocal of the absolute value of \( y(n) \) and the absolute value of \( b \) is less than 2 becomes the goal of proving that the product of the absolute value of \( b \) and the reciprocal of the absolute value of \( y(n) \) is less than 2.
+[appliedTactic]
+have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n ) 
+[answer]
+Show that the reciprocal of the absolute value of \( y(n) \) is positive.
+[appliedTactic]
+rw [gt_iff_lt,inv_pos ] 
+[answer]
+By using the facts that a statement asserting one quantity is greater than another is equivalent to the reverse inequality with less than, and that an element is positive if and only if its inverse is positive, the goal of proving that the inverse of the absolute value of \( y_n \) is greater than zero becomes the goal of proving that the absolute value of \( y_n \) itself is greater than zero.
+[appliedTactic]
+exact abs_pos.2 (yneqzero n ) 
+[answer]
+The proof is completed from the theorem that the absolute value of a number is positive if and only if the number is not zero, and the assumption that for every natural number \( n \), \( y(n) \) is not zero.
+[appliedTactic]
+apply (lt_div_iff absynpos). 1 
+[answer]
+From the theorem relating inequalities involving division by a positive number and the positivity of the reciprocal of the absolute value of \( y_n \), in order to establish that the product of the absolute value of \( b \) and the reciprocal of the absolute value of \( y_n \) is less than 2, it suffices to prove that the absolute value of \( b \) is less than 2 divided by the reciprocal of the absolute value of \( y_n \).
+[appliedTactic]
+rw [div_eq_mul_inv,inv_inv,mul_comm ] 
+[answer]
+By rewriting the expression involving division as multiplication by the inverse, applying the fact that taking the inverse twice returns the original value, and using the commutativity of multiplication, the goal of proving that the absolute value of \( b \) is less than twice the inverse of the absolute value of \( y_n \) becomes the goal of proving that the absolute value of \( b \) is less than twice the absolute value of \( y_n \).
+[appliedTactic]
+rw [gt_iff_lt, div_lt_iff (by norm_num)] at  this 
+[answer]
+By using the fact that a greater-than comparison can be rewritten as a less-than comparison and that dividing by a positive number preserves the inequality direction, the statement that the absolute value of \( y_n \) is greater than half the absolute value of \( b \) becomes the statement that the absolute value of \( b \) is less than twice the absolute value of \( y_n \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that the absolute value of \( b \) is less than twice the absolute value of \( y(n) \).
+[appliedTactic]
+rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc ] 
+[answer]
+By using the facts that dividing by a product is equivalent to multiplying by the reciprocal of the product, that the reciprocal of a product is the product of the reciprocals, and the associativity of multiplication, the goal of proving that the reciprocal of the product of the absolute value of \( y(n) \) and the absolute value of \( b \) is less than the product of two reciprocals of the absolute value of \( b \) multiplied by 2 becomes showing that the product of the reciprocal of the absolute value of \( y(n) \) and the reciprocal of the absolute value of \( b \) is less than the product of 2 and two reciprocals of the absolute value of \( b \).
+[appliedTactic]
+rw [← one_div,mul_div 2,mul_one ] 
+[answer]
+By rewriting the expression to replace the reciprocal of the absolute value of \( b \) with one divided by the absolute value of \( b \), and then applying the properties that multiplying by one leaves an expression unchanged and that multiplication distributes over division, the goal of proving \( \frac{1}{|y_n|} \times \frac{1}{|b|} < \frac{2}{|b|} \times \frac{1}{|b|} \) is obtained from the original goal of proving \( \frac{1}{|y_n|} \times |b|^{-1} < 2 \times |b|^{-1} \times |b|^{-1} \).
+[appliedTactic]
+have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact  absbpos 
+[answer]
+Show that the reciprocal of the absolute value of \( b \) is positive.
+[appliedTactic]
+rw [one_div,gt_iff_lt,inv_pos ] 
+[answer]
+By using the facts that the reciprocal of a number can be expressed as its inverse, that a greater-than comparison is equivalent to a less-than comparison with reversed terms, and that a positive number has a positive inverse, the goal of proving that the reciprocal of the absolute value of \( b \) is greater than zero becomes proving that the absolute value of \( b \) itself is positive.
+[appliedTactic]
+exact  absbpos 
+[answer]
+The proof is completed from the assumption that the absolute value of \( b \) is greater than zero.
+[appliedTactic]
+exact (mul_lt_mul_right divabsbpos).2  this 
+[answer]
+The proof is completed from the theorem that multiplying both sides of an inequality by a positive number preserves the inequality and the assumptions that the absolute value of \(b\) is greater than zero and that the reciprocal of the absolute value of \(y_n\) is less than twice the reciprocal of the absolute value of \(b\).
+[appliedTactic]
+rw [← mul_div,mul_comm ] 
+[answer]
+By using the fact that multiplication can be expressed as division of a product and that multiplication is commutative, the goal of proving that the product of the difference between \( y_n \) and \( b \) with the reciprocal of the product of the absolute values of \( y_n \) and \( b \) is less than a certain expression becomes the goal of proving that the reciprocal of the product of the absolute values of \( y_n \) and \( b \) multiplied by the difference between \( y_n \) and \( b \) is less than that expression.
+[appliedTactic]
+have l1: 2 / (|b| * |b|) > 0 := by
+          rw [gt_iff_lt]
+          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos
+          apply (lt_div_iff absbpow).2
+          rw [zero_mul]
+           norm_num 
+[answer]
+Show that \( \frac{2}{|b| \times |b|} > 0 \).
+[appliedTactic]
+rw [gt_iff_lt ] 
+[answer]
+By using the relationship that an expression being greater than another is equivalent to the latter being less than the former, the goal of proving that two divided by the square of the absolute value of \( b \) is greater than zero becomes the goal of proving that zero is less than two divided by the square of the absolute value of \( b \).
+[appliedTactic]
+have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos  absbpos 
+[answer]
+Show that the product of the absolute value of \( b \) with itself is greater than zero. This can be proved by using the fact that the absolute value of \( b \) is positive and that the product of two positive real numbers is also positive.
+[appliedTactic]
+apply (lt_div_iff absbpow). 2 
+[answer]
+From the theorem relating inequalities involving division by a positive number and the assumptions that the absolute value of \( b \) squared is positive, in order to establish that zero is less than two divided by the square of the absolute value of \( b \), it suffices to prove that zero multiplied by the square of the absolute value of \( b \) is less than two.
+[appliedTactic]
+rw [zero_mul ] 
+[answer]
+By using the fact that multiplying any number by zero results in zero, the goal of proving that zero times the square of the absolute value of \( b \) is less than 2 becomes the goal of proving that 0 is less than 2.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 0 is less than 2.
+[appliedTactic]
+exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b) ) 
+[answer]
+The proof is completed from the facts that a smaller value is also less than or equal to a larger one, the transitivity of inequalities, the positivity of absolute values, and the property that multiplying inequalities preserves the inequality when certain conditions hold, together with the assumptions about the bounds on \( |y_n - b| \), the positivity of \( |b| \), and the relationships between the indices \( n \), \( n_0 \), \( n_1 \), and \( n_2 \).
+[appliedTactic]
+ ring_nf 
+[answer]
+By a simple calculation, proving that two divided by the square of the absolute value of \( b \) multiplied by half the product of the square of the absolute value of \( b \) and \( \varepsilon \) equals \( \varepsilon \) becomes proving that the square of the absolute value of \( b \) multiplied by the square of its reciprocal times \( \varepsilon \) equals \( \varepsilon \).
+[appliedTactic]
+rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel ] 
+[answer]
+By using the fact that one plus one equals two, the properties of exponents for sums and ones, the associativity of multiplication, the behavior of absolute values under inversion and multiplication, and that a nonzero element multiplied by its inverse equals one, the goal of proving that the product of the square of the absolute value of \( b \), the square of the inverse of the absolute value of \( b \), and \( \varepsilon \) equals \( \varepsilon \) is transformed into showing that the product of the absolute value of \( b \), one, the absolute value of the inverse of \( b \), and \( \varepsilon \) equals \( \varepsilon \).
+[appliedTactic]
+rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul ] 
+[answer]
+By using the facts that the absolute value of one is one, multiplying by one leaves an element unchanged, the absolute value of a product equals the product of the absolute values, and that multiplying a nonzero element by its inverse yields one, the expression involving the product of the absolute value of \( b \), the absolute value of one, the absolute value of the inverse of \( b \), and \( \varepsilon \) simplifies to \( \varepsilon \).
+[appliedTactic]
+repeat (any_goals exact bnotzero ) 
+[answer]
+
+[appliedTactic]
+any_goals exact  bnotzero 
+[answer]
+
+[appliedTactic]
+exact  bnotzero 
+[answer]
+The proof is completed from the assumption that \( b \) is nonzero.
+[appliedTactic]
+exact  bnotzero 
+[answer]
+The proof is completed from the assumption that \( b \) is not equal to zero.

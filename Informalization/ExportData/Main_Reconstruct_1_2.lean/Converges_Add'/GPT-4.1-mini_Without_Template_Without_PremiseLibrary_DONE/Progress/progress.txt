@@ -1,0 +1,22 @@
+[applied Tactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for any positive \( \varepsilon \), there exists a natural number \( n_1 \) such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon/2 \). Since \( \varepsilon \) is positive, it follows immediately that \( \varepsilon/2 \) is also positive. By the assumption that the sequence \( x \) converges to \( a \), there must exist such an \( n_1 \) satisfying the stated inequality, thereby establishing the desired property.
+[applied Tactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that given a sequence \(y\) converging to \(b\) and a positive number \(\varepsilon\), there exists a natural number \(n_2\) such that for all \(n \geq n_2\), the distance \(|y_n - b|\) is less than \(\frac{\varepsilon}{2}\). Since \(\varepsilon > 0\), it follows immediately that \(\frac{\varepsilon}{2} > 0\). By the definition of convergence, this positivity allows us to choose such an \(n_2\) ensuring the desired inequality holds for all indices beyond or equal to \(n_2\).
+[applied Tactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+
+[answer]
+We will show that for sequences \( (x_n) \) and \( (y_n) \) converging to limits \( a \) and \( b \) respectively, the sequence \( (x_n + y_n) \) converges to \( a + b \). To this end, consider the absolute difference \(|(x_n + y_n) - (a + b)|\). By rearranging, this expression can be written as \(|(x_n - a) + (y_n - b)|\). Applying the triangle inequality, we have that this is at most \(|x_n - a| + |y_n - b|\). Next, define \( n_0 = \max(n_1, n_2) \), where \( n_1 \) and \( n_2 \) are indices beyond which \( |x_n - a| < \varepsilon/2 \) and \( |y_n - b| < \varepsilon/2 \) hold, respectively. Since \( n \geq n_0 \), both inequalities hold simultaneously, and thus their sum is less than \( \varepsilon/2 + \varepsilon/2 = \varepsilon \). This establishes the desired bound on \(|(x_n + y_n) - (a + b)|\), completing the proof that \( x_n + y_n \to a + b \).

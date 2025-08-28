@@ -1,0 +1,86 @@
+[applied Tactic]
+have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+
+[answer]
+We will show that for every natural number \( n \geq n_0 \), the inequalities \( a - \frac{\varepsilon}{2} < x_n \leq y_n < b + \frac{\varepsilon}{2} \) hold. Since \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), it follows that \( n_0 \geq n_1 \) and \( n_0 \geq n_2 \). This ensures that for all \( n \geq n_0 \), the properties established for indices at least \( n_1 \) and \( n_2 \) apply simultaneously, thereby guaranteeing the desired chain of inequalities for \( x_n \) and \( y_n \).
+[applied Tactic]
+have : ∀ε > 0, a < b + ε := by
+      -- ⭐️ 任意のε > 0 に対して
+      intro ε εpos
+      -- ⭐️ n_1,n_2∈N があって, n≥n_1→|x_n-a|<ϵ/2,n≥n_2→|y_n-b|<ϵ/2
+      let ⟨n₁,h1⟩ := convxa (ε / 2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε / 2) (half_pos εpos)
+      -- ⭐️ n_1,n_2 の大きいほうをn_0 とすれば
+      let n₀ := max n₁ n₂
+      -- ⭐️ n ≥n_0 のとき a-ϵ/2< x_n≤y_n< b+ϵ/2
+      have between : ∀n ≥ n₀, a - (ε / 2) < x n ∧ x n ≤ y n ∧ y n < b + (ε / 2) := by
+        intro n ngen₀
+        have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+        have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+        repeat (any_goals apply And.intro)
+        . have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact this.left
+        . exact xnleyn n
+        . have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact this
+      -- ⭐️ なのでa< b+ϵ となる.
+      have := between n₀ (le_refl n₀)
+      have aepsltbeps : a - ε /2 < b + ε / 2 := lt_trans (lt_of_lt_of_le this.left this.right.left) this.right.right
+      rw [← add_halves ε,← add_assoc,add_comm]
+      apply lt_add_of_neg_add_lt_left
+      rw [add_comm]
+      exact  aepsltbeps 
+
+[answer]
+We will show that for every positive number \( \varepsilon \), the value \( a \) is less than \( b + \varepsilon \). Assume \( \varepsilon > 0 \). By definition, there exists an index \( n_1 \) such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{2} \). Similarly, there exists an index \( n_2 \) such that for all \( n \geq n_2 \), the value \( y_n \) lies within \( \frac{\varepsilon}{2} \) of \( b \). Let \( n_0 = \max(n_1, n_2) \); then for every natural number \( n \geq n_0 \), both conditions hold simultaneously. Consequently, for all such \( n \), we have the chain of inequalities \( a - \frac{\varepsilon}{2} < x_n \leq y_n < b + \frac{\varepsilon}{2} \). Since \( x_n \leq y_n \), it follows that \( a < b + \varepsilon \), as required.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that \(a - \frac{\varepsilon}{2} < x_n\), \(x_n \leq y_n\), and \(y_n < b + \frac{\varepsilon}{2}\). By the rule that to prove a conjunction it suffices to prove each component separately, it is enough to establish \(a - \frac{\varepsilon}{2} < x_n\) and, separately, \(x_n \leq y_n\) and \(y_n < b + \frac{\varepsilon}{2}\). Hence, the proof reduces to verifying these inequalities individually, ensuring the full conjunction holds.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \). By the rule for introducing a conjunction, it suffices to prove these two inequalities separately. First, we establish that \( x_n \leq y_n \). Then, we show that \( y_n < b + \frac{\varepsilon}{2} \). Together, these yield the desired result \( x_n \leq y_n \) and \( y_n < b + \frac{\varepsilon}{2} \).
+[applied Tactic]
+. have := (h1 n (ge_trans ngen₀ n₀gen₁))
+          rw [abs_lt, lt_tsub_iff_left] at this
+          exact  this.left 
+
+[answer]
+We prove the case where \( a - \frac{\varepsilon}{2} < x_n \). First, we show that the absolute difference \(|x_n - a|\) is less than \(\frac{\varepsilon}{2}\). This follows from the given property of the sequence \( (x_n) \), valid for all indices \( n \) greater than or equal to \( n_1 \), and since \( n \) is at least the maximum of \( n_1 \) and \( n_2 \), which is itself greater than or equal to \( n_1 \), the inequality holds for \( n \). Using the equivalence between the absolute value inequality and the corresponding double inequality, the condition \(|x_n - a| < \frac{\varepsilon}{2}\) is equivalent to the pair of inequalities \( a - \frac{\varepsilon}{2} < x_n \) and \( x_n < a + \frac{\varepsilon}{2} \). Given our case assumption \( a - \frac{\varepsilon}{2} < x_n \), the proof follows directly.
+[applied Tactic]
+. exact xnleyn  n 
+
+[answer]
+We will show the proposition under the assumption that for every natural number \( n \), the sequence term \( x_n \) is less than or equal to the corresponding term \( y_n \). This assumption forms the basis for the proof and ensures that the inequality \( x_n \leq y_n \) holds throughout the sequence.
+[applied Tactic]
+. have := h2 n (ge_trans ngen₀ n₀gen₂)
+          rw [abs_lt] at this
+          have := this.right
+          apply lt_add_of_neg_add_lt_left
+          rw [add_comm]
+          exact  this 
+
+[answer]
+We prove the case where \( y_n < b + \frac{\varepsilon}{2} \). Since \( y_n \) converges to \( b \), for \( n \) sufficiently large—specifically, for \( n \) greater than or equal to the maximum index where the convergence conditions hold—we have that the absolute difference \( |y_n - b| \) is less than \(\frac{\varepsilon}{2}\). By the equivalence between an absolute value inequality and a double inequality, this implies that \( y_n - b \) lies strictly between \(-\frac{\varepsilon}{2}\) and \(\frac{\varepsilon}{2}\). Focusing on the upper bound, it follows that \( y_n - b < \frac{\varepsilon}{2} \). Using the fact that if \(-b + y_n < \frac{\varepsilon}{2}\), then \( y_n < b + \frac{\varepsilon}{2} \), we observe that by commutativity, \(-b + y_n = y_n - b\). Since we have already established that \( y_n - b < \frac{\varepsilon}{2} \), the desired inequality \( y_n < b + \frac{\varepsilon}{2} \) holds, completing the proof.

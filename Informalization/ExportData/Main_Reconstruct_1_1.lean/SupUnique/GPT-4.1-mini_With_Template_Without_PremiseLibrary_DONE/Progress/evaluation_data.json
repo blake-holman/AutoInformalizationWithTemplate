@@ -1,0 +1,82 @@
+[
+  {
+    "AppliedTactic": "intro aSup  bSup ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\n⊢ Supremum S a → Supremum S b → a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( a \\) and \\( b \\) are both supremums of the set \\( S \\). From now on, we will show that \\( a = b \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [Supremum] at  * ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GivenPremises": [
+      "Supremum (A : Set ℝ) (x : ℝ) : Prop"
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter] and [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the definition of supremum, the assumptions that \\( a \\) and \\( b \\) are suprema of the set \\( S \\) become the statements that \\( a \\) and \\( b \\) are upper bounds of \\( S \\) and that any upper bound of \\( S \\) is greater than or equal to \\( a \\) and \\( b \\), respectively, while the goal of proving \\( a = b \\) remains unchanged.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have aleb: a ≤ b := aSup.right b  bSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "And.left {a b : Prop} (self : a ∧ b) : a"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( a \\) is less than or equal to \\( b \\). This can be proved by using the fact that \\( a \\) is an upper bound of the set and \\( b \\) is also an upper bound of the set, which implies that \\( a \\) cannot exceed \\( b \\).",
+    "Evaluation":"Insufficient Information"
+  },
+  {
+    "AppliedTactic": "have blea: b ≤ a := bSup.right a  aSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "And.left {a b : Prop} (self : a ∧ b) : a"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( b \\leq a \\). This can be proved by noting that \\( b \\) is an upper bound of the set \\( S \\) and \\( a \\) is the least upper bound of \\( S \\), so since \\( a \\) is less than or equal to any upper bound, it follows that \\( b \\leq a \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "apply le_antisymm aleb  blea ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "le_antisymm.{u} {α : Type u} [PartialOrder α] {a b : α} : a ≤ b → b ≤ a → a = b"
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the property that two elements are equal if each is less than or equal to the other, and the assumptions that \\( a \\leq b \\) and \\( b \\leq a \\), in order to establish that \\( a = b \\), it suffices to observe that these inequalities hold.",
+    "Evaluation":"Correct"
+  }
+]

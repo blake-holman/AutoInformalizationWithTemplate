@@ -1,0 +1,50 @@
+{
+  "Lean.getConstInfo": {
+    "type": "definition",
+    "code": "Lean.getConstInfo {m : Type → Type} [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m ConstantInfo",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getConstInfo [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m ConstantInfo := do   match (← getEnv).find? constName with   | some info => pure info   | none      => throwError \"unknown constant '{mkConst constName}'\"",
+    "description": "An operation that retrieves information about a constant from a monadic environment that supports both state management and error handling."
+  },
+  "Lean.isRec": {
+    "type": "definition",
+    "code": "Lean.isRec {m : Type → Type} [Monad m] [MonadEnv m] (declName : Name) : m Bool",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def isRec [Monad m] [MonadEnv m] (declName : Name) : m Bool :=   return isRecCore (← getEnv) declName",
+    "description": "A function that checks if a given declaration is recursive within a monadic environment that manages state."
+  },
+  "Lean.mkConstWithLevelParams": {
+    "type": "definition",
+    "code": "Lean.mkConstWithLevelParams {m : Type → Type} [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m Expr",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def mkConstWithLevelParams [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m Expr := do   let info ← getConstInfo constName   return mkConst constName (info.levelParams.map mkLevelParam)",
+    "description": "An operation that constructs a constant expression with level parameters from a monadic environment that supports state management and error handling."
+  },
+  "Lean.getConstInfoDefn": {
+    "type": "definition",
+    "code": "Lean.getConstInfoDefn {m : Type → Type} [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m DefinitionVal",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getConstInfoDefn [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m DefinitionVal := do   match (← getConstInfo constName) with   | ConstantInfo.defnInfo v => pure v   | _                       => throwError \"'{mkConst constName}' is not a definition\"",
+    "description": "An operation that retrieves the definition value associated with a constant in a monadic environment that allows for state management and error handling."
+  },
+  "Lean.getConstInfoRec": {
+    "type": "definition",
+    "code": "Lean.getConstInfoRec {m : Type → Type} [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m RecursorVal",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getConstInfoRec [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m RecursorVal := do   match (← getConstInfo constName) with   | ConstantInfo.recInfo v => pure v   | _                      => throwError \"'{mkConst constName}' is not a recursor\"",
+    "description": "An operation that retrieves recursive value information associated with a constant in a monadic environment that allows for state management and error handling."
+  },
+  "Lean.getConstInfoInduct": {
+    "type": "definition",
+    "code": "Lean.getConstInfoInduct {m : Type → Type} [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m InductiveVal",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getConstInfoInduct [Monad m] [MonadEnv m] [MonadError m] (constName : Name) : m InductiveVal := do   match (← getConstInfo constName) with   | ConstantInfo.inductInfo v => pure v   | _                         => throwError \"'{mkConst constName}' is not a inductive type\"",
+    "description": "An operation that retrieves the inductive value information associated with a constant in a monadic environment that allows for state management and error handling."
+  }
+}

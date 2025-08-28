@@ -1,0 +1,97 @@
+{
+  "apply  Iff.intro ": [
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  ". -- (1) -> (2)\n      --仮定を導入し、下限を書き換える\n      intro sinf\n      have a₀InfA := Inf_def A AnotEmpty ABoundedBelow\n      rw [sinf] at a₀InfA\n      rw [Infimum] at a₀InfA\n      --結論の論理積の左右をそれぞれ証明していく\n      apply And.intro\n      . --これは下限の定義から自明\n        apply a₀InfA.left\n      . --結論が偽であると仮定して矛盾することを示す\n        by_contra h\n        --否定を中に入れる\n        push_neg at h\n        --ε を固定する。\n        let ⟨ε,⟨εpos,h1⟩⟩ := h\n        --この時、a₀ + ε が A　の下界になってしまう。ところが、a₀は最大下界であるから矛盾する。\n        --まず、a₀ + εを z とおき、それがAの下界であることを示す。\n        have : LowerBound A (a₀ + ε) := by\n          rw [LowerBound]\n          apply h1\n        --これにより a₀ ≤ a₀ + εが出てくる\n        have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε) this\n        --整理すると ε ≤ 0 が出てくる\n        simp at this\n        --矛盾発生。 linarith tacticsを使う\n         linarith ": [
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "intro  sinf ": [
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "have a₀InfA := Inf_def A AnotEmpty  ABoundedBelow ": [
+    "Inf_def (S : Set ℝ) (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) : Infimum S (sInf S)"
+  ],
+  "rw [sinf] at  a₀InfA ": [],
+  "rw [Infimum] at  a₀InfA ": [
+    "Infimum (A : Set ℝ) (x : ℝ) : Prop"
+  ],
+  "apply  And.intro ": [
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  ". --これは下限の定義から自明\n        apply  a₀InfA.left ": [
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "apply  a₀InfA.left ": [
+    "And.left {a b : Prop} (self : a ∧ b) : a",
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  ". --結論が偽であると仮定して矛盾することを示す\n        by_contra h\n        --否定を中に入れる\n        push_neg at h\n        --ε を固定する。\n        let ⟨ε,⟨εpos,h1⟩⟩ := h\n        --この時、a₀ + ε が A　の下界になってしまう。ところが、a₀は最大下界であるから矛盾する。\n        --まず、a₀ + εを z とおき、それがAの下界であることを示す。\n        have : LowerBound A (a₀ + ε) := by\n          rw [LowerBound]\n          apply h1\n        --これにより a₀ ≤ a₀ + εが出てくる\n        have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε) this\n        --整理すると ε ≤ 0 が出てくる\n        simp at this\n        --矛盾発生。 linarith tacticsを使う\n         linarith ": [],
+  "by_contra  h ": [],
+  "push_neg at  h ": [],
+  "let ⟨ε,⟨εpos,h1⟩⟩ :=  h ": [],
+  "have : LowerBound A (a₀ + ε) := by\n          rw [LowerBound]\n          apply  h1 ": [
+    "LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "rw [LowerBound ] ": [
+    "LowerBound (A : Set ℝ) (b : ℝ) : Prop",
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "apply  h1 ": [],
+  "have : (a₀ + ε) ≤ a₀ := a₀InfA.right (a₀ + ε)  this ": [
+    "And.right {a b : Prop} (self : a ∧ b) : b"
+  ],
+  "simp at  this ": [],
+  " linarith ": [],
+  ". -- (2) -> (1)\n      --仮定を導入しておく\n      intro ⟨a₀LowerBoundA, h⟩\n      --Infimumを書き換え\n      apply (Inf_sInf_iff AnotEmpty ABoundedBelow).1\n      rw [Infimum]\n      --任意のAの下界x に対して  x ≤ a₀ であることを言えばいい。\n      --leanでの場合は結論の後者\n      apply And.intro\n      . exact a₀LowerBoundA\n      . --ここからが教科書の証明。\n        --∀ をx で固定し、それがAの下界であると仮定する。\n        intro x xLowerBoundA\n        --x ≤ a₀ でないと仮定する\n        by_contra a₀lex\n        --否定を中に入れる\n        push_neg at a₀lex\n        --εを x - a₀ に固定する。\n        let ε : ℝ := x - a₀\n        --正であることを示す\n        have a₀negxpos : ε  > 0 := by\n          simp only [ε]\n          rw [gt_iff_lt, sub_pos]\n          exact a₀lex\n        -- これを上限の定義の部分に代入する\n        have h1 := h ε a₀negxpos\n        simp at h1\n        -- x が A の下界であることと矛盾することを示す\n        rw [LowerBound] at xLowerBoundA\n        -- a　を固定\n        let ⟨a,⟨ainA, altx⟩⟩ := h1\n        --このa を Aの下界の定義に適用すると a ≥ xが出てくる\n        have : a ≥ x := xLowerBoundA a ainA\n        --これによりxがAの上界であることについて矛盾が発生。\n        simp [ε] at altx\n         linarith ": [
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "intro ⟨a₀LowerBoundA, h ⟩ ": [
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "apply (Inf_sInf_iff AnotEmpty ABoundedBelow). 1 ": [
+    "Inf_sInf_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBB : BoundedBelow S) {a : ℝ} : Infimum S a ↔ sInf S = a",
+    "Infimum : Infimum (A : Set ℝ) (x : ℝ) : Prop",
+    "InfSet.sInf : InfSet.sInf.{u_1} {α : Type u_1} [self : InfSet α] : Set α → α"
+  ],
+  "rw [Infimum ] ": [
+    "Infimum (A : Set ℝ) (x : ℝ) : Prop",
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop",
+    "Infimum : Infimum (A : Set ℝ) (x : ℝ) : Prop"
+  ],
+  ". exact  a₀LowerBoundA ": [
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "exact  a₀LowerBoundA ": [],
+  ". --ここからが教科書の証明。\n        --∀ をx で固定し、それがAの下界であると仮定する。\n        intro x xLowerBoundA\n        --x ≤ a₀ でないと仮定する\n        by_contra a₀lex\n        --否定を中に入れる\n        push_neg at a₀lex\n        --εを x - a₀ に固定する。\n        let ε : ℝ := x - a₀\n        --正であることを示す\n        have a₀negxpos : ε  > 0 := by\n          simp only [ε]\n          rw [gt_iff_lt, sub_pos]\n          exact a₀lex\n        -- これを上限の定義の部分に代入する\n        have h1 := h ε a₀negxpos\n        simp at h1\n        -- x が A の下界であることと矛盾することを示す\n        rw [LowerBound] at xLowerBoundA\n        -- a　を固定\n        let ⟨a,⟨ainA, altx⟩⟩ := h1\n        --このa を Aの下界の定義に適用すると a ≥ xが出てくる\n        have : a ≥ x := xLowerBoundA a ainA\n        --これによりxがAの上界であることについて矛盾が発生。\n        simp [ε] at altx\n         linarith ": [
+    "LowerBound : LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "intro x  xLowerBoundA ": [],
+  "by_contra  a₀lex ": [],
+  "push_neg at  a₀lex ": [],
+  "let ε : ℝ := x -  a₀ ": [],
+  "have a₀negxpos : ε  > 0 := by\n          simp only [ε]\n          rw [gt_iff_lt, sub_pos]\n          exact  a₀lex ": [
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "sub_pos.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : 0 < a - b ↔ b < a"
+  ],
+  "simp only [ε ] ": [],
+  "rw [gt_iff_lt, sub_pos ] ": [
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "sub_pos.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : 0 < a - b ↔ b < a"
+  ],
+  "exact  a₀lex ": [],
+  "have h1 := h ε  a₀negxpos ": [],
+  "rw [LowerBound] at  xLowerBoundA ": [
+    "LowerBound (A : Set ℝ) (b : ℝ) : Prop"
+  ],
+  "let ⟨a,⟨ainA, altx⟩⟩ :=  h1 ": [],
+  "have : a ≥ x := xLowerBoundA a  ainA ": [],
+  "simp [ε] at  altx ": []
+}

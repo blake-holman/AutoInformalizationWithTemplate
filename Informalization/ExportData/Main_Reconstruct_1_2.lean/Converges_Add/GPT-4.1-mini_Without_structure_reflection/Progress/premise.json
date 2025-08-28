@@ -1,0 +1,69 @@
+{
+  "let ⟨a, convxa⟩ :=  conx ": [],
+  "let ⟨b, convyb⟩ :=  cony ": [],
+  "have : ConvergesTo (x + y) (a + b) := by\n      -- ⭐️ このとき任意の ε > 0に対して\n      intro ε εpos\n      -- ⭐️ n₁, n₂ ∈ ℕ があって、\n      -- ⭐️ n ≥ n₁ → |x_n - a| < ε / 2\n      -- ⭐️ n ≥ n₂ → |y_n - b| < ε / 2 となる。\n      let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos)\n      let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos)\n      -- ⭐️ n₁, n₂の大きいほうをn₀とすれば、\n      let n₀ := max n₁ n₂\n      -- ⭐️ n ≥ n₀ のとき\n      have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by\n        intro n ngen₀\n        calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves ε\n      -- ⭐️となり、\n      exact ⟨n₀, this ⟩ ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "add_sub_add_comm : In a subtraction commutative monoid, the sum of two elements minus the sum of two other elements equals the first element minus the third plus the second element minus the fourth.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive.",
+    "add_halves : This theorem asserts that in a linear ordered semifield, the sum of half of any element and half of the same element equals the original element itself.",
+    "abs_add : This theorem states that in a linear ordered additive group, the absolute value of the sum of two elements is less than or equal to the sum of their absolute values, embodying the triangle inequality.",
+    "Max.max : A function computes the maximum of two elements from a specified type.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element.",
+    "add_lt_add : This theorem asserts that the sum of two lesser pairs of elements is less than the sum of their respective greater pairs, given that each pair maintains a strict inequality.",
+    "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses.",
+    "le_refl : This theorem confirms that in a preorder, any element is related to itself under the less than or equal relation."
+  ],
+  "intro ε  εpos ": [],
+  "let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos ) ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "apply half_pos  εpos ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos ) ": [
+    "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+  ],
+  "let n₀ := max n₁  n₂ ": [
+    "Max.max : A function computes the maximum of two elements from a specified type."
+  ],
+  "have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by\n        intro n ngen₀\n        calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves  ε ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "add_sub_add_comm : In a subtraction commutative monoid, the sum of two elements minus the sum of two other elements equals the first element minus the third plus the second element minus the fourth.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "add_halves : This theorem asserts that in a linear ordered semifield, the sum of half of any element and half of the same element equals the original element itself.",
+    "abs_add : This theorem states that in a linear ordered additive group, the absolute value of the sum of two elements is less than or equal to the sum of their absolute values, embodying the triangle inequality.",
+    "Max.max : A function computes the maximum of two elements from a specified type.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element.",
+    "add_lt_add : This theorem asserts that the sum of two lesser pairs of elements is less than the sum of their respective greater pairs, given that each pair maintains a strict inequality.",
+    "le_refl : This theorem confirms that in a preorder, any element is related to itself under the less than or equal relation."
+  ],
+  "intro n  ngen₀ ": [],
+  "calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves  ε ": [],
+  "rw [add_sub_add_comm ] ": [
+    "add_sub_add_comm : In a subtraction commutative monoid, the sum of two elements minus the sum of two other elements equals the first element minus the third plus the second element minus the fourth."
+  ],
+  "apply  abs_add ": [
+    "abs_add : This theorem states that in a linear ordered additive group, the absolute value of the sum of two elements is less than or equal to the sum of their absolute values, embodying the triangle inequality."
+  ],
+  "have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) ": [
+    "Max.max : A function computes the maximum of two elements from a specified type.",
+    "le_refl : This theorem confirms that in a preorder, any element is related to itself under the less than or equal relation."
+  ],
+  "apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀) ) ": [
+    "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element.",
+    "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element.",
+    "add_lt_add : This theorem asserts that the sum of two lesser pairs of elements is less than the sum of their respective greater pairs, given that each pair maintains a strict inequality.",
+    "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third."
+  ],
+  "exact ⟨n₀, this ⟩ ": [],
+  "exact Limit_add x y conx  cony ": [
+    "Limit_add : The limit of the sum of two convergent real-valued sequences equals the sum of their individual limits."
+  ]
+}

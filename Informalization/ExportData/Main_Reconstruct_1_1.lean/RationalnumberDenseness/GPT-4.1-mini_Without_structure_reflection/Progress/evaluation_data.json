@@ -1,0 +1,1126 @@
+[
+  {
+    "AppliedTactic": "intro x ε  εpos ",
+    "GoalsBefore": "⊢ ∀ (x ε : ℝ), ε > 0 → ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x ε :  ℝ\nεpos :  ε > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( x \\) and \\( \\varepsilon \\) are real numbers with \\( \\varepsilon > 0 \\). From now on, we will show that there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have xposh : ∀ x > 0, ∀ ε > 0, (∃q : ℚ, |x - (q : ℝ)| < ε) := by\n    intro x xpos ε εpos\n    -- 系　1.5 よりある自然数 n に対して 1 / n + 1 < ε なる n が存在する\n    have onediv := OneDivnltEps ε εpos\n    let ⟨n,h⟩ := onediv\n    -- ある自然数m で m + 1 /n + 1 > x が成立する(アルキメデスの原理)\n    -- 1 / n + 1 > 0 を示す\n    have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact zero_lt_one\n    -- アルキメデスの原理よりある 自然数 m で(m + 1)/(n + 1) > x が出てくる\n    have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x xpos\n    -- そのような条件を満たす m の集合を考える\n    let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x}\n    -- M が空でないことをまずいう\n    have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact h1\n    -- よって最小元がある\n    let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M MnotEmpty\n    --その最小元を使ってqを固定する。\n    let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ)\n    apply Exists.intro q\n    -- 以下は教科書では略されているがここからが大変\n    -- x - q が負であることをまず示す\n    have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact minM\n    -- 絶対値を外す\n    rw [abs_of_neg xsubqneg]\n    -- 括弧の前のマイナスを中に入れる\n    rw [neg_sub]\n    -- a ≤ b , b < c → a < c を使う。\n    apply lt_of_le_of_lt _ h\n    --しばし変形を行う x を右辺に持っていくために色々な式変形をしている\n    rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg]\n    rw [← sub_eq_add_neg,← sub_le_abc]\n    -- 通分を行う。\n    have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm]\n    rw [h2]\n    -- x < m / (n + 1) と仮定して矛盾を示す。\n    by_contra h\n    push_neg at h\n    -- m ≥ 1 の場合と m < 1 の場合で場合わけを行う。 m - 1 が 自然数であるかどうかが重要\n    -- 自然数は減算に関して閉じていないので場合わけを行い自然数専用のライブラリを使わないと\n    -- 上手く証明することができない。扱いが難しかった。\n    by_cases hm :m ≥ 1\n      -- (m - 1)が M に含まれていることを示す。\n    . have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n      linarith\n    -- m < 1 のとき\n    . push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ",
+    "GoalsBefore": "x ε :  ℝ\nεpos :  ε > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+      "NatHasMinElement : Every nonempty set of natural numbers contains a smallest element that is less than or equal to all other elements in the set.",
+      "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+      "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself.",
+      "Set : This defines a set as a collection of elements belonging to a specific type.",
+      "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero.",
+      "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+      "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+      "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder.",
+      "neg_sub : The negation of the difference between two elements in a subtraction monoid is equal to the difference of the second element from the first.",
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero.",
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element.",
+      "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element.",
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+      "abs_of_neg : This theorem establishes that if an element is negative within a lattice and additive group, then its absolute value is equal to the negation of the element.",
+      "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "ArchimedesPrinciple : For every positive real number, there exists a natural number such that multiplying the sum of that natural number and one by the positive real number exceeds any given positive real number.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+      "add_assoc : This theorem states that the addition operation is associative, meaning that the grouping of three elements being added does not affect the result.",
+      "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+      "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "OneDivnltEps : For every positive real number, there exists a natural number such that the reciprocal of one more than that natural number is less than the given positive number.",
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "sub_eq_add_neg : Subtracting an element from another is equivalent to adding the negative of that element.",
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that for every positive real number \\( x \\) and every positive real number \\( \\varepsilon \\), there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "intro x xpos ε  εpos ",
+    "GoalsBefore": "x ε :  ℝ\nεpos :  ε > 0\n⊢ ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( x > 0 \\) and \\( \\varepsilon > 0 \\). From now on, we will show that there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have onediv := OneDivnltEps ε  εpos ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "OneDivnltEps : For every positive real number, there exists a natural number such that the reciprocal of one more than that natural number is less than the given positive number."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number \\( n \\) such that the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\). This can be proved by using the fact that for every positive real number, one can find a natural number whose reciprocal, when increased by one in the denominator, is smaller than that positive number."
+  },
+  {
+    "AppliedTactic": "let ⟨n,h⟩ :=  onediv ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n \\) be a natural number such that the reciprocal of \\( n + 1 \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have onedivnpos : 0 < 1 / ((n + (1 : ℕ)) : ℝ)  := by\n      have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact zero_lt_one\n      apply (lt_div_iff this).2\n      rw [zero_mul]\n      exact  zero_lt_one ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity.",
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero.",
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the reciprocal of \\( n + 1 \\) is positive."
+  },
+  {
+    "AppliedTactic": "have : ((n + (1 : ℕ)) : ℝ)  > 0 := by\n        rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff]\n        right\n        exact  zero_lt_one ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ 0 < 1 / (↑n + ↑1)",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 < 1 / (↑n + ↑1)",
+    "GivenPremises": [
+      "Nat.cast_lt : This theorem asserts that the inequality between natural numbers is preserved under the casting function to certain algebraic types with specified properties.",
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "Nat.cast_zero : The theorem states that the natural number zero is equal to the additive identity in any type that possesses an additive monoid structure with a multiplicative identity.",
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the sum of \\( n \\) and 1, considered as a real number, is greater than zero."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt,← Nat.cast_add,← Nat.cast_zero,Nat.cast_lt,add_pos_iff ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ ↑n + ↑1 > 0",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ 0 < n ∨ 0 < 1",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "add_pos_iff : This theorem states that in a canonically ordered additive commutative monoid, the sum of two elements is positive if and only if at least one of those elements is positive."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equivalence between greater than and less than, the properties of casting natural number addition and zero into real numbers, and the fact that a sum is positive if and only if at least one of the terms is positive, the goal of proving that the sum of \\( n \\) and 1 cast to real numbers is greater than zero becomes proving that either \\( n \\) is greater than zero or 1 is greater than zero."
+  },
+  {
+    "AppliedTactic": " right ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ 0 < n ∨ 0 < 1",
+    "GoalsAfter": "case h\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ 0 < 1",
+    "GivenPremises": [],
+    "Template": "Show the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Show the case where \\(0 < 1\\)."
+  },
+  {
+    "AppliedTactic": "exact  zero_lt_one ",
+    "GoalsBefore": "case h\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\n⊢ 0 < 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+    ],
+    "Template": "The proof is completed from the theorem(s) that [theorems].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that zero is strictly less than one."
+  },
+  {
+    "AppliedTactic": "apply (lt_div_iff this). 2 ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 < 1 / (↑n + ↑1)",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 * (↑n + ↑1) < 1",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem relating inequalities involving division by a positive number and the assumption that the sum of \\( n \\) and 1 is positive, in order to establish that zero is less than the reciprocal of the sum of \\( n \\) and 1, it suffices to prove that zero multiplied by the sum of \\( n \\) and 1 is less than one."
+  },
+  {
+    "AppliedTactic": "rw [zero_mul ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 * (↑n + ↑1) < 1",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 < 1",
+    "GivenPremises": [
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that zero multiplied by any number is zero, the goal of proving that zero times \\( n + 1 \\) is less than 1 becomes the goal of proving that 0 is less than 1."
+  },
+  {
+    "AppliedTactic": "exact  zero_lt_one ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nthis :  ↑n + ↑1 > 0\n⊢ 0 < 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "zero_lt_one : Zero is strictly less than one in any type that includes definitions for zero, one, and a partial order, provided that one is not equal to zero."
+    ],
+    "Template": "The proof is completed from the theorem(s) that [theorems].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the fact that zero is strictly less than one."
+  },
+  {
+    "AppliedTactic": "have archi:= ArchimedesPrinciple (1 /((n + (1 : ℕ)) : ℝ)) (onedivnpos) x  xpos ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "ArchimedesPrinciple : For every positive real number, there exists a natural number such that multiplying the sum of that natural number and one by the positive real number exceeds any given positive real number."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number such that multiplying the sum of that natural number and one by the reciprocal of \\( n + 1 \\) is greater than \\( x \\). This can be proved by applying the Archimedean property, which states that for any positive real number, there is a natural number large enough so that when multiplied by that positive number, the product exceeds any given positive real number."
+  },
+  {
+    "AppliedTactic": "let M : Set ℕ := {m : ℕ | ((m + 1) : ℕ) / ((n + 1): ℕ) > x } ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "Set : This defines a set as a collection of elements belonging to a specific type."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( M \\) be the set of natural numbers \\( m \\) such that the ratio of \\( m + 1 \\) to \\( n + 1 \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "have MnotEmpty : M.Nonempty := by\n      let ⟨m, h1⟩ := archi\n      apply Exists.intro m\n      rw [mul_div,mul_one,Nat.cast_one] at h1\n      rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one]\n      exact  h1 ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the set \\( M \\) is non-empty by demonstrating the existence of an element \\( m \\) in \\( M \\) such that the ratio of \\( m + 1 \\) to \\( n + 1 \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨m, h1⟩ :=  archi ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\n⊢ M.Nonempty",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ M.Nonempty",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( m \\) be such that \\((m + 1) \\times \\frac{1}{n + 1} > x\\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  m ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ M.Nonempty",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ m ∈ M",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "Set.Nonempty : This defines a property that indicates a set is non-empty, providing a convenient notation for use in theorem assumptions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the introduction rule for existential quantifiers, in order to establish that the set \\( M \\) is non-empty, it suffices to prove that the element \\( m \\) belongs to \\( M \\)."
+  },
+  {
+    "AppliedTactic": "rw [mul_div,mul_one,Nat.cast_one] at  h1 ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + ↑1) * (1 / (↑n + ↑1)) > x\n⊢ m ∈ M",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + 1) / (↑n + 1) > x\n⊢ m ∈ M",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the facts that multiplying by one leaves an element unchanged and that the natural number one corresponds to the multiplicative identity when cast, the assumption that the product of \\( m + m \\) and the reciprocal of \\( n + 1 \\) is greater than \\( x \\) becomes the statement that the quotient of \\( m + 1 \\) divided by \\( n + 1 \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "rw [Set.mem_setOf_eq,Nat.cast_add,Nat.cast_add,Nat.cast_one ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + 1) / (↑n + 1) > x\n⊢ m ∈ M",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + 1) / (↑n + 1) > x\n⊢ (↑m + 1) / (↑n + 1) > x",
+    "GivenPremises": [
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that membership in a set defined by a property is equivalent to that property holding for the element, and that casting the sum of natural numbers equals the sum of their casts, the goal of proving that \\( m \\) belongs to the set defined by the property \\( \\frac{m+1}{n+1} > x \\) becomes proving the inequality \\( \\frac{m+1}{n+1} > x \\) itself."
+  },
+  {
+    "AppliedTactic": "exact  h1 ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nm :  ℕ\nh1 :  (↑m + 1) / (↑n + 1) > x\n⊢ (↑m + 1) / (↑n + 1) > x",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the ratio of \\( m + 1 \\) to \\( n + 1 \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "let ⟨m,⟨minM,mmin⟩⟩ := NatHasMinElement M  MnotEmpty ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "NatHasMinElement : Every nonempty set of natural numbers contains a smallest element that is less than or equal to all other elements in the set."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( m \\) be the smallest element of the set \\( M \\), so that \\( m \\) belongs to \\( M \\) and is less than or equal to every element of \\( M \\)."
+  },
+  {
+    "AppliedTactic": "let q : ℚ := ((m + 1):ℕ )  / ((n + 1):ℕ ) ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( q \\) be the rational number defined as the ratio of \\( m + 1 \\) to \\( n + 1 \\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  q ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ |x - ↑q| < ε",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the assumption that \\( q \\) is defined as the rational number given by the ratio of \\( m + 1 \\) to \\( n + 1 \\), in order to establish the existence of a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\), it suffices to prove that the absolute value of the difference between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have xsubqneg: x - q < 0 := by\n      rw [sub_neg]\n      rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at minM\n      simp [q]\n      exact  minM ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ |x - ↑q| < ε",
+    "GivenPremises": [
+      "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element.",
+      "Nat.cast_add : The theorem demonstrates that the sum of two natural numbers, when cast into a type with an additive monoid structure and an identity element, is equal to the sum of their respective casts.",
+      "Nat.cast_one : The theorem asserts that the natural number one, when cast into an additive monoid with a unity element, is equal to the identity element of that monoid.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( x - q < 0 \\)."
+  },
+  {
+    "AppliedTactic": "rw [sub_neg ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x - ↑q < 0",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < ↑q",
+    "GivenPremises": [
+      "sub_neg : This theorem states that the condition of the difference between two elements in an additive group being less than zero is equivalent to the condition of the first element being less than the second element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that an inequality involving a difference being less than zero is equivalent to a strict inequality between the two elements, the goal of proving that \\( x - q < 0 \\) becomes the goal of proving that \\( x < q \\)."
+  },
+  {
+    "AppliedTactic": "rw [Set.mem_setOf_eq,gt_iff_lt,Nat.cast_add,Nat.cast_add,Nat.cast_one] at  minM ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < ↑q",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  x < (↑m + 1) / (↑n + 1)\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < ↑q",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "Set.mem_setOf_eq : An element belongs to the set defined by a property if and only if that property holds for the element."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that an element belongs to a set defined by a property if and only if that property holds for the element, and the equivalence between a greater-than relation and a less-than relation, the statement that \\( m \\) is in the set defined by the property that \\(\\frac{m+1}{n+1} > x\\) becomes the statement that \\( x < \\frac{m+1}{n+1} \\)."
+  },
+  {
+    "AppliedTactic": "simp [q ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  x < (↑m + 1) / (↑n + 1)\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < ↑q",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  x < (↑m + 1) / (↑n + 1)\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < (↑m + 1) / (↑n + 1)",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the goal of proving that \\( x \\) is less than the rational number defined as \\( q \\) is transformed into proving that \\( x \\) is less than the fraction formed by \\( m + 1 \\) divided by \\( n + 1 \\)."
+  },
+  {
+    "AppliedTactic": "exact  minM ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  x < (↑m + 1) / (↑n + 1)\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\n⊢ x < (↑m + 1) / (↑n + 1)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\(x\\) is less than the rational number \\(\\frac{m+1}{n+1}\\)."
+  },
+  {
+    "AppliedTactic": "rw [abs_of_neg xsubqneg ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ |x - ↑q| < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ -(x - ↑q) < ε",
+    "GivenPremises": [
+      "abs_of_neg : This theorem establishes that if an element is negative within a lattice and additive group, then its absolute value is equal to the negation of the element."
+    ],
+    "Template": "By using [assumptions] and [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the assumption that \\( x - q \\) is negative and the fact that the absolute value of a negative number equals its negation, the goal of proving that the absolute value of \\( x - q \\) is less than \\( \\varepsilon \\) becomes proving that the negation of \\( x - q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [neg_sub ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ -(x - ↑q) < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - x < ε",
+    "GivenPremises": [
+      "neg_sub : The negation of the difference between two elements in a subtraction monoid is equal to the difference of the second element from the first."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that the negation of the difference between two quantities is equal to the difference taken in the opposite order, the goal of proving that the negation of \\( x - q \\) is less than \\( \\varepsilon \\) becomes the goal of proving that \\( q - x \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "apply lt_of_le_of_lt _  h ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - x < ε",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - x ≤ 1 / (↑n + ↑1)",
+    "GivenPremises": [
+      "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that if one number is less than or equal to a second number and this second number is less than a third, then the first number is less than the third, and using the assumption that one divided by the successor of \\( n \\) is less than \\( \\varepsilon \\), in order to establish that \\( q - x \\) is less than \\( \\varepsilon \\), it suffices to prove that \\( q - x \\) is less than or equal to one divided by the successor of \\( n \\)."
+  },
+  {
+    "AppliedTactic": "rw [sub_le_abc,sub_eq_add_neg,sub_eq_add_neg,add_assoc,add_comm (-x),← add_assoc,← sub_eq_add_neg ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - x ≤ 1 / (↑n + ↑1)",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q + -(1 / (↑n + ↑1)) - x ≤ 0",
+    "GivenPremises": [
+      "add_comm : This theorem asserts that the addition operation in a commutative magma is commutative, meaning the sum of two elements does not depend on the order in which they are added.",
+      "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equivalence between comparing a difference to a number and comparing the difference minus that number to zero, the properties of subtraction expressed as addition of negatives, and the commutativity and associativity of addition, the goal of proving that \\( q - x \\) is less than or equal to \\( \\frac{1}{n+1} \\) becomes proving that \\( q + \\left(-\\frac{1}{n+1}\\right) - x \\) is less than or equal to zero."
+  },
+  {
+    "AppliedTactic": "rw [← sub_eq_add_neg,← sub_le_abc ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q + -(1 / (↑n + ↑1)) - x ≤ 0",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - 1 / (↑n + ↑1) ≤ x",
+    "GivenPremises": [
+      "sub_eq_add_neg : Subtracting an element from another is equivalent to adding the negative of that element.",
+      "sub_le_abc : Subtracting two real numbers and comparing the result to a third is equivalent to comparing their difference minus that third number to zero."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that subtracting a number is the same as adding its negative and that comparing the difference of two numbers to a third is equivalent to comparing their difference minus that third number to zero, the goal of proving that \\( q \\) plus the negative of the reciprocal of \\( n + 1 \\) minus \\( x \\) is less than or equal to zero becomes proving that \\( q \\) minus the reciprocal of \\( n + 1 \\) is less than or equal to \\( x \\)."
+  },
+  {
+    "AppliedTactic": "have h2: (q : ℝ)  - 1 / (n + (1 : ℕ)) = m / (n + (1 : ℕ)) := by\n      ring_nf\n      simp\n      rw [add_mul,one_mul]\n      simp\n      rw [mul_comm ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - 1 / (↑n + ↑1) ≤ x",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\n⊢ ↑q - 1 / (↑n + ↑1) ≤ x",
+    "GivenPremises": [
+      "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+      "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that subtracting the reciprocal of \\( n + 1 \\) from \\( q \\) is equal to dividing \\( m \\) by \\( n + 1 \\)."
+  },
+  {
+    "AppliedTactic": " ring_nf ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑(↑(1 + m) * (↑(1 + n))⁻¹) - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GivenPremises": [],
+    "Template": "By a simple calculation, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By a simple calculation, the goal of proving that the difference between \\( q \\) and the reciprocal of \\( n + 1 \\) equals the quotient of \\( m \\) and \\( n + 1 \\) becomes the task of proving that the difference between the product of \\( m + 1 \\) and the inverse of \\( n + 1 \\) and the inverse of \\( n + 1 \\) equals the product of the inverse of \\( n + 1 \\) and \\( m \\)."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑(↑(1 + m) * (↑(1 + n))⁻¹) - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ (1 + ↑m) * (1 + ↑n)⁻¹ - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, proving that the difference between the product of one plus \\( m \\) and the inverse of one plus \\( n \\) and the inverse of one plus \\( n \\) equals the product of the inverse of one plus \\( n \\) and \\( m \\) becomes proving that the difference between the product of one plus \\( m \\) and the inverse of one plus \\( n \\) and the inverse of one plus \\( n \\) equals the product of the inverse of one plus \\( n \\) and \\( m \\)."
+  },
+  {
+    "AppliedTactic": "rw [add_mul,one_mul ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ (1 + ↑m) * (1 + ↑n)⁻¹ - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ (1 + ↑n)⁻¹ + ↑m * (1 + ↑n)⁻¹ - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GivenPremises": [
+      "add_mul : This theorem defines the right distributive property of multiplication over addition in a specific algebraic structure.",
+      "one_mul : This theorem asserts that multiplying any element by the identity element in a multiplicative structure results in the element itself."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the distributive property of multiplication over addition and the fact that multiplying by one leaves an element unchanged, the expression \\((1 + m) \\cdot (1 + n)^{-1} - (1 + n)^{-1}\\) is rewritten as \\((1 + n)^{-1} + m \\cdot (1 + n)^{-1} - (1 + n)^{-1} = (1 + n)^{-1} \\cdot m\\)."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ (1 + ↑n)⁻¹ + ↑m * (1 + ↑n)⁻¹ - (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑m * (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the goal of proving that adding the reciprocal of one plus \\( n \\) to the product of \\( m \\) and the reciprocal of one plus \\( n \\) and then subtracting the reciprocal of one plus \\( n \\) equals the product of the reciprocal of one plus \\( n \\) and \\( m \\) is transformed into proving that the product of \\( m \\) and the reciprocal of one plus \\( n \\) equals the product of the reciprocal of one plus \\( n \\) and \\( m \\)."
+  },
+  {
+    "AppliedTactic": "rw [mul_comm ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\n⊢ ↑m * (1 + ↑n)⁻¹ = (1 + ↑n)⁻¹ * ↑m",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By using the commutativity of multiplication, we complete the proof."
+  },
+  {
+    "AppliedTactic": "rw [h2 ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\n⊢ ↑q - 1 / (↑n + ↑1) ≤ x",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\n⊢ ↑m / (↑n + ↑1) ≤ x",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equality that expresses the difference between \\( q \\) and the reciprocal of \\( n+1 \\) as \\( \\frac{m}{n+1} \\), the goal of proving that \\( q - \\frac{1}{n+1} \\leq x \\) becomes the goal of proving that \\( \\frac{m}{n+1} \\leq x \\)."
+  },
+  {
+    "AppliedTactic": "by_contra  h ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\n⊢ ↑m / (↑n + ↑1) ≤ x",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  ¬↑m / (↑n + ↑1) ≤ x\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Assume that  [hypothesisAfter] and show a contradiction.",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Assume that the quotient of \\( m \\) plus one divided by \\( n \\) plus one is greater than \\( x \\) is not less than or equal to \\( x \\) and show a contradiction."
+  },
+  {
+    "AppliedTactic": "push_neg at  h ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  ¬↑m / (↑n + ↑1) ≤ x\n⊢ False",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\n⊢ False",
+    "GivenPremises": [],
+    "Template": "[hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Not \\( \\frac{m}{n + 1} \\leq x \\) becomes \\( x < \\frac{m}{n + 1} \\)."
+  },
+  {
+    "AppliedTactic": "by_cases hm :m ≥  1 ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\n⊢ False",
+    "GoalsAfter": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ False\n\ncase neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  ¬m ≥ 1\n⊢ False",
+    "GivenPremises": [],
+    "Template": "To prove [goalsBefore], we proceed by case analysis on whether [statement].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "To prove a contradiction from the given assumptions, we proceed by case analysis on whether the natural number \\( m \\) is greater than or equal to 1."
+  },
+  {
+    "AppliedTactic": ". have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at h\n      -- (m - 1)がMに含まれていることがわかったので m ≤ m - 1が出てくる\n      have : m ≤ m - 1 := mmin (m - 1) msubinM\n      -- m > m - 1を示す。\n      have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this hm\n      -- ここまでで矛盾発生。\n       linarith ",
+    "GoalsBefore": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ False\n\ncase neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  ¬m ≥ 1\n⊢ False",
+    "GoalsAfter": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ False",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where a contradiction arises from the assumption that \\( m \\) is the minimal element of the set \\( M \\) with \\( m \\geq 1 \\), by showing that \\( m \\leq m - 1 \\) and simultaneously \\( m > m - 1 \\), which is impossible."
+  },
+  {
+    "AppliedTactic": "have msubinM: (m - 1) ∈ M := by\n        simp only [M, Set.mem_setOf]\n        -- -1 + 1 = 0 を用いる。nat. を使わないといけない点には注意\n        rw [Nat.sub_add_cancel hm]\n        -- h のcastも動かすことで 結論の式と一致する\n        norm_cast at  h ",
+    "GoalsBefore": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ False",
+    "GoalsAfter": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\n⊢ False",
+    "GivenPremises": [
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element.",
+      "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( m - 1 \\) belongs to the set of natural numbers whose successor divided by the successor of \\( n \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "simp only [M, Set.mem_setOf ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ m - 1 ∈ M",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ ↑(m - 1 + 1) / ↑(n + 1) > x",
+    "GivenPremises": [
+      "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+    ],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the goal of proving that \\( m - 1 \\) belongs to the set of natural numbers \\( m \\) such that \\(\\frac{m + 1}{n + 1} > x\\) becomes the goal of proving that \\(\\frac{(m - 1) + 1}{n + 1} > x\\)."
+  },
+  {
+    "AppliedTactic": "rw [Nat.sub_add_cancel hm ] ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ ↑(m - 1 + 1) / ↑(n + 1) > x",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\n⊢ ↑m / ↑(n + 1) > x",
+    "GivenPremises": [
+      "Nat.sub_add_cancel : Subtracting a natural number from another and then adding the subtracted number back results in the original number, provided that the first number is greater than or equal to the second."
+    ],
+    "Template": "By using [assumptions] and [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the assumption that \\( m \\) is at least 1 and the fact that subtracting a natural number and then adding it back returns the original number, the goal of proving that the fraction with numerator \\( m - 1 + 1 \\) over denominator \\( n + 1 \\) is greater than \\( x \\) becomes proving that the fraction with numerator \\( m \\) over denominator \\( n + 1 \\) is greater than \\( x \\)."
+  },
+  {
+    "AppliedTactic": "have : m ≤ m - 1 := mmin (m - 1)  msubinM ",
+    "GoalsBefore": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\n⊢ False",
+    "GoalsAfter": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ False",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( m \\) is less than or equal to \\( m - 1 \\). This can be proved by applying the minimality property of \\( m \\) in the set \\( M \\), which states that \\( m \\) is less than or equal to any element of \\( M \\), including \\( m - 1 \\), since \\( m - 1 \\) is also in \\( M \\)."
+  },
+  {
+    "AppliedTactic": "have : m > m - 1 := by\n        -- 0 < m , 0 < 1 より m - 1 < m が出てくる。\n        apply Nat.sub_lt _ (by norm_num)\n          -- 0 < m を示す\n        . have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ",
+    "GoalsBefore": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ False",
+    "GoalsAfter": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis✝ :  m ≤ m - 1\nthis :  m > m - 1\n⊢ False",
+    "GivenPremises": [
+      "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( m \\) is greater than \\( m - 1 \\)."
+  },
+  {
+    "AppliedTactic": "apply Nat.sub_lt _ (by norm_num ) ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ m > m - 1",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < m",
+    "GivenPremises": [],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the property that subtracting a smaller number from a larger one yields a positive result, in order to establish that \\( m \\) is greater than \\( m - 1 \\), it suffices to prove that \\( 0 < m \\)."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that zero is less than one."
+  },
+  {
+    "AppliedTactic": ". have : 0 < (1 : ℕ) := by norm_num\n          -- 0 < 1, 1 ≤ m より 0 < m が出てくる\n          apply lt_of_lt_of_le this  hm ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < m",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < m",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where \\( m \\) is positive."
+  },
+  {
+    "AppliedTactic": "have : 0 < (1 : ℕ) := by  norm_num ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < m",
+    "GoalsAfter": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis✝ :  m ≤ m - 1\nthis :  0 < 1\n⊢ 0 < m",
+    "GivenPremises": [],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that zero is less than one."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis :  m ≤ m - 1\n⊢ 0 < 1",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that zero is less than one."
+  },
+  {
+    "AppliedTactic": "apply lt_of_lt_of_le this  hm ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis✝ :  m ≤ m - 1\nthis :  0 < 1\n⊢ 0 < m",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the fact that if one number is less than a second number, and the second number is less than or equal to a third number, then the first number is less than the third number, and the assumptions that one number is less than another and that a certain integer is at least one, in order to establish that zero is less than \\( m \\), it suffices to recognize that this conclusion follows directly from these inequalities and bounds."
+  },
+  {
+    "AppliedTactic": " linarith ",
+    "GoalsBefore": "case pos\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m ≥ 1\nmsubinM :  m - 1 ∈ M\nthis✝ :  m ≤ m - 1\nthis :  m > m - 1\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since the statements \\( m \\leq m - 1 \\) and \\( m > m - 1 \\) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+  },
+  {
+    "AppliedTactic": ". push_neg at hm\n      -- m = 0 であることをまず示す\n      have : m = 0 := by\n        apply Nat.lt_one_iff.1 hm\n      -- m を代入\n      rw [this] at h\n      simp at h\n      -- x > 0 と x < 0　で矛盾\n       linarith ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  ¬m ≥ 1\n⊢ False",
+    "GoalsAfter": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  ¬m ≥ 1\n⊢ False",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We show that \\( m = 0 \\), substitute this into the inequality involving \\( m \\), simplify, and then derive a contradiction from the assumptions that \\( x > 0 \\) and \\( x < 0 \\), concluding the proof."
+  },
+  {
+    "AppliedTactic": "push_neg at  hm ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  ¬m ≥ 1\n⊢ False",
+    "GoalsAfter": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m < 1\n⊢ False",
+    "GivenPremises": [],
+    "Template": "[hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "Not \\( m \\geq 1 \\) becomes \\( m < 1 \\)."
+  },
+  {
+    "AppliedTactic": "have : m = 0 := by\n        apply Nat.lt_one_iff.1  hm ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m < 1\n⊢ False",
+    "GoalsAfter": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\n⊢ False",
+    "GivenPremises": [
+      "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( m = 0 \\) because \\( m \\) is less than one."
+  },
+  {
+    "AppliedTactic": "apply Nat.lt_one_iff.1  hm ",
+    "GoalsBefore": "x✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m < 1\n⊢ m = 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Nat.lt_one_iff : The theorem asserts that a natural number is less than one if and only if it is equal to zero."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem that a natural number is less than one if and only if it equals zero, and the assumption that \\( m \\) is less than one, in order to establish that \\( m = 0 \\), it suffices to prove the goal with no remaining conditions."
+  },
+  {
+    "AppliedTactic": "rw [this] at  h ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑m / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\n⊢ False",
+    "GoalsAfter": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑0 / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\n⊢ False",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the assumption that \\( m = 0 \\), the statement that \\( x \\) is less than the fraction with numerator \\( m \\) and denominator \\( n + 1 \\) becomes the statement that \\( x \\) is less than zero divided by \\( n + 1 \\)."
+  },
+  {
+    "AppliedTactic": "simp at  h ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nh :  x < ↑0 / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\n⊢ False",
+    "GoalsAfter": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\nh :  x < 0\n⊢ False",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the assumption that \\( x \\) is less than one divided by \\( n + 1 \\) cast to real numbers becomes the assumption that \\( x \\) is less than zero."
+  },
+  {
+    "AppliedTactic": " linarith ",
+    "GoalsBefore": "case neg\nx✝ ε✝ :  ℝ\nεpos✝ :  ε✝ > 0\nx :  ℝ\nxpos :  x > 0\nε :  ℝ\nεpos :  ε > 0\nonediv :  ∃ n, 1 / (↑n + ↑1) < ε\nn :  ℕ\nh✝ :  1 / (↑n + ↑1) < ε\nonedivnpos :  0 < 1 / (↑n + ↑1)\narchi :  ∃ n_1, (↑n_1 + ↑1) * (1 / (↑n + ↑1)) > x\nM : Set ℕ :=  {m | ↑(m + 1) / ↑(n + 1) > x}\nMnotEmpty :  M.Nonempty\nm :  ℕ\nminM :  m ∈ M\nmmin :  ∀ y ∈ M, m ≤ y\nq : ℚ :=  ↑(m + 1) / ↑(n + 1)\nxsubqneg :  x - ↑q < 0\nh2 :  ↑q - 1 / (↑n + ↑1) = ↑m / (↑n + ↑1)\nhm :  m < 1\nthis :  m = 0\nh :  x < 0\n⊢ False",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "Since [conflictingExpressions] cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.",
+    "TokenInfos": {
+      "[conflictingExpressions]": "This token appears in tactic templates that demonstrate a contradiction between propositions within the assumptions or between an assumption and the proof goal. Check *Hypothesis And Goals Before Tactic Application*, extract the two or more conflicting propositions, and replace it with a brief explanation or a mathematical reference formatted in TeX to the contradictory expressions."
+    },
+    "Result": "Since \\( x > 0 \\) and \\( x < 0 \\) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof."
+  },
+  {
+    "AppliedTactic": "rcases lt_trichotomy x 0 with h | h |  h ",
+    "GoalsBefore": "x ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ ∃ q, |x - ↑q| < ε\n\ncase inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |x - ↑q| < ε\n\ncase inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [
+      "lt_trichotomy : This theorem establishes that in a linear order, for any two elements, one of the following must be true: the first is less than the second, they are equal, or the second is less than the first."
+    ],
+    "Template": "To prove [goalsBefore], we proceed by case analysis on whether [statement].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "To prove that there exists a rational number \\( q \\) approximating \\( x \\) within \\( \\varepsilon \\), we proceed by case analysis on whether \\( x \\) is less than zero, equal to zero, or greater than zero."
+  },
+  {
+    "AppliedTactic": ". have : -x > 0 := by simp; exact h\n    let ⟨q,h1⟩ := xposh (-x) this ε εpos\n    apply Exists.intro (-q)\n    simp\n    rw [sub_assoc,abs_neg] at h1\n    exact  h1 ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ ∃ q, |x - ↑q| < ε\n\ncase inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |x - ↑q| < ε\n\ncase inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\) when \\( x \\) is negative."
+  },
+  {
+    "AppliedTactic": "have : -x > 0 := by simp; exact  h ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the negation of \\( x \\) is positive."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "x ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ -x > 0",
+    "GoalsAfter": "x ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ x < 0",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the goal of proving that the negative of \\( x \\) is greater than zero becomes the goal of proving that \\( x \\) is less than zero."
+  },
+  {
+    "AppliedTactic": "exact  h ",
+    "GoalsBefore": "x ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\n⊢ x < 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( x \\) is less than zero."
+  },
+  {
+    "AppliedTactic": "let ⟨q,h1⟩ := xposh (-x) this ε  εpos ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( q \\) be a rational number such that the distance between \\(-x\\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro (-q ) ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ |x - ↑(-q)| < ε",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the introduction rule for existential quantifiers, in order to establish that there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\), it suffices to prove that the distance between \\( x \\) and the rational number \\( -q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ |x - ↑(-q)| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ |x + ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "By simplifying the expression, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By simplifying the expression, the goal of proving that the distance between \\( x \\) and the negation of \\( q \\) is less than \\( \\varepsilon \\) is transformed into proving that the distance between \\( x \\) and the additive inverse of \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [sub_assoc,abs_neg] at  h1 ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |-x - ↑q| < ε\n⊢ |x + ↑q| < ε",
+    "GoalsAfter": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |x + ↑q| < ε\n⊢ |x + ↑q| < ε",
+    "GivenPremises": [
+      "sub_assoc : Negating a real number minus another real number equals the negation of their sum.",
+      "abs_neg : This theorem states that the absolute value of the negation of an element is equal to the absolute value of the element itself in the context of a lattice and additive group."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that subtracting a number from the negation of another is the same as negating their sum and that the absolute value of a negated number equals the absolute value of the original number, the assumption that the absolute value of the difference between the negation of \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\) becomes the assumption that the absolute value of \\( x + q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "exact  h1 ",
+    "GoalsBefore": "case inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x < 0\nthis :  -x > 0\nq :  ℚ\nh1 :  |x + ↑q| < ε\n⊢ |x + ↑q| < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the absolute value of \\( x + q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": ". rw [h]\n    apply Exists.intro 0\n    rw [zero_sub,abs_neg]\n     norm_cast ",
+    "GoalsBefore": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |x - ↑q| < ε\n\ncase inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove the case where there exists a rational number \\( q \\) such that the distance between zero and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [h ] ",
+    "GoalsBefore": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |0 - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the assumption that \\( x = 0 \\), the goal of proving the existence of a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\) becomes the goal of proving the existence of a rational number \\( q \\) such that the distance between 0 and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  0 ",
+    "GoalsBefore": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ ∃ q, |0 - ↑q| < ε",
+    "GoalsAfter": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ |0 - ↑0| < ε",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the principle that to prove the existence of an element satisfying a property it suffices to provide a specific example, in order to establish that there exists a number \\( q \\) such that the distance between zero and \\( q \\) is less than \\( \\varepsilon \\), it suffices to prove that the distance between zero and zero is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [zero_sub,abs_neg ] ",
+    "GoalsBefore": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ |0 - ↑0| < ε",
+    "GoalsAfter": "case inr.inl\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  x = 0\n⊢ |↑0| < ε",
+    "GivenPremises": [
+      "zero_sub : In a sub-negative monoid, subtracting any element from zero results in the negation of that element.",
+      "abs_neg : This theorem states that the absolute value of the negation of an element is equal to the absolute value of the element itself in the context of a lattice and additive group."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that subtracting zero from zero results in zero and that the absolute value of a negation equals the absolute value of the original element, the goal of proving the absolute value of zero minus zero is less than epsilon becomes proving the absolute value of zero is less than epsilon."
+  },
+  {
+    "AppliedTactic": ". exact xposh x h ε  εpos ",
+    "GoalsBefore": "case inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "case inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GivenPremises": [],
+    "Template": "We prove the case where [goalsAfter].",
+    "TokenInfos": {
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "We prove that there exists a rational number \\( q \\) such that the distance between \\( x \\) and \\( q \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "exact xposh x h ε  εpos ",
+    "GoalsBefore": "case inr.inr\nx ε :  ℝ\nεpos :  ε > 0\nxposh :  ∀ x > 0, ∀ ε > 0, ∃ q, |x - ↑q| < ε\nh :  0 < x\n⊢ ∃ q, |x - ↑q| < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that \\( x \\) is greater than zero and \\( \\varepsilon \\) is greater than zero."
+  }
+]

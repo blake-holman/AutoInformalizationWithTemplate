@@ -1,0 +1,266 @@
+{
+  "Command.lean": {
+    "Lean.Elab.Command.runTermElabM": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.runTermElabM {α : Type} (elabFn : Array Expr → TermElabM α) : Command.CommandElabM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def runTermElabM (elabFn : Array Expr → TermElabM α) : CommandElabM α := do   let scope ← getScope   liftTermElabM <|     Term.withAutoBoundImplicit <|       Term.elabBinders scope.varDecls fun xs => do         -- We need to synthesize postponed terms because this is a checkpoint for the auto-bound implicit feature         -- If we don't use this checkpoint here, then auto-bound implicits in the postponed terms will not be handled correctly.         Term.synthesizeSyntheticMVarsNoPostponing         let mut sectionFVars := {}         for uid in scope.varUIds, x in xs do           sectionFVars := sectionFVars.insert uid x         withReader ({ · with sectionFVars := sectionFVars }) do           -- We don't want to store messages produced when elaborating `(getVarDecls s)` because they have already been saved when we elaborated the `variable`(s) command.           -- So, we use `Core.resetMessageLog`.           Core.resetMessageLog           let someType := mkSort levelZero           Term.addAutoBoundImplicits' xs someType fun xs _ =>             Term.withoutAutoBoundImplicit <| elabFn xs",
+      "description": "A function that executes a term elaboration procedure using a provided elaboration function on an array of expressions within a command elaboration context."
+    },
+    "Lean.Elab.Command.liftCoreM": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.liftCoreM {α : Type} (x : CoreM α) : CommandElabM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def liftCoreM (x : CoreM α) : CommandElabM α := do   MonadExcept.ofExcept (← runCore (observing x))",
+      "description": "A function that allows lifting computations from the core monad into the command elaboration monad."
+    },
+    "Lean.Elab.Command.CommandElabM": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.CommandElabM (α : Type) : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev CommandElabM := CommandElabCoreM Exception abbrev CommandElab  := Syntax → CommandElabM Unit structure Linter where   run : Syntax → CommandElabM Unit   name : Name := by exact decl_name%",
+      "description": "A type representing the command elaboration monad for computations that yield values of a given type."
+    },
+    "Lean.Elab.Command.State.env": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.State.env (self : State) : Environment",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "env            : Environment   messages       : MessageLog := {}   scopes         : List Scope := [{ header := \"\" }]   nextMacroScope : Nat := firstFrontendMacroScope + 1   maxRecDepth    : Nat   ngen           : NameGenerator := {}   infoState      : InfoState := {}   traceState     : TraceState := {}   deriving Nonempty",
+      "description": "A function that retrieves the environment from a given state in the command elaboration context."
+    },
+    "Lean.Elab.Command.modifyScope": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.modifyScope (f : Scope → Scope) : CommandElabM Unit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def modifyScope (f : Scope → Scope) : CommandElabM Unit :=   modify fun s => { s with     scopes := match s.scopes with       | h::t => f h :: t       | []   => unreachable!   }",
+      "description": "A function that modifies the current scope in the command elaboration context using a provided transformation function."
+    },
+    "Lean.Elab.Command.liftTermElabM": {
+      "type": "definition",
+      "code": "Lean.Elab.Command.liftTermElabM {α : Type} (x : TermElabM α) : Command.CommandElabM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def liftTermElabM (x : TermElabM α) : CommandElabM α := do   let ctx ← read   let s   ← get   -- dbg_trace \"heartbeats: {heartbeats}\"   let scope := s.scopes.head!   -- We execute `x` with an empty message log. Thus, `x` cannot modify/view messages produced by previous commands.   -- This is useful for implementing `runTermElabM` where we use `Term.resetMessageLog`   let x : TermElabM _  := withSaveInfoContext x   -- make sure `observing` below also catches runtime exceptions (like we do by default in   -- `CommandElabM`)   let _ := MonadAlwaysExcept.except (m := TermElabM)   let x : MetaM _ := (observing (try x finally Meta.reportDiag)).run (mkTermContext ctx s) { levelNames := scope.levelNames }   let x : CoreM _ := x.run mkMetaContext {}   let ((ea, _), _) ← runCore x   MonadExcept.ofExcept ea",
+      "description": "A function that lifts computations from the term elaboration monad into the command elaboration monad."
+    }
+  },
+  "SyntheticMVars.lean": {
+    "Lean.Elab.Term.elabTermAndSynthesize": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.elabTermAndSynthesize (stx : Syntax) (expectedType? : Option Expr) : TermElabM Expr",
+      "comment": "Elaborate `stx`, and make sure all pending synthetic metavariables created while elaborating `stx` are solved. ",
+      "explanatories": {},
+      "fullDefinition": "def elabTermAndSynthesize (stx : Syntax) (expectedType? : Option Expr) : TermElabM Expr :=   withRef stx do     instantiateMVars (← withSynthesize <| elabTerm stx expectedType?)",
+      "description": "A function that elaborates a given syntax while ensuring that any unresolved synthetic metavariables are resolved during the process."
+    }
+  },
+  "Tactic": {
+    "Basic.lean": {
+      "Lean.Elab.Tactic.getMainGoal": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.getMainGoal : TacticM MVarId",
+        "comment": "Return the first goal. ",
+        "explanatories": {},
+        "fullDefinition": "def getMainGoal : TacticM MVarId := do   loop (← getGoals) where   loop : List MVarId → TacticM MVarId     | [] => throwNoGoalsToBeSolved     | mvarId :: mvarIds => do       if (← mvarId.isAssigned) then         loop mvarIds       else         setGoals (mvarId :: mvarIds)         return mvarId",
+        "description": "A function that retrieves the primary goal from a set of goals in a tactical context."
+      },
+      "Lean.Elab.Tactic.closeMainGoal": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.closeMainGoal (val : Expr) (checkUnassigned : Bool := true) : TacticM Unit",
+        "comment": "Close main goal using the given expression. If `checkUnassigned == true`, then `val` must not contain unassigned metavariables. ",
+        "explanatories": {},
+        "fullDefinition": "def closeMainGoal (val : Expr) (checkUnassigned := true): TacticM Unit := do   if checkUnassigned then     ensureHasNoMVars val   (← getMainGoal).assign val   replaceMainGoal []",
+        "description": "A function that closes the primary goal with a specified expression, ensuring that the expression has no unassigned metavariables if the corresponding option is enabled."
+      },
+      "Lean.Elab.Tactic.Tactic": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.Tactic : Type",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "abbrev Tactic  := Syntax → TacticM Unit",
+        "description": "A construct representing a tactic within a type system."
+      },
+      "Lean.Elab.Tactic.TacticM": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.TacticM (α : Type) : Type",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "abbrev TacticM := ReaderT Context $ StateRefT State TermElabM abbrev Tactic  := Syntax → TacticM Unit",
+        "description": "A type construct representing a monadic context for executing tactics in a type system."
+      },
+      "Lean.Elab.Tactic.liftMetaTactic": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.liftMetaTactic (tactic : MVarId → MetaM (List MVarId)) : TacticM Unit",
+        "comment": "Get the mvarid of the main goal, run the given `tactic`,\nthen set the new goals to be the resulting goal list.",
+        "explanatories": {},
+        "fullDefinition": "@[inline] def liftMetaTactic (tactic : MVarId → MetaM (List MVarId)) : TacticM Unit :=   liftMetaTacticAux fun mvarId => do     let gs ← tactic mvarId     pure ((), gs)",
+        "description": "A function that executes a specified tactic on the main goal and updates the goals based on the results of that tactic."
+      },
+      "Lean.Elab.Tactic.withMainContext": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.withMainContext {α : Type} (x : TacticM α) : TacticM α",
+        "comment": "Execute `x` using the main goal local context and instances ",
+        "explanatories": {},
+        "fullDefinition": "def withMainContext (x : TacticM α) : TacticM α := do   (← getMainGoal).withContext x",
+        "description": "A function that runs a specified tactic within the local context and instances of the primary goal."
+      },
+      "Lean.Elab.Tactic.withoutRecover": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.withoutRecover {α : Type} (x : TacticM α) : TacticM α",
+        "comment": "Execute `x` with error recovery disabled ",
+        "explanatories": {},
+        "fullDefinition": "def withoutRecover (x : TacticM α) : TacticM α :=   withReader (fun ctx => { ctx with recover := false }) x",
+        "description": "A function that executes a specified tactic without enabling error recovery."
+      },
+      "Lean.Elab.Tactic.liftMetaTacticAux": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.liftMetaTacticAux {α : Type} (tac : MVarId → MetaM (α × List MVarId)) : TacticM α",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "@[inline] def liftMetaTacticAux (tac : MVarId → MetaM (α × List MVarId)) : TacticM α := do   withMainContext do     let (a, mvarIds) ← tac (← getMainGoal)     replaceMainGoal mvarIds     pure a",
+        "description": "A function that lifts a meta tactic to operate within a tactical context."
+      },
+      "Lean.Elab.Tactic.run": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.run (mvarId : MVarId) (x : Elab.Tactic.TacticM Unit) : Elab.TermElabM (List MVarId)",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def run (mvarId : MVarId) (x : TacticM Unit) : TermElabM (List MVarId) :=   mvarId.withContext do    let pendingMVarsSaved := (← get).pendingMVars    modify fun s => { s with pendingMVars := [] }    let aux : TacticM (List MVarId) :=      /- Important: the following `try` does not backtrack the state.         This is intentional because we don't want to backtrack the error messages when we catch the \"abort internal exception\"         We must define `run` here because we define `MonadExcept` instance for `TacticM` -/      try        x; getUnsolvedGoals      catch ex =>        if isAbortTacticException ex then          getUnsolvedGoals        else          throw ex    try      aux.runCore' { elaborator := .anonymous } { goals := [mvarId] }    finally      modify fun s => { s with pendingMVars := pendingMVarsSaved }",
+        "description": "A function that executes a tactic within the context of a specific metavariable and returns a list of metavariable identifiers."
+      }
+    },
+    "ElabTerm.lean": {
+      "Lean.Elab.Tactic.elabTermEnsuringType": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.elabTermEnsuringType (stx : Syntax) (expectedType? : Option Expr) (mayPostpone : Bool := false) :\n  TacticM Expr",
+        "comment": "Elaborate `stx` in the current `MVarContext`. If given, the `expectedType` will be used to help\nelaboration and then a `TypeMismatchError` will be thrown if the elaborated type doesn't match.  ",
+        "explanatories": {},
+        "fullDefinition": "def elabTermEnsuringType (stx : Syntax) (expectedType? : Option Expr) (mayPostpone := false) : TacticM Expr := do   let e ← elabTerm stx expectedType? mayPostpone   -- We do use `Term.ensureExpectedType` because we don't want coercions being inserted here.   match expectedType? with   | none => return e   | some expectedType =>     let eType ← inferType e     -- We allow synthetic opaque metavars to be assigned in the following step since the `isDefEq` is not really     -- part of the elaboration, but part of the tactic. See issue #492     unless (← withAssignableSyntheticOpaque <| isDefEq eType expectedType) do       Term.throwTypeMismatchError none expectedType eType e     return e",
+        "description": "A function that elaborates a given syntax in the current context, optionally checking against an expected type and reporting a type mismatch error if necessary."
+      },
+      "Lean.Elab.Tactic.getFVarId": {
+        "type": "definition",
+        "code": "Lean.Elab.Tactic.getFVarId (id : Syntax) : TacticM FVarId",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def getFVarId (id : Syntax) : TacticM FVarId := withRef id do   -- use apply-like elaboration to suppress insertion of implicit arguments   let e ← withMainContext do     elabTermForApply id (mayPostpone := false)   match e with   | Expr.fvar fvarId => return fvarId   | _                => throwError \"unexpected term '{e}'; expected single reference to variable\"",
+        "description": "A function that retrieves the identifier of a variable from the current tactic context."
+      }
+    }
+  },
+  "Term.lean": {
+    "Lean.Elab.Term.elabTerm": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.elabTerm (stx : Syntax) (expectedType? : Option Expr) (catchExPostpone implicitLambda : Bool := true) :\n  Elab.TermElabM Expr",
+      "comment": "Main function for elaborating terms.\nIt extracts the elaboration methods from the environment using the node kind.\nRecall that the environment has a mapping from `SyntaxNodeKind` to `TermElab` methods.\nIt creates a fresh macro scope for executing the elaboration method.\nAll unlogged trace messages produced by the elaboration method are logged using\nthe position information at `stx`. If the elaboration method throws an `Exception.error` and `errToSorry == true`,\nthe error is logged and a synthetic sorry expression is returned.\nIf the elaboration throws `Exception.postpone` and `catchExPostpone == true`,\na new synthetic metavariable of kind `SyntheticMVarKind.postponed` is created, registered,\nand returned.\nThe option `catchExPostpone == false` is used to implement `resumeElabTerm`\nto prevent the creation of another synthetic metavariable when resuming the elaboration.\n\nIf `implicitLambda == false`, then disable implicit lambdas feature for the given syntax, but not for its subterms.\nWe use this flag to implement, for example, the `@` modifier. If `Context.implicitLambda == false`, then this parameter has no effect.\n",
+      "explanatories": {},
+      "fullDefinition": "def elabTerm (stx : Syntax) (expectedType? : Option Expr) (catchExPostpone := true) (implicitLambda := true) : TermElabM Expr :=   withRef stx <| elabTermAux expectedType? catchExPostpone implicitLambda stx",
+      "description": "A function that elaborates terms by extracting methods from the environment, handling exceptions, logging trace messages, and managing implicit lambda features based on specified options."
+    },
+    "Lean.Elab.Term.exprToSyntax": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.exprToSyntax (e : Expr) : TermElabM Term",
+      "comment": "Helper function for \"embedding\" an `Expr` in `Syntax`.\nIt creates a named hole `?m` and immediately assigns `e` to it.\nExamples:\n```lean\nlet e := mkConst ``Nat.zero\n`(Nat.succ $(← exprToSyntax e))\n```\n",
+      "explanatories": {},
+      "fullDefinition": "def exprToSyntax (e : Expr) : TermElabM Term := withFreshMacroScope do   let result ← `(?m)   let eType ← inferType e   let mvar ← elabTerm result eType   mvar.mvarId!.assign e   return result",
+      "description": "A helper function that converts an expression into syntax by creating a named hole and assigning the expression to it."
+    },
+    "Lean.Elab.Term.TermElabM.run": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.TermElabM.run {α : Type} (x : Elab.TermElabM α)\n  (ctx : Elab.Term.Context :=\n    { declName? := none, auxDeclToFullName := ∅, macroStack := [], mayPostpone := true, errToSorry := true,\n      autoBoundImplicit := false,\n      autoBoundImplicits :=\n        { root := PersistentArrayNode.node (Array.mkEmpty PersistentArray.branching.toNat),\n          tail := Array.mkEmpty PersistentArray.branching.toNat, size := 0, shift := PersistentArray.initShift,\n          tailOff := 0 },\n      autoBoundImplicitForbidden := fun x => false, sectionVars := ∅, sectionFVars := ∅, implicitLambda := true,\n      heedElabAsElim := true, isNoncomputableSection := false, ignoreTCFailures := false, inPattern := false,\n      tacticCache? := none, tacSnap? := none, saveRecAppSyntax := true, holesAsSyntheticOpaque := false })\n  (s : Elab.Term.State :=\n    { levelNames := [], syntheticMVars := ∅, pendingMVars := ∅, mvarErrorInfos := [], mvarArgNames := ∅,\n      letRecsToLift := [] }) :\n  MetaM (α × Elab.Term.State)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def TermElabM.run (x : TermElabM α) (ctx : Context := {}) (s : State := {}) : MetaM (α × State) :=   withConfig setElabConfig (x ctx |>.run s)",
+      "description": "A function that executes a term elaboration computation within a specified context and state, returning the result alongside the updated state."
+    },
+    "Lean.Elab.Term.TermElabM": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.TermElabM (α : Type) : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev TermElabM := ReaderT Context $ StateRefT State MetaM abbrev TermElab  := Syntax → Option Expr → TermElabM Expr",
+      "description": "A type that represents a computation for term elaboration, parameterized by a specific type."
+    },
+    "Lean.Elab.Term.withoutErrToSorry": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.withoutErrToSorry.{u_1} {m : Type → Type u_1} {α : Type} [MonadFunctorT TermElabM m] : m α → m α",
+      "comment": "Execute `x` without converting errors (i.e., exceptions) to `sorry` applications.\nRecall that when `errToSorry = true`, the method `elabTerm` catches exceptions and converts them into `sorry` applications.\n",
+      "explanatories": {},
+      "fullDefinition": "def withoutErrToSorry [MonadFunctorT TermElabM m] : m α → m α :=   monadMap (m := TermElabM) withoutErrToSorryImp",
+      "description": "A function that executes a computation without transforming errors into synthetic placeholders, maintaining the original exceptions."
+    },
+    "Lean.Elab.Term.TermElabM.run'": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.TermElabM.run' {α : Type} (x : TermElabM α)\n  (ctx : Term.Context :=\n    { declName? := none, auxDeclToFullName := ∅, macroStack := [], mayPostpone := true, errToSorry := true,\n      autoBoundImplicit := false,\n      autoBoundImplicits :=\n        { root := PersistentArrayNode.node (Array.mkEmpty PersistentArray.branching.toNat),\n          tail := Array.mkEmpty PersistentArray.branching.toNat, size := 0, shift := PersistentArray.initShift,\n          tailOff := 0 },\n      autoBoundImplicitForbidden := fun x => false, sectionVars := ∅, sectionFVars := ∅, implicitLambda := true,\n      heedElabAsElim := true, isNoncomputableSection := false, ignoreTCFailures := false, inPattern := false,\n      tacticCache? := none, tacSnap? := none, saveRecAppSyntax := true, holesAsSyntheticOpaque := false })\n  (s : Term.State :=\n    { levelNames := [], syntheticMVars := ∅, pendingMVars := ∅, mvarErrorInfos := [], mvarArgNames := ∅,\n      letRecsToLift := [] }) :\n  MetaM α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def TermElabM.run' (x : TermElabM α) (ctx : Context := {}) (s : State := {}) : MetaM α :=   (·.1) <$> x.run ctx s",
+      "description": "A function that executes a term elaboration computation within a specified context and state, returning a result in a meta-level monadic framework."
+    }
+  },
+  "App.lean": {
+    "Lean.Elab.Term.elabAppArgs": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.elabAppArgs (f : Expr) (namedArgs : Array Elab.Term.NamedArg) (args : Array Elab.Term.Arg)\n  (expectedType? : Option Expr) (explicit ellipsis : Bool) (resultIsOutParamSupport : Bool := true) :\n  Elab.TermElabM Expr",
+      "comment": "Elaborate a `f`-application using `namedArgs` and `args` as the arguments.\n- `expectedType?` the expected type if available. It is used to propagate typing information only. This method does **not** ensure the result has this type.\n- `explicit = true` when notation `@` is used, and implicit arguments are assumed to be provided at `namedArgs` and `args`.\n- `ellipsis = true` when notation `..` is used. That is, we add `_` for missing arguments.\n- `resultIsOutParamSupport` is used to control whether special support is used when processing applications of functions that return\n   output parameter of some local instance. Example:\n   ```\n   GetElem.getElem : {Cont : Type u_1} → {Idx : Type u_2} → {elem : Type u_3} → {dom : cont → idx → Prop} → [self : GetElem cont idx elem dom] → (xs : cont) → (i : idx) → dom xs i → elem\n   ```\n   The result type `elem` is the output parameter of the local instance `self`.\n   When this parameter is set to `true`, we execute `synthesizeSyntheticMVarsUsingDefault`. For additional details, see comment at\n   `ElabAppArgs.resultIsOutParam`.\n",
+      "explanatories": {},
+      "fullDefinition": "def elabAppArgs (f : Expr) (namedArgs : Array NamedArg) (args : Array Arg)     (expectedType? : Option Expr) (explicit ellipsis : Bool) (resultIsOutParamSupport := true) : TermElabM Expr := do   -- Coercions must be available to use this flag.   -- If `@` is used (i.e., `explicit = true`), we disable `resultIsOutParamSupport`.   let resultIsOutParamSupport := ((← getEnv).contains ``Lean.Internal.coeM) && resultIsOutParamSupport && !explicit   let fType ← inferType f   let fType ← instantiateMVars fType   unless namedArgs.isEmpty && args.isEmpty do     tryPostponeIfMVar fType   trace[Elab.app.args] \"explicit: {explicit}, ellipsis: {ellipsis}, {f} : {fType}\"   trace[Elab.app.args] \"namedArgs: {namedArgs}\"   trace[Elab.app.args] \"args: {args}\"   if let some elimInfo ← elabAsElim? then     tryPostponeIfNoneOrMVar expectedType?     let some expectedType := expectedType? | throwError \"failed to elaborate eliminator, expected type is not available\"     let expectedType ← instantiateMVars expectedType     if expectedType.getAppFn.isMVar then throwError \"failed to elaborate eliminator, expected type is not available\"     let extraArgsPos ← getElabAsElimExtraArgsPos elimInfo     ElabElim.main.run { elimInfo, expectedType, extraArgsPos } |>.run' {       f, fType       args := args.toList       namedArgs := namedArgs.toList     }   else     ElabAppArgs.main.run { explicit, ellipsis, resultIsOutParamSupport } |>.run' {       args := args.toList       expectedType?, f, fType       namedArgs := namedArgs.toList       propagateExpected := (← propagateExpectedTypeFor f)     } where   /-- Return `some info` if we should elaborate as an eliminator. -/   elabAsElim? : TermElabM (Option ElimInfo) := do     unless (← read).heedElabAsElim do return none     if explicit || ellipsis then return none     let .const declName _ := f | return none     unless (← shouldElabAsElim declName) do return none     let elimInfo ← getElimInfo declName     forallTelescopeReducing (← inferType f) fun xs _ => do       if h : elimInfo.motivePos < xs.size then         let x := xs[elimInfo.motivePos]         let localDecl ← x.fvarId!.getDecl         if findBinderName? namedArgs.toList localDecl.userName matches some _ then           -- motive has been explicitly provided, so we should use standard app elaborator           return none         return some elimInfo       else         return none",
+      "description": "A function that elaborates a function application by taking in a function expression and its arguments while considering optional typing information and specific processing rules for various argument notations and output parameters."
+    }
+  },
+  "Arg.lean": {
+    "Lean.Elab.Term.Arg.expr": {
+      "type": "theorem",
+      "code": "Lean.Elab.Term.Arg.expr (val : Expr) : Elab.Term.Arg",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A structure that represents a term argument in the elaboration process, associated with a specific expression value."
+    }
+  },
+  "Binders.lean": {
+    "Lean.Elab.Term.addLocalVarInfo": {
+      "type": "definition",
+      "code": "Lean.Elab.Term.addLocalVarInfo (stx : Syntax) (fvar : Expr) : Elab.TermElabM Unit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def addLocalVarInfo (stx : Syntax) (fvar : Expr) : TermElabM Unit :=   addTermInfo' (isBinder := true) stx fvar",
+      "description": "A function that adds local variable information based on a syntax element and a variable expression during the elaboration process."
+    }
+  },
+  "Exception.lean": {
+    "Lean.Elab.throwUnsupportedSyntax": {
+      "type": "definition",
+      "code": "Lean.Elab.throwUnsupportedSyntax.{u_1, u_2} {m : Type u_1 → Type u_2} {α : Type u_1} [MonadExceptOf Exception m] : m α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def throwUnsupportedSyntax [MonadExceptOf Exception m] : m α :=   throw $ Exception.internal unsupportedSyntaxExceptionId",
+      "description": "A function that raises an error indicating that the provided syntax is not supported in the current context."
+    },
+    "Lean.Elab.throwIllFormedSyntax": {
+      "type": "definition",
+      "code": "Lean.Elab.throwIllFormedSyntax {m : Type → Type} {α : Type} [Monad m] [MonadError m] : m α",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def throwIllFormedSyntax [Monad m] [MonadError m] : m α :=   throwError \"ill-formed syntax\"",
+      "description": "A function that triggers an error when the syntax being processed is found to be ill-formed or incorrect."
+    }
+  },
+  "InfoTree": {
+    "Main.lean": {
+      "Lean.Elab.realizeGlobalConstNoOverloadWithInfo": {
+        "type": "definition",
+        "code": "Lean.Elab.realizeGlobalConstNoOverloadWithInfo (id : Syntax) (expectedType? : Option Expr := none) : CoreM Name",
+        "comment": "This does the same job as `realizeGlobalConstNoOverload`; resolving an identifier\nsyntax to a unique fully resolved name or throwing if there are ambiguities.\nBut also adds this resolved name to the infotree. This means that when you hover\nover a name in the sourcefile you will see the fully resolved name in the hover info.",
+        "explanatories": {},
+        "fullDefinition": "def realizeGlobalConstNoOverloadWithInfo (id : Syntax) (expectedType? : Option Expr := none) : CoreM Name := do   let n ← realizeGlobalConstNoOverload id   if (← getInfoState).enabled then     -- we do not store a specific elaborator since identifiers are special-cased by the server anyway     addConstInfo id n expectedType?   return n",
+        "description": "A function that resolves an identifier to a unique fully qualified name while adding this information to the infotree for improved hover information in the source code."
+      }
+    }
+  }
+}

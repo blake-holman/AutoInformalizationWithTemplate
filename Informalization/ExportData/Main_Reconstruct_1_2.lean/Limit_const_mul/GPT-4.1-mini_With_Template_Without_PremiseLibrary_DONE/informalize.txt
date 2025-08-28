@@ -1,0 +1,276 @@
+[appliedTactic]
+let ⟨a,convxa⟩ :=  conx 
+[answer]
+Let \(a\) be the limit to which the sequence \(x\) converges.
+[appliedTactic]
+have : IsConverges (fun n => α * (x n)) := by
+          apply Exists.intro (α * a)
+          intro ε εpos
+          let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))
+          apply Exists.intro n₀
+          intro n nlen₀
+          calc
+            |α * (x n) - α * a| = |α| * |x n - a| := by
+              rw [← mul_sub, abs_mul]
+            _ ≤ (|α| * ε /(|α| + 1))  := by
+              rw [← mul_div]
+              by_cases h1 :|α| > 0
+              . rw [mul_le_mul_left h1]
+                apply le_of_lt
+                exact h n nlen₀
+              . push_neg at h1
+                rw [abs_nonpos_iff] at h1
+                rw [h1,abs_zero,zero_mul,zero_mul]
+            _ < ε := by
+              rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]
+              rw [one_mul,lt_add_iff_pos_right]
+              exact  zero_lt_one 
+[answer]
+Show that the sequence defined by multiplying each term of the original sequence by \( \alpha \) converges, with limit equal to \( \alpha \) times the limit of the original sequence.
+[appliedTactic]
+apply Exists.intro (α * a ) 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that the sequence defined by multiplying each term of \( x \) by \( \alpha \) converges, it suffices to prove that this sequence converges to \( \alpha \) times \( a \).
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon > 0 \). From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of \( \alpha \cdot x_n - \alpha \cdot a \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+[answer]
+Let \( n_0 \) be such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 0 < 1 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that there exists an index from which the sequence formed by multiplying each term of \( x \) by \( \alpha \) is within \( \varepsilon \) of \( \alpha a \), it suffices to prove that for all indices greater than or equal to \( n_0 \), the terms of this new sequence satisfy the required closeness condition.
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of \( \alpha \) times \( x_n \) minus \( \alpha \) times \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+            |α * (x n) - α * a| = |α| * |x n - a| := by
+              rw [← mul_sub, abs_mul]
+            _ ≤ (|α| * ε /(|α| + 1))  := by
+              rw [← mul_div]
+              by_cases h1 :|α| > 0
+              . rw [mul_le_mul_left h1]
+                apply le_of_lt
+                exact h n nlen₀
+              . push_neg at h1
+                rw [abs_nonpos_iff] at h1
+                rw [h1,abs_zero,zero_mul,zero_mul]
+            _ < ε := by
+              rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]
+              rw [one_mul,lt_add_iff_pos_right]
+              exact  zero_lt_one 
+[answer]
+By calculation, it is shown that \( | \alpha \cdot x_n - \alpha \cdot a | = |\alpha| \cdot |x_n - a| \leq |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon. \)
+[appliedTactic]
+rw [← mul_sub, abs_mul ] 
+[answer]
+By rewriting the expression to factor out the multiplication over subtraction and then applying the property that the absolute value of a product equals the product of the absolute values, we complete the proof.
+[appliedTactic]
+rw [← mul_div ] 
+[answer]
+By using the property that multiplying a number by a quotient is equivalent to dividing the product by the denominator, the goal of proving that the absolute value of α times the absolute value of the difference between x n and a is less than or equal to the absolute value of α times ε divided by the sum of the absolute value of α and 1 becomes proving that this product is less than or equal to the absolute value of α multiplied by the quotient of ε over the sum of the absolute value of α and 1.
+[appliedTactic]
+by_cases h1 :|α| >  0 
+[answer]
+To prove that the product of the absolute value of \( \alpha \) and the absolute difference between \( x_n \) and \( a \) is bounded by the product of the absolute value of \( \alpha \) and \( \varepsilon \) divided by the sum of the absolute value of \( \alpha \) and 1, we proceed by case analysis on whether the absolute value of \( \alpha \) is greater than zero.
+[appliedTactic]
+. rw [mul_le_mul_left h1]
+                apply le_of_lt
+                exact h n  nlen₀ 
+[answer]
+We prove the case where the product of the absolute value of \( \alpha \) and the difference between \( x_n \) and \( a \) is less than or equal to the product of the absolute value of \( \alpha \) and the fraction of \( \varepsilon \) over the sum of the absolute value of \( \alpha \) and one.
+[appliedTactic]
+rw [mul_le_mul_left h1 ] 
+[answer]
+By using the assumption that the absolute value of α is positive and the theorem that multiplying both sides of an inequality by a positive number preserves the inequality, the goal of proving that the product of the absolute value of α and the absolute difference between x n and a is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 becomes the goal of proving that the absolute difference between x n and a is less than or equal to ε divided by the sum of the absolute value of α and 1.
+[appliedTactic]
+apply  le_of_lt 
+[answer]
+From the fact that a strict inequality implies a non-strict inequality, in order to establish that the absolute value of \( x_n - a \) is less than or equal to \( \frac{\varepsilon}{|\alpha| + 1} \), it suffices to prove that the absolute value of \( x_n - a \) is strictly less than \( \frac{\varepsilon}{|\alpha| + 1} \).
+[appliedTactic]
+exact h n  nlen₀ 
+[answer]
+The proof is completed from the assumptions that \(n\) is greater than or equal to \(n_0\) and for all such \(n\), the distance between \(x_n\) and \(a\) is less than \(\varepsilon\) divided by \(|\alpha| + 1\).
+[appliedTactic]
+. push_neg at h1
+                rw [abs_nonpos_iff] at h1
+                rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+We prove the case where the absolute value of \( \alpha \) is not greater than zero, and thus the inequality involving the product of the absolute value of \( \alpha \) and the difference between \( x_n \) and \( a \) holds as stated.
+[appliedTactic]
+push_neg at  h1 
+[answer]
+Not \( | \alpha | > 0 \) becomes \( | \alpha | \leq 0 \).
+[appliedTactic]
+rw [abs_nonpos_iff] at  h1 
+[answer]
+By using the theorem that an absolute value is less than or equal to zero if and only if the original number is zero, the assumption that the absolute value of α is less than or equal to zero becomes the assumption that α equals zero.
+[appliedTactic]
+rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+By using the assumption that \( \alpha = 0 \) and the facts that the absolute value of zero is zero and that zero multiplied by any number is zero, we complete the proof.
+[appliedTactic]
+rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ] 
+[answer]
+By using the positivity of ε, the non-negativity of the absolute value of α, and the equivalence between inequalities involving division and multiplication, the goal of proving that the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 is less than ε becomes the goal of proving that the absolute value of α is less than the product of 1 and the sum of the absolute value of α and 1.
+[appliedTactic]
+rw [one_mul,lt_add_iff_pos_right ] 
+[answer]
+By using the facts that multiplying by one leaves a number unchanged and that an inequality comparing a number to itself plus another is equivalent to the positivity of the added number, the goal of proving that the absolute value of α is less than one times the sum of the absolute value of α and one becomes the goal of proving that one is greater than zero.
+[appliedTactic]
+exact  zero_lt_one 
+[answer]
+The proof is completed from the theorem that zero is less than one.
+[appliedTactic]
+apply LimitUniqueness (fun n => α * (x n) ) 
+[answer]
+From the assumption that the sequence \( x \) converges to \( a \) and that the sequence defined by multiplying \( x \) by \( \alpha \) also converges, in order to establish that the limit of the sequence \( \alpha \cdot x_n \) equals \( \alpha \) times the limit of \( x_n \), it suffices to prove that the sequence \( \alpha \cdot x_n \) converges to its limit and that it also converges to \( \alpha \) times the limit of \( x_n \).
+[appliedTactic]
+. exact Limit_def (fun n => α * (x n))  this 
+[answer]
+We prove the case where the sequence defined by multiplying each term of \( x \) by \( \alpha \) converges to the limit of that sequence.
+[appliedTactic]
+exact Limit_def (fun n => α * (x n))  this 
+[answer]
+The proof is completed from the theorem that a sequence converges to its limit by definition and the assumption that the sequence defined by multiplying each term of \( x \) by \( \alpha \) converges.
+[appliedTactic]
+. intro ε εpos
+        let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))
+        apply Exists.intro n₀
+        intro n nlen₀
+        have : Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa
+        rw [this]
+        calc
+          |α * (x n) - α * a| = |α| * |x n - a| := by
+            rw [← mul_sub, abs_mul]
+          _ ≤ (|α| * ε /(|α| + 1))  := by
+            rw [← mul_div]
+            by_cases h1 :|α| > 0
+            . rw [mul_le_mul_left h1]
+              apply le_of_lt
+              exact h n nlen₀
+            . push_neg at h1
+              rw [abs_nonpos_iff] at h1
+              rw [h1,abs_zero,zero_mul,zero_mul]
+          _ < ε := by
+            rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]
+            rw [one_mul,lt_add_iff_pos_right]
+            exact  zero_lt_one 
+[answer]
+We prove the case where the sequence defined by multiplying each term of \( x \) by \( \alpha \) converges to the product of \( \alpha \) and the limit of \( x \).
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of the difference between \( \alpha \cdot x_n \) and \( \alpha \) times the limit of \( x \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+[answer]
+Let \( n_0 \) be such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \).
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 0 < 1 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of the difference between \( \alpha \) times the sequence \( x_n \) and \( \alpha \) times the limit of \( x \) is less than \( \varepsilon \), it suffices to prove that for all \( n \geq n_0 \), this inequality holds.
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number with \( n \geq n_0 \). From now on, we will show that the absolute value of \( \alpha \cdot x(n) - \alpha \) times the limit of \( x \) is less than \( \varepsilon \).
+[appliedTactic]
+have : Lim.sLim x = a := (Converges_sLim_iff x conx a).1  convxa 
+[answer]
+Show that the limit of the sequence \( x \) is equal to \( a \). This can be proved by using the equivalence between the sequence converging to \( a \) and the limit of the sequence being \( a \), which follows from the definition of the limit and the given fact that the sequence \( x \) converges to \( a \).
+[appliedTactic]
+rw [this ] 
+[answer]
+By using the assumption that the limit of the sequence \( x \) is \( a \), the goal of proving that the absolute value of \( \alpha \) times the \( n \)-th term of \( x \) minus \( \alpha \) times the limit of \( x \) is less than \( \varepsilon \) becomes the goal of proving that the absolute value of \( \alpha \) times the \( n \)-th term of \( x \) minus \( \alpha \) times \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+          |α * (x n) - α * a| = |α| * |x n - a| := by
+            rw [← mul_sub, abs_mul]
+          _ ≤ (|α| * ε /(|α| + 1))  := by
+            rw [← mul_div]
+            by_cases h1 :|α| > 0
+            . rw [mul_le_mul_left h1]
+              apply le_of_lt
+              exact h n nlen₀
+            . push_neg at h1
+              rw [abs_nonpos_iff] at h1
+              rw [h1,abs_zero,zero_mul,zero_mul]
+          _ < ε := by
+            rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]
+            rw [one_mul,lt_add_iff_pos_right]
+            exact  zero_lt_one 
+[answer]
+By calculation, it is shown that \( | \alpha \cdot x_n - \alpha \cdot a | = |\alpha| \cdot |x_n - a| \leq |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon. \)
+[appliedTactic]
+rw [← mul_sub, abs_mul ] 
+[answer]
+By using the distributive property of multiplication over subtraction and the property that the absolute value of a product equals the product of the absolute values, we complete the proof.
+[appliedTactic]
+rw [← mul_div ] 
+[answer]
+By using the property that multiplying a number by a quotient is equivalent to dividing the product by the denominator, the goal of proving that the product of the absolute value of α and the absolute difference between \( x_n \) and \( a \) is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 becomes proving that the product of the absolute value of α and the absolute difference between \( x_n \) and \( a \) is less than or equal to the absolute value of α multiplied by the quotient of ε over the sum of the absolute value of α and 1.
+[appliedTactic]
+by_cases h1 :|α| >  0 
+[answer]
+To prove that the product of the absolute value of \( \alpha \) and the absolute difference between \( x_n \) and \( a \) is bounded as specified, we proceed by case analysis on whether the absolute value of \( \alpha \) is greater than zero.
+[appliedTactic]
+. rw [mul_le_mul_left h1]
+              apply le_of_lt
+              exact h n  nlen₀ 
+[answer]
+We prove the case where the product of the absolute value of α and the absolute difference between x at n and a is less than or equal to the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1.
+[appliedTactic]
+rw [mul_le_mul_left h1 ] 
+[answer]
+By using the assumption that the absolute value of \(\alpha\) is positive and the property that multiplying both sides of an inequality by a positive number preserves the inequality, the goal of proving that the product of the absolute value of \(\alpha\) and the absolute difference between \(x_n\) and \(a\) is less than or equal to the product of the absolute value of \(\alpha\) and \(\varepsilon\) divided by the sum of the absolute value of \(\alpha\) and one becomes the goal of proving that the absolute difference between \(x_n\) and \(a\) is less than or equal to \(\varepsilon\) divided by the sum of the absolute value of \(\alpha\) and one.
+[appliedTactic]
+apply  le_of_lt 
+[answer]
+From the fact that a strict inequality implies a non-strict inequality, in order to establish that the absolute value of \( x_n - a \) is less than or equal to \( \varepsilon / (| \alpha | + 1) \), it suffices to prove that the absolute value of \( x_n - a \) is strictly less than \( \varepsilon / (| \alpha | + 1) \).
+[appliedTactic]
+exact h n  nlen₀ 
+[answer]
+The proof is completed from the assumptions that \( n \) is greater than or equal to \( n_0 \) and that for all such \( n \), the absolute difference between \( x_n \) and \( a \) is less than \( \varepsilon \) divided by the sum of the absolute value of \( \alpha \) and one.
+[appliedTactic]
+. push_neg at h1
+              rw [abs_nonpos_iff] at h1
+              rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+We prove the case where the absolute value of α is not greater than zero, so it equals zero and the expression simplifies accordingly.
+[appliedTactic]
+push_neg at  h1 
+[answer]
+Not \( |α| > 0 \) becomes \( |α| \leq 0 \).
+[appliedTactic]
+rw [abs_nonpos_iff] at  h1 
+[answer]
+By using the fact that the absolute value of a number is less than or equal to zero if and only if the number itself is zero, the assumption that the absolute value of α is less than or equal to zero becomes the assumption that α equals zero.
+[appliedTactic]
+rw [h1,abs_zero,zero_mul,zero_mul ] 
+[answer]
+By using the assumption that \( \alpha = 0 \) and the facts that the absolute value of zero is zero and that zero multiplied by any number is zero, we complete the proof.
+[appliedTactic]
+rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ] 
+[answer]
+By using the fact that the absolute value of α is nonnegative and that the sum of a nonnegative number and a positive number is positive, along with the equivalence between inequalities involving division and multiplication and the characterization of inequalities involving multiplication by a positive number, the goal of proving that the product of the absolute value of α and ε divided by the sum of the absolute value of α and 1 is less than ε becomes the goal of proving that the absolute value of α is less than 1 times the sum of the absolute value of α and 1.
+[appliedTactic]
+rw [one_mul,lt_add_iff_pos_right ] 
+[answer]
+By using the facts that multiplying by one leaves a number unchanged and that a comparison of a number being less than the sum of one and another number is equivalent to the other number being positive, the goal of proving that the absolute value of α is less than one times the sum of the absolute value of α and one becomes the goal of proving that zero is less than one.
+[appliedTactic]
+exact  zero_lt_one 
+[answer]
+The proof is completed from the theorem that zero is less than one.

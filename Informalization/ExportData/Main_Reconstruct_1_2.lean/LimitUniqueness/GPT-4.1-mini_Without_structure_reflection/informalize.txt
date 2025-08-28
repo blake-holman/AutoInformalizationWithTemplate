@@ -1,0 +1,91 @@
+[appliedTactic]
+have : ∀ ε > 0, |a - b| < ε := by
+      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、
+      intro ε εpos
+      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2
+      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)
+      let ⟨n₁,n₁h⟩ := n₁eps
+      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。
+      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)
+      let ⟨n₂,n₂h⟩ := n₂eps
+      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、
+      let n := max n₁ n₂
+      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]
+      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.
+      calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+[answer]
+Show that for every positive number ε, the distance between a and b is less than ε by using the convergence of the sequence to both a and b, the triangle inequality, and the properties of maximum and half to conclude that a equals b.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon > 0 \). From now on, we will show that the distance between \( a \) and \( b \) is less than \( \varepsilon \).
+[appliedTactic]
+have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) 
+[answer]
+Show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \). This can be proved by applying the fact that the sequence \( x \) converges to \( a \) and using the positivity of half of \( \varepsilon \), which follows from the positivity of \( \varepsilon \).
+[appliedTactic]
+exact half_pos  εpos 
+[answer]
+The proof is completed from the theorem that half of a positive element is positive and the assumption that \( \varepsilon \) is greater than zero.
+[appliedTactic]
+let ⟨n₁,n₁h⟩ :=  n₁eps 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the value of \( x_n \) is within \( \frac{\varepsilon}{2} \) of \( a \).
+[appliedTactic]
+have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) 
+[answer]
+Show that there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), the distance between \( x_n \) and \( b \) is less than half of \( \varepsilon \). This can be proved by applying the fact that \( x \) converges to \( b \) and using the positivity of half of \( \varepsilon \).
+[appliedTactic]
+exact half_pos  εpos 
+[answer]
+The proof is completed from the theorem that half of a positive number is positive and the assumption that ε is greater than zero.
+[appliedTactic]
+let ⟨n₂,n₂h⟩ :=  n₂eps 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the distance between \( x_n \) and \( b \) is less than half of \( \varepsilon \).
+[appliedTactic]
+let n := max n₁  n₂ 
+[answer]
+Let \( n \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] 
+[answer]
+Show that \( n \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+rw [ge_iff_le ] 
+[answer]
+By rewriting the goal using the equivalence between "greater than or equal to" and "less than or equal to," we complete the proof.
+[appliedTactic]
+calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+[answer]
+By calculation, it is shown that \( |a - b| = |(a - x_n) + (x_n - b)| \leq |x_n - a| + |x_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon. \)
+[appliedTactic]
+rw [add_sub,sub_add_cancel ] 
+[answer]
+By rewriting the expression using the property that adding the difference of two elements is equivalent to adding one and then subtracting the other, and then simplifying by canceling the subtraction with the subsequent addition, we complete the proof.
+[appliedTactic]
+rw [abs_sub_comm ] 
+[answer]
+By using the fact that the absolute value of the difference between two elements is symmetric, the goal of proving that the absolute value of \( a - x_n + (x_n - b) \) is at most the sum of the absolute values of \( x_n - a \) and \( x_n - b \) becomes the goal of proving that it is at most the sum of the absolute values of \( a - x_n \) and \( x_n - b \).
+[appliedTactic]
+exact abs_add (a - x n) (x n - b ) 
+[answer]
+The proof is completed from the theorem that the absolute value of a sum is at most the sum of the absolute values, and the assumptions that \(n\) is at least the maximum of \(n_1\) and \(n_2\), and that for all such \(n\), the absolute values of \(x_n - a\) and \(x_n - b\) are each less than half of \(\varepsilon\).
+[appliedTactic]
+exact eq_of_sub_eq_zero (abs_eps_zero (a - b) this ) 
+[answer]
+The proof is completed from the theorems that if the absolute value of a real number is less than every positive number then that number is zero, and if the difference between two elements equals zero then the elements are equal, and the assumption that the absolute value of \(a - b\) is less than every positive number.

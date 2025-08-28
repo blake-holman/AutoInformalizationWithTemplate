@@ -1,0 +1,61 @@
+[applied Tactic]
+have : 1 ∈ P := by
+      rw [Set.mem_setOf]
+       norm_num 
+
+[answer]
+We will show that the number 1 belongs to the set of all positive real numbers. By definition, an element belongs to this set if and only if it satisfies the property of being greater than 0. Therefore, to prove that 1 is in the set of positive real numbers, it suffices to show that \(1 > 0\). This inequality holds clearly, and thus 1 is indeed a positive real number.
+[applied Tactic]
+have PnotEmpty : P.Nonempty := by
+    have : 1 ∈ P := by
+      rw [Set.mem_setOf]
+      norm_num
+    exact ⟨1, this ⟩ 
+
+[answer]
+We will show that the set of all real numbers greater than zero is non-empty by demonstrating that the number 1 belongs to this set. By definition, a real number is in this set if and only if it is greater than zero. Since it is clear that \(1 > 0\), it follows that 1 is an element of this set. Consequently, the set contains at least one element, namely 1, and is therefore non-empty.
+[applied Tactic]
+have LB: LowerBound P 0 := by
+    intro a h1
+    exact le_of_lt  h1 
+
+[answer]
+We will show that 0 is a lower bound of the set of all real numbers greater than 0 by proving that every element of this set is greater than or equal to 0. Assume that \( a \) is a positive real number. Since \( a > 0 \), it follows from the theorem that a strict inequality implies a non-strict inequality that \( a \geq 0 \). Therefore, every element \( a \) in the set satisfies \( a \geq 0 \), establishing that 0 is indeed a lower bound of the set of all positive real numbers.
+[applied Tactic]
+have PBB : BoundedBelow P := by
+    exact ⟨0, LB ⟩ 
+
+[answer]
+We will show that the set \( P \) is bounded below by 0. To do this, we begin by assuming that the set \( P \) is nonempty. Under this assumption, we observe that 0 serves as a lower bound for \( P \), meaning that no element in \( P \) is less than 0. Therefore, we conclude that the set \( P \) is bounded below by 0 as required.
+[applied Tactic]
+apply (lt_div_iff (by norm_num)). 2 
+
+[answer]
+We will show that \( 0 < \frac{\inf P}{2} \) by applying the theorem concerning inequalities involving division by a positive number. Since it is clear that \( 0 < 2 \), it follows that to establish \( 0 < \frac{\inf P}{2} \), it suffices to prove the equivalent inequality \( 0 \cdot 2 < \inf P \). Given that multiplying zero by two yields zero, this reduces to showing \( 0 < \inf P \), thereby completing the proof.
+[applied Tactic]
+have : (1 / 2) * (sInf P) ∈ P := by
+      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]
+      apply (lt_div_iff (by norm_num)).2
+      rw [zero_mul]
+      exact  gtzero 
+
+[answer]
+We will show that one half of the greatest lower bound (infimum) of the set \( P \) is an element of \( P \). To do this, it suffices to prove that \( 0 < \frac{\inf P}{2} \), since membership in the set \( P \) corresponds to being greater than zero. Noting that \( 0 < 2 \), by applying the theorem concerning inequalities and division by a positive number, establishing \( 0 < \frac{\inf P}{2} \) is equivalent to showing \( 0 \cdot 2 < \inf P \). Because \( 0 \times 2 = 0 \), this reduces to proving \( 0 < \inf P \). Finally, the proof is completed by the assumption that the greatest lower bound of \( P \) is indeed positive, thereby confirming that one half of \(\inf P\) belongs to \( P \).
+[applied Tactic]
+have negtzero: ¬sInf P > 0 := by
+    intro gtzero
+    -- ⭐️ (1 /2) inf P ∈ P だから
+    have : (1 / 2) * (sInf P) ∈ P := by
+      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]
+      apply (lt_div_iff (by norm_num)).2
+      rw [zero_mul]
+      exact gtzero
+    -- ⭐️ (1 /2) inf P ≥ inf P でなければならない。
+    have : (1 /2) * (sInf P) ≥ (sInf P) := Element_ge_Inf PnotEmpty PBB ((1 /2) * (sInf P)) this
+    -- ⭐️これより inf P ≤ 0 となり、
+    rw [ge_iff_le,div_mul_comm,mul_one,le_div_iff (by norm_num), ← one_add_one_eq_two,mul_add,mul_one,add_le_iff_nonpos_right] at this
+    -- ⭐️ inf P > 0　としたことに矛盾する。
+     linarith 
+
+[answer]
+We will show that the infimum of the set \( P \) is not greater than zero by assuming the contrary and deriving a contradiction. Suppose, for the sake of contradiction, that \(\inf P > 0\). Under this assumption, consider the number \(\frac{\inf P}{2}\). Since \(\inf P > 0\), dividing by the positive number 2 preserves the inequality, so \(0 < \frac{\inf P}{2}\), which implies \(\frac{\inf P}{2} \in P\) because elements of \(P\) are greater than zero. However, since \(\inf P\) is a greatest lower bound, every element of \(P\), in particular \(\frac{\inf P}{2}\), must satisfy \(\frac{\inf P}{2} \geq \inf P\). This yields the inequality \(\frac{\inf P}{2} \geq \inf P\), which, upon rearrangement, implies \(\inf P \leq 0\). This contradicts our initial assumption that \(\inf P > 0\). Therefore, the assumption must be false, and we conclude that the infimum of \(P\) is not greater than zero.

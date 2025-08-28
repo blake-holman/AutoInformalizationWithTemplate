@@ -1,0 +1,218 @@
+[appliedTactic]
+intro x ⟨a, x_conv_to_a ⟩ 
+[answer]
+Assume that \( x \) is a sequence of real numbers and that \( x \) converges to some real number \( a \). From now on, we will show that the sequence \( x \) is bounded.
+[appliedTactic]
+have := x_conv_to_a 1 (by norm_num ) 
+[answer]
+Show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between \( x_n \) and \( a \) is less than 1. This can be proved by applying the definition of convergence of the sequence \( x \) to the limit \( a \) and using numerical simplification to establish the bound.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that \( 1 > 0 \).
+[appliedTactic]
+let ⟨n₀, h1⟩ :=  this 
+[answer]
+Let \( n_0 \) be such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than 1.
+[appliedTactic]
+have h2: ∀n ≥ n₀, |x n| < |a| + 1 := by
+      intro n ngen₀
+      have h2₁ := abs_sub_abs_le_abs_sub (x n) a
+      have h2₂ := h1 n ngen₀
+      exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) 
+[answer]
+Show that for every natural number \( n \) greater than or equal to \( n_0 \), the absolute value of \( x_n \) is less than the absolute value of \( a \) plus one.
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of \( x(n) \) is less than the absolute value of \( a \) plus 1.
+[appliedTactic]
+have h2₁ := abs_sub_abs_le_abs_sub (x n)  a 
+[answer]
+Show that the difference between the absolute value of \( x n \) and the absolute value of \( a \) is less than or equal to the absolute value of the difference between \( x n \) and \( a \). This can be proved by applying the property that the absolute value of the difference between two elements bounds the difference of their absolute values.
+[appliedTactic]
+have h2₂ := h1 n  ngen₀ 
+[answer]
+Show that the absolute difference between \( x(n) \) and \( a \) is less than 1. This can be proved by applying the property that for all \( n \) greater than or equal to \( n_0 \), the absolute value of \( x(n) - a \) is less than 1, which is given by the hypothesis for \( n \) satisfying \( n \geq n_0 \).
+[appliedTactic]
+exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) 
+[answer]
+The proof is completed from the theorems that if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third, and that if subtracting an element from another results in a value less than a third element, then the first element is less than the sum of the second element and the third element, and the assumptions that the difference between the absolute values of \( x(n) \) and \( a \) is less than one, and that the absolute value of \( x(n) \) minus the absolute value of \( a \) is less than or equal to the absolute value of their difference.
+[appliedTactic]
+let Z : Finset ℝ := (Multiset.ofList ((List.range n₀).map (|x ·|) ++ [|a| + 1])). toFinset 
+[answer]
+Let \( Z \) be the finite set consisting of the absolute values of \( x n \) for all \( n \) less than \( n_0 \), together with the value \( |a| + 1 \).
+[appliedTactic]
+have : Z.Nonempty := by
+      rw [Finset.Nonempty]
+      apply Exists.intro (|a| + 1)
+      simp [Z ] 
+[answer]
+Show that the finite set \( Z \) is non-empty by exhibiting the element \( |a| + 1 \) in it.
+[appliedTactic]
+rw [Finset.Nonempty ] 
+[answer]
+By using the definition that a finite set is non-empty if and only if there exists an element belonging to it, the goal of proving that the finite set \( Z \) is non-empty becomes the goal of proving that there exists an element \( x \) in \( Z \).
+[appliedTactic]
+apply Exists.intro (|a| + 1 ) 
+[answer]
+From the principle that to prove the existence of an element with a certain property it suffices to provide a specific example, in order to establish that there exists an element belonging to the set \( Z \), it suffices to prove that the number \( |a| + 1 \) is an element of \( Z \).
+[appliedTactic]
+simp [Z ] 
+[answer]
+By using the definition of the finite set constructed from the values of the sequence up to a certain index and the bound on the sequence terms beyond that index, the statement that the quantity \(|a| + 1\) belongs to this finite set is proved straightforward.
+[appliedTactic]
+let ⟨M,finmax⟩ := (Finset.max_of_nonempty this ) 
+[answer]
+Let \( M \) be the maximum element of the nonempty finite set \( Z \).
+[appliedTactic]
+have : ∀ n, |x n| ≤ M := by
+      intro n
+      -- 教科書では明示されていないものの基本は場合わけで考えているはず
+      by_cases h : n ≥ n₀
+      . have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt this
+      . push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+[answer]
+Show that for every natural number \( n \), the absolute value of \( x_n \) is less than or equal to \( M \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is an arbitrary natural number. From now on, we will show that the absolute value of \( x(n) \) is at most \( M \).
+[appliedTactic]
+by_cases h : n ≥  n₀ 
+[answer]
+To prove that the absolute value of \( x_n \) is at most \( M \), we proceed by case analysis on whether \( n \) is greater than or equal to \( n_0 \).
+[appliedTactic]
+. have h3 := h2 n h
+        have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at this
+        have := lt_of_lt_of_le h3 h4
+        exact le_of_lt  this 
+[answer]
+We prove the case where the absolute value of \( x_n \) is less than or equal to \( M \).
+[appliedTactic]
+have h3 := h2 n  h 
+[answer]
+Show that the absolute value of \( x_n \) is less than \( |a| + 1 \). This follows directly from the fact that \( n \) is greater than or equal to \( n_0 \) and the given property that for all such \( n \), the absolute value of \( x_n \) is bounded above by \( |a| + 1 \).
+[appliedTactic]
+have h4 : |a| + 1 ≤ M := by
+          have : (|a| + 1) ∈ Z := by simp [Z]
+          have := Finset.le_max this; rw [finmax] at this
+          norm_cast at  this 
+[answer]
+Show that the quantity \( |a| + 1 \) is less than or equal to the maximum element \( M \) of the finite set containing the absolute values of the first \( n_0 \) terms of the sequence and \( |a| + 1 \).
+[appliedTactic]
+have : (|a| + 1) ∈ Z := by simp [Z ] 
+[answer]
+Show that the quantity obtained by adding 1 to the absolute value of \( a \) is an element of the finite set \( Z \).
+[appliedTactic]
+simp [Z ] 
+[answer]
+By using the definition of the finite set constructed from the values of the sequence and the bound, the fact that the number \(|a| + 1\) belongs to this set is proved straightforward.
+[appliedTactic]
+have := Finset.le_max  this 
+[answer]
+Show that the value \( |a| + 1 \) is less than or equal to the maximum element of the finite set \( Z \). This can be proved by using the fact that any element of a finite set is less than or equal to the maximum element of that set.
+[appliedTactic]
+rw [finmax] at  this 
+[answer]
+By using the assumption that the maximum of the finite set equals \( M \), the statement that the value \( |a| + 1 \) is less than or equal to the maximum of the set becomes the statement that \( |a| + 1 \) is less than or equal to \( M \).
+[appliedTactic]
+norm_cast at  this 
+[answer]
+
+[appliedTactic]
+have := lt_of_lt_of_le h3  h4 
+[answer]
+Show that the absolute value of \( x_n \) is less than \( M \). This can be proved by noting that the absolute value of \( x_n \) is less than the sum of the absolute value of \( a \) and 1, and this sum is less than or equal to \( M \); therefore, by transitivity of inequality, the absolute value of \( x_n \) is less than \( M \).
+[appliedTactic]
+exact le_of_lt  this 
+[answer]
+The proof is completed from the theorem that a strict inequality implies a non-strict inequality and the assumption that the absolute value of \( x_n \) is less than \( M \).
+[appliedTactic]
+. push_neg at h
+        have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl⟩
+        have := Finset.le_max this; rw [finmax] at this
+        norm_cast at  this 
+[answer]
+We prove the case where the index \( n \) is less than \( n_0 \).
+[appliedTactic]
+push_neg at  h 
+[answer]
+Not \( n \geq n_0 \) becomes \( n < n_0 \).
+[appliedTactic]
+have :  |x n| ∈ Z := by
+          simp [Z]
+          left
+          exact ⟨n, h, rfl ⟩ 
+[answer]
+Show that the absolute value of \( x_n \) is an element of the finite set \( Z \).
+[appliedTactic]
+simp [Z ] 
+[answer]
+By simplifying the expression, the goal of proving that the absolute value of \( x(n) \) belongs to the set \( Z \) is transformed into proving that either there exists an index less than \( n_0 \) for which the absolute value of \( x \) at that index equals the absolute value of \( x(n) \), or that the absolute value of \( x(n) \) equals \( |a| + 1 \).
+[appliedTactic]
+ left 
+[answer]
+Show the case where there exists an index less than \( n_0 \) such that the absolute value of \( x \) at that index equals the absolute value of \( x \) at \( n \).
+[appliedTactic]
+exact ⟨n, h, rfl ⟩ 
+[answer]
+The proof is completed from the assumptions that there exists an index less than \( n_0 \) and that the absolute value of the sequence at this index equals the absolute value of the sequence at \( n \), along with the fact that an element is equal to itself.
+[appliedTactic]
+have := Finset.le_max  this 
+[answer]
+Show that the value of \( |x n| \) is less than or equal to the maximum element of the finite set \( Z \). This can be proved by using the fact that any element of a finite set is less than or equal to the maximum element of that set.
+[appliedTactic]
+rw [finmax] at  this 
+[answer]
+By using the fact that the maximum of the finite set \( Z \) equals \( M \), the statement that the absolute value of \( x_n \) is less than or equal to the maximum element of \( Z \) becomes the statement that the absolute value of \( x_n \) is less than or equal to \( M \).
+[appliedTactic]
+norm_cast at  this 
+[answer]
+
+[appliedTactic]
+apply Exists.intro  M 
+[answer]
+From the principle that to prove the existence of an element with a certain property it suffices to provide a specific example, in order to establish that the sequence is bounded, it suffices to prove that the real number \( M \) is an upper bound for the set of absolute values of the sequence terms.
+[appliedTactic]
+intro  a 
+[answer]
+Assume that \( a \) is an element such that there exists a natural number \( n \) with \( a = |x(n)| \). From now on, we will show that \( a \) is less than or equal to \( M \).
+[appliedTactic]
+rw [Set.mem_setOf ] 
+[answer]
+By using the fact that an element belongs to the set of all elements satisfying a property if and only if that property holds for the element, the goal of proving that if \( a \) is in the set of values equal to the absolute value of some term in the sequence then \( a \) is less than or equal to \( M \) becomes proving that if there exists an index \( n \) such that \( a \) equals the absolute value of the \( n \)-th term of the sequence, then \( a \) is less than or equal to \( M \).
+[appliedTactic]
+intro  k1 
+[answer]
+Assume that there exists a natural number \( n \) such that \( a \) equals the absolute value of \( x(n) \). From now on, we will show that \( a \) is less than or equal to \( M \).
+[appliedTactic]
+let ⟨n,k2⟩ :=  k1 
+[answer]
+Let \( n \) be such that \( a \) equals the absolute value of \( x \) at \( n \).
+[appliedTactic]
+rw [k2 ] 
+[answer]
+By using the assumption that \( a \) equals the absolute value of \( x \) at the natural number \( n \), the goal of proving \( a \leq M \) becomes the goal of proving that the absolute value of \( x \) at \( n \) is less than or equal to \( M \).
+[appliedTactic]
+exact this  n 
+[answer]
+The proof is completed from the assumption that for the given \( n \), the absolute value of \( x_n \) is less than or equal to \( M \).

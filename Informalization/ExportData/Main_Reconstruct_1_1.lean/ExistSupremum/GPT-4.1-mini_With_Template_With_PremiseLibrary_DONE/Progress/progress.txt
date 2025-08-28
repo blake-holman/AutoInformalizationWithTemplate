@@ -1,0 +1,269 @@
+[applied Tactic]
+have : DedekindCut A B := by
+    apply dedekind_comm
+    repeat (any_goals apply And.intro)
+    . exact BnotEmpty
+    . exact Set.diff_inter_self
+    . rw [Set.diff_union_self,Set.univ_union]
+    . let ⟨c,cinC⟩ := CnotEmpty
+      have h1 : {z : ℝ | z < c}.Nonempty := by
+        apply Exists.intro (c - 1)
+        simp
+      let ⟨z,zltc⟩ := h1
+      have : z ∈ A := by
+        have znotUpperBoundC : ¬ UpperBound C z := by
+          rw [UpperBound]; push_neg
+          apply Exists.intro
+          exact ⟨cinC,zltc⟩
+        exact ⟨Set.mem_univ z, znotUpperBoundC⟩
+      have : A ≠ ∅ := by
+        apply Set.nonempty_iff_ne_empty.1
+        exact ⟨z, this⟩
+      rw [Set.nonempty_iff_ne_empty]
+      exact this
+    . have : ∀ (a : ℝ), a ∈ A → ∀ (b : ℝ), b ∈ B → a < b := by
+        intro a ainA b binB
+        by_contra ageb
+        push_neg at ageb
+        have bUpperBoundC : UpperBound C b := binB
+        have aUpperBoundC : UpperBound C a := le_of_UpperBound C b bUpperBoundC a ageb
+        have ainACapB : a ∈ A ∩ B := ⟨ainA,aUpperBoundC⟩
+        have ACapBnotEmp : (A ∩ B)≠ ∅ := by
+          apply Set.nonempty_iff_ne_empty.1
+          exact ⟨a, ainACapB⟩
+        have ACapBemp : A ∩ B = ∅ := Set.diff_inter_self
+        contradiction
+      exact  this 
+
+[answer]
+We will show that the sets \( A \) and \( B \) form a Dedekind cut by verifying the defining properties. First, we establish that both \( A \) and \( B \) are nonempty. Next, we prove that their union covers the entire set of real numbers and that they are disjoint, ensuring no overlap between the two sets. Then, we show that every element of \( A \) is strictly less than every element of \( B \). Finally, we confirm that \( A \) contains no greatest element. Together, these properties demonstrate that \( (A, B) \) constitutes a Dedekind cut.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the set \( B \) is non-empty and that the sets \( A \) and \( B \) satisfy the properties that they are disjoint, their union is the universal set, \( A \) is non-empty, and every element of \( A \) is less than every element of \( B \). To do so, we rely on the principle that a conjunction of propositions holds if and only if each proposition holds individually. Therefore, it suffices to prove separately that \( B \) is non-empty and that the conjunction of the remaining properties holds. This approach breaks down the overall statement into manageable parts, allowing us to establish each required property step by step until the proposition is fully demonstrated.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the sets \( A \) and \( B \) satisfy the following properties: their intersection is empty, their union equals the universal set, \( A \) is nonempty, and for every element \( a \in A \) and \( b \in B \), we have \( a < b \). By the principle that the conjunction of true propositions is true, it suffices to prove each of these statements individually. First, we establish that \( A \cap B = \emptyset \). Next, we verify that \( A \cup B \) equals the universal set. Then, we confirm that \( A \) is nonempty. Finally, we demonstrate that every element of \( A \) is less than every element of \( B \). Together, these results confirm the proposition.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the union of the sets \( A \) and \( B \) equals the universal set, that \( A \) is nonempty, and that every element of \( A \) is less than every element of \( B \). By the principle that to prove a conjunction it suffices to prove each component separately, it is enough to establish these properties individually. Thus, we proceed by first demonstrating that \( A \cup B \) equals the universal set, then showing that \( A \) contains at least one element, and finally verifying that for any \( a \in A \) and \( b \in B \), the inequality \( a < b \) holds.
+[applied Tactic]
+any_goals apply  And.intro 
+
+[answer]
+We will show that the set \( A \) is non-empty and that every element of \( A \) is less than every element of \( B \). By the principle of conjunction, it suffices to prove these two statements separately. First, we establish that \( A \) is non-empty. Next, we demonstrate that for every \( a \in A \) and \( b \in B \), the inequality \( a < b \) holds. Together, these two results confirm the desired proposition.
+[applied Tactic]
+. exact  BnotEmpty 
+
+[answer]
+We prove the proposition under the assumption that the set \( B \) is non-empty. Starting from this premise, the proof proceeds by leveraging the non-emptiness of \( B \) to establish the desired conclusion. Thus, the argument is completed by relying directly on the assumption that \( B \neq \emptyset \).
+[applied Tactic]
+. exact  Set.diff_inter_self 
+
+[answer]
+We will show that the intersection of \( A \) and \( B \) is empty under the given conditions. To do this, we rely on the theorem stating that the intersection of the difference of one set from another with the first set itself is empty. Specifically, since the intersection of \( A \setminus B \) and \( A \) is empty, it follows that \( A \) and \( B \) do not share any elements, completing the proof.
+[applied Tactic]
+. rw [Set.diff_union_self,Set.univ_union ] 
+
+[answer]
+We will prove the proposition in the case where the union of \( A \) and \( B \) equals the universal set. To do so, we observe that the union of the difference of one set from another with the second set equals the union of both sets. Applying this fact, along with the property that the union of the universal set with any set is the universal set, we conclude that the union in question is indeed the universal set, thereby completing the proof.
+[applied Tactic]
+have h1 : {z : ℝ | z < c}.Nonempty := by
+        apply Exists.intro (c - 1)
+         simp 
+
+[answer]
+We will show that the set of all real numbers less than \( c \) is non-empty. To do this, by the introduction rule for existential quantifiers, it suffices to exhibit a specific real number that is less than \( c \). Consider the number \( c - 1 \). Since subtracting 1 from \( c \) yields a number strictly less than \( c \), it follows that \( c - 1 \) belongs to the set of real numbers less than \( c \). Therefore, the set is non-empty, as required.
+[applied Tactic]
+have znotUpperBoundC : ¬ UpperBound C z := by
+          rw [UpperBound]; push_neg
+          apply Exists.intro
+          exact ⟨cinC,zltc ⟩ 
+
+[answer]
+We will show that \( z \) is not an upper bound of the set \( C \) by demonstrating the existence of an element in \( C \) that exceeds \( z \). By definition, \( z \) is an upper bound of \( C \) if and only if every element of \( C \) is less than or equal to \( z \). Therefore, to prove that \( z \) is not an upper bound, it suffices to show that there exists at least one element in \( C \) greater than \( z \). By the introduction rule for existential quantifiers, this amounts to identifying a particular element \( c \in C \) such that \( z < c \). Given the assumptions that such an element \( c \) exists in \( C \) and that \( z < c \), it follows directly that \( z \) cannot serve as an upper bound for \( C \). Hence, the proposition is established.
+[applied Tactic]
+have : z ∈ A := by
+        have znotUpperBoundC : ¬ UpperBound C z := by
+          rw [UpperBound]; push_neg
+          apply Exists.intro
+          exact ⟨cinC,zltc⟩
+        exact ⟨Set.mem_univ z, znotUpperBoundC ⟩ 
+
+[answer]
+We will show that the element \( z \), which is less than \( c \) and belongs to the universal set, is not an upper bound of the set \( C \). By definition, \( z \) is an upper bound of \( C \) if every element of \( C \) is less than or equal to \( z \). To prove the contrary, it suffices to demonstrate the existence of an element \( c \in C \) such that \( z < c \). Since such an element \( c \) exists by assumption, it follows that \( z \) cannot be an upper bound of \( C \). Given that \( z \) belongs to the universal set and is not an upper bound of \( C \), we conclude that \( z \) belongs to the set \( A \), as required.
+[applied Tactic]
+have : A ≠ ∅ := by
+        apply Set.nonempty_iff_ne_empty.1
+        exact ⟨z, this ⟩ 
+
+[answer]
+We will show that the set \( A \) is not empty by demonstrating the existence of an element \( z \in A \). Since a set is non-empty if and only if it is not equal to the empty set, it suffices to prove that such an element \( z \) exists. Given the assumptions that there exists a real number \( z \) less than \( c \) and that this \( z \) belongs to \( A \), it follows immediately that \( A \) contains at least one element. Therefore, \( A \) is non-empty, completing the proof.
+[applied Tactic]
+. let ⟨c,cinC⟩ := CnotEmpty
+      have h1 : {z : ℝ | z < c}.Nonempty := by
+        apply Exists.intro (c - 1)
+        simp
+      let ⟨z,zltc⟩ := h1
+      have : z ∈ A := by
+        have znotUpperBoundC : ¬ UpperBound C z := by
+          rw [UpperBound]; push_neg
+          apply Exists.intro
+          exact ⟨cinC,zltc⟩
+        exact ⟨Set.mem_univ z, znotUpperBoundC⟩
+      have : A ≠ ∅ := by
+        apply Set.nonempty_iff_ne_empty.1
+        exact ⟨z, this⟩
+      rw [Set.nonempty_iff_ne_empty]
+      exact  this 
+
+[answer]
+We will show that the set \( A \) is non-empty. To begin, let \( c \) be an element of the set \( C \). Consider the set of all real numbers less than \( c \); to prove this set is non-empty, it suffices to exhibit a specific real number less than \( c \). For this purpose, note that \( c - 1 \) is strictly less than \( c \), implying that \( c - 1 \) lies in this set, and thus it is indeed non-empty.
+
+Next, let \( z \) be any real number less than \( c \). We claim that such an element \( z \) belongs to the universal set but is not an upper bound of \( C \). Recall that an element \( z \) is an upper bound of \( C \) if every element of \( C \) is less than or equal to \( z \). However, since \( z < c \) and \( c \in C \), it follows that \( z \) cannot be an upper bound of \( C \). Therefore, by definition, \( z \) must belong to the set \( A \).
+
+Since we have identified an element \( z \in A \), it follows that \( A \) is not empty. This is equivalent to asserting that \( A \) is not equal to the empty set. Hence, the existence of such an element \( z \) confirms that the set \( A \) is non-empty, completing the proof.
+[applied Tactic]
+have ACapBnotEmp : (A ∩ B)≠ ∅ := by
+          apply Set.nonempty_iff_ne_empty.1
+          exact ⟨a, ainACapB ⟩ 
+
+[answer]
+We will show that the intersection of the sets \( A \) and \( B \) is not empty. To do this, it suffices to prove that there exists an element that belongs to both \( A \) and \( B \). By the assumptions, there is an element \( a \) such that \( a \in A \cap B \). Therefore, the intersection \( A \cap B \) contains at least one element \( a \), which implies that the intersection is not empty, as required.
+[applied Tactic]
+have : ∀ (a : ℝ), a ∈ A → ∀ (b : ℝ), b ∈ B → a < b := by
+        intro a ainA b binB
+        by_contra ageb
+        push_neg at ageb
+        have bUpperBoundC : UpperBound C b := binB
+        have aUpperBoundC : UpperBound C a := le_of_UpperBound C b bUpperBoundC a ageb
+        have ainACapB : a ∈ A ∩ B := ⟨ainA,aUpperBoundC⟩
+        have ACapBnotEmp : (A ∩ B)≠ ∅ := by
+          apply Set.nonempty_iff_ne_empty.1
+          exact ⟨a, ainACapB⟩
+        have ACapBemp : A ∩ B = ∅ := Set.diff_inter_self
+         contradiction 
+
+[answer]
+We will show that for every real number \( a \in A \) and every real number \( b \in B \), it holds that \( a < b \). Suppose, for the sake of contradiction, that this is not true, i.e., there exist \( a \in A \) and \( b \in B \) such that \( a \geq b \). Equivalently, we have \( b \leq a \). Since \( b \) is an element of \( B \), it follows by definition that \( b \) is an upper bound of the set \( C \), meaning \( b \) is greater than or equal to every element of \( C \). Given \( a \geq b \), and knowing that any real number greater than or equal to an upper bound is also an upper bound, it follows that \( a \) is an upper bound of \( C \) as well. Thus, \( a \) satisfies the condition for membership in \( B \), so \( a \in B \). But by assumption, \( a \in A \) as well. Hence, \( a \) belongs to the intersection \( A \cap B \). On one hand, by definition, \( A \) is the complement of \( B \), so their intersection must be empty; on the other hand, we have found an element \( a \) belonging to both, implying the intersection is nonempty. This contradiction shows that our initial assumption is false. Therefore, for every \( a \in A \) and every \( b \in B \), it must hold that \( a < b \), completing the proof.
+[applied Tactic]
+. have : ∀ (a : ℝ), a ∈ A → ∀ (b : ℝ), b ∈ B → a < b := by
+        intro a ainA b binB
+        by_contra ageb
+        push_neg at ageb
+        have bUpperBoundC : UpperBound C b := binB
+        have aUpperBoundC : UpperBound C a := le_of_UpperBound C b bUpperBoundC a ageb
+        have ainACapB : a ∈ A ∩ B := ⟨ainA,aUpperBoundC⟩
+        have ACapBnotEmp : (A ∩ B)≠ ∅ := by
+          apply Set.nonempty_iff_ne_empty.1
+          exact ⟨a, ainACapB⟩
+        have ACapBemp : A ∩ B = ∅ := Set.diff_inter_self
+        contradiction
+      exact  this 
+
+[answer]
+We will show that for every real number \( a \in A \) and every real number \( b \in B \), it holds that \( a < b \). Suppose, for the sake of contradiction, that this is not true; that is, there exist \( a \in A \) and \( b \in B \) such that \( a \geq b \). Since \( b \in B \), by definition \( b \) is an upper bound of the set \( C \), so \( b \) is greater than or equal to every element of \( C \). Given \( a \geq b \), it follows that \( a \) is also an upper bound of \( C \) and thus satisfies the membership condition for \( B \), implying \( a \in B \). However, this contradicts the assumption that \( a \in A \), since \( A \) is defined as the complement of \( B \) and therefore the intersection \( A \cap B \) must be empty. This contradiction shows that our initial assumption is false, and hence for every \( a \in A \) and every \( b \in B \), we must have \( a < b \), which completes the proof.
+[applied Tactic]
+have : HasMinElement B → ∃x, Supremum C x := by
+    intro ⟨x,h⟩
+    apply Exists.intro
+    exact  h 
+
+[answer]
+We will show that if the set \( B \) has a minimum element, then there exists a real number that is the supremum of the set \( C \). Assume that there exists a real number \( x \) which belongs to the set of upper bounds of \( C \) and is less than or equal to every other upper bound in that set. To prove the existence of the supremum, it suffices to demonstrate that this particular \( x \) is indeed the supremum of \( C \). This claim follows directly from the assumption that \( x \) is an upper bound of \( C \) and is minimal among all such upper bounds, thereby completing the proof.
+[applied Tactic]
+suffices h : HasMaxElement A → ∃x, Supremum C x by
+    exact Or.elim continuity h  this 
+
+[answer]
+We will show that there exists a real number \( a \) that is the supremum of the set \( C \). The argument relies on the fact that if the set \( A \) has a maximum element, then there exists a real number \( x \) which is the supremum of \( C \). By considering the two possible cases—either the set \( A \) has a maximum element or the related set has a minimum element—and noting that both conditions imply the existence of a supremum for \( C \), we conclude, using the theorem that if at least one of two propositions holds and both imply a third, then the third proposition is true, that such an \( a \), the supremum of \( C \), indeed exists.
+[applied Tactic]
+have xnotInB : ¬ x ∈ B := by
+    rw [Set.mem_diff] at xinA
+    exact  xinA.right 
+
+[answer]
+We will show that \( x \) does not belong to \( B \). By the definition of set difference, an element belongs to \( A = U \setminus B \) if and only if it is in the universal set \( U \) and not in \( B \). Since \( x \) is assumed to be in \( A \), it follows directly that \( x \) is not in \( B \). Hence, the proof is complete.
+[applied Tactic]
+have : ¬UpperBound C x := by  assumption 
+
+[answer]
+We will show that \( x \) is not an upper bound of the set \( C \). This follows directly from the definitions and properties involved, as no element of \( C \) is bounded above by \( x \), or equivalently, there exists an element in \( C \) that exceeds \( x \). Thus, \( x \) cannot serve as an upper bound for \( C \), establishing the proposition.
+[applied Tactic]
+have : ∃ c ∈ C, x < c := by
+    have : ¬UpperBound C x := by assumption
+    rw [UpperBound] at this
+    push_neg at this
+    exact  this 
+
+[answer]
+We will show that there exists an element \( c \) in the set \( C \) such that \( x < c \). To do this, we first observe that if \( x \) were an upper bound of \( C \), then by definition, every element of \( C \) would satisfy \( c \leq x \). However, showing that \( x \) is not an upper bound is equivalent to demonstrating that this condition fails. Specifically, if it is not true that all elements of \( C \) are less than or equal to \( x \), then there must exist at least one element \( c \in C \) for which \( c > x \). Hence, from the negation of the upper bound property, it follows that there exists an element in \( C \) exceeding \( x \), which completes the proof.
+[applied Tactic]
+have : ¬ UpperBound C z := by
+      rw [UpperBound]
+      push_neg
+      exact ⟨c, cinC, zltc ⟩ 
+
+[answer]
+We will show that \( z \) is not an upper bound of the set \( C \). By definition, \( z \) is an upper bound of \( C \) if and only if every element of \( C \) is less than or equal to \( z \). To prove the contrary, it suffices to demonstrate that there exists an element in \( C \) that is greater than \( z \). Given the assumptions that \( c \) is an element of \( C \), that \( x < c \), and that \( z \) lies between \( x \) and \( c \), it follows that \( z < c \). Since \( c \in C \) and \( c > z \), this shows that \( z \) cannot serve as an upper bound for \( C \), completing the proof.
+[applied Tactic]
+have : ∀z, (x < z ∧ z < c → z ∈ A):= by
+    intro z ⟨_, zltc⟩
+    have : ¬ UpperBound C z := by
+      rw [UpperBound]
+      push_neg
+      exact ⟨c, cinC, zltc⟩
+    exact ⟨Set.mem_univ z, this ⟩ 
+
+[answer]
+We will show that for every real number \( z \) such that \( x < z < c \), the element \( z \) belongs to the set \( A \). To this end, assume that \( z \) is such a real number. We first argue that \( z \) cannot be an upper bound of the set \( C \). By definition, \( z \) is an upper bound of \( C \) if every element of \( C \) is less than or equal to \( z \). However, since \( c \in C \) and \( x < z < c \), it follows that \( z < c \), contradicting the requirement for \( z \) to be an upper bound. Thus, \( z \) is not an upper bound of \( C \). Finally, since every element lies in the universal set and \( z \) is not an upper bound of \( C \), it follows from the construction of \( A \) that \( z \in A \), completing the proof.
+[applied Tactic]
+apply (lt_div_iff (by norm_num)). 2 
+
+[answer]
+We will show that \( x \) is less than the average of \( x \) and \( c \). By the theorem relating strict inequalities involving division by a positive number, this is equivalent to proving that twice \( x \) is less than the sum of \( x \) and \( c \). Since it is clear that \( 0 < 2 \), dividing both sides of the inequality \( 2x < x + c \) by the positive number 2 preserves the inequality, thereby establishing the desired result.
+[applied Tactic]
+. apply (lt_div_iff (by norm_num)).2
+      rw [← one_add_one_eq_two,mul_add,mul_one]
+      exact add_lt_add_left xltc  x 
+
+[answer]
+We will show that \( x \) is less than the average of \( x \) and \( c \). By the theorem relating strict inequalities involving division by a positive number, this is equivalent to proving that twice \( x \) is less than the sum \( x + c \). Since \( 0 < 2 \), dividing both sides of the inequality \( 2x < x + c \) by 2 preserves the inequality, thereby establishing the desired result. Noting that \( 2x = x + x \) by the distributive property and basic arithmetic, the inequality \( 2x < x + c \) can be rewritten as \( x + x < x + c \). Finally, by the assumption that \( x < c \) and the fact that adding the same quantity \( x \) to both sides of a strict inequality preserves the inequality, it follows that \( x + x < x + c \). Thus, the proposition is proved.
+[applied Tactic]
+apply (div_lt_iff (by norm_num)). 2 
+
+[answer]
+We will show that the average of \( x \) and \( c \) is less than \( c \). By the theorem stating that dividing one number by a positive number is less than another number if and only if the first number is less than the product of the second number and the positive divisor, this is equivalent to proving that the sum \( x + c \) is less than \( 2c \). Since \( 0 < 2 \) is clear, it follows directly that the inequality involving the sum and product holds, thereby establishing the desired result.
+[applied Tactic]
+. apply (div_lt_iff (by norm_num)).2
+      rw [← one_add_one_eq_two,mul_add,mul_one]
+      exact add_lt_add_right xltc  c 
+
+[answer]
+We will show that the average of \( x \) and \( c \) is less than \( c \). By the theorem stating that dividing one number by a positive number is less than another number if and only if the first number is less than the product of the second number and the positive divisor, this is equivalent to proving that the sum \( x + c \) is less than \( 2c \). Since multiplying by two can be expressed as adding \( c \) to itself, the inequality \( x + c < 2c \) translates to \( x + c < c + c \). Given the assumption that \( x < c \), adding \( c \) to both sides preserves the inequality, yielding \( x + c < c + c \). Therefore, the desired result follows directly.
+[applied Tactic]
+have zemp: {z : ℝ | x < z ∧ z < c}.Nonempty := by
+    apply Exists.intro ((x + c) / 2)
+    apply And.intro
+    . apply (lt_div_iff (by norm_num)).2
+      rw [← one_add_one_eq_two,mul_add,mul_one]
+      exact add_lt_add_left xltc x
+    . apply (div_lt_iff (by norm_num)).2
+      rw [← one_add_one_eq_two,mul_add,mul_one]
+      exact add_lt_add_right xltc  c 
+
+[answer]
+We will show that the set of real numbers \( z \) satisfying \( x < z < c \) is non-empty by exhibiting the midpoint \(\frac{x + c}{2}\) as an element of this set. To do so, it suffices to prove that this midpoint lies strictly between \( x \) and \( c \). First, we establish that \( x < \frac{x + c}{2} \). Multiplying both sides by 2, a positive number, this inequality is equivalent to proving \( 2x < x + c \). Since \( 2x = x + x \), and by adding \( x \) to both sides of the known inequality \( x < c \), we obtain \( x + x < x + c \), confirming that \( x < \frac{x + c}{2} \). Next, we show \( \frac{x + c}{2} < c \). Multiplying both sides by 2, this is equivalent to \( x + c < 2c \). Since \( 2c = c + c \), adding \( c \) to both sides of \( x < c \) yields \( x + c < c + c \), confirming the second inequality. Therefore, the midpoint \(\frac{x + c}{2}\) lies strictly between \( x \) and \( c \), establishing that the set of real numbers \( z \) with \( x < z < c \) is indeed non-empty.
+[applied Tactic]
+have : ¬ (∀ y ∈ A, y ≤ x) := by
+    push_neg
+    apply Exists.intro z
+    exact ⟨this z zltgt,zltgt.left ⟩ 
+
+[answer]
+We will show that it is not true that every element of \( A \) is less than or equal to \( x \). To do so, we observe that this negation is equivalent to the existence of an element \( y \) in \( A \) such that \( y > x \). By the principle of existence, it suffices to exhibit a specific element \( z \) in \( A \) for which \( z > x \). According to the assumptions, there exists such a \( z \) satisfying \( x < z < c \) and \( z \in A \). Therefore, we conclude that there is an element of \( A \) that exceeds \( x \), proving the proposition.

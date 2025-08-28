@@ -1,0 +1,126 @@
+[appliedTactic]
+let P : Set ℝ := {x : ℝ | x > 0 } 
+[answer]
+Define the set \( P \) to be the collection of all real numbers greater than zero.
+[appliedTactic]
+have PnotEmpty : P.Nonempty := by
+    have : 1 ∈ P := by
+      rw [Set.mem_setOf]
+      norm_num
+    exact ⟨1, this ⟩ 
+[answer]
+Establish that the set of all real numbers greater than zero is not empty by showing that the number 1 belongs to this set.
+[appliedTactic]
+have : 1 ∈ P := by
+      rw [Set.mem_setOf]
+       norm_num 
+[answer]
+Establish that the number 1 belongs to the set \( P \) by showing that it satisfies the defining property of \( P \), which is being greater than zero.
+[appliedTactic]
+rw [Set.mem_setOf ] 
+[answer]
+By applying the definition of membership in a set defined by a property, the goal of showing that 1 belongs to the set of real numbers greater than zero is transformed into proving that 1 is greater than zero.
+[appliedTactic]
+ norm_num 
+[answer]
+It is evident that 1 is greater than 0.
+[appliedTactic]
+exact ⟨1, this ⟩ 
+[answer]
+The proof is completed by demonstrating that the set of positive real numbers is nonempty, using the fact that 1 belongs to this set.
+[appliedTactic]
+have LB: LowerBound P 0 := by
+    intro a h1
+    exact le_of_lt  h1 
+[answer]
+Establish that zero is a lower bound of the set of all positive real numbers by showing that zero is less than or equal to every element in this set.
+[appliedTactic]
+intro a  h1 
+[answer]
+Assume an element \( a \) belongs to the set of real numbers greater than zero. We will now prove that this element \( a \) is greater than or equal to zero.
+[appliedTactic]
+exact le_of_lt  h1 
+[answer]
+The proof is completed by using the fact that since \(a\) is strictly greater than zero, it follows that \(a\) is also greater than or equal to zero.
+[appliedTactic]
+have PBB : BoundedBelow P := by
+    exact ⟨0, LB ⟩ 
+[answer]
+Establish that the set \( P \), consisting of all real numbers greater than zero, is bounded below by showing that zero serves as a lower bound for this set.
+[appliedTactic]
+exact ⟨0, LB ⟩ 
+[answer]
+The proof is completed by demonstrating that the set \( P \), which contains all positive real numbers, is bounded below using zero as a lower bound and confirming that \( P \) is not empty.
+[appliedTactic]
+have gezero: sInf P ≥ 0 := Inf_LowerBound PnotEmpty PBB 0  LB 
+[answer]
+Establish that the greatest lower bound of the set of all positive real numbers is at least zero. This follows from the fact that zero is a lower bound of the set, the set is nonempty, and it is bounded below. Therefore, by the property that any lower bound of a nonempty, bounded-below set is less than or equal to its greatest lower bound, the greatest lower bound must be greater than or equal to zero.
+[appliedTactic]
+have negtzero: ¬sInf P > 0 := by
+    intro gtzero
+    -- ⭐️ (1 /2) inf P ∈ P だから
+    have : (1 / 2) * (sInf P) ∈ P := by
+      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]
+      apply (lt_div_iff (by norm_num)).2
+      rw [zero_mul]
+      exact gtzero
+    -- ⭐️ (1 /2) inf P ≥ inf P でなければならない。
+    have : (1 /2) * (sInf P) ≥ (sInf P) := Element_ge_Inf PnotEmpty PBB ((1 /2) * (sInf P)) this
+    -- ⭐️これより inf P ≤ 0 となり、
+    rw [ge_iff_le,div_mul_comm,mul_one,le_div_iff (by norm_num), ← one_add_one_eq_two,mul_add,mul_one,add_le_iff_nonpos_right] at this
+    -- ⭐️ inf P > 0　としたことに矛盾する。
+     linarith 
+[answer]
+Assume, for the sake of contradiction, that the greatest lower bound of the set \( P \) is strictly greater than zero. Using this assumption, show that half of this greatest lower bound must also belong to the set \( P \). Then, establish that this half must be greater than or equal to the greatest lower bound itself. From this, deduce an inequality that implies the greatest lower bound is less than or equal to zero, contradicting the initial assumption that it is positive. Therefore, conclude that the greatest lower bound cannot be greater than zero.
+[appliedTactic]
+intro  gtzero 
+[answer]
+Assume, for the sake of contradiction, that the greatest lower bound of the set \( P \) is strictly greater than zero. Under this assumption, we will derive a contradiction.
+[appliedTactic]
+have : (1 / 2) * (sInf P) ∈ P := by
+      rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one]
+      apply (lt_div_iff (by norm_num)).2
+      rw [zero_mul]
+      exact  gtzero 
+[answer]
+Demonstrate that half of the greatest lower bound of the set belongs to the set by showing that this value is greater than zero, thereby confirming it satisfies the defining property of the set.
+[appliedTactic]
+rw [Set.mem_setOf_eq,gt_iff_lt,div_mul_comm,mul_one ] 
+[answer]
+The goal of showing that one-half of the greatest lower bound of the set belongs to the set, which means it is greater than zero, is transformed into proving directly that the greatest lower bound divided by two is positive. This is done by rewriting the membership condition in terms of inequalities, converting the greater-than relation into a less-than form, and rearranging the multiplication and division to simplify the expression accordingly.
+[appliedTactic]
+apply (lt_div_iff (by norm_num)). 2 
+[answer]
+By applying the equivalence that relates a strict inequality involving division by a positive number to a strict inequality involving multiplication, the goal to prove that zero is less than the infimum of the set divided by two is transformed into proving that zero multiplied by two is less than the infimum of the set.
+[appliedTactic]
+ norm_num 
+[answer]
+It is clear that 0 is less than 2.
+[appliedTactic]
+rw [zero_mul ] 
+[answer]
+By applying the fact that zero multiplied by any number equals zero, the goal of proving that zero times two is less than the greatest lower bound of the set simplifies to proving that zero itself is less than that greatest lower bound.
+[appliedTactic]
+exact  gtzero 
+[answer]
+The proof is completed by directly using the fact that the greatest lower bound of the set \( P \) is strictly greater than zero.
+[appliedTactic]
+have : (1 /2) * (sInf P) ≥ (sInf P) := Element_ge_Inf PnotEmpty PBB ((1 /2) * (sInf P))  this 
+[answer]
+Establish that half of the infimum of the set is greater than or equal to the infimum itself. This follows from the fact that any element of a nonempty set of real numbers that has a lower bound cannot be less than the greatest lower bound (infimum) of that set. Since half the infimum is an element of the set, it must be at least as large as the infimum.
+[appliedTactic]
+rw [ge_iff_le,div_mul_comm,mul_one,le_div_iff (by norm_num), ← one_add_one_eq_two,mul_add,mul_one,add_le_iff_nonpos_right] at  this 
+[answer]
+The tactic rewrites the inequality involving half of the greatest lower bound of the set \( P \) by expressing the "greater than or equal to" relation as a "less than or equal to" relation in the opposite direction. It then applies properties of division and multiplication to rearrange the terms, ultimately transforming the statement that half of this bound is at least as large as the bound itself into the statement that the bound is less than or equal to zero. This change simplifies the inequality in the hypothesis, setting up a contradiction with the earlier assumption that the bound is strictly positive.
+[appliedTactic]
+ linarith 
+[answer]
+The assumptions that the greatest lower bound of the set is both greater than zero and less than or equal to zero cannot hold at the same time. This contradiction completes the proof.
+[appliedTactic]
+push_neg at  negtzero 
+[answer]
+The negation of the statement that the greatest lower bound of the set is greater than zero is rewritten as the greatest lower bound being less than or equal to zero.
+[appliedTactic]
+exact le_antisymm negtzero  gezero 
+[answer]
+The proof is completed by showing that the greatest lower bound of the set of positive real numbers is both less than or equal to zero and greater than or equal to zero, thereby concluding that it equals zero.

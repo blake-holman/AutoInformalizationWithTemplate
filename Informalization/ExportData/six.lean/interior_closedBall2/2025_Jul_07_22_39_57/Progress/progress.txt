@@ -1,0 +1,25 @@
+[applied Tactic]
+· rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty ] 
+
+[answer]
+We will prove the case where the radius \( r \) is negative. Since \( r < 0 \), it follows from the definition of metric balls that a closed ball with negative radius is the empty set. Consequently, the interior of this empty set is also empty. Similarly, the open ball with negative radius is empty as well. These observations establish that for negative \( r \), the relevant balls and their interiors are empty, thereby completing the proof.
+[applied Tactic]
+· exact  hr 
+
+[answer]
+We will prove the case where the point \( y \) lies within the open ball centered at \( x \) with radius \( r \). To do so, we start from the assumption that the distance between \( y \) and \( x \) is less than \( r \). This condition directly establishes that \( y \) is contained in the open ball, thus completing the proof for this case.
+[applied Tactic]
+have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closedBall x <| dist y x) := by simpa [f ] 
+
+[answer]
+We will show that the point corresponding to 1 lies within the interior of the closed ball centered at \( x \) with radius equal to the distance \( d(y,x) \) under the mapping \( f \). To this end, we consider the continuity of the function \( f \) defined by scalar multiplication and addition. Given that the point \( y \) lies in the interior of the closed ball centered at \( x \) with radius \( d(y,x) \), and noting that the preimage of this closed ball under \( f \) is contained within the interval \([-1,1]\), it follows that the point \( 1 \) must belong to the preimage of the interior of the closed ball under \( f \). This confirms that the image of 1 under \( f \) lies in the interior of the closed ball, completing the proof.
+[applied Tactic]
+suffices f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1 by
+    have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
+    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closedBall x <| dist y x) := by simpa [f]
+    have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
+      interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
+    simp at  h1 
+
+[answer]
+We will show that the point \( y \) lies in the open ball centered at \( x \) with radius \( d(y,x) \). To this end, consider the function \( f \) defined by \( f(t) = x + t(y - x) \) for \( t \in \mathbb{R} \). This function is continuous since it is formed by composing continuous functions: the identity, constant functions, scalar multiplication, and addition, all of which preserve continuity. Given that the preimage of the closed ball centered at \( x \) with radius \( d(y,x) \) under \( f \) is contained within the interval \([-1,1]\), it follows that the point \( 1 \) lies in this preimage. Moreover, by the continuity of \( f \) and the property that the preimage of the interior of a set lies within the interior of the preimage, \( 1 \) is an interior point of the interval \([-1,1]\). Consequently, the image of \( 1 \) under \( f \), which is \( y \), lies in the interior of the closed ball—that is, within the open ball centered at \( x \) with radius \( d(y,x) \)—thus completing the proof.

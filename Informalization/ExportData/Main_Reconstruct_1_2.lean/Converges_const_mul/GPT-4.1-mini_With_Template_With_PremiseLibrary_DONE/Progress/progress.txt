@@ -1,0 +1,78 @@
+[applied Tactic]
+let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) 
+
+[answer]
+We will show that for all \( n \geq n_0 \), the difference between \( x_n \) and \( a \) is less than \( \frac{\varepsilon}{|\alpha| + 1} \). Since it is clear that \( 0 < 1 \), the denominator \( |\alpha| + 1 \) is positive, ensuring the expression \( \frac{\varepsilon}{|\alpha| + 1} \) is well-defined and positive. Thus, by choosing \( n_0 \) appropriately, we guarantee that the sequence \( (x_n) \) lies within the specified bound of \( a \) for all \( n \geq n_0 \).
+[applied Tactic]
+. rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n  nlen₀ 
+
+[answer]
+We will show that \( |\alpha| |x_n - a| \leq \frac{|\alpha| \varepsilon}{|\alpha| + 1} \). Since \( |\alpha| > 0 \), by multiplying both sides of the inequality \( |x_n - a| \leq \frac{\varepsilon}{|\alpha| + 1} \) by the positive number \( |\alpha| \), this is equivalent to proving \( |x_n - a| \leq \frac{\varepsilon}{|\alpha| + 1} \). Moreover, as a strict inequality implies the corresponding non-strict inequality, it suffices to show that \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \). By the assumptions that for every \( n \geq n_0 \), \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \), that \( n \geq n_0 \), and that \( |\alpha| > 0 \), the desired inequality follows immediately, completing the proof.
+[applied Tactic]
+. push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul ] 
+
+[answer]
+We will prove the case where the absolute value of \(\alpha\) is zero, thereby simplifying the inequality accordingly. First, since it is not true that \(|\alpha| > 0\), it follows that \(|\alpha| \leq 0\). Because the absolute value of any real number is nonnegative, this implies that \(\alpha = 0\). Using the assumption \(\alpha = 0\), we note that \(|0| = 0\) and that multiplying by zero yields zero. These observations simplify the inequality and complete the proof.
+[applied Tactic]
+calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+
+[answer]
+We will show that for any real number \(\alpha\) and sequence \((x_n)\) converging to \(a\), the inequality \( |\alpha \cdot x_n - \alpha \cdot a| = |\alpha| \cdot |x_n - a| \leq |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon \) holds. To prove this, we consider two cases based on the value of \(|\alpha|\).
+
+First, if \(|\alpha| > 0\), multiplying the given inequality \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \) by the positive number \(|\alpha|\) preserves the inequality direction, yielding \( |\alpha| |x_n - a| < \frac{|\alpha| \varepsilon}{|\alpha| + 1} \). Since the assumptions guarantee that \( |x_n - a| < \frac{\varepsilon}{|\alpha| + 1} \) for all sufficiently large \(n\), the first part of the inequality follows immediately.
+
+Second, if \(|\alpha| = 0\), then \(\alpha = 0\) and consequently, \( |\alpha| |x_n - a| = 0 \), which trivially satisfies the inequality. 
+
+Finally, to show the strict inequality \( |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon \), we note that since \(\varepsilon > 0\), this reduces to showing \( |\alpha| < |\alpha| + 1 \), which is always true. Thus, combining these steps completes the proof.
+[applied Tactic]
+have : ConvergesTo (fun n => α * (x n)) (α*a):= by
+    -- ⭐️ 任意の ε > 0 に対して、
+    intro ε εpos
+    -- ⭐️ n₀ ∈ ℕ で n ≥ n₀ ならば |x_n - a| < ε / (|α| + 1)となるものが存在する
+    let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))
+    -- ⭐️ n ≥ n₀ なら
+    apply Exists.intro n₀
+    intro n nlen₀
+    /-
+      ⭐️
+      |αx_n - αa| = |α||x_n - a| ≤ |α| * ε / (|α| + 1) < ε
+      となるので (c)が示された.
+    -/
+    calc
+      |α * (x n) - α * a| = |α| * |x n - a| := by
+        rw [← mul_sub, abs_mul]
+      _ ≤ (|α| * ε /(|α| + 1)) := by
+        rw [← mul_div]
+        by_cases h1 :|α| > 0
+        . rw [mul_le_mul_left h1]
+          apply le_of_lt
+          exact h n nlen₀
+        . push_neg at h1
+          simp at h1
+          rw [h1,abs_zero,zero_mul,zero_mul]
+      _ < ε := by
+        rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (by simp) (by norm_num))]
+        rw [one_mul]
+         simp 
+
+[answer]
+We will show that the sequence obtained by multiplying each term of the sequence \((x_n)\) by a real number \(\alpha\) converges to \(\alpha a\), where \(a\) is the limit of \((x_n)\). Assume \(\varepsilon > 0\). Since \(\lim_{n \to \infty} x_n = a\), there exists a natural number \(n_0\) such that for all \(n \geq n_0\), we have \(|x_n - a| < \frac{\varepsilon}{|\alpha| + 1}\). The denominator \(|\alpha| + 1\) is positive, ensuring this bound is well-defined. For any \(n \geq n_0\), consider the quantity \(|\alpha x_n - \alpha a| = |\alpha| \cdot |x_n - a|\). If \(|\alpha| > 0\), multiplying the inequality by \(|\alpha|\) preserves the inequality, so \(|\alpha x_n - \alpha a| < |\alpha| \cdot \frac{\varepsilon}{|\alpha| + 1} < \varepsilon\) since \(|\alpha| < |\alpha| + 1\). If \(|\alpha| = 0\), then \(\alpha = 0\) and the expression equals zero, which is trivially less than \(\varepsilon\). Therefore, for all \(n \geq n_0\), \(|\alpha x_n - \alpha a| < \varepsilon\), which shows by the definition of convergence that \(\alpha x_n \to \alpha a\). This completes the proof.

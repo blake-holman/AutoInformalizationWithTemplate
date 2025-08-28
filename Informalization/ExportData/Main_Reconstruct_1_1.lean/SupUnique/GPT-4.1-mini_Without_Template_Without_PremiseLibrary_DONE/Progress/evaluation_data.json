@@ -1,0 +1,52 @@
+[
+  {
+    "AppliedTactic": "intro aSup  bSup ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\n⊢ Supremum S a → Supremum S b → a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GivenPremises": [],
+    "Result": "Assume that \\( a \\) is a supremum of the set \\( S \\) and that \\( b \\) is also a supremum of the set \\( S \\). From now on, we will show that \\( a \\) and \\( b \\) are equal.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [Supremum] at  * ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GivenPremises": [
+      "Supremum (A : Set ℝ) (x : ℝ) : Prop"
+    ],
+    "Result": "By unfolding the definition of the supremum, the assumptions that \\( a \\) and \\( b \\) are the least upper bounds of the set \\( S \\) are restated explicitly as \\( a \\) and \\( b \\) being upper bounds of \\( S \\) such that any other upper bound of \\( S \\) is greater than or equal to them. This clarifies the properties of \\( a \\) and \\( b \\) in the goal to prove their equality.",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": "have aleb: a ≤ b := aSup.right b  bSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "And.left {a b : Prop} (self : a ∧ b) : a"
+    ],
+    "Result": "Establish that \\( a \\) is less than or equal to \\( b \\) by using the fact that both \\( a \\) and \\( b \\) are upper bounds of the set \\( S \\), and that \\( a \\) is less than or equal to any upper bound of \\( S \\). Since \\( b \\) is an upper bound, it follows that \\( a \\leq b \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have blea: b ≤ a := bSup.right a  aSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "And.left {a b : Prop} (self : a ∧ b) : a"
+    ],
+    "Result": "Establish that \\( b \\) is less than or equal to \\( a \\) by using the fact that \\( b \\) is an upper bound of the set and that \\( a \\) is also an upper bound. Since \\( b \\) is an upper bound, it must be less than or equal to any other upper bound, including \\( a \\). This introduces the inequality \\( b \\leq a \\) alongside the existing \\( a \\leq b \\).",
+    "Evaluation":"MisInformation"
+  },
+  {
+    "AppliedTactic": "apply le_antisymm aleb  blea ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "le_antisymm.{u} {α : Type u} [PartialOrder α] {a b : α} : a ≤ b → b ≤ a → a = b"
+    ],
+    "Result": "Since \\( a \\) is less than or equal to \\( b \\) and \\( b \\) is less than or equal to \\( a \\), it follows by the antisymmetry property of the order relation that \\( a \\) and \\( b \\) are equal. This completes the proof.",
+    "Evaluation":"Correct"
+  }
+]

@@ -1,0 +1,210 @@
+[appliedTactic]
+intro a apos b  _ 
+[answer]
+Assume that \( a > 0 \) and \( b > 0 \). From now on, we will show that there exists a natural number \( n \) such that \( (n + 1) \cdot a > b \).
+[appliedTactic]
+by_contra!  h 
+[answer]
+Assume that for every natural number \( n \), the product of \( (n + 1) \) and \( a \) is less than or equal to \( b \) and show a contradiction.
+[appliedTactic]
+let C : Set ℝ:= {s : ℝ | ∃ k : ℕ, s =  ((k + (1 : ℕ)) : ℝ ) * a } 
+[answer]
+Let \( C \) be the set of all real numbers \( s \) such that there exists a natural number \( k \) with \( s = (k + 1) \times a \).
+[appliedTactic]
+have CnotEmpty : C.Nonempty := by
+    -- s = a, k = 0 とすれば成り立つ
+    apply Exists.intro a
+    apply Exists.intro 0
+    rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+[answer]
+Show that the set \( C \) is not empty by demonstrating that it contains the element obtained by taking \( s = a \) and \( k = 0 \).
+[appliedTactic]
+apply Exists.intro  a 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that the set \( C \) is nonempty, it suffices to prove that the element \( a \) belongs to \( C \).
+[appliedTactic]
+apply Exists.intro  0 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that \( a \) belongs to the set \( C \), it suffices to prove that \( a \) equals \( (0 + 1) \) times \( a \).
+[appliedTactic]
+rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+[answer]
+By using the facts that multiplying by one leaves a number unchanged and adding zero to a number leaves it unchanged, we complete the proof.
+[appliedTactic]
+have CUB : BoundedAbove C := by
+    -- b が上界であることを使う
+    have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h k'
+    exact ⟨b, this ⟩ 
+[answer]
+Show that the set \( C \) is bounded above by \( b \).
+[appliedTactic]
+have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h  k' 
+[answer]
+Show that \( b \) is an upper bound of the set \( C \) by proving that for every element \( s \) in \( C \), \( s \leq b \).
+[appliedTactic]
+intro k  kinC 
+[answer]
+Assume that there exists an element \( k \) in the set \( C \). From now on, we will show that \( k \leq b \).
+[appliedTactic]
+let ⟨k',k'h⟩ :=  kinC 
+[answer]
+Let \( k' \) be a natural number such that \( k = (k' + 1) \times a \).
+[appliedTactic]
+rw [k'h ] 
+[answer]
+By using the equality expressing \( k \) as \((k' + 1) \cdot a\), the goal of proving \( k \leq b \) becomes the goal of proving \((k' + 1) \cdot a \leq b\).
+[appliedTactic]
+exact h  k' 
+[answer]
+The proof is completed from the assumptions that \(a\) is greater than zero, \(b\) is greater than zero, and that \(k\) equals \((k' + 1) \cdot a\) for some natural number \(k'\), together with the fact that for every natural number \(n\), \((n + 1) \cdot a\) is less than or equal to \(b\).
+[appliedTactic]
+exact ⟨b, this ⟩ 
+[answer]
+The proof is completed from the assumptions that \(b\) is a positive real number and that \(b\) is an upper bound for the set consisting of all real numbers of the form \((n + 1) \cdot a\) for natural numbers \(n\).
+[appliedTactic]
+have CSup := ExistSupremum C ⟨CnotEmpty, CUB ⟩ 
+[answer]
+Show that there exists a least upper bound of the set \( C \). This can be proved by noting that the set \( C \) is nonempty and bounded above, which guarantees the existence of its supremum.
+[appliedTactic]
+let ⟨x, SupCx⟩ :=  CSup 
+[answer]
+Let \( x \) be the supremum of the set \( C \).
+[appliedTactic]
+have : ∀n : ℕ, ((n + (2 : ℕ )) : ℝ)  * a ≤ x := by
+    intro n
+    -- SupCxの左側　UpperBound C x を上手く使うため、 (n + 1) * a が C の要素であることをいう
+    have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc]
+    -- 結果を素直に用いれば示せる
+    apply SupCx.left ((n + 2) * a)  this 
+[answer]
+Show that for every natural number \( n \), the product of \( (n + 2) \) and \( a \) is less than or equal to \( x \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is a natural number. From now on, we will show that the product of \( a \) with \( n + 2 \) is less than or equal to \( x \).
+[appliedTactic]
+have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc ] 
+[answer]
+Show that the product of the sum of \( n \) and 2 with \( a \) belongs to the set \( C \).
+[appliedTactic]
+rw [Set.mem_setOf_eq ] 
+[answer]
+By using the fact that membership in a set defined by a property is equivalent to that property holding for the element, the goal of showing that \((n + 2) \cdot a\) belongs to the set \(C\) becomes showing that there exists an integer \(k\) such that \((n + 2) \cdot a = (k + 1) \cdot a\).
+[appliedTactic]
+apply Exists.intro (n + 1 ) 
+[answer]
+From the introduction rule for existential quantifiers, in order to establish that there exists a \( k \) such that \((n + 2) \cdot a = (k + 1) \cdot a\), it suffices to prove that \((n + 2) \cdot a = ((n + 1) + 1) \cdot a\).
+[appliedTactic]
+rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff ] 
+[answer]
+By using the fact that one plus one equals two and that a product equality holds if and only if either the factors are equal or the multiplier is zero, the goal of proving that multiplying the sum of a natural number and two by a positive real number equals multiplying the sum of the successor of that number and one by the same real number becomes showing that the sum of the natural number and two can be expressed as the sum of the natural number, one, and one, or that the real number is zero.
+[appliedTactic]
+apply  Or.inl 
+[answer]
+From the rule that to prove a disjunction it suffices to prove its left part, in order to establish that either the sum of \( n \) and \( 2 \) equals the sum of \( n \) and \( 1 \) plus \( 1 \), or \( a \) is zero, it suffices to prove that the sum of \( n \) and \( 2 \) equals the sum of \( n \) and \( 1 \) plus \( 1 \).
+[appliedTactic]
+rw [add_assoc ] 
+[answer]
+By using the associativity of addition, we complete the proof.
+[appliedTactic]
+apply SupCx.left ((n + 2) * a)  this 
+[answer]
+From the fact that \( (n + 2) \cdot a \) is an element of the set \( C \) and the definition of \( x \) as the supremum of \( C \), in order to establish that \( (n + 2) \cdot a \leq x \), the goal is immediately satisfied.
+[appliedTactic]
+have : ∀n : ℕ, ((n + 1 : ℕ) : ℝ)* a ≤ x - a := by
+    intro n
+    have := this n
+    rw [← one_add_one_eq_two] at this
+    rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at this
+    apply le_tsub_of_add_le_right
+    rw [Nat.cast_add,Nat.cast_one]
+    exact  this 
+[answer]
+Show that for every natural number \( n \), the product of \( (n + 1) \) and \( a \) is less than or equal to \( x - a \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is an arbitrary natural number. From now on, we will show that \( (n + 1) \) times \( a \) is less than or equal to \( x \) minus \( a \).
+[appliedTactic]
+have := this  n 
+[answer]
+Show that the inequality involving \( n \) holds by applying the existing inequality for \( n \) to obtain that the expression with \( n + 2 \) multiplied by \( a \) is less than or equal to \( x \).
+[appliedTactic]
+rw [← one_add_one_eq_two] at  this 
+[answer]
+By using the fact that one plus one equals two, the statement that the product of \( (n + 2) \) and \( a \) is less than or equal to \( x \) becomes the statement that the product of \( (n + (1 + 1)) \) and \( a \) is less than or equal to \( x \).
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at  this 
+[answer]
+By using the commutativity of addition and the distributive property of multiplication over addition, the statement that for a natural number \( n \), the product of the sum \( n + 2 \) and \( a \) is less than or equal to \( x \) becomes the statement that the sum of the product \( (n + 1) \cdot a \) and \( a \) is less than or equal to \( x \).
+[appliedTactic]
+apply  le_tsub_of_add_le_right 
+[answer]
+From the property that if the sum of two elements is less than or equal to a third, then one element is less than or equal to the third minus the other, in order to establish that the product of \( n + 1 \) and \( a \) is less than or equal to \( x \) minus \( a \), it suffices to prove that the sum of the product of \( n + 1 \) and \( a \) and \( a \) itself is less than or equal to \( x \).
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one ] 
+[answer]
+By using the facts that casting the natural number one to the real numbers equals one and that casting the sum of two natural numbers equals the sum of their casts, the goal of proving the inequality involving the sum of the cast of \( n + 1 \) times \( a \) plus \( a \) is transformed into proving the inequality involving the sum of the cast of \( n \) plus one times \( a \) plus \( a \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that the expression \((n + 1) \cdot a + a\) is less than or equal to \(x\).
+[appliedTactic]
+have up: UpperBound C (x - a) := by
+    intro l ⟨k, kp⟩
+    have := this k
+    rw [kp,Nat.cast_one]
+    rw [Nat.cast_add,Nat.cast_one] at this
+    exact  this 
+[answer]
+Show that \( x - a \) is an upper bound of the set \( C \).
+[appliedTactic]
+intro l ⟨k, kp ⟩ 
+[answer]
+Assume that \( l \) is a real number such that \( l = (k + 1) \cdot a \) for some natural number \( k \). From now on, we will show that \( l \leq x - a \).
+[appliedTactic]
+have := this  k 
+[answer]
+Show that the inequality involving the term with index \( k + 1 \) multiplied by \( a \) holds. This can be proved by applying the existing inequality for all natural numbers to the specific value \( k \), thereby obtaining the desired inequality directly.
+[appliedTactic]
+rw [kp,Nat.cast_one ] 
+[answer]
+By using the assumption that \( l \) equals the product of \( (k + 1) \) and \( a \), and the fact that the natural number cast of one is equal to one, the goal of proving \( l \leq x - a \) becomes proving that the product of \( (k + 1) \) and \( a \) is less than or equal to \( x - a \).
+[appliedTactic]
+rw [Nat.cast_add,Nat.cast_one] at  this 
+[answer]
+By using the facts that casting the natural number one to the real numbers equals one and that casting the sum of two natural numbers equals the sum of their casts, the statement that the cast of \( k + 1 \) plus one times \( a \) is less than or equal to \( x - a \) becomes the statement that the sum of the cast of \( k \) and one times \( a \) is less than or equal to \( x - a \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumption that \((k + 1) \cdot a \leq x - a\).
+[appliedTactic]
+have : ∀y, UpperBound C y → x ≤ y :=  SupCx.right 
+[answer]
+Show that for every real number \( y \), if \( y \) is an upper bound of the set \( C \), then \( x \) is less than or equal to \( y \). This follows from the property of \( x \) being the least upper bound (supremum) of the set \( C \), which by definition means \( x \) is less than or equal to any upper bound of \( C \).
+[appliedTactic]
+have := this (x - a)  up 
+[answer]
+Show that \( x \leq x - a \). This can be proved by applying the existing inequality involving \( x - a \) as an upper bound to the set \( C \) and then using the property that \( x \) is the least upper bound of \( C \), which implies \( x \) must be less than or equal to any upper bound of \( C \), including \( x - a \).
+[appliedTactic]
+ linarith 
+[answer]
+Since the inequality \( x \leq x - a \) contradicts the fact that \( a > 0 \), this leads to a contradiction. Therefore, we complete the proof.

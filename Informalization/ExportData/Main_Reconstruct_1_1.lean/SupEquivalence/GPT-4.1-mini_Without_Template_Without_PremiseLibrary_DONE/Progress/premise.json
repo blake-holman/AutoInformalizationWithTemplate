@@ -1,0 +1,101 @@
+{
+  "have left : (sSup A = a₀) → (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) := by\n      -- a₀がAの上限であれば、\n      intro ssup\n      -- 書きやすい形に書き換える\n      have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2 ssup\n      -- ⭐️ (2)の前半はもちろん成り立っているので、\n      have lleft : UpperBound A a₀ := ssup.left\n      -- ⭐️ 後半だけ示せばよい。\n      suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by\n        exact ⟨lleft,lright⟩\n      -- ⭐️ もし(2)の後半が成り立っていないと、\n      by_contra h; push_neg at h\n      -- ⭐️ある ε > 0に対して a₀ - ε がAの上界になってしまうので、\n      have : ∃ε > 0, UpperBound A (a₀ - ε) := by\n        let ⟨ε, εpos,h2⟩ := h\n        apply Exists.intro ε\n        apply And.intro\n        . exact εpos\n        . intro k kinA\n          exact h2 k kinA\n      let ⟨ε,εpos,h3⟩ := this\n      -- ⭐️ a₀がAの最小上界である\n      have a₀MinUBA:= ssup.right (a₀ - ε) h3\n      -- ⭐️ という仮定に反する\n       linarith ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Sup_sSup_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBA : BoundedAbove S) (a₀ : ℝ) : Supremum S a₀ ↔ sSup S = a₀",
+    "And.left {a b : Prop} (self : a ∧ b) : a",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "UpperBound (A : Set ℝ) (b : ℝ) : Prop",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b"
+  ],
+  "intro  ssup ": [],
+  "have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2  ssup ": [
+    "Sup_sSup_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBA : BoundedAbove S) (a₀ : ℝ) : Supremum S a₀ ↔ sSup S = a₀"
+  ],
+  "have lleft : UpperBound A a₀ :=  ssup.left ": [
+    "UpperBound (A : Set ℝ) (b : ℝ) : Prop",
+    "And.left {a b : Prop} (self : a ∧ b) : a"
+  ],
+  "suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by\n        exact ⟨lleft,lright ⟩ ": [],
+  "exact ⟨lleft,lright ⟩ ": [],
+  "by_contra  h ": [],
+  "push_neg at  h ": [],
+  "have : ∃ε > 0, UpperBound A (a₀ - ε) := by\n        let ⟨ε, εpos,h2⟩ := h\n        apply Exists.intro ε\n        apply And.intro\n        . exact εpos\n        . intro k kinA\n          exact h2 k  kinA ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "UpperBound (A : Set ℝ) (b : ℝ) : Prop",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "let ⟨ε, εpos,h2⟩ :=  h ": [],
+  "apply Exists.intro  ε ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "apply  And.intro ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  ". exact  εpos ": [],
+  "exact  εpos ": [],
+  ". intro k kinA\n          exact h2 k  kinA ": [],
+  "intro k  kinA ": [],
+  "exact h2 k  kinA ": [],
+  "let ⟨ε,εpos,h3⟩ :=  this ": [],
+  "have a₀MinUBA:= ssup.right (a₀ - ε)  h3 ": [
+    "And.right {a b : Prop} (self : a ∧ b) : b"
+  ],
+  " linarith ": [],
+  "have right :  (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) → (sSup A = a₀) := by\n      -- ⭐️ a₀が(2)の条件を満たしているとき、\n      intro h1\n      -- Aの任意の上界xに対して a₀ ≤ xであることを言えばよい。\n      suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by\n        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h⟩\n      intro x ub\n      -- ⭐️ もし a₀ ≤ x でないとすると、\n      by_contra h2; push_neg at h2\n      -- ⭐️ ε := a₀ - x\n      let ε := a₀ - x\n      -- ⭐️ >0 となり\n      have εpos : ε > 0 := by\n        rw [gt_iff_lt,sub_pos]; exact h2\n      -- ⭐️ (2) より x = a₀ - ε\n      have : x = a₀ - ε := by ring\n      -- ⭐️ < a なる a ∈ A が存在する\n      have : ∃a ∈ A, x < a := by\n        let ⟨a,ainA,p⟩ := (h1.right ε εpos)\n        rw [this]\n        exact ⟨a, ainA, p⟩\n      -- ⭐️ ことになり、\n      let ⟨a,ainA,xlta⟩ := this\n      -- ⭐️ x が Aの上界であること\n      have := ub a ainA\n      -- ⭐️ に矛盾する。\n       linarith ": [
+    "sub_pos.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : 0 < a - b ↔ b < a",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Sup_sSup_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBA : BoundedAbove S) (a₀ : ℝ) : Supremum S a₀ ↔ sSup S = a₀",
+    "And.left {a b : Prop} (self : a ∧ b) : a",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b"
+  ],
+  "intro  h1 ": [],
+  "suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by\n        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ ": [
+    "Sup_sSup_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBA : BoundedAbove S) (a₀ : ℝ) : Supremum S a₀ ↔ sSup S = a₀",
+    "And.left {a b : Prop} (self : a ∧ b) : a"
+  ],
+  "exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ ": [
+    "Sup_sSup_iff {S : Set ℝ} (SnotEmpty : S.Nonempty) (SBA : BoundedAbove S) (a₀ : ℝ) : Supremum S a₀ ↔ sSup S = a₀",
+    "And.left {a b : Prop} (self : a ∧ b) : a"
+  ],
+  "intro x  ub ": [],
+  "by_contra  h2 ": [],
+  "push_neg at  h2 ": [],
+  "let ε := a₀ -  x ": [],
+  "have εpos : ε > 0 := by\n        rw [gt_iff_lt,sub_pos]; exact  h2 ": [
+    "sub_pos.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : 0 < a - b ↔ b < a",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x"
+  ],
+  "rw [gt_iff_lt,sub_pos ] ": [
+    "sub_pos.{u} {α : Type u} [AddGroup α] [LT α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b : α} : 0 < a - b ↔ b < a",
+    "gt_iff_lt.{u} {α : Type u} [LT α] {x y : α} : x > y ↔ y < x"
+  ],
+  "exact  h2 ": [],
+  "have : x = a₀ - ε := by  ring ": [],
+  " ring ": [],
+  "have : ∃a ∈ A, x < a := by\n        let ⟨a,ainA,p⟩ := (h1.right ε εpos)\n        rw [this]\n        exact ⟨a, ainA, p ⟩ ": [
+    "And.right {a b : Prop} (self : a ∧ b) : b"
+  ],
+  "let ⟨a,ainA,p⟩ := (h1.right ε εpos ) ": [
+    "And.right {a b : Prop} (self : a ∧ b) : b"
+  ],
+  "rw [this ] ": [],
+  "exact ⟨a, ainA, p ⟩ ": [],
+  "let ⟨a,ainA,xlta⟩ :=  this ": [],
+  "have := ub a  ainA ": [],
+  "exact Iff.intro left  right ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "And.left {a b : Prop} (self : a ∧ b) : a",
+    "And.right {a b : Prop} (self : a ∧ b) : b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b"
+  ]
+}

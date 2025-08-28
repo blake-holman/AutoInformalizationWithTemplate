@@ -1,0 +1,102 @@
+{
+  "intro x ⟨a, x_conv_to_a ⟩ ": [
+    "SequenceBounded : A sequence of real numbers is bounded if all its terms lie within some fixed real interval."
+  ],
+  "have := x_conv_to_a 1 (by norm_num ) ": [],
+  " norm_num ": [],
+  "let ⟨n₀, h1⟩ :=  this ": [],
+  "have h2: ∀n ≥ n₀, |x n| < |a| + 1 := by\n      intro n ngen₀\n      have h2₁ := abs_sub_abs_le_abs_sub (x n) a\n      have h2₂ := h1 n ngen₀\n      exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group.",
+    "lt_add_of_tsub_lt_left : This theorem states that if subtracting an element from another results in a value less than a third element, then the first element is less than the sum of the second element and the third element."
+  ],
+  "intro n  ngen₀ ": [],
+  "have h2₁ := abs_sub_abs_le_abs_sub (x n)  a ": [
+    "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group."
+  ],
+  "have h2₂ := h1 n  ngen₀ ": [],
+  "exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) ": [
+    "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+    "lt_add_of_tsub_lt_left : This theorem states that if subtracting an element from another results in a value less than a third element, then the first element is less than the sum of the second element and the third element."
+  ],
+  "let Z : Finset ℝ := (Multiset.ofList ((List.range n₀).map (|x ·|) ++ [|a| + 1])). toFinset ": [
+    "Multiset.ofList : This definition describes a function that converts a list into a multiset by grouping elements that are identical, thus disregarding their order.",
+    "List.map : This definition describes a function that transforms each element of a list by applying a specified function to it, producing a new list of the transformed elements.",
+    "List.range : This definition describes a function that generates a list of consecutive integers starting from zero up to, but not including, a specified number.",
+    "Multiset.toFinset : This definition describes a function that transforms a multiset into a finite set by eliminating any duplicate elements."
+  ],
+  "have : Z.Nonempty := by\n      rw [Finset.Nonempty]\n      apply Exists.intro (|a| + 1)\n      simp [Z ] ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Finset.Nonempty : This definition establishes a property that denotes a finite set being non-empty, providing a convenient way to express this concept in theorem assumptions.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "rw [Finset.Nonempty ] ": [
+    "Finset.Nonempty : This definition establishes a property that denotes a finite set being non-empty, providing a convenient way to express this concept in theorem assumptions.",
+    "Finset.Nonempty : This definition establishes a property that denotes a finite set being non-empty, providing a convenient way to express this concept in theorem assumptions."
+  ],
+  "apply Exists.intro (|a| + 1 ) ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+  ],
+  "simp [Z ] ": [],
+  "let ⟨M,finmax⟩ := (Finset.max_of_nonempty this ) ": [
+    "Finset.max_of_nonempty : This theorem states that for any nonempty finite set of elements in a linear order, there exists an element such that the maximum value of the set is equal to that element."
+  ],
+  "have : ∀ n, |x n| ≤ M := by\n      intro n\n      -- 教科書では明示されていないものの基本は場合わけで考えているはず\n      by_cases h : n ≥ n₀\n      . have h3 := h2 n h\n        have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at this\n        have := lt_of_lt_of_le h3 h4\n        exact le_of_lt this\n      . push_neg at h\n        have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl⟩\n        have := Finset.le_max this; rw [finmax] at this\n        norm_cast at  this ": [
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element.",
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "Finset.le_max : This theorem asserts that any element belonging to a finite set is less than or equal to the maximum element of that set in a linear order."
+  ],
+  "intro  n ": [],
+  "by_cases h : n ≥  n₀ ": [],
+  ". have h3 := h2 n h\n        have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at this\n        have := lt_of_lt_of_le h3 h4\n        exact le_of_lt  this ": [],
+  "have h3 := h2 n  h ": [],
+  "have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at  this ": [
+    "Finset.le_max : This theorem asserts that any element belonging to a finite set is less than or equal to the maximum element of that set in a linear order."
+  ],
+  "have : (|a| + 1) ∈ Z := by simp [Z ] ": [],
+  "have := Finset.le_max  this ": [
+    "Finset.le_max : This theorem asserts that any element belonging to a finite set is less than or equal to the maximum element of that set in a linear order."
+  ],
+  "rw [finmax] at  this ": [],
+  "have := lt_of_lt_of_le h3  h4 ": [
+    "lt_of_lt_of_le : This theorem shows that if one element is less than a second element, and the second element is less than or equal to a third element, then the first element is also less than the third element in a preorder."
+  ],
+  "exact le_of_lt  this ": [
+    "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element."
+  ],
+  ". push_neg at h\n        have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl⟩\n        have := Finset.le_max this; rw [finmax] at this\n        norm_cast at  this ": [],
+  "push_neg at  h ": [],
+  "have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl ⟩ ": [
+    "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition.",
+    "rfl : An element is equal to itself, with an implicit argument allowing for broader applications of this concept."
+  ],
+  " left ": [],
+  "exact ⟨n, h, rfl ⟩ ": [
+    "rfl : An element is equal to itself, with an implicit argument allowing for broader applications of this concept."
+  ],
+  "apply Exists.intro  M ": [
+    "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+    "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+    "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+    "SequenceBounded : A sequence of real numbers is bounded if all its terms lie within some fixed real interval.",
+    "UpperBound : A real number is an upper bound of a set if it is greater than or equal to every element in that set."
+  ],
+  "intro  a ": [],
+  "rw [Set.mem_setOf ] ": [
+    "Set.mem_setOf : An element is in the set of all elements satisfying a property if and only if that property holds for the element."
+  ],
+  "intro  k1 ": [],
+  "let ⟨n,k2⟩ :=  k1 ": [],
+  "rw [k2 ] ": [],
+  "exact this  n ": []
+}

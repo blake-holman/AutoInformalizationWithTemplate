@@ -1,0 +1,97 @@
+{
+  "intro x ⟨a, x_conv_to_a ⟩ ": [],
+  "have := x_conv_to_a 1 (by norm_num ) ": [],
+  " norm_num ": [],
+  "let ⟨n₀, h1⟩ :=  this ": [],
+  "have h2: ∀n ≥ n₀, |x n| < |a| + 1 := by\n      intro n ngen₀\n      have h2₁ := abs_sub_abs_le_abs_sub (x n) a\n      have h2₂ := h1 n ngen₀\n      exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "lt_add_of_tsub_lt_left.{u_1} {α : Type u_1} [PartialOrder α] [AddCommSemigroup α] [Sub α] [OrderedSub α] {a b c : α}\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (h : a - b < c) : a < b + c",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "lt_of_le_of_lt.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b < c → a < c",
+    "abs_sub_abs_le_abs_sub.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a| - |b| ≤ |a - b|",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b"
+  ],
+  "intro n  ngen₀ ": [],
+  "have h2₁ := abs_sub_abs_le_abs_sub (x n)  a ": [
+    "abs_sub_abs_le_abs_sub.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a| - |b| ≤ |a - b|"
+  ],
+  "have h2₂ := h1 n  ngen₀ ": [],
+  "exact lt_add_of_tsub_lt_left (lt_of_le_of_lt h2₁ h2₂ ) ": [
+    "lt_of_le_of_lt.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b < c → a < c",
+    "lt_add_of_tsub_lt_left.{u_1} {α : Type u_1} [PartialOrder α] [AddCommSemigroup α] [Sub α] [OrderedSub α] {a b c : α}\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (h : a - b < c) : a < b + c"
+  ],
+  "let Z : Finset ℝ := (Multiset.ofList ((List.range n₀).map (|x ·|) ++ [|a| + 1])). toFinset ": [
+    "List.range (n : ℕ) : List ℕ",
+    "Multiset.ofList.{u_1} {α : Type u_1} : List α → Multiset α",
+    "List.map.{u, v} {α : Type u} {β : Type v} (f : α → β) : List α → List β",
+    "Multiset.toFinset.{u_1} {α : Type u_1} [DecidableEq α] (s : Multiset α) : Finset α"
+  ],
+  "have : Z.Nonempty := by\n      rw [Finset.Nonempty]\n      apply Exists.intro (|a| + 1)\n      simp [Z ] ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Finset.Nonempty.{u_1} {α : Type u_1} (s : Finset α) : Prop",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "rw [Finset.Nonempty ] ": [
+    "Finset.Nonempty.{u_1} {α : Type u_1} (s : Finset α) : Prop"
+  ],
+  "apply Exists.intro (|a| + 1 ) ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "simp [Z ] ": [],
+  "let ⟨M,finmax⟩ := (Finset.max_of_nonempty this ) ": [
+    "Finset.max_of_nonempty.{u_2} {α : Type u_2} [LinearOrder α] {s : Finset α} (h : s.Nonempty) : ∃ a, s.max = ↑a"
+  ],
+  "have : ∀ n, |x n| ≤ M := by\n      intro n\n      -- 教科書では明示されていないものの基本は場合わけで考えているはず\n      by_cases h : n ≥ n₀\n      . have h3 := h2 n h\n        have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at this\n        have := lt_of_lt_of_le h3 h4\n        exact le_of_lt this\n      . push_neg at h\n        have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl⟩\n        have := Finset.le_max this; rw [finmax] at this\n        norm_cast at  this ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "lt_of_lt_of_le.{u} {α : Type u} [Preorder α] {a b c : α} : a < b → b ≤ c → a < c",
+    "And.left {a b : Prop} (self : a ∧ b) : a",
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Finset.le_max.{u_2} {α : Type u_2} [LinearOrder α] {a : α} {s : Finset α} (as : a ∈ s) : ↑a ≤ s.max",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b"
+  ],
+  "intro  n ": [],
+  "by_cases h : n ≥  n₀ ": [],
+  ". have h3 := h2 n h\n        have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at this\n        have := lt_of_lt_of_le h3 h4\n        exact le_of_lt  this ": [],
+  "have h3 := h2 n  h ": [],
+  "have h4 : |a| + 1 ≤ M := by\n          have : (|a| + 1) ∈ Z := by simp [Z]\n          have := Finset.le_max this; rw [finmax] at this\n          norm_cast at  this ": [
+    "Finset.le_max.{u_2} {α : Type u_2} [LinearOrder α] {a : α} {s : Finset α} (as : a ∈ s) : ↑a ≤ s.max"
+  ],
+  "have : (|a| + 1) ∈ Z := by simp [Z ] ": [],
+  "have := Finset.le_max  this ": [
+    "Finset.le_max.{u_2} {α : Type u_2} [LinearOrder α] {a : α} {s : Finset α} (as : a ∈ s) : ↑a ≤ s.max"
+  ],
+  "rw [finmax] at  this ": [],
+  "have := lt_of_lt_of_le h3  h4 ": [
+    "lt_of_lt_of_le.{u} {α : Type u} [Preorder α] {a b c : α} : a < b → b ≤ c → a < c"
+  ],
+  "exact le_of_lt  this ": [
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b"
+  ],
+  ". push_neg at h\n        have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl⟩\n        have := Finset.le_max this; rw [finmax] at this\n        norm_cast at  this ": [],
+  "push_neg at  h ": [],
+  "have :  |x n| ∈ Z := by\n          simp [Z]\n          left\n          exact ⟨n, h, rfl ⟩ ": [
+    "rfl.{u} {α : Sort u} {a : α} : a = a",
+    "And.left {a b : Prop} (self : a ∧ b) : a"
+  ],
+  " left ": [],
+  "exact ⟨n, h, rfl ⟩ ": [
+    "rfl.{u} {α : Sort u} {a : α} : a = a"
+  ],
+  "apply Exists.intro  M ": [
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+  ],
+  "intro  a ": [],
+  "rw [Set.mem_setOf ] ": [
+    "Set.mem_setOf.{u} {α : Type u} {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a"
+  ],
+  "intro  k1 ": [],
+  "let ⟨n,k2⟩ :=  k1 ": [],
+  "rw [k2 ] ": [],
+  "exact this  n ": []
+}

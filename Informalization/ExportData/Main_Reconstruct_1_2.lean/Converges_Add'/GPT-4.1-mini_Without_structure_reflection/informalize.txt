@@ -1,0 +1,59 @@
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that there exists an index \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of the difference between \( x(n) + y(n) \) and \( a + b \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+From the theorem that half of a positive number is positive and the assumption that \( \varepsilon \) is greater than zero, it follows immediately that half of \( \varepsilon \) is also greater than zero, thereby completing the proof.
+[appliedTactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the values of \( y_n \) are within half of \( \varepsilon \) from \( b \).
+[appliedTactic]
+apply half_pos  εpos 
+[answer]
+From the theorem that half of a positive number is also positive and the assumption that \( \varepsilon \) is greater than zero, it follows that to prove that half of \( \varepsilon \) is positive, no further proof is needed.
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the assumption that the sequences \( x \) and \( y \) converge to \( a \) and \( b \) respectively, and given that for sufficiently large indices the terms of \( x \) and \( y \) are within half of \( \varepsilon \) from their limits, in order to establish the existence of an index from which the sum of the sequences is within \( \varepsilon \) from \( a + b \), it suffices to prove that for all indices greater than or equal to the maximum of those two indices, the sum of the sequences is within \( \varepsilon \) from \( a + b \).
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between \( x_n + y_n \) and \( a + b \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+[answer]
+By calculation, it is shown that \( |x_n + y_n - (a + b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon. \)
+[appliedTactic]
+rw [add_sub_add_comm ] 
+[answer]
+By using the property that the difference of sums can be rearranged as the sum of differences, the goal of proving the absolute value of \(x_n + y_n - (a + b)\) is less than or equal to the sum of the absolute values of \(x_n - a\) and \(y_n - b\) becomes proving the absolute value of \((x_n - a) + (y_n - b)\) is less than or equal to the sum of the absolute values of \(x_n - a\) and \(y_n - b\).
+[appliedTactic]
+apply  abs_add 
+[answer]
+From the triangle inequality, in order to establish that the absolute value of the sum of \( x(n) - a \) and \( y(n) - b \) is less than or equal to the sum of their absolute values, it suffices to prove this inequality directly, which completes the proof.
+[appliedTactic]
+have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) 
+[answer]
+Show that \( n_0 \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \). This follows directly from the fact that any number is always less than or equal to itself, applied to the definition of \( n_0 \) as the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀) ) 
+[answer]
+From the assumptions that for all \( n \) greater than or equal to \( n_1 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \), and for all \( n \) greater than or equal to \( n_2 \), the distance between \( y_n \) and \( b \) is less than half of \( \varepsilon \), and using the facts that if the maximum of two numbers is less than or equal to a third number then each is less than or equal to that third number, as well as the transitivity of the order relation, and the property that the sum of two inequalities is less than the sum of their bounds, to establish that the sum of the distances between \( x_n \) and \( a \) and between \( y_n \) and \( b \) is less than \( \varepsilon \), it suffices to prove that this sum is less than the sum of the two halves of \( \varepsilon \).

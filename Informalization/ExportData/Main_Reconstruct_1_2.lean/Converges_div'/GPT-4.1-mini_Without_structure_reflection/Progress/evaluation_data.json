@@ -1,0 +1,1077 @@
+[
+  {
+    "AppliedTactic": "intro ⟨convxa, convyb ⟩ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\n⊢ ConvergesTo x a ∧ ConvergesTo y b → ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GivenPremises": [
+      "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses."
+    ],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that the sequence \\( x \\) converges to \\( a \\) and the sequence \\( y \\) converges to \\( b \\). From now on, we will show that the sequence defined by dividing \\( x \\) by \\( y \\) converges to the quotient \\( a / b \\)."
+  },
+  {
+    "AppliedTactic": "suffices h1 : ConvergesTo (fun n ↦ 1 / (y n)) (1 / b) by\n      have := Converges_mul' x (1 / y) a (1 / b) ⟨convxa,h1⟩\n      rw [mul_div,mul_one,mul_div,mul_one] at this\n      exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses.",
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+      "Converges_mul' : If two sequences of real numbers converge to respective limits, then their term-by-term product converges to the product of those limits.",
+      "ConvergesTo : A sequence of real numbers converges to a real number if its terms become arbitrarily close to that number as the sequence progresses."
+    ],
+    "Template": "Assume that [goalsAfter]. From now on, we will show that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that the sequence defined by taking the reciprocal of each term of \\( y \\) converges to the reciprocal of \\( b \\). From now on, we will show that the sequence defined by the term-wise division of \\( x \\) by \\( y \\) converges to the quotient of \\( a \\) by \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have := Converges_mul' x (1 / y) a (1 / b) ⟨convxa,h1 ⟩ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nh1 :  ConvergesTo (fun n => 1 / y n) (1 / b)\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nh1 :  ConvergesTo (fun n => 1 / y n) (1 / b)\nthis :  ConvergesTo (fun n => (x * (1 / y)) n) (a * (1 / b))\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GivenPremises": [
+      "Converges_mul' : If two sequences of real numbers converge to respective limits, then their term-by-term product converges to the product of those limits."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the sequence obtained by multiplying \\( x \\) by the reciprocal of \\( y \\) converges to the product of \\( a \\) and the reciprocal of \\( b \\). This can be proved by applying the fact that if two sequences converge to respective limits, then their term-by-term product converges to the product of those limits."
+  },
+  {
+    "AppliedTactic": "rw [mul_div,mul_one,mul_div,mul_one] at  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nh1 :  ConvergesTo (fun n => 1 / y n) (1 / b)\nthis :  ConvergesTo (fun n => (x * (1 / y)) n) (a * (1 / b))\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nh1 :  ConvergesTo (fun n => 1 / y n) (1 / b)\nthis :  ConvergesTo (fun n => (x / y) n) (a / b)\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the properties that multiplying by one leaves an element unchanged and that multiplying by a quotient can be expressed as division of a product, the statement that the sequence formed by multiplying \\( x \\) and the reciprocal of \\( y \\) converges to the product of \\( a \\) and the reciprocal of \\( b \\) becomes the statement that the sequence formed by dividing \\( x \\) by \\( y \\) converges to the quotient of \\( a \\) by \\( b \\)."
+  },
+  {
+    "AppliedTactic": "exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nh1 :  ConvergesTo (fun n => 1 / y n) (1 / b)\nthis :  ConvergesTo (fun n => (x / y) n) (a / b)\n⊢ ConvergesTo (fun n => (x / y) n) (a / b)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the sequence defined by dividing \\(x\\) by \\(y\\) converges to the quotient of their limits \\(a\\) divided by \\(b\\)."
+  },
+  {
+    "AppliedTactic": "have absbpos: |b| > 0 := by\n      rw [gt_iff_lt]\n      exact abs_pos.2  bnotzero ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GivenPremises": [
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the absolute value of \\( b \\) is greater than zero."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ |b| > 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ 0 < |b|",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that an expression being greater than zero is equivalent to zero being less than that expression, the goal of proving that the absolute value of \\( b \\) is greater than zero becomes the goal of proving that zero is less than the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "exact abs_pos.2  bnotzero ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\n⊢ 0 < |b|",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that the absolute value of a number is positive if and only if the number is not zero, and the assumption that \\( b \\) is not zero."
+  },
+  {
+    "AppliedTactic": "have h3: ∃n₁, ∀n ≥ n₁, |y n - b| < |b| / 2 := convyb (|b|/2) (half_pos absbpos ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GivenPremises": [
+      "half_pos : This theorem asserts that in a linear ordered semifield, if an element is positive, then half of that element is also positive."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number \\( n_1 \\) such that for all \\( n \\geq n_1 \\), the distance between \\( y(n) \\) and \\( b \\) is less than half the absolute value of \\( b \\). This can be proved by applying the fact that the sequence \\( y \\) converges to \\( b \\), together with the fact that half of a positive number is also positive."
+  },
+  {
+    "AppliedTactic": "let ⟨n₁,h₁⟩ :=  h3 ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n_1 \\) be such that for all \\( n \\geq n_1 \\), the distance between \\( y_n \\) and \\( b \\) is less than half the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have yngtabsb : ∀n ≥ n₁, |y n| > |b| / 2 := by\n      intro n ngen₁\n      have := h₁ n ngen₁\n      rw [abs_sub_comm] at this\n      have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n)\n      have := lt_of_le_of_lt sub this\n      rw [sub_lt_comm] at this\n      have subhalf : |b| - |b| / 2 = |b| / 2 := by ring\n      rw [subhalf] at this\n      exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GivenPremises": [
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third.",
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions.",
+      "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group.",
+      "sub_lt_comm : This theorem states that the inequality involving the difference between two elements compared to a third element is equivalent to a rearranged difference involving the first and third elements in an additive commutative group context.",
+      "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that for all natural numbers \\( n \\) greater than or equal to \\( n_1 \\), the absolute value of \\( y(n) \\) is greater than half the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "intro n  ngen₁ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\n⊢ ∀ n ≥ n₁, |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is a natural number greater than or equal to \\( n_1 \\). From now on, we will show that the absolute value of \\( y(n) \\) is greater than half the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have := h₁ n  ngen₁ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |y n - b| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the absolute value of \\( y n - b \\) is less than half the absolute value of \\( b \\). This follows directly from the assumption that for all \\( n \\) greater than or equal to \\( n_1 \\), the absolute difference between \\( y n \\) and \\( b \\) is less than half the absolute value of \\( b \\), and since \\( n \\) satisfies this condition, the statement holds."
+  },
+  {
+    "AppliedTactic": "rw [abs_sub_comm] at  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |y n - b| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |b - y n| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [
+      "abs_sub_comm : This theorem asserts that the absolute value of the difference between two elements is symmetric, meaning that the order of subtraction does not affect its absolute value in the context of a lattice and additive group."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that the absolute value of the difference between two elements is symmetric, the statement that the absolute value of \\( y(n) - b \\) is less than half the absolute value of \\( b \\) becomes the statement that the absolute value of \\( b - y(n) \\) is less than half the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |b - y n| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [
+      "abs_sub_abs_le_abs_sub : This theorem asserts that the difference between the absolute values of two elements is less than or equal to the absolute value of the difference between those two elements within a linear ordered additive commutative group."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the difference between the absolute value of \\( b \\) and the absolute value of \\( y(n) \\) is less than or equal to the absolute value of the difference between \\( b \\) and \\( y(n) \\). This can be proved by applying the property that, for any two real numbers, the absolute value of their difference bounds the difference of their absolute values from above."
+  },
+  {
+    "AppliedTactic": "have := lt_of_le_of_lt sub  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |y n| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [
+      "lt_of_le_of_lt : This theorem asserts that in a preorder, if one element is less than or equal to a second element and the second element is strictly less than a third, then the first element is also strictly less than the third."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the difference between the absolute value of \\( b \\) and the absolute value of \\( y_n \\) is less than half the absolute value of \\( b \\). This can be proved by combining the inequality that the difference between the absolute values is at most the absolute value of their difference with the fact that the absolute value of the difference between \\( b \\) and \\( y_n \\) is less than half the absolute value of \\( b \\), which together imply the desired strict inequality."
+  },
+  {
+    "AppliedTactic": "rw [sub_lt_comm] at  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |y n| < |b| / 2\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |b| / 2 < |y n|\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [
+      "sub_lt_comm : This theorem states that the inequality involving the difference between two elements compared to a third element is equivalent to a rearranged difference involving the first and third elements in an additive commutative group context."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that an inequality involving the difference between two elements can be rewritten by swapping the order of subtraction, the statement that the difference between the absolute value of \\( b \\) and the absolute value of \\( y n \\) is less than half the absolute value of \\( b \\) becomes the statement that the difference between the absolute value of \\( b \\) and half the absolute value of \\( b \\) is less than the absolute value of \\( y n \\)."
+  },
+  {
+    "AppliedTactic": "have subhalf : |b| - |b| / 2 = |b| / 2 := by  ring ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |b| / 2 < |y n|\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |b| / 2 < |y n|\nsubhalf :  |b| - |b| / 2 = |b| / 2\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the difference between the absolute value of \\( b \\) and half of the absolute value of \\( b \\) equals half of the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": " ring ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |b| / 2 < |y n|\n⊢ |b| - |b| / 2 = |b| / 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "By a simple calculation, [goalsBefore] is immediately verified.",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "By a simple calculation, the equality stating that the difference between the absolute value of \\( b \\) and half of it equals half of the absolute value of \\( b \\) is immediately verified."
+  },
+  {
+    "AppliedTactic": "rw [subhalf] at  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| - |b| / 2 < |y n|\nsubhalf :  |b| - |b| / 2 = |b| / 2\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| / 2 < |y n|\nsubhalf :  |b| - |b| / 2 = |b| / 2\n⊢ |y n| > |b| / 2",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that subtracting half of the absolute value of \\( b \\) from the absolute value of \\( b \\) equals half of the absolute value of \\( b \\), the inequality stating that the absolute value of \\( b \\) minus half of the absolute value of \\( b \\) is less than the absolute value of \\( y_n \\) becomes the inequality stating that half of the absolute value of \\( b \\) is less than the absolute value of \\( y_n \\)."
+  },
+  {
+    "AppliedTactic": "exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nn :  ℕ\nngen₁ :  n ≥ n₁\nthis✝ :  |b - y n| < |b| / 2\nsub :  |b| - |y n| ≤ |b - y n|\nthis :  |b| / 2 < |y n|\nsubhalf :  |b| - |b| / 2 = |b| / 2\n⊢ |y n| > |b| / 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the absolute value of \\(y_n\\) is greater than half the absolute value of \\(b\\)."
+  },
+  {
+    "AppliedTactic": "intro ε  εpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\n⊢ ConvergesTo (fun n => 1 / y n) (1 / b)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( \\varepsilon > 0 \\). From now on, we will show that there exists a natural number \\( n_0 \\) such that for all \\( n \\geq n_0 \\), the absolute difference between the reciprocal of \\( y_n \\) and the reciprocal of \\( b \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "have h4: ∃n₂, ∀n ≥ n₂, |y n - b| < (|b| * |b| * ε / 2) := by\n      have bbεpos : (|b| * |b| * ε / 2) > 0 := by\n        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]\n        exact mul_pos absbpos (mul_pos absbpos εpos)\n      exact convyb (|b| * |b| * ε / 2)  bbεpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [
+      "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+      "Real.mul_pos : The product of two positive real numbers is also positive.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+      "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that there exists a natural number \\( n_2 \\) such that for all \\( n \\geq n_2 \\), the difference between \\( y_n \\) and \\( b \\) is less than the product of the square of the absolute value of \\( b \\) and \\( \\varepsilon \\) divided by 2."
+  },
+  {
+    "AppliedTactic": "have bbεpos : (|b| * |b| * ε / 2) > 0 := by\n        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]\n        exact mul_pos absbpos (mul_pos absbpos εpos ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nbbεpos :  |b| * |b| * ε / 2 > 0\n⊢ ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2",
+    "GivenPremises": [
+      "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+      "Real.mul_pos : The product of two positive real numbers is also positive.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+      "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the product of the absolute value of \\( b \\) squared, multiplied by \\( \\varepsilon \\) and divided by 2, is greater than zero."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ |b| * |b| * ε / 2 > 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ 0 < |b| * (|b| * ε)",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the equivalence between greater-than and less-than comparisons and the relationship that compares an element to a quotient involving a positive divisor, the goal of proving that the product of the absolute value of \\( b \\) squared and half of \\( \\varepsilon \\) is greater than zero becomes proving that zero is less than the product of the absolute value of \\( b \\) and the product of the absolute value of \\( b \\) and \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "exact mul_pos absbpos (mul_pos absbpos εpos ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\n⊢ 0 < |b| * (|b| * ε)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+      "Real.mul_pos : The product of two positive real numbers is also positive."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that the absolute value of \\( b \\) is greater than zero and that \\( \\varepsilon \\) is greater than zero, using the fact that the product of positive real numbers is positive."
+  },
+  {
+    "AppliedTactic": "exact convyb (|b| * |b| * ε / 2)  bbεpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nbbεpos :  |b| * |b| * ε / 2 > 0\n⊢ ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that the sequence \\( y \\) converges to \\( b \\), that \\( b \\) is nonzero and its absolute value is positive, and that the product of the square of the absolute value of \\( b \\) and half of \\( \\varepsilon \\) is positive."
+  },
+  {
+    "AppliedTactic": "let ⟨n₂,h₂⟩ :=  h4 ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n_2 \\) be such that for all \\( n \\geq n_2 \\), the distance between \\( y_n \\) and \\( b \\) is less than \\( |b|^2 \\) times \\( \\varepsilon \\) divided by 2."
+  },
+  {
+    "AppliedTactic": "let n₀ := max n₁  n₂ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [
+      "Max.max : A function computes the maximum of two elements from a specified type."
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n_0 \\) be the maximum of \\( n_1 \\) and \\( n_2 \\)."
+  },
+  {
+    "AppliedTactic": "have n₀max : max n₁ n₂ ≤ n₀ := by  simp ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [
+      "Max.max : A function computes the maximum of two elements from a specified type."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the maximum of \\( n_1 \\) and \\( n_2 \\) is less than or equal to \\( n_0 \\)."
+  },
+  {
+    "AppliedTactic": " simp ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\n⊢ max n₁ n₂ ≤ n₀",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "Max.max : A function computes the maximum of two elements from a specified type."
+    ],
+    "Template": "[goalsBefore] is proved straightforward.",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "The statement that the maximum of \\( n_1 \\) and \\( n_2 \\) is less than or equal to \\( n_0 \\) is proved straightforward."
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  n₀ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\n⊢ ∃ n₀, ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\n⊢ ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [
+      "And.intro : This states that if two propositions are true, then their conjunction is also true.",
+      "Exists.intro : If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+      "Iff.intro : Two propositions are equivalent if one implies the other in both directions."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the assumption that \\( n_0 \\) is defined as the maximum of \\( n_1 \\) and \\( n_2 \\), in order to establish the existence of some \\( n_0 \\) such that for all \\( n \\geq n_0 \\), the difference between the reciprocal of \\( y_n \\) and the reciprocal of \\( b \\) is less than \\( \\varepsilon \\), it suffices to prove that for all \\( n \\geq n_0 \\), this difference is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "intro n  ngen₀ ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\n⊢ ∀ n ≥ n₀, |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is a natural number greater than or equal to \\( n_0 \\). From now on, we will show that the absolute value of the difference between the reciprocal of \\( y_n \\) and the reciprocal of \\( b \\) is less than \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "calc\n      |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by\n        rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]\n        rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]\n        rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]\n        exact bnotzero; exact yneqzero n\n      _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by\n        have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max\n        have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max\n        rw [abs_mul,mul_comm,mul_div]\n        have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n          have := yngtabsb n (le_trans n₁len₀ ngen₀)\n          have : 1 / |y n| < 2 / |b| := by\n            rw [one_div]\n            apply (lt_div_iff absbpos).2\n            rw [mul_comm]\n            have absynpos : |y n|⁻¹ > 0 := by\n              rw [gt_iff_lt,inv_pos]\n              exact abs_pos.2 (yneqzero n)\n            apply (lt_div_iff absynpos).1\n            rw [div_eq_mul_inv,inv_inv,mul_comm]\n            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n            exact this\n          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n          rw [← one_div,mul_div 2,mul_one]\n          have divabsbpos : 1 / |b| > 0 :=by\n            rw [one_div,gt_iff_lt,inv_pos]\n            exact absbpos\n          exact (mul_lt_mul_right divabsbpos).2 this\n        rw [← mul_div,mul_comm]\n        have l1: 2 / (|b| * |b|) > 0 := by\n          rw [gt_iff_lt]\n          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n          apply (lt_div_iff absbpow).2\n          rw [zero_mul]\n          norm_num\n        exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))\n      _ = ε := by\n        ring_nf\n        rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]\n        rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]\n        repeat (any_goals exact bnotzero ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(fun n => 1 / y n) n - 1 / b| < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "By calculation, it is shown that [calcStep].",
+    "TokenInfos": {
+      "[calcStep]": "This token appears in tactic templates that prove a proposition through multiple calculation steps. Replace it with the full sequence of intermediate expressions formatted in TeX.\n\nFor example, consider the following calculation:\n\n```\ncalc\n    a = b + 1 := ...\n    _ = c + 1 := ...\n  _ ≤ d + 1 := ...\n\n```\n\nIn this case, the output should be:\n\nBy calculation, it is shown that \\( a = b + 1 = c + 1 \\leq d + 1. \\)"
+    },
+    "Result": "By calculation, it is shown that \\( \\left| \\frac{1}{y_n} - \\frac{1}{b} \\right| = \\frac{1}{|y_n| \\cdot |b|} \\cdot |y_n - b| < \\frac{2}{|b|^2} \\cdot \\frac{|b|^2 \\varepsilon}{2} = \\varepsilon. \\)"
+  },
+  {
+    "AppliedTactic": "rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |1 / y n - 1 / b| = 1 / |y n * b| * |y n - b|",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(y n)⁻¹ - b⁻¹| = |y n - b| * |y n * b|⁻¹",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the commutativity of multiplication, the fact that multiplying by one leaves an element unchanged, and the equivalence between division and multiplication by the inverse, the goal of proving that the absolute value of the difference between the reciprocals of \\( y(n) \\) and \\( b \\) equals the product of the absolute value of their difference and the reciprocal of the absolute value of their product becomes the statement that the absolute value of \\( (y(n))^{-1} - b^{-1} \\) equals the absolute value of \\( y(n) - b \\) multiplied by the reciprocal of the absolute value of \\( y(n) \\cdot b \\)."
+  },
+  {
+    "AppliedTactic": "rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(y n)⁻¹ - b⁻¹| = |y n - b| * |y n * b|⁻¹",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(y n)⁻¹ - b⁻¹| = |b⁻¹ - b * (y n)⁻¹ * b⁻¹|\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GivenPremises": [
+      "sub_mul : Subtraction multiplied by an element distributes over multiplication in a non-unital non-associative ring.",
+      "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the properties that the absolute value of a product equals the product of the absolute values, the inverse of a product equals the product of the inverses in reverse order, the distributive property of multiplication over subtraction, and the fact that a nonzero element multiplied by its inverse is the identity, the expression for the absolute difference of the inverses of \\( y_n \\) and \\( b \\) is transformed from the difference of their inverses to an expression involving the product of their inverses and the difference \\( y_n - b \\), changing the goal from proving \\( |(y_n)^{-1} - b^{-1}| = |y_n - b| \\cdot |y_n \\cdot b|^{-1} \\) to proving \\( |(y_n)^{-1} - b^{-1}| = |b^{-1} - b \\cdot (y_n)^{-1} \\cdot b^{-1}| \\)."
+  },
+  {
+    "AppliedTactic": "rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |(y n)⁻¹ - b⁻¹| = |b⁻¹ - b * (y n)⁻¹ * b⁻¹|\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GivenPremises": [
+      "inv_mul_cancel : This theorem asserts that in a group with zero, the product of a nonzero element and its inverse equals one.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the commutativity and associativity of multiplication, the fact that multiplying a nonzero element by its inverse yields one, and the symmetry of the absolute value of a difference, the goal of proving an equality involving the absolute value of the difference between the inverses of two terms transforms into the goal of proving that the constant \\( b \\) is nonzero."
+  },
+  {
+    "AppliedTactic": "exact  bnotzero ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( b \\) is nonzero."
+  },
+  {
+    "AppliedTactic": "exact yneqzero  n ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ y n ≠ 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that for every natural number \\( n \\), the value of \\( y(n) \\) is not zero."
+  },
+  {
+    "AppliedTactic": "have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left  n₀max ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ 1 / |y n * b| * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\n⊢ 1 / |y n * b| * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "le_of_max_le_left : If the maximum of two elements is less than or equal to a third element, then at least one of those two elements must also be less than or equal to the third element."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( n_1 \\) is less than or equal to \\( n_0 \\). This can be proved by using the fact that if the maximum of \\( n_1 \\) and \\( n_2 \\) is less than or equal to \\( n_0 \\), then \\( n_1 \\) must also be less than or equal to \\( n_0 \\)."
+  },
+  {
+    "AppliedTactic": "have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right  n₀max ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\n⊢ 1 / |y n * b| * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\n⊢ 1 / |y n * b| * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "le_of_max_le_right : If the maximum of two elements is less than or equal to a third element, then the second element is also less than or equal to that third element."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( n_2 \\) is less than or equal to \\( n_0 \\). This can be proved by using the fact that \\( n_0 \\) is defined as the maximum of \\( n_1 \\) and \\( n_2 \\), so if the maximum of \\( n_1 \\) and \\( n_2 \\) is less than or equal to \\( n_0 \\), then in particular \\( n_2 \\) must be less than or equal to \\( n_0 \\)."
+  },
+  {
+    "AppliedTactic": "rw [abs_mul,mul_comm,mul_div ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\n⊢ 1 / |y n * b| * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\n⊢ |y n - b| * 1 / (|y n| * |b|) < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "abs_mul : The absolute value of the product of two elements in a linearly ordered ring is equal to the product of their absolute values.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that the absolute value of a product equals the product of the absolute values, that multiplication is commutative, and that division can be expressed as multiplication by the reciprocal, the goal of proving that one divided by the absolute value of the product of \\( y(n) \\) and \\( b \\) times the absolute value of \\( y(n) - b \\) is less than a certain expression becomes proving that the absolute value of \\( y(n) - b \\) times one divided by the product of the absolute values of \\( y(n) \\) and \\( b \\) is less than that expression."
+  },
+  {
+    "AppliedTactic": "have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by\n          have := yngtabsb n (le_trans n₁len₀ ngen₀)\n          have : 1 / |y n| < 2 / |b| := by\n            rw [one_div]\n            apply (lt_div_iff absbpos).2\n            rw [mul_comm]\n            have absynpos : |y n|⁻¹ > 0 := by\n              rw [gt_iff_lt,inv_pos]\n              exact abs_pos.2 (yneqzero n)\n            apply (lt_div_iff absynpos).1\n            rw [div_eq_mul_inv,inv_inv,mul_comm]\n            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n            exact this\n          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]\n          rw [← one_div,mul_div 2,mul_one]\n          have divabsbpos : 1 / |b| > 0 :=by\n            rw [one_div,gt_iff_lt,inv_pos]\n            exact absbpos\n          exact (mul_lt_mul_right divabsbpos).2  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\n⊢ |y n - b| * 1 / (|y n| * |b|) < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ |y n - b| * 1 / (|y n| * |b|) < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "mul_inv : In a commutative division monoid, the inverse of the product of two elements is equal to the product of their individual inverses.",
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+      "mul_assoc : This theorem asserts that multiplication in a semigroup is associative, meaning the product of three elements is the same regardless of how they are grouped.",
+      "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+      "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+      "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third.",
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+      "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+      "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the reciprocal of the product of the absolute values of \\( y(n) \\) and \\( b \\) is less than twice the reciprocal of the square of the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have := yngtabsb n (le_trans n₁len₀ ngen₀ ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\n⊢ 1 / (|y n| * |b|) < 2 / (|b| * |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ 1 / (|y n| * |b|) < 2 / (|b| * |b|)",
+    "GivenPremises": [
+      "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the absolute value of \\( y(n) \\) is greater than half the absolute value of \\( b \\). This can be proved by applying the given property that holds for all \\( n \\) greater than or equal to \\( n_1 \\), and using the fact that \\( n \\) is greater than or equal to the maximum of \\( n_1 \\) and \\( n_2 \\), which itself is greater than or equal to \\( n_1 \\) by the transitivity of inequalities."
+  },
+  {
+    "AppliedTactic": "have : 1 / |y n| < 2 / |b| := by\n            rw [one_div]\n            apply (lt_div_iff absbpos).2\n            rw [mul_comm]\n            have absynpos : |y n|⁻¹ > 0 := by\n              rw [gt_iff_lt,inv_pos]\n              exact abs_pos.2 (yneqzero n)\n            apply (lt_div_iff absynpos).1\n            rw [div_eq_mul_inv,inv_inv,mul_comm]\n            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this\n            exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ 1 / (|y n| * |b|) < 2 / (|b| * |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / (|y n| * |b|) < 2 / (|b| * |b|)",
+    "GivenPremises": [
+      "div_eq_mul_inv : This theorem demonstrates that in a specific algebraic structure, dividing one element by another is equivalent to multiplying the first element by the inverse of the second.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order.",
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse.",
+      "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element.",
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the reciprocal of the absolute value of \\( y(n) \\) is less than twice the reciprocal of the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "rw [one_div ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ 1 / |y n| < 2 / |b|",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |y n|⁻¹ < 2 / |b|",
+    "GivenPremises": [
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that the reciprocal of a number is equal to its inverse, the goal of proving that one divided by the absolute value of \\( y(n) \\) is less than two divided by the absolute value of \\( b \\) becomes proving that the inverse of the absolute value of \\( y(n) \\) is less than two divided by the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "apply (lt_div_iff absbpos). 2 ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |y n|⁻¹ < 2 / |b|",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |y n|⁻¹ * |b| < 2",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem relating inequalities involving division by a positive number and the assumption that the absolute value of \\( b \\) is positive, in order to establish that the reciprocal of the absolute value of \\( y_n \\) is less than twice the reciprocal of the absolute value of \\( b \\), it suffices to prove that the product of the reciprocal of the absolute value of \\( y_n \\) and the absolute value of \\( b \\) is less than 2."
+  },
+  {
+    "AppliedTactic": "rw [mul_comm ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |y n|⁻¹ * |b| < 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |b| * |y n|⁻¹ < 2",
+    "GivenPremises": [
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that multiplication is commutative, the goal of proving that the product of the reciprocal of the absolute value of \\( y(n) \\) and the absolute value of \\( b \\) is less than 2 becomes the goal of proving that the product of the absolute value of \\( b \\) and the reciprocal of the absolute value of \\( y(n) \\) is less than 2."
+  },
+  {
+    "AppliedTactic": "have absynpos : |y n|⁻¹ > 0 := by\n              rw [gt_iff_lt,inv_pos]\n              exact abs_pos.2 (yneqzero n ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |b| * |y n|⁻¹ < 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| * |y n|⁻¹ < 2",
+    "GivenPremises": [
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the reciprocal of the absolute value of \\( y(n) \\) is positive."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt,inv_pos ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ |y n|⁻¹ > 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ 0 < |y n|",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that a statement asserting one quantity is greater than another is equivalent to the reverse inequality with less than, and that an element is positive if and only if its inverse is positive, the goal of proving that the inverse of the absolute value of \\( y_n \\) is greater than zero becomes the goal of proving that the absolute value of \\( y_n \\) itself is greater than zero."
+  },
+  {
+    "AppliedTactic": "exact abs_pos.2 (yneqzero n ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\n⊢ 0 < |y n|",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_pos : This theorem establishes that the absolute value of an element in an additive group and linear order is positive if and only if the element itself is not zero."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that the absolute value of a number is positive if and only if the number is not zero, and the assumption that for every natural number \\( n \\), \\( y(n) \\) is not zero."
+  },
+  {
+    "AppliedTactic": "apply (lt_div_iff absynpos). 1 ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| * |y n|⁻¹ < 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < 2 / |y n|⁻¹",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem relating inequalities involving division by a positive number and the positivity of the reciprocal of the absolute value of \\( y_n \\), in order to establish that the product of the absolute value of \\( b \\) and the reciprocal of the absolute value of \\( y_n \\) is less than 2, it suffices to prove that the absolute value of \\( b \\) is less than 2 divided by the reciprocal of the absolute value of \\( y_n \\)."
+  },
+  {
+    "AppliedTactic": "rw [div_eq_mul_inv,inv_inv,mul_comm ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < 2 / |y n|⁻¹",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < |y n| * 2",
+    "GivenPremises": [
+      "inv_inv : This theorem demonstrates that taking the inverse of an element twice in a group retrieves the original element.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By rewriting the expression involving division as multiplication by the inverse, applying the fact that taking the inverse twice returns the original value, and using the commutativity of multiplication, the goal of proving that the absolute value of \\( b \\) is less than twice the inverse of the absolute value of \\( y_n \\) becomes the goal of proving that the absolute value of \\( b \\) is less than twice the absolute value of \\( y_n \\)."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt, div_lt_iff (by norm_num)] at  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |y n| > |b| / 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < |y n| * 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |b| < |y n| * 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < |y n| * 2",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "div_lt_iff : This theorem establishes that in a linear ordered semifield, dividing one element by a positive element is less than another element if and only if the first element is less than the product of the second element and that positive element."
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied."
+    },
+    "Result": "By using the fact that a greater-than comparison can be rewritten as a less-than comparison and that dividing by a positive number preserves the inequality direction, the statement that the absolute value of \\( y_n \\) is greater than half the absolute value of \\( b \\) becomes the statement that the absolute value of \\( b \\) is less than twice the absolute value of \\( y_n \\)."
+  },
+  {
+    "AppliedTactic": "exact  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  |b| < |y n| * 2\nabsynpos :  |y n|⁻¹ > 0\n⊢ |b| < |y n| * 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the absolute value of \\( b \\) is less than twice the absolute value of \\( y(n) \\)."
+  },
+  {
+    "AppliedTactic": "rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / (|y n| * |b|) < 2 / (|b| * |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / |y n| * |b|⁻¹ < 2 * |b|⁻¹ * |b|⁻¹",
+    "GivenPremises": [
+      "div_eq_mul_one_div : In a division inverse monoid, the division of one element by another is equivalent to multiplying the first element by the reciprocal of the second.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that dividing by a product is equivalent to multiplying by the reciprocal of the product, that the reciprocal of a product is the product of the reciprocals, and the associativity of multiplication, the goal of proving that the reciprocal of the product of the absolute value of \\( y(n) \\) and the absolute value of \\( b \\) is less than the product of two reciprocals of the absolute value of \\( b \\) multiplied by 2 becomes showing that the product of the reciprocal of the absolute value of \\( y(n) \\) and the reciprocal of the absolute value of \\( b \\) is less than the product of 2 and two reciprocals of the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "rw [← one_div,mul_div 2,mul_one ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / |y n| * |b|⁻¹ < 2 * |b|⁻¹ * |b|⁻¹",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / |y n| * (1 / |b|) < 2 / |b| * (1 / |b|)",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By rewriting the expression to replace the reciprocal of the absolute value of \\( b \\) with one divided by the absolute value of \\( b \\), and then applying the properties that multiplying by one leaves an expression unchanged and that multiplication distributes over division, the goal of proving \\( \\frac{1}{|y_n|} \\times \\frac{1}{|b|} < \\frac{2}{|b|} \\times \\frac{1}{|b|} \\) is obtained from the original goal of proving \\( \\frac{1}{|y_n|} \\times |b|^{-1} < 2 \\times |b|^{-1} \\times |b|^{-1} \\)."
+  },
+  {
+    "AppliedTactic": "have divabsbpos : 1 / |b| > 0 :=by\n            rw [one_div,gt_iff_lt,inv_pos]\n            exact  absbpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / |y n| * (1 / |b|) < 2 / |b| * (1 / |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\ndivabsbpos :  1 / |b| > 0\n⊢ 1 / |y n| * (1 / |b|) < 2 / |b| * (1 / |b|)",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "inv_pos : This theorem establishes that in a linear ordered semifield, an element is positive if and only if its inverse is also positive.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that the reciprocal of the absolute value of \\( b \\) is positive."
+  },
+  {
+    "AppliedTactic": "rw [one_div,gt_iff_lt,inv_pos ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 1 / |b| > 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 0 < |b|",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "one_div : The reciprocal of an element in a division inverse monoid is equal to its inverse."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that the reciprocal of a number can be expressed as its inverse, that a greater-than comparison is equivalent to a less-than comparison with reversed terms, and that a positive number has a positive inverse, the goal of proving that the reciprocal of the absolute value of \\( b \\) is greater than zero becomes proving that the absolute value of \\( b \\) itself is positive."
+  },
+  {
+    "AppliedTactic": "exact  absbpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\n⊢ 0 < |b|",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the absolute value of \\( b \\) is greater than zero."
+  },
+  {
+    "AppliedTactic": "exact (mul_lt_mul_right divabsbpos).2  this ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis✝ :  |y n| > |b| / 2\nthis :  1 / |y n| < 2 / |b|\ndivabsbpos :  1 / |b| > 0\n⊢ 1 / |y n| * (1 / |b|) < 2 / |b| * (1 / |b|)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "mul_lt_mul_right : This theorem establishes that for positive multiplication, the inequality relating the products of an element with two others holds if and only if the two other elements themselves are in the same inequality relation."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that multiplying both sides of an inequality by a positive number preserves the inequality and the assumptions that the absolute value of \\(b\\) is greater than zero and that the reciprocal of the absolute value of \\(y_n\\) is less than twice the reciprocal of the absolute value of \\(b\\)."
+  },
+  {
+    "AppliedTactic": "rw [← mul_div,mul_comm ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ |y n - b| * 1 / (|y n| * |b|) < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ 1 / (|y n| * |b|) * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "mul_div : Multiplying an element by the quotient of two others is equivalent to dividing the product of the first element and the second by the third in a division inverse monoid.",
+      "mul_comm : This theorem states that multiplication is commutative in a certain algebraic structure, meaning that the product of two elements is the same regardless of their order."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that multiplication can be expressed as division of a product and that multiplication is commutative, the goal of proving that the product of the difference between \\( y_n \\) and \\( b \\) with the reciprocal of the product of the absolute values of \\( y_n \\) and \\( b \\) is less than a certain expression becomes the goal of proving that the reciprocal of the product of the absolute values of \\( y_n \\) and \\( b \\) multiplied by the difference between \\( y_n \\) and \\( b \\) is less than that expression."
+  },
+  {
+    "AppliedTactic": "have l1: 2 / (|b| * |b|) > 0 := by\n          rw [gt_iff_lt]\n          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos\n          apply (lt_div_iff absbpow).2\n          rw [zero_mul]\n           norm_num ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ 1 / (|y n| * |b|) * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nl1 :  2 / (|b| * |b|) > 0\n⊢ 1 / (|y n| * |b|) * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element.",
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former.",
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication.",
+      "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+      "Real.mul_pos : The product of two positive real numbers is also positive."
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( \\frac{2}{|b| \\times |b|} > 0 \\)."
+  },
+  {
+    "AppliedTactic": "rw [gt_iff_lt ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ 2 / (|b| * |b|) > 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ 0 < 2 / (|b| * |b|)",
+    "GivenPremises": [
+      "gt_iff_lt : The relationship between greater than and less than for any two elements states that one element being greater than another is equivalent to the latter being less than the former."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the relationship that an expression being greater than another is equivalent to the latter being less than the former, the goal of proving that two divided by the square of the absolute value of \\( b \\) is greater than zero becomes the goal of proving that zero is less than two divided by the square of the absolute value of \\( b \\)."
+  },
+  {
+    "AppliedTactic": "have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos  absbpos ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\n⊢ 0 < 2 / (|b| * |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 < 2 / (|b| * |b|)",
+    "GivenPremises": [
+      "mul_pos : This theorem asserts that the product of two positive elements in a type with certain algebraic properties is also positive.",
+      "Real.mul_pos : The product of two positive real numbers is also positive."
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the product of the absolute value of \\( b \\) with itself is greater than zero. This can be proved by using the fact that the absolute value of \\( b \\) is positive and that the product of two positive real numbers is also positive."
+  },
+  {
+    "AppliedTactic": "apply (lt_div_iff absbpow). 2 ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 < 2 / (|b| * |b|)",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 * (|b| * |b|) < 2",
+    "GivenPremises": [
+      "lt_div_iff : This theorem establishes a relationship between the strict inequality of two elements and the division by a positive element in a linear ordered semifield, indicating that one element is less than another divided by a positive element if and only if the product of that positive element with the first element is also less than the second element."
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the theorem relating inequalities involving division by a positive number and the assumptions that the absolute value of \\( b \\) squared is positive, in order to establish that zero is less than two divided by the square of the absolute value of \\( b \\), it suffices to prove that zero multiplied by the square of the absolute value of \\( b \\) is less than two."
+  },
+  {
+    "AppliedTactic": "rw [zero_mul ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 * (|b| * |b|) < 2",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 < 2",
+    "GivenPremises": [
+      "MulZeroClass.zero_mul : This theorem establishes that multiplying any element by zero results in zero, demonstrating that zero acts as a left absorbing element in multiplication."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that multiplying any number by zero results in zero, the goal of proving that zero times the square of the absolute value of \\( b \\) is less than 2 becomes the goal of proving that 0 is less than 2."
+  },
+  {
+    "AppliedTactic": " norm_num ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nabsbpow :  |b| * |b| > 0\n⊢ 0 < 2",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "It is clear that [goalsBefore].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied."
+    },
+    "Result": "It is clear that 0 is less than 2."
+  },
+  {
+    "AppliedTactic": "exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b) ) ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\nn₁len₀ :  n₁ ≤ n₀\nn₂len₀ :  n₂ ≤ n₀\nthis :  1 / (|y n| * |b|) < 2 / (|b| * |b|)\nl1 :  2 / (|b| * |b|) > 0\n⊢ 1 / (|y n| * |b|) * |y n - b| < 2 / (|b| * |b|) * (|b| * |b| * ε / 2)",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_nonneg : This theorem asserts that the absolute value of an element is always non-negative in the context of a lattice and additive group.",
+      "mul_lt_mul_of_le_of_le' : This theorem establishes that if one element is less than or equal to another, and a second element is strictly less than a third positive element, then the product of the first element with the second is less than the product of the second element with the third.",
+      "le_of_lt : This theorem asserts that if one element is strictly less than another in a preorder, then it is also less than or equal to that element.",
+      "le_trans : This theorem asserts that in a preorder, if one element is less than or equal to a second, and the second is less than or equal to a third, then the first element is also less than or equal to the third."
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the facts that a smaller value is also less than or equal to a larger one, the transitivity of inequalities, the positivity of absolute values, and the property that multiplying inequalities preserves the inequality when certain conditions hold, together with the assumptions about the bounds on \\( |y_n - b| \\), the positivity of \\( |b| \\), and the relationships between the indices \\( n \\), \\( n_0 \\), \\( n_1 \\), and \\( n_2 \\)."
+  },
+  {
+    "AppliedTactic": " ring_nf ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ 2 / (|b| * |b|) * (|b| * |b| * ε / 2) = ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |b| ^ 2 * |b|⁻¹ ^ 2 * ε = ε",
+    "GivenPremises": [],
+    "Template": "By a simple calculation, [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By a simple calculation, proving that two divided by the square of the absolute value of \\( b \\) multiplied by half the product of the square of the absolute value of \\( b \\) and \\( \\varepsilon \\) equals \\( \\varepsilon \\) becomes proving that the square of the absolute value of \\( b \\) multiplied by the square of its reciprocal times \\( \\varepsilon \\) equals \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |b| ^ 2 * |b|⁻¹ ^ 2 * ε = ε",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |b| * |1| * |b⁻¹| * ε = ε\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0",
+    "GivenPremises": [
+      "one_add_one_eq_two : The theorem asserts that in any additive monoid with a unity element, the sum of one and one equals two.",
+      "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that one plus one equals two, the properties of exponents for sums and ones, the associativity of multiplication, the behavior of absolute values under inversion and multiplication, and that a nonzero element multiplied by its inverse equals one, the goal of proving that the product of the square of the absolute value of \\( b \\), the square of the inverse of the absolute value of \\( b \\), and \\( \\varepsilon \\) equals \\( \\varepsilon \\) is transformed into showing that the product of the absolute value of \\( b \\), one, the absolute value of the inverse of \\( b \\), and \\( \\varepsilon \\) equals \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul ] ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ |b| * |1| * |b⁻¹| * ε = ε\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0",
+    "GoalsAfter": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0\n\nx y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0",
+    "GivenPremises": [
+      "mul_one : This theorem establishes that multiplying any element in a multiplicative structure by one results in that same element.",
+      "mul_inv_cancel : This theorem establishes that in a group with a zero element, any non-zero element multiplied by its inverse results in the identity element."
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the facts that the absolute value of one is one, multiplying by one leaves an element unchanged, the absolute value of a product equals the product of the absolute values, and that multiplying a nonzero element by its inverse yields one, the expression involving the product of the absolute value of \\( b \\), the absolute value of one, the absolute value of the inverse of \\( b \\), and \\( \\varepsilon \\) simplifies to \\( \\varepsilon \\)."
+  },
+  {
+    "AppliedTactic": "exact  bnotzero ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( b \\) is nonzero."
+  },
+  {
+    "AppliedTactic": "exact  bnotzero ",
+    "GoalsBefore": "x y :  ℕ → ℝ\na b :  ℝ\nbnotzero :  b ≠ 0\nyneqzero :  ∀ (n : ℕ), y n ≠ 0\nconvxa :  ConvergesTo x a\nconvyb :  ConvergesTo y b\nabsbpos :  |b| > 0\nh3 :  ∃ n₁, ∀ n ≥ n₁, |y n - b| < |b| / 2\nn₁ :  ℕ\nh₁ :  ∀ n ≥ n₁, |y n - b| < |b| / 2\nyngtabsb :  ∀ n ≥ n₁, |y n| > |b| / 2\nε :  ℝ\nεpos :  ε > 0\nh4 :  ∃ n₂, ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₂ :  ℕ\nh₂ :  ∀ n ≥ n₂, |y n - b| < |b| * |b| * ε / 2\nn₀ : ℕ :=  max n₁ n₂\nn₀max :  max n₁ n₂ ≤ n₀\nn :  ℕ\nngen₀ :  n ≥ n₀\n⊢ b ≠ 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that \\( b \\) is not equal to zero."
+  }
+]

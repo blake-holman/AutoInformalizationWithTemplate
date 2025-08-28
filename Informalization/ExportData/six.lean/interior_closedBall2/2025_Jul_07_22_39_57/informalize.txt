@@ -1,0 +1,78 @@
+[appliedTactic]
+cases' hr.lt_or_lt with hr  hr 
+[answer]
+To prove that the interior of the closed ball centered at \( x \) with radius \( r \) is equal to the open ball centered at \( x \) with radius \( r \), we proceed by case analysis on whether \( r \) is less than zero or greater than zero.
+[appliedTactic]
+· rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty ] 
+[answer]
+We prove the case where \( r < 0 \).
+[appliedTactic]
+rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty ] 
+[answer]
+By using the assumption that the radius \( r \) is negative and not zero, and applying the facts that a closed ball with negative radius is empty, the interior of the empty set is empty, and the open ball with negative radius is empty, we complete the proof.
+[appliedTactic]
+refine Subset.antisymm ?_  ball_subset_interior_closedBall 
+[answer]
+By the fact that two sets are equal if each is a subset of the other, in order to prove that the interior of the closed ball centered at \( x \) with radius \( r \) equals the open ball centered at \( x \) with radius \( r \), it suffices to prove that the interior of the closed ball centered at \( x \) with radius \( r \) is contained within the open ball centered at \( x \) with radius \( r \).
+[appliedTactic]
+intro y  hy 
+[answer]
+Assume that \( y \) is a point in the interior of the closed ball centered at \( x \) with radius \( r \). From now on, we will show that \( y \) lies within the open ball centered at \( x \) with radius \( r \).
+[appliedTactic]
+rcases (mem_closedBall.1 <| interior_subset hy).lt_or_eq with (hr | rfl ) 
+[answer]
+To prove that \( y \) lies within the ball centered at \( x \) with radius \( r \), we proceed by case analysis on whether the distance between \( y \) and \( x \) is strictly less than \( r \) or exactly equal to \( r \).
+[appliedTactic]
+· exact  hr 
+[answer]
+We prove the case where the point \( y \) lies within the open ball centered at \( x \) with radius \( r \).
+[appliedTactic]
+exact  hr 
+[answer]
+The proof is completed from the assumption that the distance between \( y \) and \( x \) is less than \( r \).
+[appliedTactic]
+set f : ℝ → E := fun c : ℝ => c • (y - x) +  x 
+[answer]
+Let \( f \) be defined as a function from the real numbers to \( E \), given by the formula \( f(c) = c \cdot (y - x) + x \).
+[appliedTactic]
+suffices f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1 by
+    have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
+    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closedBall x <| dist y x) := by simpa [f]
+    have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
+      interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
+    simp at  h1 
+[answer]
+Assume that the set of pre-images of the closed ball centered at \( x \) with radius equal to the distance between \( y \) and \( x \), under the function \( f \), is a subset of the closed interval from \(-1\) to \(1\). From now on, we will show that \( y \) belongs to the open ball centered at \( x \) with radius equal to the distance between \( y \) and \( x \).
+[appliedTactic]
+have hfc : Continuous f := (continuous_id.smul continuous_const).add  continuous_const 
+[answer]
+Show that the function \( f \), defined by scaling the vector \( y - x \) by a real number and then adding \( x \), is continuous. This can be proved by noting that the identity function and constant functions are continuous, and using the facts that scalar multiplication and addition of continuous functions preserve continuity, thus the combination defining \( f \) is continuous.
+[appliedTactic]
+have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closedBall x <| dist y x) := by simpa [f ] 
+[answer]
+Show that the point corresponding to 1 lies within the interior of the closed ball centered at \( x \) with radius equal to the distance from \( y \) to \( x \) under the mapping \( f \).
+[appliedTactic]
+simpa [f ] 
+[answer]
+By using the continuity of the function defined by scalar multiplication and addition, the fact that the point y lies in the interior of the closed ball centered at x with radius equal to the distance between y and x, and the inclusion of the preimage of the closed ball under this function within the interval from -1 to 1, it is shown straightforwardly that 1 belongs to the preimage of the interior of the closed ball under this function.
+[appliedTactic]
+have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
+      interior_mono this (preimage_interior_subset_interior_preimage hfc hf1 ) 
+[answer]
+Show that 1 is an interior point of the interval from -1 to 1. This can be proved by noting that the preimage of the closed ball under the function is contained within this interval, and by applying the fact that the preimage of the interior of a set under a continuous function is contained within the interior of the preimage of that set, which together imply that 1 lies in the interior of the interval.
+[appliedTactic]
+simp at  h1 
+[answer]
+The statement that \( y \) lies within the open ball centered at \( x \) with radius equal to the distance between \( y \) and \( x \) is proved straightforward.
+[appliedTactic]
+intro c  hc 
+[answer]
+Assume that \( c \) is a real number such that \( f(c) \) lies within the closed ball centered at \( x \) with radius equal to the distance between \( y \) and \( x \). From now on, we will show that \( c \) belongs to the closed interval from \(-1\) to \(1\).
+[appliedTactic]
+rw [mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr ] 
+[answer]
+By using the assumption that the distance between \( y \) and \( x \) is positive and nonzero, and the theorems characterizing membership in a closed interval in terms of inequalities, the equivalence between membership of \( c \) in the closed interval from \(-1\) to \(1\) and the inequality involving the norm of \( c \) multiplied by the distance from \( y \) to \( x \) is established, so the goal of proving that \( c \) lies within the interval \([-1,1]\) becomes proving that the product of the norm of \( c \) and the distance from \( y \) to \( x \) is at most the product of \(1\) and the distance from \( y \) to \( x \).
+[appliedTactic]
+simpa [f, dist_eq_norm, norm_smul] using  hc 
+[answer]
+By using the assumption that \( c \) belongs to the preimage of the closed ball under the function defined by scalar multiplication and addition, together with the facts that distance equals the norm of the difference and that the norm of a scalar multiple equals the product of the absolute value of the scalar and the norm of the vector, the inequality involving the product of the norm of \( c \) and the distance between \( y \) and \( x \) is proved straightforward.

@@ -1,0 +1,246 @@
+[
+  {
+    "AppliedTactic": "have : ∀ ε > 0, |a - b| < ε := by\n      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、\n      intro ε εpos\n      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2\n      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)\n      let ⟨n₁,n₁h⟩ := n₁eps\n      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。\n      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)\n      let ⟨n₂,n₂h⟩ := n₂eps\n      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、\n      let n := max n₁ n₂\n      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]\n      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.\n      calc\n        |a - b| = |(a - x n) + (x n - b)| := by\n          rw [add_sub,sub_add_cancel]\n        _ ≤  |x n - a| + |x n - b| := by\n          rw [abs_sub_comm]\n          exact abs_add (a - x n) (x n - b)\n        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))\n        _ = ε := add_halves  ε ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\n⊢ a = b",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nthis :  ∀ ε > 0, |a - b| < ε\n⊢ a = b",
+    "GivenPremises": [
+      "le_of_max_le_right.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : b ≤ c",
+      "add_halves.{u_2} {α : Type u_2} [LinearOrderedSemifield α] (a : α) : a / 2 + a / 2 = a",
+      "add_sub.{u_3} {G : Type u_3} [SubNegMonoid G] (a b c : G) : a + (b - c) = a + b - c",
+      "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+      "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+      "abs_sub_comm.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a b : α) : |a - b| = |b - a|",
+      "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+      "sub_add_cancel.{u_3} {G : Type u_3} [AddGroup G] (a b : G) : a - b + b = a",
+      "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2",
+      "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|",
+      "add_lt_add.{u_1} {α : Type u_1} [Add α] [Preorder α] [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b c d : α} (h₁ : a < b)\n  (h₂ : c < d) : a + c < b + d",
+      "le_of_max_le_left.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : a ≤ c",
+      "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x",
+      "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b"
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that for every positive number ε, the distance between a and b is less than ε.",
+    "Evaluation": "Correct"
+  },
+  {
+    "AppliedTactic": "intro ε  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\n⊢ ∀ ε > 0, |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\n⊢ |a - b| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( \\varepsilon \\) is a positive real number. From now on, we will show that the distance between \\( a \\) and \\( b \\) is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\n⊢ |a - b| < ε",
+    "GivenPremises": [
+      "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number \\( n_0 \\) such that for all \\( n \\geq n_0 \\), the distance between \\( x(n) \\) and \\( a \\) is less than half of \\( \\varepsilon \\). This follows from the fact that the sequence \\( x \\) converges to \\( a \\), and since \\( \\varepsilon \\) is positive, half of \\( \\varepsilon \\) is also positive, allowing the application of the convergence property with \\( \\varepsilon / 2 \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "exact half_pos  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\n⊢ ε / 2 > 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that half of a positive number is positive and the assumption that \\( \\varepsilon \\) is greater than zero.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "let ⟨n₁,n₁h⟩ :=  n₁eps ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\n⊢ |a - b| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n_1 \\) be such that for all \\( n \\geq n_1 \\), the value of \\( x_n \\) is within \\( \\frac{\\varepsilon}{2} \\) of \\( a \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\n⊢ |a - b| < ε",
+    "GivenPremises": [
+      "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that there exists a natural number \\( n_2 \\) such that for all \\( n \\geq n_2 \\), the distance between \\( x_n \\) and \\( b \\) is less than half of \\( \\varepsilon \\). This follows from the fact that the sequence \\( x \\) converges to \\( b \\) and that half of \\( \\varepsilon \\) is positive.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "exact half_pos  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\n⊢ ε / 2 > 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the theorem that half of a positive number is positive and the assumption that ε is greater than zero.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "let ⟨n₂,n₂h⟩ :=  n₂eps ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\n⊢ |a - b| < ε",
+    "GivenPremises": [],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n_2 \\) be such that for all \\( n \\geq n_2 \\), the distance between \\( x_n \\) and \\( b \\) is less than \\( \\varepsilon/2 \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "let n := max n₁  n₂ ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\n⊢ |a - b| < ε",
+    "GivenPremises": [
+      "Max.max.{u} {α : Type u} [self : Max α] : α → α → α"
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( n \\) be the maximum of \\( n_1 \\) and \\( n_2 \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\n⊢ |a - b| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - b| < ε",
+    "GivenPremises": [
+      "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x",
+      "Max.max.{u} {α : Type u} [self : Max α] : α → α → α"
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that \\( n \\) is greater than or equal to the maximum of \\( n_1 \\) and \\( n_2 \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [ge_iff_le ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\n⊢ n ≥ max n₁ n₂",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "ge_iff_le.{u} {α : Type u} [LE α] {x y : α} : x ≥ y ↔ y ≤ x"
+    ],
+    "Template": "By using [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By rewriting the inequality in terms of the corresponding less-than-or-equal relation, we complete the proof.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "calc\n        |a - b| = |(a - x n) + (x n - b)| := by\n          rw [add_sub,sub_add_cancel]\n        _ ≤  |x n - a| + |x n - b| := by\n          rw [abs_sub_comm]\n          exact abs_add (a - x n) (x n - b)\n        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))\n        _ = ε := add_halves  ε ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - b| < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "By calculation, it is shown that [calcStep].",
+    "TokenInfos": {
+      "[calcStep]": "This token appears in tactic templates that prove a proposition through multiple calculation steps. Replace it with the full sequence of intermediate expressions formatted in TeX.\n\nFor example, consider the following calculation:\n\n```\ncalc\n    a = b + 1 := ...\n    _ = c + 1 := ...\n  _ ≤ d + 1 := ...\n\n```\n\nIn this case, the output should be:\n\nBy calculation, it is shown that \\( a = b + 1 = c + 1 \\leq d + 1. \\)"
+    },
+    "Result": "By calculation, it is shown that \\( |a - b| = |(a - x_n) + (x_n - b)| \\leq |x_n - a| + |x_n - b| < \\frac{\\varepsilon}{2} + \\frac{\\varepsilon}{2} = \\varepsilon. \\)",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [add_sub,sub_add_cancel ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - b| = |a - x n + (x n - b)|",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "add_sub.{u_3} {G : Type u_3} [SubNegMonoid G] (a b c : G) : a + (b - c) = a + b - c",
+      "sub_add_cancel.{u_3} {G : Type u_3} [AddGroup G] (a b : G) : a - b + b = a"
+    ],
+    "Template": "By using [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By rewriting the expression using the property that adding and then subtracting the same quantity leaves the original value unchanged, and the property that subtracting and then adding the same quantity also returns the original value, we complete the proof.",
+    "Evaluation":"MisInformation"
+  },
+  {
+    "AppliedTactic": "rw [abs_sub_comm ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - x n + (x n - b)| ≤ |x n - a| + |x n - b|",
+    "GoalsAfter": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - x n + (x n - b)| ≤ |a - x n| + |x n - b|",
+    "GivenPremises": [
+      "abs_sub_comm.{u_1} {α : Type u_1} [Lattice α] [AddGroup α] (a b : α) : |a - b| = |b - a|"
+    ],
+    "Template": "By using [theorems], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the fact that the absolute value of the difference between two terms is equal when their order is reversed, the goal of proving that the absolute value of \\(a - x_n + (x_n - b)\\) is at most the sum of the absolute values of \\(x_n - a\\) and \\(x_n - b\\) becomes the goal of proving that the absolute value of \\(a - x_n + (x_n - b)\\) is at most the sum of the absolute values of \\(a - x_n\\) and \\(x_n - b\\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "exact abs_add (a - x n) (x n - b ) ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nε :  ℝ\nεpos :  ε > 0\nn₁eps :  ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε / 2\nn₁ :  ℕ\nn₁h :  ∀ n ≥ n₁, |x n - a| < ε / 2\nn₂eps :  ∃ n₀, ∀ n ≥ n₀, |x n - b| < ε / 2\nn₂ :  ℕ\nn₂h :  ∀ n ≥ n₂, |x n - b| < ε / 2\nn : ℕ :=  max n₁ n₂\nthis :  n ≥ max n₁ n₂\n⊢ |a - x n + (x n - b)| ≤ |a - x n| + |x n - b|",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the triangle inequality stating that the absolute value of a sum is at most the sum of the absolute values, and the assumptions that \\(n\\) is at least the maximum of \\(n_1\\) and \\(n_2\\), and that for all such \\(n\\), the absolute values of \\(x_n - a\\) and \\(x_n - b\\) are each less than half of \\(\\varepsilon\\).",
+    "Evaluation":"MisInformation"
+  },
+  {
+    "AppliedTactic": "exact eq_of_sub_eq_zero (abs_eps_zero (a - b) this ) ",
+    "GoalsBefore": "x :  ℕ → ℝ\na b :  ℝ\nxlima :  ConvergesTo x a\nxlimb :  ConvergesTo x b\nthis :  ∀ ε > 0, |a - b| < ε\n⊢ a = b",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_eps_zero (a : ℝ) : (∀ ε > 0, |a| < ε) → a = 0",
+      "eq_of_sub_eq_zero.{u_1} {α : Type u_1} [SubtractionMonoid α] {a b : α} (h : a - b = 0) : a = b"
+    ],
+    "Template": "The proof is completed from the theorem(s) and assumption(s) that [theorems] and [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the facts that the difference between \\(a\\) and \\(b\\) is zero whenever its absolute value is less than any positive number and that if the subtraction of two elements equals zero, then those elements are equal, together with the assumption that the absolute value of \\(a - b\\) is less than every positive number.",
+    "Evaluation":"MisInformation"
+  }
+]

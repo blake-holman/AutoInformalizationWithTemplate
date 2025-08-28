@@ -1,0 +1,66 @@
+[appliedTactic]
+intro  SnotEmpty 
+[answer]
+Assume that the set \( S \) is nonempty. From now on, we will show that there exists an element \( x \) in \( S \) such that for every element \( y \) in \( S \), \( x \) is less than or equal to \( y \).
+[appliedTactic]
+by_contra!  h 
+[answer]
+Assume that for every element \( x \) in \( S \), there exists another element \( y \) in \( S \) that is smaller than \( x \), and show a contradiction.
+[appliedTactic]
+have :∀ n : ℕ ,(n ∉ S) := by
+      -- forall を固定
+      intro n
+      --数学的帰納法を用いる。
+      induction' n using Nat.strong_induction_on with n ih
+      intro ninS
+      have := h n ninS
+      let ⟨y,⟨yinS,yltn⟩⟩ := this
+      have := ih y yltn
+      -- 矛盾発生
+       contradiction 
+[answer]
+Show that every natural number does not belong to the set \( S \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is a natural number. From now on, we will show that \( n \) does not belong to the set \( S \).
+[appliedTactic]
+induction' n using Nat.strong_induction_on with n  ih 
+[answer]
+Prove that \( n \) does not belong to the set \( S \) using strong induction on \( n \).
+[appliedTactic]
+intro  ninS 
+[answer]
+Assume that \( n \) is an element of the set \( S \). From now on, we will show that this assumption leads to a contradiction.
+[appliedTactic]
+have := h n  ninS 
+[answer]
+Show that there exists an element in the set \( S \) that is less than \( n \). This follows directly from the assumption that for every element in \( S \), there is another element in \( S \) smaller than it, applied to the element \( n \) which belongs to \( S \).
+[appliedTactic]
+let ⟨y,⟨yinS,yltn⟩⟩ :=  this 
+[answer]
+Let \( y \) be an element of \( S \) such that \( y \) is less than \( n \).
+[appliedTactic]
+have := ih y  yltn 
+[answer]
+Show that \( y \) is not an element of the set \( S \). This can be proved by applying the induction hypothesis to \( y \), which is less than \( n \), and using the fact that all elements smaller than \( n \) are not in \( S \).
+[appliedTactic]
+ contradiction 
+[answer]
+Since the element \( y \) is both in the set and not in the set simultaneously, this leads to a contradiction. Therefore, we complete the proof.
+[appliedTactic]
+rw [Set.Nonempty] at  SnotEmpty 
+[answer]
+By using the definition that a set is nonempty if and only if there exists an element in the set, the assumption that the set \( S \) is nonempty becomes the assumption that there exists some element \( x \) that belongs to \( S \).
+[appliedTactic]
+let ⟨x,xinS⟩ :=  SnotEmpty 
+[answer]
+Let \( x \) be an element of the set \( S \).
+[appliedTactic]
+have := this  x 
+[answer]
+Show that \( x \) is not an element of the set \( S \). This can be proved by applying the existing statement that no natural number belongs to \( S \) to the specific element \( x \).
+[appliedTactic]
+ contradiction 
+[answer]
+Since the assumptions that \( x \) belongs to the set and \( x \) does not belong to the set cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.

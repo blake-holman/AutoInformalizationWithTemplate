@@ -1,0 +1,222 @@
+[applied Tactic]
+suffices h1 : ConvergesTo (fun n ↦ 1 / (y n)) (1 / b) by
+      have := Converges_mul' x (1 / y) a (1 / b) ⟨convxa,h1⟩
+      rw [mul_div,mul_one,mul_div,mul_one] at this
+      exact  this 
+
+[answer]
+We will show that the sequence defined by dividing \( x \) by \( y \) converges to the quotient \( a / b \), assuming that the sequence defined by taking the reciprocal of \( y \) converges to \( 1/b \). To do this, we first observe that the sequence obtained by multiplying \( x \) with the reciprocal of \( y \) converges to the product \( a \cdot (1/b) \). This follows from the fact that if two sequences converge to limits \( a \) and \( 1/b \), respectively, then their pointwise product converges to the product of these limits. Next, using the properties that multiplying by one leaves an element unchanged and that multiplying by a quotient can be expressed as a quotient of products, we recognize that the sequence defined by multiplying \( x \) by the reciprocal of \( y \) is precisely the sequence defined by \( x / y \), and similarly, the product \( a \cdot (1/b) \) simplifies to \( a / b \). Therefore, the sequence \( x / y \) converges to \( a / b \), completing the proof.
+[applied Tactic]
+have absbpos: |b| > 0 := by
+      rw [gt_iff_lt]
+      exact abs_pos.2  bnotzero 
+
+[answer]
+We will show that the absolute value of \( b \) is greater than zero. By the theorem stating that the inequality \( x > y \) is equivalent to \( y < x \), this is equivalent to proving that zero is less than the absolute value of \( b \). Since \( b \) is assumed to be nonzero, it follows from the well-known theorem that the absolute value of a number is positive if and only if the number itself is not zero. Therefore, \(|b| > 0\), completing the proof.
+[applied Tactic]
+have subhalf : |b| - |b| / 2 = |b| / 2 := by  ring 
+
+[answer]
+We will show that the difference between the absolute value of \( b \) and half of the absolute value of \( b \) equals half of the absolute value of \( b \). By direct calculation, we observe that subtracting \(\frac{1}{2} |b|\) from \(|b|\) yields \(|b| - \frac{1}{2} |b| = \frac{1}{2} |b|\), which verifies the stated equality immediately.
+[applied Tactic]
+have yngtabsb : ∀n ≥ n₁, |y n| > |b| / 2 := by
+      intro n ngen₁
+      have := h₁ n ngen₁
+      rw [abs_sub_comm] at this
+      have sub : |b| - |y n| ≤ |b - y n| := abs_sub_abs_le_abs_sub b (y n)
+      have := lt_of_le_of_lt sub this
+      rw [sub_lt_comm] at this
+      have subhalf : |b| - |b| / 2 = |b| / 2 := by ring
+      rw [subhalf] at this
+      exact  this 
+
+[answer]
+We will show that for all natural numbers \( n \geq n_1 \), the absolute value of \( y(n) \) is greater than half the absolute value of \( b \). By assumption, for such \( n \), the absolute difference \( |y(n) - b| \) is less than half of \( |b| \). Since the absolute value of a difference is symmetric, this inequality is equivalent to \( |b - y(n)| < \frac{1}{2}|b| \). Applying the triangle inequality, we know that the difference between the absolute values satisfies \( ||b| - |y(n)|| \leq |b - y(n)| \). Combining this with the prior inequality, it follows that \( ||b| - |y(n)|| < \frac{1}{2}|b| \). Rewriting this, we see that \( |b| - \frac{1}{2}|b| < |y(n)| \). Noting that \( |b| - \frac{1}{2}|b| = \frac{1}{2}|b| \) by direct calculation, we conclude that \( |y(n)| > \frac{1}{2}|b| \). This completes the proof.
+[applied Tactic]
+have bbεpos : (|b| * |b| * ε / 2) > 0 := by
+        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]
+        exact mul_pos absbpos (mul_pos absbpos εpos ) 
+
+[answer]
+We will show that \(\frac{|b|^2 \varepsilon}{2} > 0\). To this end, note that since \(|b| > 0\) and \(\varepsilon > 0\) by assumption, their product is also positive. By applying the equivalence between inequalities and using the fact that division by a positive number preserves the inequality direction, the original statement reduces to showing \(0 < |b| \cdot (|b| \varepsilon)\). Given the positivity of \(|b|\) and \(\varepsilon\), it follows directly that \(0 < |b| \cdot (|b| \varepsilon)\), which completes the proof.
+[applied Tactic]
+have h4: ∃n₂, ∀n ≥ n₂, |y n - b| < (|b| * |b| * ε / 2) := by
+      have bbεpos : (|b| * |b| * ε / 2) > 0 := by
+        rw [gt_iff_lt,lt_div_iff (by norm_num),zero_mul,mul_assoc]
+        exact mul_pos absbpos (mul_pos absbpos εpos)
+      exact convyb (|b| * |b| * ε / 2)  bbεpos 
+
+[answer]
+We will show that there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), the difference \( |y_n - b| \) is less than \( |b|^2 \times \frac{\varepsilon}{2} \). First, observe that since \( b \neq 0 \) and \( \varepsilon > 0 \) by assumption, their product \( |b|^2 \cdot \frac{\varepsilon}{2} \) is strictly positive. This follows from the positivity of \( |b| \) and \( \varepsilon \), which implies \( 0 < |b| \cdot (|b| \varepsilon) \), and hence \( 0 < |b|^2 \cdot \frac{\varepsilon}{2} \). Given that the sequence \( (y_n) \) converges to \( b \), by the definition of convergence, there exists a natural number \( n_2 \) such that for all \( n \geq n_2 \), the inequality \( |y_n - b| < |b|^2 \times \frac{\varepsilon}{2} \) holds. Thus, the desired result follows directly from the assumptions on \( y \), \( b \), and \( \varepsilon \).
+[applied Tactic]
+have n₀max : max n₁ n₂ ≤ n₀ := by  simp 
+
+[answer]
+We will show that the maximum of \( n_1 \) and \( n_2 \) is less than or equal to \( n_0 \). This follows directly from the given conditions and definitions. Since by assumption \( n_1 \leq n_0 \) and \( n_2 \leq n_0 \), it immediately follows that \(\max(n_1, n_2) \leq n_0\). Thus, the statement is proved straightforwardly.
+[applied Tactic]
+have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n ) 
+
+[answer]
+We will show that the reciprocal of the absolute value of \( y(n) \) is positive. To this end, note that since the reciprocal of a positive number remains positive, it suffices to prove that the absolute value of \( y(n) \) is itself positive. By the well-known theorem that the absolute value of a number is positive if and only if the number is nonzero, and given the assumption that \( y(n) \neq 0 \) for all natural numbers \( n \), it follows that \( |y(n)| > 0 \). Hence, its reciprocal is positive, completing the proof.
+[applied Tactic]
+have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact  this 
+
+[answer]
+We will show that the reciprocal of the absolute value of \( y(n) \) is less than twice the reciprocal of the absolute value of \( b \). To do this, note that proving the reciprocal inequality is equivalent to proving that the inverse of \( |y(n)| \) is less than \( \frac{2}{|b|} \). Since \( |b| > 0 \), it suffices, by properties of inequalities involving multiplication and division by positive numbers, to prove that the product \( |b| \times \frac{1}{|y(n)|} \) is less than 2. By commutativity, this is the same as \( \frac{1}{|y(n)|} \times |b| < 2 \). Next, observe that \( \frac{1}{|y(n)|} > 0 \) because \( |y(n)| > 0 \) as \( y(n) \neq 0 \) for all natural numbers \( n \). Applying the relevant inequality theorems again, it suffices to prove that \( |b| < 2 \times |y(n)| \). This follows directly from the assumption that \( |y(n)| > \frac{|b|}{2} \), which is equivalent to \( |b| < 2 |y(n)| \). Hence, the desired inequality holds, completing the proof.
+[applied Tactic]
+have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact  absbpos 
+
+[answer]
+We will show that the reciprocal of the absolute value of \( b \) is positive. To do this, we first note that dividing by a number is equivalent to multiplying by its inverse, so proving that \( \frac{1}{|b|} > 0 \) is equivalent to proving that the inverse of a positive number is positive. Since the absolute value \( |b| \) is always nonnegative and, by assumption, strictly greater than zero, it follows that \( |b| > 0 \). Therefore, its reciprocal \( \frac{1}{|b|} \) is also positive, which completes the proof.
+[applied Tactic]
+have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by
+          have := yngtabsb n (le_trans n₁len₀ ngen₀)
+          have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact this
+          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]
+          rw [← one_div,mul_div 2,mul_one]
+          have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact absbpos
+          exact (mul_lt_mul_right divabsbpos).2  this 
+
+[answer]
+We will show that the reciprocal of the product of the absolute values of \( y(n) \) and \( b \) is less than twice the reciprocal of the square of the absolute value of \( b \). First, note that by assumption, \( |y(n)| > \frac{|b|}{2} \), which can be established using the fact that \( n \geq n_0 \), where \( n_0 = \max(n_1, n_2) \), and applying the transitivity of inequalities. From this, it follows that \( |b| < 2|y(n)| \).
+
+Next, observe that the reciprocal \( \frac{1}{|y(n)|} \) is positive since \( |y(n)| > 0 \) (as \( y(n) \neq 0 \) for all natural numbers \( n \)), and similarly, \( \frac{1}{|b|} > 0 \) because \( |b| > 0 \) by assumption on \( b \).
+
+By properties of reciprocals and products, the reciprocal of the product \( |y(n)| \cdot |b| \) is equal to the product of the reciprocals, i.e., \(\frac{1}{|y(n)| \cdot |b|} = \frac{1}{|y(n)|} \cdot \frac{1}{|b|} \). Our goal is to prove that
+
+\[
+\frac{1}{|y(n)|} \cdot \frac{1}{|b|} < \frac{2}{|b|} \cdot \frac{1}{|b|} = \frac{2}{|b|^2}.
+\]
+
+Since \( \frac{1}{|b|} > 0 \), multiplying both sides of the inequality
+
+\[
+\frac{1}{|y(n)|} < \frac{2}{|b|}
+\]
+
+by \( \frac{1}{|b|} \) preserves the inequality. The earlier inequality \( |b| < 2|y(n)| \) is equivalent to \( \frac{1}{|y(n)|} < \frac{2}{|b|} \), which completes the proof.
+
+Therefore, the reciprocal of the product \( |y(n)| \cdot |b| \) is indeed less than twice the reciprocal of the square of \( |b| \), as required.
+[applied Tactic]
+have l1: 2 / (|b| * |b|) > 0 := by
+          rw [gt_iff_lt]
+          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos
+          apply (lt_div_iff absbpow).2
+          rw [zero_mul]
+           norm_num 
+
+[answer]
+We will show that \(\frac{2}{|b| \cdot |b|} > 0\). By rewriting the inequality, this is equivalent to proving that \(0 < \frac{2}{|b|^2}\). First, observe that \(|b| > 0\) since the absolute value of any nonzero real number is positive; consequently, the product \(|b| \cdot |b| = |b|^2\) is also positive because the product of two positive numbers is positive. Given that the denominator \(|b|^2\) is positive, it follows from the properties of inequalities and division by a positive number that \(0 < \frac{2}{|b|^2}\) if and only if \(0 \cdot |b|^2 < 2\). Since multiplying zero by any number yields zero, this reduces to proving that \(0 < 2\), which is evidently true. Therefore, we conclude that \(\frac{2}{|b|^2} > 0\), as required.
+[applied Tactic]
+calc
+      |1 / y n - 1 / b| =  (1 / |(y n) * b|) * |y n - b| := by
+        rw [mul_comm,mul_div,mul_one,div_eq_mul_inv,div_eq_mul_inv,div_eq_mul_inv,one_mul,one_mul]
+        rw [← abs_inv,← abs_mul,sub_mul,mul_inv,← mul_assoc,mul_inv_cancel,one_mul,← mul_assoc]
+        rw [mul_comm,← mul_assoc,inv_mul_cancel,one_mul,abs_sub_comm]
+        exact bnotzero; exact yneqzero n
+      _ < (2 / (|b| * |b|)) * ((|b| * |b| * ε) / 2) := by
+        have n₁len₀ : n₁ ≤ n₀ := le_of_max_le_left n₀max
+        have n₂len₀ : n₂ ≤ n₀ := le_of_max_le_right n₀max
+        rw [abs_mul,mul_comm,mul_div]
+        have : 1 / (|y n| * |b|) < (2 / (|b| * |b|)) := by
+          have := yngtabsb n (le_trans n₁len₀ ngen₀)
+          have : 1 / |y n| < 2 / |b| := by
+            rw [one_div]
+            apply (lt_div_iff absbpos).2
+            rw [mul_comm]
+            have absynpos : |y n|⁻¹ > 0 := by
+              rw [gt_iff_lt,inv_pos]
+              exact abs_pos.2 (yneqzero n)
+            apply (lt_div_iff absynpos).1
+            rw [div_eq_mul_inv,inv_inv,mul_comm]
+            rw [gt_iff_lt, div_lt_iff (by norm_num)] at this
+            exact this
+          rw [one_div,mul_inv,← one_div,div_eq_mul_one_div 2,one_div (|b| * |b|),mul_inv,← mul_assoc]
+          rw [← one_div,mul_div 2,mul_one]
+          have divabsbpos : 1 / |b| > 0 :=by
+            rw [one_div,gt_iff_lt,inv_pos]
+            exact absbpos
+          exact (mul_lt_mul_right divabsbpos).2 this
+        rw [← mul_div,mul_comm]
+        have l1: 2 / (|b| * |b|) > 0 := by
+          rw [gt_iff_lt]
+          have absbpow : |b| * |b| > 0 := Real.mul_pos absbpos absbpos
+          apply (lt_div_iff absbpow).2
+          rw [zero_mul]
+          norm_num
+        exact mul_lt_mul_of_le_of_le' (le_of_lt this) (h₂ n (le_trans n₂len₀ ngen₀)) l1 (abs_nonneg (y n - b))
+      _ = ε := by
+        ring_nf
+        rw [← one_add_one_eq_two,pow_add,pow_one,pow_add,pow_one,← mul_assoc,← abs_inv,← abs_mul,← abs_mul,mul_assoc b, abs_mul,mul_inv_cancel]
+        rw [abs_one,mul_one,← abs_mul,mul_inv_cancel,abs_one,one_mul]
+        repeat (any_goals exact bnotzero ) 
+
+[answer]
+We will show that for the sequence \((y_n)\) converging to a nonzero limit \(b\), the sequence of reciprocals \(\left( \frac{1}{y_n} \right)\) converges to \(\frac{1}{b}\). To this end, we consider the absolute difference
+
+\[
+\left| \frac{1}{y_n} - \frac{1}{b} \right|.
+\]
+
+By rewriting the difference of reciprocals using the properties of multiplication and inverses, this can be expressed as
+
+\[
+\left| \frac{1}{y_n} - \frac{1}{b} \right| = \frac{|y_n - b|}{|y_n| \cdot |b|}.
+\]
+
+Since \(b \neq 0\) by assumption, and each \(y_n \neq 0\) for all \(n\), the denominators are well-defined and strictly positive. Using the convergence of \(y_n\) to \(b\), we can choose \(n_0\) (defined as the maximum of certain indices \(n_1\) and \(n_2\)) such that for all \(n \geq n_0\), the inequalities
+
+\[
+|y_n| > \frac{|b|}{2}
+\]
+
+hold. From this, it follows that
+
+\[
+\frac{1}{|y_n| \cdot |b|} = \frac{1}{|y_n|} \cdot \frac{1}{|b|} < \frac{2}{|b|^2}.
+\]
+
+Combining these inequalities, we arrive at
+
+\[
+\left| \frac{1}{y_n} - \frac{1}{b} \right| = \frac{|y_n - b|}{|y_n| \cdot |b|} < \frac{2}{|b|^2} |y_n - b|.
+\]
+
+Since \(y_n \to b\), for any \(\varepsilon > 0\), there is an index beyond which \(|y_n - b| < \frac{|b|^2 \varepsilon}{2}\), so that
+
+\[
+\left| \frac{1}{y_n} - \frac{1}{b} \right| < \frac{2}{|b|^2} \cdot \frac{|b|^2 \varepsilon}{2} = \varepsilon.
+\]
+
+Thus, the sequence of reciprocals converges to the reciprocal of the limit, completing the proof.
+[applied Tactic]
+any_goals exact  bnotzero 
+
+[answer]
+We will show that the proposition holds under the assumption that \( b \) is nonzero. By taking \( b \neq 0 \) as a starting point, the proof proceeds directly and concludes successfully based on this premise.

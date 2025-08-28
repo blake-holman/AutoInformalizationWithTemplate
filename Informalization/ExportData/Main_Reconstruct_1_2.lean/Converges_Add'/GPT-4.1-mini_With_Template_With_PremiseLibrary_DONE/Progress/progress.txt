@@ -1,0 +1,46 @@
+[applied Tactic]
+let ⟨n₁,h1⟩ := conxa (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for any positive number \(\varepsilon\), there exists an index \(n_1\) such that for all \(n \geq n_1\), the sequence term \(x_n\) lies within \(\varepsilon/2\) of \(a\). Since \(\varepsilon\) is positive, it follows that \(\varepsilon/2\) is also positive. This ensures that the notion of being within half of \(\varepsilon\) from \(a\) is well-defined and positive, completing the proof.
+[applied Tactic]
+let ⟨n₂,h2⟩ := conyb (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that half of the positive number \(\varepsilon\) is also positive. Since \(\varepsilon > 0\), dividing this positive number by 2 yields \(\frac{\varepsilon}{2} > 0\). This straightforward observation ensures that the values of \(y_n\) lie within a positive distance—specifically, within \(\frac{\varepsilon}{2}\)—from \(b\) for all \(n \geq n_2\), as required.
+[applied Tactic]
+calc
+    |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+      rw [add_sub_add_comm]
+      apply abs_add
+    _ < ε / 2 + ε / 2 := by
+      have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+      apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+    _ = ε := add_halves'  ε 
+
+[answer]
+We will show that the sequence \( (x_n + y_n) \) converges to \( a + b \), that is, for every \(\varepsilon > 0\), there exists an index \( n_0 \) such that for all \( n \geq n_0 \), the inequality \( |x_n + y_n - (a + b)| < \varepsilon \) holds. First, observe that by rewriting the difference of sums, we have
+
+\[
+|x_n + y_n - (a + b)| = |(x_n - a) + (y_n - b)|.
+\]
+
+Applying the triangle inequality, this is bounded above by
+
+\[
+|x_n - a| + |y_n - b|.
+\]
+
+To ensure this sum is less than \(\varepsilon\), it suffices to find \( n_0 \geq \max(n_1, n_2) \) such that for all \( n \geq n_0 \), both
+
+\[
+|x_n - a| < \frac{\varepsilon}{2} \quad \text{and} \quad |y_n - b| < \frac{\varepsilon}{2}
+\]
+
+hold. Since \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), it follows that \( n_0 \geq n_1 \) and \( n_0 \geq n_2 \), ensuring both inequalities hold simultaneously for all \( n \geq n_0 \). Consequently,
+
+\[
+|x_n + y_n - (a + b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon,
+\]
+
+which completes the proof.

@@ -1,0 +1,77 @@
+[
+  {
+    "AppliedTactic": "let p := minFac (n ! + 1 ) ",
+    "GoalsBefore": "n :  ℕ\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GoalsAfter": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GivenPremises": [
+      "def minFac (n : ℕ) : ℕ :=   if 2 ∣ n then 2 else minFacAux n 3"
+    ],
+    "Template": "Let [newVariable] be [newVariableCondition].",
+    "TokenInfos": {
+      "[newVariable]": "This token appears in templates for tactics that introduce new variables into hypotheses. Replace it with the newly introduced variables by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application. Note that a “variable” here is one that has a simple type.(This does not include variables that name hypotheses about an expression, such as \\( h : r = a + b\\).)",
+      "[newVariableCondition]": "This token appears in templates for tactics that introduce new variables into the hypotheses. Replace it with a explanation or a mathematical reference that describes the state of the newly introduced variable by comparing Hypothesis And Goals Before Tactic Application with Hypothesis And Goals After Tactic Application."
+    },
+    "Result": "Let \\( p \\) be the smallest prime factor of \\( n! + 1 \\)."
+  },
+  {
+    "AppliedTactic": "have f1 : n ! + 1 ≠ 1 := Nat.ne_of_gt <| succ_lt_succ <| factorial_pos  _ ",
+    "GoalsBefore": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GoalsAfter": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GivenPremises": [
+      "succ_lt_succ {n m : Nat} : n < m → succ n < succ m",
+      "ne_of_gt {a b : Nat} (h : b < a) : a ≠ b",
+      "factorial_pos : ∀ n, 0 < n !"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the factorial of \\( n \\) plus 1 is not equal to 1. This can be proved by noting that the factorial of \\( n \\) is always positive, meaning \\( n! \\) is greater than 0. Consequently, \\( n! + 1 \\) is greater than 1, leading to the conclusion that \\( n! + 1 \\neq 1 \\)."
+  },
+  {
+    "AppliedTactic": "have pp : Nat.Prime p := minFac_prime  f1 ",
+    "GoalsBefore": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GoalsAfter": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\npp :  Nat.Prime p\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GivenPremises": [
+      "def Prime (p : ℕ) :=   Irreducible p",
+      "minFac_prime {n : ℕ} (n1 : n ≠ 1) : Prime (minFac n)"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that the number \\( p \\), defined as the smallest factor of \\( n! + 1 \\), is prime. This can be proved by applying the fact that the smallest factor of any number different from 1 is always prime."
+  },
+  {
+    "AppliedTactic": "have np : n ≤ p :=\n  le_of_not_ge fun h =>\n  have h₁ : p ∣ n ! := dvd_factorial (minFac_pos _) h\n  have h₂ : p ∣ 1 := (Nat.dvd_add_iff_right h₁).2 (minFac_dvd _)\n  pp.not_dvd_one  h₂ ",
+    "GoalsBefore": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\npp :  Nat.Prime p\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GoalsAfter": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\npp :  Nat.Prime p\nnp :  n ≤ p\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GivenPremises": [
+      "minFac_pos (n : ℕ) : 0 < minFac n",
+      "le_of_not_ge {a b : α} : ¬a ≥ b → a ≤ b",
+      "Prime.not_dvd_one {p : ℕ} (pp : Prime p) : ¬p ∣ 1",
+      "dvd_add_iff_right {k m n : Nat} (h : k ∣ m) : k ∣ n ↔ k ∣ m + n",
+      "dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !",
+      "minFac_dvd (n : ℕ) : minFac n ∣ n"
+    ],
+    "Template": "Show that [statement]. This can be proved by [proof].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic.",
+      "[proof]": "This token appears in templates for a tactic that simultaneously provides a proposition (subgoal) to be proven and its proof. Replace it with a explanation of a proof to the relevant proof by checking the Applied Tactic. Additionally, if any theorems listed in Using Definitions and Theorems are used, be sure to include an explanation or a mathematical reference of those theorems in the text. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "Show that \\( n \\leq p \\). This can be proved by assuming the contrary, that \\( n > p \\), which leads to \\( p \\) dividing the factorial of \\( n \\). Using this, one deduces that \\( p \\) divides 1 by considering the divisibility properties of the minimal factor and the factorial, which contradicts the fact that a prime number cannot divide 1. Therefore, the assumption is false and \\( n \\leq p \\) holds."
+  },
+  {
+    "AppliedTactic": "exact ⟨p, np, pp ⟩ ",
+    "GoalsBefore": "n :  ℕ\np : ℕ :=  (n ! + 1).minFac\nf1 :  n ! + 1 ≠ 1\npp :  Nat.Prime p\nnp :  n ≤ p\n⊢ ∃ p, n ≤ p ∧ Nat.Prime p",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that \\(p\\) is defined as the smallest prime factor of \\(n! + 1\\), that \\(n! + 1\\) is not equal to 1, that \\(p\\) is prime, and that \\(p\\) is greater than or equal to \\(n\\)."
+  }
+]

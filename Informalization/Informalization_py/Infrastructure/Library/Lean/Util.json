@@ -1,0 +1,48 @@
+{
+  "MonadBacktrack.lean": {
+    "Lean.MonadBacktrack.saveState": {
+      "type": "definition",
+      "code": "Lean.MonadBacktrack.saveState {s : outParam Type} {m : Type → Type} [self : MonadBacktrack s m] : m s",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "saveState    : m s   restoreState : s → m Unit",
+      "description": "An operation that saves the current state in a monadic context that supports backtracking."
+    },
+    "Lean.MonadBacktrack.restoreState": {
+      "type": "definition",
+      "code": "Lean.MonadBacktrack.restoreState {s : outParam Type} {m : Type → Type} [self : MonadBacktrack s m] : s → m Unit",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "restoreState : s → m Unit",
+      "description": "An operation that restores a previously saved state in a monadic context that supports backtracking."
+    },
+    "Lean.observing?": {
+      "type": "definition",
+      "code": "Lean.observing?.{u_1} {m : Type → Type} {s : Type} {ε : Type u_1} {α : Type} [Monad m] [MonadBacktrack s m]\n  [MonadExcept ε m] (x : m α) : m (Option α)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def observing? [Monad m] [MonadBacktrack s m] [MonadExcept ε m] (x : m α) : m (Option α) := do   let s ← saveState   try     x   catch _ =>     restoreState s     return none",
+      "description": "An operation that observes a monadic computation, returning an optional result in a backtracking context that may also handle exceptions."
+    }
+  },
+  "ReplaceExpr.lean": {
+    "Lean.Expr.replace": {
+      "type": "definition",
+      "code": "Lean.Expr.replace (f? : Expr → Option Expr) (e : Expr) : Expr",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "partial def replace (f? : Expr → Option Expr) (e : Expr) : Expr :=   e.replaceNoCache f?",
+      "description": "A function that replaces occurrences of expressions based on a given transformation in a specific expression."
+    }
+  },
+  "Recognizers.lean": {
+    "Lean.Expr.eq?": {
+      "type": "definition",
+      "code": "Lean.Expr.eq? (p : Expr) : Option (Expr × Expr × Expr)",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "@[inline] def eq? (p : Expr) : Option (Expr × Expr × Expr) :=   p.app3? ``Eq",
+      "description": "A function that checks if a given expression is an equality and returns the two expressions involved along with a proof of their equality if applicable."
+    }
+  }
+}

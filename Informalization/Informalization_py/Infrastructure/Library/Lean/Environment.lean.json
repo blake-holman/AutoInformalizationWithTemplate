@@ -1,0 +1,90 @@
+{
+  "Lean.MonadEnv.getEnv": {
+    "type": "definition",
+    "code": "Lean.MonadEnv.getEnv {m : Type → Type} [self : MonadEnv m] : m Environment",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "getEnv    : m Environment   modifyEnv : (Environment → Environment) → m Unit",
+    "description": "A function that retrieves the current environment state within a monadic context that supports environment operations."
+  },
+  "Lean.EnvExtensionEntry": {
+    "type": "definition",
+    "code": "Lean.EnvExtensionEntry : Type",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def EnvExtensionEntry : Type := EnvExtensionEntrySpec.type instance : Nonempty EnvExtensionEntry := EnvExtensionEntrySpec.property",
+    "description": "A type representing an entry in an environment extension system."
+  },
+  "Lean.EnvExtension.getState": {
+    "type": "definition",
+    "code": "Lean.EnvExtension.getState {σ : Type} [Inhabited σ] (ext : EnvExtension σ) (env : Environment) : σ",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getState {σ : Type} [Inhabited σ] (ext : EnvExtension σ) (env : Environment) : σ :=   EnvExtensionInterfaceImp.getState ext env.extensions",
+    "description": "A function that retrieves the state associated with a specific environment extension within a given environment."
+  },
+  "Lean.PersistentEnvExtension.exportEntriesFn": {
+    "type": "definition",
+    "code": "Lean.PersistentEnvExtension.exportEntriesFn {α β σ : Type} (self : PersistentEnvExtension α β σ) : σ → Array α",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "",
+    "description": "A function that exports entries from a persistent environment extension associated with a specific state."
+  },
+  "Lean.PersistentEnvExtensionState.state": {
+    "type": "definition",
+    "code": "Lean.PersistentEnvExtensionState.state {α σ : Type} (self : PersistentEnvExtensionState α σ) : σ",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "state : σ",
+    "description": "A function that provides access to the state associated with a persistent environment extension."
+  },
+  "Lean.Environment.registerNamespace": {
+    "type": "definition",
+    "code": "Lean.Environment.registerNamespace (env : Environment) (n : Name) : Environment",
+    "comment": "Register a new namespace in the environment. ",
+    "explanatories": {},
+    "fullDefinition": "def registerNamespace (env : Environment) (n : Name) : Environment :=   if (namespacesExt.getState env).contains n then env else namespacesExt.addEntry env n",
+    "description": "A function that registers a new namespace within a given environment."
+  },
+  "Lean.Environment.getModuleIdxFor?": {
+    "type": "definition",
+    "code": "Lean.Environment.getModuleIdxFor? (env : Environment) (declName : Name) : Option ModuleIdx",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getModuleIdxFor? (env : Environment) (declName : Name) : Option ModuleIdx :=   env.const2ModIdx.find? declName",
+    "description": "A function that returns the optional index of a module in an environment associated with a given declaration name."
+  },
+  "Lean.ModuleIdx.toNat": {
+    "type": "definition",
+    "code": "Lean.ModuleIdx.toNat (midx : ModuleIdx) : Nat",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "abbrev ModuleIdx.toNat (midx : ModuleIdx) : Nat := midx",
+    "description": "A function that converts a module index into a natural number."
+  },
+  "Lean.Import.module": {
+    "type": "definition",
+    "code": "Lean.Import.module (self : Import) : Name",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "module      : Name   runtimeOnly : Bool := false   deriving Repr, Inhabited",
+    "description": "A function that retrieves the name of a module associated with an import."
+  },
+  "Lean.Environment.contains": {
+    "type": "definition",
+    "code": "Lean.Environment.contains (env : Environment) (n : Name) : Bool",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def contains (env : Environment) (n : Name) : Bool :=   env.constants.contains n",
+    "description": "A function that checks whether a given name is present in a specified environment."
+  },
+  "Lean.Environment.find?": {
+    "type": "definition",
+    "code": "Lean.Environment.find? (env : Environment) (n : Name) : Option ConstantInfo",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def find? (env : Environment) (n : Name) : Option ConstantInfo :=   /- It is safe to use `find'` because we never overwrite imported declarations. -/   env.constants.find?' n",
+    "description": "A function that searches for a constant's information by its name within a given environment, returning an option type that indicates whether the constant exists."
+  }
+}

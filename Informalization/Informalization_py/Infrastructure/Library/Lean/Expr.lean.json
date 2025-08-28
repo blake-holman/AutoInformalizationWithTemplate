@@ -1,0 +1,194 @@
+{
+  "Lean.Expr.app": {
+    "type": "theorem",
+    "code": "Lean.Expr.app (fn arg : Expr) : Expr",
+    "comment": "A function application.\n\nFor example, the natural number one, i.e. `Nat.succ Nat.zero` is represented as\n``Expr.app (.const `Nat.succ []) (.const .zero [])``.\nNote that multiple arguments are represented using partial application.\n\nFor example, the two argument application `f x y` is represented as\n`Expr.app (.app f x) y`.\n",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A representation of applying a function to an argument in an expression format."
+  },
+  "Lean.Expr.const": {
+    "type": "theorem",
+    "code": "Lean.Expr.const (declName : Name) (us : List Level) : Expr",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A representation of a constant expression associated with a given declaration name and universal quantification levels."
+  },
+  "Lean.mkSort": {
+    "type": "definition",
+    "code": "Lean.mkSort (u : Level) : Expr",
+    "comment": "`.sort u` is now the preferred form. ",
+    "explanatories": {},
+    "fullDefinition": "def mkSort (u : Level) : Expr :=   .sort u",
+    "description": "A representation of a sort expression associated with a specified level."
+  },
+  "Lean.mkApp": {
+    "type": "definition",
+    "code": "Lean.mkApp (f a : Expr) : Expr",
+    "comment": "`.app f a` is now the preferred form.\n",
+    "explanatories": {},
+    "fullDefinition": "@[match_pattern] def mkApp (f a : Expr) : Expr :=   .app f a",
+    "description": "A representation of an application of a function to an argument in expression format."
+  },
+  "Lean.Expr.isAppOfArity": {
+    "type": "definition",
+    "code": "Lean.Expr.isAppOfArity : Expr → Name → ℕ → Bool",
+    "comment": "Given `f a₁ ... aᵢ`, returns true if `f` is a constant\nwith name `n` and has the correct number of arguments.\n",
+    "explanatories": {},
+    "fullDefinition": "def isAppOfArity : Expr → Name → Nat → Bool   | const c _, n, 0   => c == n   | app f _,   n, a+1 => isAppOfArity f n a   | _,         _, _   => false",
+    "description": "A function that checks if a given expression is an application of a constant with a specified name and the correct number of arguments."
+  },
+  "Lean.Expr.fvar": {
+    "type": "theorem",
+    "code": "Lean.Expr.fvar (fvarId : FVarId) : Expr",
+    "comment": "The `fvar` constructor represent free variables. These *free* variable\noccurrences are not bound by an earlier `lam`, `forallE`, or `letE`\nconstructor and its binder exists in a local context only.\n\nNote that Lean uses the *locally nameless approach*. See [McBride and McKinna](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.365.2479&rep=rep1&type=pdf)\nfor additional details.\n\nWhen \"visiting\" the body of a binding expression (i.e. `lam`, `forallE`, or `letE`),\nbound variables are converted into free variables using a unique identifier,\nand their user-facing name, type, value (for `LetE`), and binder annotation\nare stored in the `LocalContext`.\n",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A representation of a free variable in an expression that is not bound by any preceding binding constructors and exists only within a specific local context."
+  },
+  "Lean.mkConst": {
+    "type": "definition",
+    "code": "Lean.mkConst (declName : Name) (us : List Level := []) : Expr",
+    "comment": "`mkConst declName us` return `.const declName us`. ",
+    "explanatories": {},
+    "fullDefinition": "def mkConst (declName : Name) (us : List Level := []) : Expr :=   .const declName us",
+    "description": "A function that creates a constant expression given its declaration name and optional universe levels."
+  },
+  "Lean.Expr.nat?": {
+    "type": "definition",
+    "code": "Lean.Expr.nat? (e : Expr) : Option Nat",
+    "comment": "Checks if an expression is a \"natural number numeral in normal form\",\ni.e. of type `Nat`, and explicitly of the form `OfNat.ofNat n`\nwhere `n` matches `.lit (.natVal n)` for some literal natural number `n`.\nand if so returns `n`.\n",
+    "explanatories": {},
+    "fullDefinition": "def nat? (e : Expr) : Option Nat := do   let_expr OfNat.ofNat _ n _ := e | failure   let lit (.natVal n) := n | failure   n",
+    "description": "A function that checks if an expression represents a natural number in a specific normal form and returns the number if it does."
+  },
+  "Lean.Expr.int?": {
+    "type": "definition",
+    "code": "Lean.Expr.int? (e : Expr) : Option Int",
+    "comment": "Checks if an expression is an \"integer numeral in normal form\",\ni.e. of type `Nat` or `Int`, and either a natural number numeral in normal form (as specified by `nat?`),\nor the negation of a positive natural number numberal in normal form,\nand if so returns the integer.\n",
+    "explanatories": {},
+    "fullDefinition": "def int? (e : Expr) : Option Int :=   let_expr Neg.neg _ _ a := e | e.nat?   match a.nat? with   | none => none   | some 0 => none   | some n => some (-n)",
+    "description": "A function that checks if an expression represents an integer numeral in normal form and returns its value if it does."
+  },
+  "Lean.mkRawNatLit": {
+    "type": "definition",
+    "code": "Lean.mkRawNatLit (n : Nat) : Expr",
+    "comment": "Return the \"raw\" natural number `.lit (.natVal n)`.\nThis is not the default representation used by the Lean frontend.\nSee `mkNatLit`.\n",
+    "explanatories": {},
+    "fullDefinition": "def mkRawNatLit (n : Nat) : Expr :=   mkLit (.natVal n)",
+    "description": "A function that produces a representation of a natural number in its unprocessed literal form."
+  },
+  "Lean.Expr.getRevArg!": {
+    "type": "definition",
+    "code": "Lean.Expr.getRevArg! : Expr → Nat → Expr",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getRevArg! : Expr → Nat → Expr   | app _ a, 0   => a   | app f _, i+1 => getRevArg! f i   | _,       _   => panic! \"invalid index\"",
+    "description": "A function that retrieves an argument from an expression based on its position in reverse order."
+  },
+  "Lean.Expr.getAppFn": {
+    "type": "definition",
+    "code": "Lean.Expr.getAppFn : Expr → Expr",
+    "comment": "If the given expression is a sequence of\nfunction applications `f a₁ .. aₙ`, return `f`.\nOtherwise return the input expression.\n",
+    "explanatories": {},
+    "fullDefinition": "def getAppFn : Expr → Expr   | app f _ => getAppFn f   | e         => e",
+    "description": "A function that retrieves the main function from a sequence of applied expressions or returns the input if it does not represent an application."
+  },
+  "Lean.mkAppN": {
+    "type": "definition",
+    "code": "Lean.mkAppN (f : Expr) (args : Array Expr) : Expr",
+    "comment": "`mkAppN f #[a₀, ..., aₙ]` constructs the application `f a₀ a₁ ... aₙ`.\n",
+    "explanatories": {},
+    "fullDefinition": "def mkAppN (f : Expr) (args : Array Expr) : Expr :=   args.foldl mkApp f",
+    "description": "A function that constructs an expression representing the application of a given function to a specified array of arguments."
+  },
+  "Lean.mkStrLit": {
+    "type": "definition",
+    "code": "Lean.mkStrLit (s : String) : Lean.Expr",
+    "comment": "Return the string literal `.lit (.strVal s)` ",
+    "explanatories": {},
+    "fullDefinition": "def mkStrLit (s : String) : Expr :=   mkLit (.strVal s)",
+    "description": "A representation of a string literal in expression format."
+  },
+  "Lean.Expr.proj": {
+    "type": "theorem",
+    "code": "Lean.Expr.proj (typeName : Name) (idx : Nat) (struct : Expr) : Expr",
+    "comment": "Projection-expressions. They are redundant, but are used to create more compact\nterms, speedup reduction, and implement eta for structures.\nThe type of `struct` must be an structure-like inductive type. That is, it has only one\nconstructor, is not recursive, and it is not an inductive predicate. The kernel and elaborators\ncheck whether the `typeName` matches the type of `struct`, and whether the (zero-based) index\nis valid (i.e., it is smaller than the number of constructor fields).\nWhen exporting Lean developments to other systems, `proj` can be replaced with `typeName`.`rec`\napplications.\n\nExample, given `a : Nat × Bool`, `a.1` is represented as\n```\n.proj `Prod 0 a\n```\n",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A function that generates a projection expression for accessing fields of structure-like types, ensuring the provided type name and index are valid."
+  },
+  "Lean.Expr.withApp": {
+    "type": "definition",
+    "code": "Lean.Expr.withApp.{u_1} {α : Sort u_1} (e : Expr) (k : Expr → Array Expr → α) : α",
+    "comment": "Given `e = f a₁ a₂ ... aₙ`, returns `k f #[a₁, ..., aₙ]`. ",
+    "explanatories": {},
+    "fullDefinition": "@[inline] def withApp (e : Expr) (k : Expr → Array Expr → α) : α :=   let dummy := mkSort levelZero   let nargs := e.getAppNumArgs   withAppAux k e (mkArray nargs dummy) (nargs-1)",
+    "description": "A function that deconstructs an expression representing a function application into the function and its arguments, then applies a given handler to them."
+  },
+  "Lean.Expr.beta": {
+    "type": "definition",
+    "code": "Lean.Expr.beta (f : Expr) (args : Array Expr) : Expr",
+    "comment": "Apply the given arguments to `f`, beta-reducing if `f` is a\nlambda expression. See docstring for `betaRev` for examples.\n",
+    "explanatories": {},
+    "fullDefinition": "def beta (f : Expr) (args : Array Expr) : Expr :=   betaRev f args.reverse",
+    "description": "A function that applies given arguments to an expression, beta-reducing it if the expression is a lambda."
+  },
+  "Lean.Expr.mvar": {
+    "type": "theorem",
+    "code": "Lean.Expr.mvar (mvarId : MVarId) : Expr",
+    "comment": "Metavariables are used to represent \"holes\" in expressions, and goals in the\ntactic framework. Metavariable declarations are stored in the `MetavarContext`.\nMetavariables are used during elaboration, and are not allowed in the kernel,\nor in the code generator.\n",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A representation of a metavariable in an expression that signifies an unfilled placeholder or a goal in the tactic framework, utilized during the process of elaboration."
+  },
+  "Lean.BinderInfo.default": {
+    "type": "theorem",
+    "code": "Lean.BinderInfo.default : BinderInfo",
+    "comment": "Default binder annotation, e.g. `(x : α)` ",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A representation of the standard binder information used for variables in type annotations."
+  },
+  "Lean.BinderInfo.implicit": {
+    "type": "theorem",
+    "code": "Lean.BinderInfo.implicit : BinderInfo",
+    "comment": "Implicit binder annotation, e.g., `{x : α}` ",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "An annotation indicating that a binder is implicit, such as those used in parameter lists of functions."
+  },
+  "Lean.BinderInfo.strictImplicit": {
+    "type": "theorem",
+    "code": "Lean.BinderInfo.strictImplicit : BinderInfo",
+    "comment": "Strict implicit binder annotation, e.g., `{{ x : α }}` ",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A specification of a strict implicit binder annotation used to indicate that a variable is implicitly bound in certain contexts."
+  },
+  "Lean.BinderInfo.instImplicit": {
+    "type": "theorem",
+    "code": "Lean.BinderInfo.instImplicit : BinderInfo",
+    "comment": "Local instance binder annotataion, e.g., `[Decidable α]` ",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A specification of an implicit binder used to annotate local instances, such as in the context of decidable types."
+  },
+  "Lean.Expr.mvarId!": {
+    "type": "definition",
+    "code": "Lean.Expr.mvarId! : Expr → MVarId",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def mvarId! : Expr → MVarId   | mvar n => n   | _      => panic! \"mvar expected\"",
+    "description": "A function that extracts the metavariable identifier from an expression."
+  },
+  "Lean.Expr.replaceFVars": {
+    "type": "definition",
+    "code": "Lean.Expr.replaceFVars (e : Expr) (fvars vs : Array Expr) : Expr",
+    "comment": "Replace occurrences of the free variables `fvars` in `e` with `vs` ",
+    "explanatories": {},
+    "fullDefinition": "def replaceFVars (e : Expr) (fvars : Array Expr) (vs : Array Expr) : Expr :=   (e.abstract fvars).instantiateRev vs",
+    "description": "A function that replaces specified free variables in an expression with given replacement expressions."
+  }
+}

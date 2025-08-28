@@ -1,0 +1,177 @@
+[
+  {
+    "AppliedTactic": "intro  xconst ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\n⊢ (∀ (n : ℕ), x n = a) → ConvergesTo x a",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\n⊢ ConvergesTo x a",
+    "GivenPremises": [
+      "ConvergesTo : ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop"
+    ],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that the function \\( x \\) is constant and equal to \\( a \\) for every natural number \\( n \\). From now on, we will show that \\( x \\) converges to \\( a \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have : ∀ε > 0, ∀n, |x n - a| < ε := by\n    intro ε εpos n\n    have : ∀n, |x n - a| = 0 := by\n      intro n\n      rw [xconst n,sub_self,abs_zero]\n    rw [this n]\n    exact  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\n⊢ ConvergesTo x a",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\n⊢ ConvergesTo x a",
+    "GivenPremises": [
+      "abs_zero.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |0| = 0",
+      "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+      "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+      "sub_self.{u_3} {G : Type u_3} [AddGroup G] (a : G) : a - a = 0",
+      "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b"
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that for every positive number ε and every natural number n, the absolute value of the difference between \\( x_n \\) and \\( a \\) is less than ε.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "intro ε εpos  n ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\n⊢ ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\n⊢ |x n - a| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( \\varepsilon \\) is a positive real number and \\( n \\) is a natural number. From now on, we will show that the absolute value of \\( x_n - a \\) is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have : ∀n, |x n - a| = 0 := by\n      intro n\n      rw [xconst n,sub_self,abs_zero ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\n⊢ |x n - a| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\nthis :  ∀ (n : ℕ), |x n - a| = 0\n⊢ |x n - a| < ε",
+    "GivenPremises": [
+      "abs_zero.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |0| = 0",
+      "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+      "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+      "sub_self.{u_3} {G : Type u_3} [AddGroup G] (a : G) : a - a = 0",
+      "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b"
+    ],
+    "Template": "Show that [statement].",
+    "TokenInfos": {
+      "[statement]": "This token appears in templates for a tactic that provides a proposition (subgoal) to be proven. Replace it with a explanation or a mathematical reference to the relevant proposition by checking the Applied Tactic."
+    },
+    "Result": "Show that for every natural number \\( n \\), the absolute value of \\( x_n - a \\) is zero.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "intro  n ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\n⊢ ∀ (n : ℕ), |x n - a| = 0",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn✝ n :  ℕ\n⊢ |x n - a| = 0",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is an arbitrary natural number. From now on, we will show that the absolute value of \\( x(n) - a \\) is zero.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [xconst n,sub_self,abs_zero ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn✝ n :  ℕ\n⊢ |x n - a| = 0",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "abs_zero.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |0| = 0",
+      "sub_self.{u_3} {G : Type u_3} [AddGroup G] (a : G) : a - a = 0"
+    ],
+    "Template": "By using [assumptions] and [theorems], we complete the proof.",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "By using the assumption that \\( x n = a \\) for all natural numbers \\( n \\), and applying the facts that subtracting a number from itself yields zero and that the absolute value of zero is zero, we complete the proof.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [this n ] ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\nthis :  ∀ (n : ℕ), |x n - a| = 0\n⊢ |x n - a| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\nthis :  ∀ (n : ℕ), |x n - a| = 0\n⊢ 0 < ε",
+    "GivenPremises": [],
+    "Template": "By using [assumptions], [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the assumption that for every natural number \\( n \\), the absolute value of the difference between \\( x(n) \\) and \\( a \\) is zero, the goal of proving that this absolute value is less than \\( \\varepsilon \\) becomes the simpler goal of proving that zero is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "exact  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\nthis :  ∀ (n : ℕ), |x n - a| = 0\n⊢ 0 < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumption that the positive real number \\( \\varepsilon \\) is greater than zero.",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": "intro ε  εpos ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\n⊢ ConvergesTo x a",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( \\varepsilon \\) is a positive real number. From now on, we will show that there exists a natural number \\( n_0 \\) such that for all \\( n \\geq n_0 \\), the distance between \\( x_n \\) and \\( a \\) is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "apply Exists.intro  1 ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\n⊢ ∃ n₀, ∀ n ≥ n₀, |x n - a| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\n⊢ ∀ n ≥ 1, |x n - a| < ε",
+    "GivenPremises": [
+      "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+      "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+      "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p"
+    ],
+    "Template": "From [theorems],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the introduction rule for existential quantifiers, in order to establish that there exists a natural number \\( n_0 \\) such that for all \\( n \\geq n_0 \\), the absolute difference between \\( x_n \\) and \\( a \\) is less than \\( \\varepsilon \\), it suffices to prove that for all \\( n \\geq 1 \\), the absolute difference between \\( x_n \\) and \\( a \\) is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "intro n  _ ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\n⊢ ∀ n ≥ 1, |x n - a| < ε",
+    "GoalsAfter": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\na✝ :  n ≥ 1\n⊢ |x n - a| < ε",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( n \\) is a natural number greater than or equal to 1. From now on, we will show that the absolute value of \\( x_n - a \\) is less than \\( \\varepsilon \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "exact this ε εpos  n ",
+    "GoalsBefore": "x :  ℕ → ℝ\na :  ℝ\nxconst :  ∀ (n : ℕ), x n = a\nthis :  ∀ ε > 0, ∀ (n : ℕ), |x n - a| < ε\nε :  ℝ\nεpos :  ε > 0\nn :  ℕ\na✝ :  n ≥ 1\n⊢ |x n - a| < ε",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [],
+    "Template": "The proof is completed from the assumption(s) that [assumptions].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them."
+    },
+    "Result": "The proof is completed from the assumptions that for every positive number ε and every natural number n, the distance between \\(x_n\\) and \\(a\\) is less than ε, that ε is positive, and that n is a natural number.",
+    "Evaluation":"Correct"
+  }
+]

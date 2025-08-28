@@ -1,0 +1,77 @@
+[applied Tactic]
+have CnotEmpty : C.Nonempty := by
+    -- s = a, k = 0 とすれば成り立つ
+    apply Exists.intro a
+    apply Exists.intro 0
+    rw [CharP.cast_eq_zero,Nat.cast_one,zero_add,one_mul ] 
+
+[answer]
+We will show that the set \( C \) is not empty by demonstrating that it contains the element obtained by taking \( s = a \) and \( k = 0 \). According to the introduction rule for existential quantifiers, it suffices to prove that the element \( a \) belongs to \( C \). To establish this, it is enough to verify that \( a \) equals \((0 + 1) \times a \). Since multiplying by one leaves a number unchanged and adding zero does not affect the value, we conclude that \( a = (0 + 1) \times a \). Therefore, \( a \) is indeed an element of \( C \), proving that \( C \) is nonempty.
+[applied Tactic]
+have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h  k' 
+
+[answer]
+We will show that \( b \) is an upper bound of the set \( C \) by proving that for every element \( s \) in \( C \), \( s \leq b \). To this end, let \( k \) be an arbitrary element of \( C \). By definition, there exists a natural number \( k' \) such that \( k = (k' + 1) \cdot a \). Thus, the inequality \( k \leq b \) is equivalent to showing \((k' + 1) \cdot a \leq b\). Since \( a > 0 \), \( b > 0 \), and for every natural number \( n \), \((n + 1) \cdot a \leq b \) holds by the assumptions, it follows that \( k \leq b \). Therefore, \( b \) is an upper bound of \( C \).
+[applied Tactic]
+have CUB : BoundedAbove C := by
+    -- b が上界であることを使う
+    have : UpperBound C b := by
+      intro k kinC
+      let ⟨k',k'h⟩ := kinC
+      rw [k'h]
+      exact h k'
+    exact ⟨b, this ⟩ 
+
+[answer]
+We will show that \( b \) is an upper bound of the set \( C \) by proving that for every element \( s \in C \), we have \( s \leq b \). To this end, let \( k \) be an arbitrary element of \( C \). By the definition of \( C \), there exists a natural number \( k' \) such that \( k = (k' + 1) \cdot a \). Thus, showing \( k \leq b \) is equivalent to showing \((k' + 1) \cdot a \leq b\). Since \( a > 0 \) and \( b > 0 \), and by assumption that for every natural number \( n \), \((n + 1) \cdot a \leq b \) holds, it follows directly that \( k \leq b \). Hence, \( b \) is an upper bound of the set \( C \), completing the proof.
+[applied Tactic]
+have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc ] 
+
+[answer]
+We will show that the product of the sum of \( n \) and 2 with \( a \) belongs to the set \( C \). By definition of membership in \( C \), this amounts to proving the existence of an integer \( k \) such that \((n + 2) \cdot a = (k + 1) \cdot a\). To exhibit such a \( k \), it suffices to take \( k = n + 1 \) and verify that \((n + 2) \cdot a = ((n + 1) + 1) \cdot a\). Since multiplication by \( a \) preserves equality when \( a \) is nonzero, it remains to show that \( n + 2 = (n + 1) + 1 \). By the associativity of addition and the arithmetic fact that \( 1 + 1 = 2 \), this equality holds, completing the proof that \((n + 2) \cdot a\) lies in \( C \).
+[applied Tactic]
+have : ∀n : ℕ, ((n + (2 : ℕ )) : ℝ)  * a ≤ x := by
+    intro n
+    -- SupCxの左側　UpperBound C x を上手く使うため、 (n + 1) * a が C の要素であることをいう
+    have : ((n + (2 : ℕ )) : ℝ) * a ∈ C := by
+      rw [Set.mem_setOf_eq]
+      apply Exists.intro (n + 1)
+      rw [Nat.cast_ofNat,Nat.cast_add,Nat.cast_one,← one_add_one_eq_two,mul_eq_mul_right_iff]
+      apply Or.inl
+      rw [add_assoc]
+    -- 結果を素直に用いれば示せる
+    apply SupCx.left ((n + 2) * a)  this 
+
+[answer]
+We will show that for every natural number \( n \), the product \((n + 2) \cdot a\) is less than or equal to \( x \). To do this, we first consider the set \( C \) and aim to prove that \((n + 2) \cdot a \in C\). By the definition of membership in \( C \), there must exist an integer \( k \) such that \((n + 2) \cdot a = (k + 1) \cdot a\). Choosing \( k = n + 1 \), we verify that \((n + 2) \cdot a = ((n + 1) + 1) \cdot a\). Since multiplication by \( a \) preserves equality when \( a \) is nonzero, it suffices to confirm that \( n + 2 = (n + 1) + 1 \), which follows directly from the associativity of addition and the arithmetic fact that \( 1 + 1 = 2 \). Thus, \((n + 2) \cdot a\) indeed belongs to \( C \). Finally, since \( x \) is defined as the supremum of \( C \), it follows immediately that \((n + 2) \cdot a \leq x\), completing the proof.
+[applied Tactic]
+have : ∀n : ℕ, ((n + 1 : ℕ) : ℝ)* a ≤ x - a := by
+    intro n
+    have := this n
+    rw [← one_add_one_eq_two] at this
+    rw [Nat.cast_add,Nat.cast_one,← add_assoc,add_comm,add_mul,one_mul,add_comm] at this
+    apply le_tsub_of_add_le_right
+    rw [Nat.cast_add,Nat.cast_one]
+    exact  this 
+
+[answer]
+We will show that for every natural number \( n \), the product \((n + 1) \cdot a\) is less than or equal to \( x - a \). Assume \( n \) is arbitrary. Starting from the inequality involving \( n \), we apply the existing inequality for \( n \) to establish that \((n + 2) \cdot a \leq x\). Recognizing that \( n + 2 = n + (1 + 1) \) and using the commutativity of addition, we rewrite this as \(((n + 1) + 1) \cdot a \leq x\). By the distributive property, this is equivalent to \((n + 1) \cdot a + a \leq x\). From the property that if the sum of two terms is less than or equal to a third, then one term is less than or equal to the third minus the other, it follows that \((n + 1) \cdot a \leq x - a\). Finally, by considering the casting of natural numbers into the reals and using the assumption, we conclude that \((n + 1) \cdot a \leq x - a\) holds, completing the proof.
+[applied Tactic]
+have up: UpperBound C (x - a) := by
+    intro l ⟨k, kp⟩
+    have := this k
+    rw [kp,Nat.cast_one]
+    rw [Nat.cast_add,Nat.cast_one] at this
+    exact  this 
+
+[answer]
+We will show that \( x - a \) is an upper bound of the set \( C \). To this end, assume that \( l \) is a real number such that \( l = (k + 1) \cdot a \) for some natural number \( k \). Our goal is to prove that \( l \leq x - a \). By the assumption on \( l \) and the fact that the natural number one casts to the real number one, it suffices to show that the product \( (k + 1) \cdot a \) does not exceed \( x - a \). Recognizing that the cast of \( k + 1 \) decomposes as the sum of the cast of \( k \) plus one, the inequality \( (k + 1) \cdot a \leq x - a \) is equivalent to \( (k \cdot a) + a \leq x - a \). Finally, this follows directly from the given inequality involving the term indexed by \( k + 1 \), completing the proof that \( x - a \) serves as an upper bound for \( C \).

@@ -1,0 +1,52 @@
+[
+  {
+    "AppliedTactic": "intro aInf  bInf ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\n⊢ Infimum S a → Infimum S b → a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naInf :  Infimum S a\nbInf :  Infimum S b\n⊢ a = b",
+    "GivenPremises": [],
+    "Template": "Assume that [hypothesisAfter]. From now on, we will show that [goalsAfter].",
+    "TokenInfos": {
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "Assume that \\( a \\) and \\( b \\) are both infimums of the set \\( S \\). From now on, we will show that \\( a = b \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [Infimum] at  * ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naInf :  Infimum S a\nbInf :  Infimum S b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naInf :  LowerBound S a ∧ ∀ (y : ℝ), LowerBound S y → y ≤ a\nbInf :  LowerBound S b ∧ ∀ (y : ℝ), LowerBound S y → y ≤ b\n⊢ a = b",
+    "GivenPremises": [
+      "Infimum (A : Set ℝ) (x : ℝ) : Prop"
+    ],
+    "Template": "By using [theorems], [hypothesisBefore] becomes [hypothesisAfter] and [goalsBefore] becomes [goalsAfter].",
+    "TokenInfos": {
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[hypothesisBefore]": "This token appears in templates for tactics that need to refer to assumptions in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions before the tactic is applied.",
+      "[hypothesisAfter]": "This token appears in templates for tactics that need to refer to assumptions in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant assumptions after the tactic is applied.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "By using the definition of the greatest lower bound, the assumption that \\( a \\) is the infimum of the set \\( S \\) becomes the statement that \\( a \\) is a lower bound of \\( S \\) and that any other lower bound of \\( S \\) is less than or equal to \\( a \\), and similarly for \\( b \\); the goal of proving \\( a = b \\) remains unchanged.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "apply le_antisymm (bInf.right a aInf.left) (aInf.right b bInf.left ) ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naInf :  LowerBound S a ∧ ∀ (y : ℝ), LowerBound S y → y ≤ a\nbInf :  LowerBound S b ∧ ∀ (y : ℝ), LowerBound S y → y ≤ b\n⊢ a = b",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "And.right {a b : Prop} (self : a ∧ b) : b",
+      "And.left {a b : Prop} (self : a ∧ b) : a",
+      "le_antisymm.{u} {α : Type u} [PartialOrder α] {a b : α} : a ≤ b → b ≤ a → a = b"
+    ],
+    "Template": "From [theorems] and [assumptions],  in order to establish [goalsBefore], it suffices to prove [goalsAfter].",
+    "TokenInfos": {
+      "[assumptions]": "This token appears in templates for tactics that may use assumptions from the proof state given in *Hypothesis And Goals Before Tactic Application*. Replace it with a explanation or a mathematical reference to each assumption used.If multiple theorems are used, include explanations for all of them.",
+      "[theorems]": "This token appears in templates for tactics that may use definitions or theorems listed in *Using Definitions and Theorems*. Replace it with a explanation or a mathematical reference to each definition or theorem used. If multiple theorems are used, include explanations for all of them.",
+      "[goalsBefore]": "This token appears in templates for tactics that need to refer to goals in the proof state before applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals before the tactic is applied.",
+      "[goalsAfter]": "This token appears in templates for tactics that need to refer to goals in the proof state after applying the tactic. Replace it with a explanation or a mathematical reference to the relevant goals after the tactic is applied."
+    },
+    "Result": "From the antisymmetry property of the order relation and the assumptions that \\( a \\) and \\( b \\) are both lower bounds of the set \\( S \\) with each being less than or equal to any other lower bound, in order to establish that \\( a = b \\), it suffices to prove that \\( a \\leq b \\) and \\( b \\leq a \\).",
+    "Evaluation":"MisInformation"
+  }
+]

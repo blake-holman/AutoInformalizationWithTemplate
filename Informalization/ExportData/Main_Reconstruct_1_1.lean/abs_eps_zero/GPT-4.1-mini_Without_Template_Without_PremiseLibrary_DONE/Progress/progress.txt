@@ -1,0 +1,17 @@
+[applied Tactic]
+have abslezero : |a| ≤ 0 := by
+    have := alebByEps |a| 0
+    -- このままだと絶対値までsimpされてしまうのでそれはやらないようにする
+    -- [- theorem]でsimpで用いるtheoremから[]内のものを除くことが可能
+    simp[- abs_nonpos_iff] at this
+    exact this  h 
+
+[answer]
+We will show that \(|a| \leq 0\) under the assumption that \(|a|\) is less than every positive real number. To do this, we invoke the principle that if a real number is less than every positive number, then it must be less than or equal to zero. More precisely, since \(|a|\) is less than any positive \(\varepsilon\), it follows that \(|a| \leq 0\). Next, we explicitly rewrite the hypothesis by stating that \(\varepsilon\) is a real number greater than zero, without introducing any equivalence regarding \(|a| \leq 0\) implying \(a=0\), thereby clarifying the assumption without altering its content. Finally, using the fact that \(|a| < \varepsilon\) for all positive \(\varepsilon\), we conclude that \(|a|\) must be at most zero, completing the proof.
+[applied Tactic]
+have : a = 0 := by
+    rw [abs_nonpos_iff] at abslezero
+    exact  abslezero 
+
+[answer]
+We will show that \( a = 0 \). Since it is given that the absolute value of \( a \) is less than or equal to zero, we use the fundamental property that the absolute value of a real number is nonnegative and equals zero if and only if the number itself is zero. Hence, from the condition \( |a| \leq 0 \), it immediately follows that \( a = 0 \). This concludes the proof.

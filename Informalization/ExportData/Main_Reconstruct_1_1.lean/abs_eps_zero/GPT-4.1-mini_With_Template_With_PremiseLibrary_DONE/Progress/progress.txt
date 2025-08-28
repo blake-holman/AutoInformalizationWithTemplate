@@ -1,0 +1,17 @@
+[applied Tactic]
+have abslezero : |a| ≤ 0 := by
+    have := alebByEps |a| 0
+    -- このままだと絶対値までsimpされてしまうのでそれはやらないようにする
+    -- [- theorem]でsimpで用いるtheoremから[]内のものを除くことが可能
+    simp[- abs_nonpos_iff] at this
+    exact this  h 
+
+[answer]
+We will show that the absolute value of \(a\) is less than or equal to zero. To do this, we assume that for every positive real number \(\varepsilon\), the absolute value of \(a\) satisfies the inequality \(|a| < \varepsilon\). By the principle that if a real number is less than any positive number greater than a given number, then it must be less than or equal to that number, it follows that \(|a| \leq 0\). Hence, from the assumption \(|a| < \varepsilon\) for all \(\varepsilon > 0\), we conclude that \(|a| \leq 0\), completing the proof.
+[applied Tactic]
+have : a = 0 := by
+    rw [abs_nonpos_iff] at abslezero
+    exact  abslezero 
+
+[answer]
+We will show that \( a = 0 \). By the theorem stating that an absolute value is non-positive if and only if the element itself is zero, the assumption that \(|a| \leq 0\) implies that \( a = 0 \). Therefore, from this assumption, the proof is complete.

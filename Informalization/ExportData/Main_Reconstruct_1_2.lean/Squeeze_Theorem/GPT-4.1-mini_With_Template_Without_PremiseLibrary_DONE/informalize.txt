@@ -1,0 +1,246 @@
+[appliedTactic]
+intro bet ε  εpos 
+[answer]
+Assume that for every natural number \( n \), the value of \( z(n) \) lies between \( x(n) \) and \( y(n) \), and let \( \varepsilon \) be a positive real number. From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( z(n) \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+have s3 := convxa ε  εpos 
+[answer]
+Show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon \). This follows directly from the fact that the sequence \( x \) converges to \( a \) and the positive value of \( \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ :=  s3 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+have s4 := convya ε  εpos 
+[answer]
+Show that there exists a natural number from which onwards the values of \( y \) are within \( \varepsilon \) of \( a \). This can be proved by applying the convergence property of \( y \) to \( a \) with the positive number \( \varepsilon \), which guarantees such an index exists.
+[appliedTactic]
+let ⟨n₂,h2⟩ :=  s4 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the value of \( y_n \) is within \( \varepsilon \) of \( a \).
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+have s5 : ∀n ≥ n₀, |x n - a| < ε := by
+      intro n ngen₀
+      have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁ n₂
+      exact h1 n (ge_trans ngen₀ n₀gen₁ ) 
+[answer]
+Show that for every natural number \( n \) greater than or equal to \( n_0 \), the absolute value of the difference between \( x_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between \( x_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+have n₀gen₁ : n₀ ≥ n₁ := Nat.le_max_left n₁  n₂ 
+[answer]
+Show that \( n_0 \) is greater than or equal to \( n_1 \). This can be proved by the fact that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), so it must be at least as large as \( n_1 \).
+[appliedTactic]
+exact h1 n (ge_trans ngen₀ n₀gen₁ ) 
+[answer]
+The proof is completed from the assumption that for all \( n \) greater than or equal to \( n_1 \), the distance between \( x_n \) and \( a \) is less than \( \varepsilon \), together with the fact that \( n \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \), and the transitivity of the inequality relation on natural numbers.
+[appliedTactic]
+have s6 : ∀n ≥ n₀, |y n - a| < ε := by
+      intro n ngen₀
+      have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁ n₂
+      exact h2 n (ge_trans ngen₀ n₀gen₂ ) 
+[answer]
+Show that for every natural number \( n \) greater than or equal to \( n_0 \), the absolute value of the difference between \( y_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between \( y_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+have n₀gen₂ : n₀ ≥ n₂ := Nat.le_max_right n₁  n₂ 
+[answer]
+Show that the maximum of \( n_1 \) and \( n_2 \) is greater than or equal to \( n_2 \). This can be proved by the property of the maximum function which states that for any two natural numbers, the maximum is at least as large as each of them individually.
+[appliedTactic]
+exact h2 n (ge_trans ngen₀ n₀gen₂ ) 
+[answer]
+The proof is completed from the assumption that \( n \) is greater than or equal to \( n_0 \), the assumption that \( n_0 \) is greater than or equal to \( n_2 \), and the fact that the absolute value of \( y_n - a \) is less than \( \varepsilon \) for all \( n \) greater than or equal to \( n_2 \), together with the transitivity of the inequality relation on natural numbers.
+[appliedTactic]
+have s7 : ∀n ≥ n₀, a - ε < x n ∧ x n ≤ z n ∧ z n ≤ y n ∧ y n < a + ε := by
+      intro n ngen₀
+      repeat (any_goals apply And.intro)
+      . have := s5 n ngen₀
+        rw [abs_lt,lt_tsub_iff_left] at this
+        exact this.left
+      . exact (bet n).left
+      . exact (bet n).right
+      . have := s6 n ngen₀
+        rw [abs_lt,] at this
+        apply lt_add_of_neg_add_lt_left
+        rw [add_comm]
+        exact  this.right 
+[answer]
+Show that for all natural numbers \( n \) greater than or equal to \( n_0 \), the value of \( x_n \) is greater than \( a - \varepsilon \), \( x_n \) is less than or equal to \( z_n \), \( z_n \) is less than or equal to \( y_n \), and \( y_n \) is less than \( a + \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that \( a - \varepsilon < x_n \), \( x_n \leq z_n \), \( z_n \leq y_n \), and \( y_n < a + \varepsilon \).
+[appliedTactic]
+repeat (any_goals apply And.intro ) 
+[answer]
+
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the introduction rule for conjunction, in order to establish that \( a - \varepsilon < x_n \) and \( x_n \leq z_n \) and \( z_n \leq y_n \) and \( y_n < a + \varepsilon \), it suffices to prove separately that \( a - \varepsilon < x_n \) and that \( x_n \leq z_n \) and \( z_n \leq y_n \) and \( y_n < a + \varepsilon \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the introduction rule for conjunction, in order to establish that \( x_n \leq z_n \) and \( z_n \leq y_n \) and \( y_n < a + \varepsilon \), it suffices to prove separately that \( x_n \leq z_n \) and that \( z_n \leq y_n \) and \( y_n < a + \varepsilon \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the introduction rule for conjunction, in order to establish that \( z_n \leq y_n \) and \( y_n < a + \varepsilon \), it suffices to prove separately that \( z_n \leq y_n \) and that \( y_n < a + \varepsilon \).
+[appliedTactic]
+any_goals apply  And.intro 
+[answer]
+
+[appliedTactic]
+. have := s5 n ngen₀
+        rw [abs_lt,lt_tsub_iff_left] at this
+        exact  this.left 
+[answer]
+We prove the case where \( a - \varepsilon < x_n \).
+[appliedTactic]
+have := s5 n  ngen₀ 
+[answer]
+Show that the absolute difference between \( x_n \) and \( a \) is less than \( \varepsilon \). This can be proved by applying the property that for all \( n \) greater than or equal to \( n_0 \), the absolute difference between \( x_n \) and \( a \) is bounded by \( \varepsilon \), together with the fact that \( n \) is at least \( n_0 \).
+[appliedTactic]
+rw [abs_lt,lt_tsub_iff_left] at  this 
+[answer]
+By using the equivalence that an absolute value being less than a positive number means the expression lies strictly between the negative and positive of that number, and the equivalence that a strict inequality involving a difference can be rewritten by adding the subtracted term to the other side, the assumption that the absolute value of \( x_n - a \) is less than \( \varepsilon \) becomes the conjunction that \( a - \varepsilon < x_n \) and \( x_n - a < \varepsilon \).
+[appliedTactic]
+exact  this.left 
+[answer]
+The proof is completed from the assumption that \(a - \varepsilon < x_n\) and \(x_n - a < \varepsilon\).
+[appliedTactic]
+. exact (bet n). left 
+[answer]
+We prove the case where \( x_n \leq z_n \).
+[appliedTactic]
+exact (bet n). left 
+[answer]
+The proof is completed from the assumption that for the given \( n \), the value of \( x_n \) is less than or equal to the value of \( z_n \).
+[appliedTactic]
+. exact (bet n). right 
+[answer]
+We prove the case where \( z_n \leq y_n \).
+[appliedTactic]
+exact (bet n). right 
+[answer]
+The proof is completed from the assumption that for the given \( n \), the value of \( z_n \) is less than or equal to the value of \( y_n \).
+[appliedTactic]
+. have := s6 n ngen₀
+        rw [abs_lt,] at this
+        apply lt_add_of_neg_add_lt_left
+        rw [add_comm]
+        exact  this.right 
+[answer]
+We prove the case where the value of the sequence \( y \) at \( n \) is less than \( a + \varepsilon \).
+[appliedTactic]
+have := s6 n  ngen₀ 
+[answer]
+Show that the absolute difference between \( y_n \) and \( a \) is less than \( \varepsilon \). This can be proved by applying the property that for all \( n \) greater than or equal to \( n_0 \), the absolute difference between \( y_n \) and \( a \) is less than \( \varepsilon \), and since \( n \) is at least \( n_0 \), this property holds for \( y_n \).
+[appliedTactic]
+rw [abs_lt,] at  this 
+[answer]
+By using the theorem that an absolute value inequality \( |a| < b \) is equivalent to the double inequality \( -b < a < b \), the assumption that the absolute value of \( y_n - a \) is less than \( \varepsilon \) becomes the statement that \( y_n - a \) lies strictly between \(-\varepsilon\) and \(\varepsilon\).
+[appliedTactic]
+apply  lt_add_of_neg_add_lt_left 
+[answer]
+From the property that if the sum of the negation of one quantity and another is less than a third, then the second quantity is less than the sum of the first and third, in order to establish that \( y_n \) is less than \( a + \varepsilon \), it suffices to prove that \( -a + y_n \) is less than \( \varepsilon \).
+[appliedTactic]
+rw [add_comm ] 
+[answer]
+By using the commutativity of addition, the goal of proving that negative \( a \) plus \( y_n \) is less than \( \varepsilon \) becomes proving that \( y_n \) plus negative \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+exact  this.right 
+[answer]
+The proof is completed from the assumption that \(y_n - a\) is strictly between \(-\varepsilon\) and \(\varepsilon\).
+[appliedTactic]
+have s8 : ∀n ≥ n₀, |a - z n| < ε := by
+      intro n ngen₀
+      rw [abs_lt]
+      have := s7 n ngen₀
+      apply And.intro
+      . have := lt_of_le_of_lt this.right.right.left this.right.right.right
+        linarith
+      . have := lt_of_lt_of_le this.left this.right.left
+         linarith 
+[answer]
+Show that for every natural number \( n \) greater than or equal to \( n_0 \), the absolute value of the difference between \( z_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the distance between \( a \) and \( z_n \) is less than \( \varepsilon \).
+[appliedTactic]
+rw [abs_lt ] 
+[answer]
+By using the equivalence that an absolute value inequality \( |a| < b \) is the same as the double inequality \( -b < a < b \), the goal of proving \( |a - z_n| < \varepsilon \) becomes proving that \( -\varepsilon < a - z_n \) and \( a - z_n < \varepsilon \).
+[appliedTactic]
+have := s7 n  ngen₀ 
+[answer]
+Show that for the given \( n \) greater than or equal to \( n_0 \), the value \( z_n \) lies strictly between \( a - \varepsilon \) and \( a + \varepsilon \). This can be proved by applying the established fact that for all \( n \) greater than or equal to \( n_0 \), the sequence values satisfy the chain of inequalities \( a - \varepsilon < x_n \leq z_n \leq y_n < a + \varepsilon \).
+[appliedTactic]
+apply  And.intro 
+[answer]
+From the introduction rule for conjunction, in order to establish that the expression lies strictly between \(-\varepsilon\) and \(\varepsilon\), it suffices to prove separately that it is greater than \(-\varepsilon\) and that it is less than \(\varepsilon\).
+[appliedTactic]
+. have := lt_of_le_of_lt this.right.right.left this.right.right.right
+         linarith 
+[answer]
+We prove the case where the difference between \( a \) and \( z_n \) is greater than \(-\varepsilon\).
+[appliedTactic]
+have := lt_of_le_of_lt this.right.right.left  this.right.right.right 
+[answer]
+Show that \( z_n < a + \varepsilon \). This can be proved by extracting the inequalities from the given conjunction and applying the fact that if one number is less than or equal to another, which in turn is less than a third, then the first is less than the third.
+[appliedTactic]
+ linarith 
+[answer]
+Since \( z_n < a + \varepsilon \) and \( -\varepsilon < a - z_n \) cannot hold simultaneously, this leads to a contradiction. Therefore, we complete the proof.
+[appliedTactic]
+. have := lt_of_lt_of_le this.left this.right.left
+         linarith 
+[answer]
+We prove the case where the difference between \( a \) and \( z_n \) is less than \( \varepsilon \).
+[appliedTactic]
+have := lt_of_lt_of_le this.left  this.right.left 
+[answer]
+Show that \( a - \varepsilon < z_n \). This can be proved by extracting the inequalities \( a - \varepsilon < x_n \) and \( x_n \leq z_n \) from the given combined inequality, and then applying the transitive property of inequalities to conclude that \( a - \varepsilon < z_n \).
+[appliedTactic]
+ linarith 
+[answer]
+Since \( a - \varepsilon < z_n \) and \( a - z_n < \varepsilon \) are both true, the desired inequality holds, completing the proof.
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the assumption that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between \( x_n \) and \( a \) is less than \( \varepsilon \), in order to establish that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between \( z_n \) and \( a \) is less than \( \varepsilon \), it suffices to prove that for all \( n \geq n_0 \), the absolute difference between \( z_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+intro n  ngen₀ 
+[answer]
+Assume that \( n \) is a natural number with \( n \geq n_0 \). From now on, we will show that the distance between \( z_n \) and \( a \) is less than \( \varepsilon \).
+[appliedTactic]
+rw [abs_sub_comm ] 
+[answer]
+By using the fact that the absolute value of the difference between two terms is equal to the absolute value of the difference taken in the reverse order, the goal of proving that the absolute value of \( z_n - a \) is less than \( \varepsilon \) becomes proving that the absolute value of \( a - z_n \) is less than \( \varepsilon \).
+[appliedTactic]
+exact s8 n  ngen₀ 
+[answer]
+The proof is completed from the assumptions that for all indices greater than or equal to \( n_0 \), the values of the sequence \( z \) remain within \( \varepsilon \) of \( a \), and that the index \( n \) considered is at least \( n_0 \).

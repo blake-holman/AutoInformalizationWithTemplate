@@ -1,0 +1,543 @@
+{
+  "Basic.lean": {
+    "Condensed": {
+      "type": "definition",
+      "code": "Condensed.{u, v, w} (C : Type w) [Category.{v, w} C] : Type (max (max (max (u + 1) w) u) v)",
+      "comment": "`Condensed.{u} C` is the category of condensed objects in a category `C`, which are\ndefined as sheaves on `CompHaus.{u}` with respect to the coherent Grothendieck topology.\n",
+      "explanatories": {},
+      "fullDefinition": "def Condensed (C : Type w) [Category.{v} C] :=   Sheaf (coherentTopology CompHaus.{u}) C",
+      "description": "This defines a type representing the category of condensed objects in a given category, characterized by sheaves on the category of compact Hausdorff spaces according to a specific Grothendieck topology."
+    }
+  },
+  "Discrete.lean": {
+    "Condensed.discrete": {
+      "type": "definition",
+      "code": "Condensed.discrete.{u, w} (C : Type w) [Category.{u + 1, w} C] [HasWeakSheafify (coherentTopology CompHaus) C] :\n  C ⥤ Condensed C",
+      "comment": "The discrete condensed object associated to an object of `C` is the constant sheaf at that object.\n",
+      "explanatories": {
+        "CategoryTheory.constantSheaf": "This defines a functor that assigns to each object of a category a constant sheaf formed by the sheafification of the constant presheaf at that object within a given Grothendieck topology."
+      },
+      "fullDefinition": "noncomputable def Condensed.discrete : C ⥤ Condensed.{u} C := constantSheaf _ C",
+      "description": "This defines a functor that assigns to each object in a category a discrete condensed object, which is represented by a constant sheaf based on that object."
+    },
+    "Condensed.underlying": {
+      "type": "definition",
+      "code": "Condensed.underlying.{u, w} (C : Type w) [Category.{u + 1, w} C] : Condensed C ⥤ C",
+      "comment": "The underlying object of a condensed object in `C` is the condensed object evaluated at a point.\nThis can be viewed as a sort of forgetful functor from `Condensed C` to `C`\n",
+      "explanatories": {
+        "CompHaus.of": "This provides a way to create objects in the category of compact Hausdorff spaces by specifying a type that is compact and Hausdorff."
+      },
+      "fullDefinition": "noncomputable def Condensed.underlying : Condensed.{u} C ⥤ C :=   (sheafSections _ _).obj ⟨CompHaus.of PUnit.{u+1}⟩",
+      "description": "This defines a functor that retrieves the underlying object of a condensed object in a category, essentially acting as a forgetful functor from condensed objects to the original category."
+    }
+  },
+  "Module.lean": {
+    "CondensedMod": {
+      "type": "definition",
+      "code": "CondensedMod.{u} (R : Type (u + 1)) [Ring R] : Type (u + 2)",
+      "comment": "The category of condensed `R`-modules, defined as sheaves of `R`-modules over\n`CompHaus` with respect to the coherent Grothendieck topology.\n",
+      "explanatories": {},
+      "fullDefinition": "abbrev CondensedMod := Condensed.{u} (ModuleCat.{u+1} R)",
+      "description": "This defines a type that represents the category of condensed modules over a given ring, characterized by sheaves of modules on the category of compact Hausdorff spaces using a coherent Grothendieck topology."
+    },
+    "Condensed.free": {
+      "type": "definition",
+      "code": "Condensed.free.{u} (R : Type (u + 1)) [Ring R] : CondensedSet ⥤ CondensedMod R",
+      "comment": "The left adjoint to the forgetful functor. The *free condensed `R`-module* on a condensed set.\n",
+      "explanatories": {
+        "CondensedMod": "This defines a type that represents the category of condensed modules over a given ring, characterized by sheaves of modules on the category of compact Hausdorff spaces using a coherent Grothendieck topology.",
+        "CategoryTheory.Sheaf.composeAndSheafify": "This definition introduces a functor that transforms a sheaf in one category into a sheaf in another category by composing it with a functor and sheafifying the result.",
+        "ModuleCat.free": "This definition represents a functor that constructs free modules over a ring from types by associating each type element with a generator of the module."
+      },
+      "fullDefinition": "def Condensed.free : CondensedSet ⥤ CondensedMod R :=   Sheaf.composeAndSheafify _ (ModuleCat.free R)",
+      "description": "This defines a functor that associates to any condensed set the free condensed module over that set with respect to a given ring, serving as the left adjoint to the forgetful functor."
+    },
+    "Condensed.forget": {
+      "type": "definition",
+      "code": "Condensed.forget.{u} (R : Type (u + 1)) [Ring R] : CondensedMod R ⥤ CondensedSet",
+      "comment": "The forgetful functor from condensed `R`-modules to condensed sets. ",
+      "explanatories": {
+        "CondensedMod": "This defines a type that represents the category of condensed modules over a given ring, characterized by sheaves of modules on the category of compact Hausdorff spaces using a coherent Grothendieck topology.",
+        "CategoryTheory.sheafCompose": "The definition establishes a functor that connects the categories of sheaves for two different types based on a functor that supports composition for a given Grothendieck topology.",
+        "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe."
+      },
+      "fullDefinition": "def Condensed.forget : CondensedMod R ⥤ CondensedSet := sheafCompose _ (CategoryTheory.forget _)",
+      "description": "This defines a functor that translates condensed modules over a given ring into condensed sets, effectively discarding the module structure."
+    },
+    "CondensedAb": {
+      "type": "definition",
+      "code": "CondensedAb.{u} : Type (u + 2)",
+      "comment": "The category of condensed abelian groups is defined as condensed `ℤ`-modules.\n",
+      "explanatories": {},
+      "fullDefinition": "abbrev CondensedAb := CondensedMod.{u} (ULift ℤ)",
+      "description": "This defines a type that represents the category of condensed abelian groups, which are characterized as condensed modules over the integers."
+    },
+    "Condensed.freeAb": {
+      "type": "definition",
+      "code": "Condensed.freeAb.{u_1} : CondensedSet ⥤ CondensedAb",
+      "comment": "The free condensed abelian group on a condensed set. ",
+      "explanatories": {
+        "ModuleCat.free": "This definition represents a functor that constructs free modules over a ring from types by associating each type element with a generator of the module.",
+        "CondensedAb": "This defines a type that represents the category of condensed abelian groups, which are characterized as condensed modules over the integers."
+      },
+      "fullDefinition": "noncomputable abbrev Condensed.freeAb : CondensedSet ⥤ CondensedAb := free _",
+      "description": "This defines a functor that assigns to any condensed set the free condensed abelian group generated by that set."
+    },
+    "Condensed.abForget": {
+      "type": "definition",
+      "code": "Condensed.abForget.{u_1} : CondensedAb ⥤ CondensedSet",
+      "comment": "The forgetful functor from condensed abelian groups to condensed sets. ",
+      "explanatories": {
+        "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe.",
+        "Condensed.forget": "This defines a functor that translates condensed modules over a given ring into condensed sets, effectively discarding the module structure.",
+        "CondensedAb": "This defines a type that represents the category of condensed abelian groups, which are characterized as condensed modules over the integers."
+      },
+      "fullDefinition": "abbrev Condensed.abForget : CondensedAb ⥤ CondensedSet := forget _",
+      "description": "This defines a functor that maps condensed abelian groups to condensed sets, effectively removing the group structure."
+    },
+    "Condensed.freeForgetAdjunction": {
+      "type": "definition",
+      "code": "Condensed.freeForgetAdjunction.{u} (R : Type (u + 1)) [Ring R] : free R ⊣ forget R",
+      "comment": "The condensed version of the free-forgetful adjunction. ",
+      "explanatories": {
+        "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe.",
+        "ModuleCat.free": "This definition represents a functor that constructs free modules over a ring from types by associating each type element with a generator of the module.",
+        "Condensed.forget": "This defines a functor that translates condensed modules over a given ring into condensed sets, effectively discarding the module structure.",
+        "CategoryTheory.Sheaf.adjunction": "This definition states that an adjunction between two functors induces an adjunction between the categories of sheaves over respective presheaves, provided certain constraints on sheafification and limit preservation are met.",
+        "ModuleCat.adj": "This definition establishes an adjunction between the functor that creates free modules over a ring and the forgetful functor that discards the module structure."
+      },
+      "fullDefinition": "def Condensed.freeForgetAdjunction : free R ⊣ forget R := Sheaf.adjunction _ (ModuleCat.adj R)",
+      "description": "This defines an adjunction between the functor that creates free condensed modules over a ring and the functor that forgets the structure of those modules."
+    }
+  },
+  "Functors.lean": {
+    "Condensed.ulift": {
+      "type": "definition",
+      "code": "Condensed.ulift.{u} : Condensed (Type u) ⥤ CondensedSet",
+      "comment": "Increase the size of the target category of condensed sets. ",
+      "explanatories": {
+        "CategoryTheory.sheafCompose": "The definition establishes a functor that connects the categories of sheaves for two different types based on a functor that supports composition for a given Grothendieck topology."
+      },
+      "fullDefinition": "def Condensed.ulift : Condensed.{u} (Type u) ⥤ CondensedSet.{u} :=   sheafCompose (coherentTopology CompHaus) uliftFunctor.{u+1, u}",
+      "description": "This defines a functor that increases the size of the target category of condensed sets from a given category of condensed objects."
+    },
+    "compHausToCondensed'": {
+      "type": "definition",
+      "code": "compHausToCondensed'.{u} : CompHaus ⥤ Condensed (Type u)",
+      "comment": "The functor from `CompHaus` to `Condensed.{u} (Type u)` given by the Yoneda sheaf. ",
+      "explanatories": {
+        "CategoryTheory.Sheaf.Subcanonical.yoneda": "This definition provides a Yoneda functor that maps a category into the sheaf category under a subcanonical Grothendieck topology."
+      },
+      "fullDefinition": "def compHausToCondensed' : CompHaus.{u} ⥤ Condensed.{u} (Type u) :=   (coherentTopology.subcanonical CompHaus).yoneda",
+      "description": "This defines a functor that maps compact Hausdorff spaces to the category of condensed objects using the Yoneda sheaf."
+    },
+    "compHausToCondensed": {
+      "type": "definition",
+      "code": "compHausToCondensed.{u} : CompHaus ⥤ CondensedSet",
+      "comment": "The yoneda presheaf as an actual condensed set. ",
+      "explanatories": {
+        "Condensed.ulift": "This defines a functor that increases the size of the target category of condensed sets from a given category of condensed objects.",
+        "compHausToCondensed'": "This defines a functor that maps compact Hausdorff spaces to the category of condensed objects using the Yoneda sheaf."
+      },
+      "fullDefinition": "def compHausToCondensed : CompHaus.{u} ⥤ CondensedSet.{u} :=   compHausToCondensed' ⋙ Condensed.ulift",
+      "description": "This defines a functor that represents the Yoneda presheaf as an actual condensed set."
+    },
+    "profiniteToCondensed": {
+      "type": "definition",
+      "code": "profiniteToCondensed.{u} : Profinite ⥤ CondensedSet",
+      "comment": "The yoneda presheaf as a condensed set, restricted to profinite spaces. ",
+      "explanatories": {
+        "compHausToCondensed": "This defines a functor that represents the Yoneda presheaf as an actual condensed set.",
+        "profiniteToCompHaus": "This definition indicates a fully faithful functor that embeds the category of profinite spaces into the category of compact Hausdorff spaces."
+      },
+      "fullDefinition": "def profiniteToCondensed : Profinite.{u} ⥤ CondensedSet.{u} :=   profiniteToCompHaus ⋙ compHausToCondensed",
+      "description": "This defines a functor that represents the Yoneda presheaf as a condensed set specifically for profinite spaces."
+    },
+    "stoneanToCondensed": {
+      "type": "definition",
+      "code": "stoneanToCondensed.{u} : Stonean ⥤ CondensedSet",
+      "comment": "The yoneda presheaf as a condensed set, restricted to Stonean spaces. ",
+      "explanatories": {
+        "compHausToCondensed": "This defines a functor that represents the Yoneda presheaf as an actual condensed set.",
+        "Stonean.toCompHaus": "This defines a functor that maps Stonean spaces to compact Hausdorff spaces, effectively forgetting some structure of the former."
+      },
+      "fullDefinition": "def stoneanToCondensed : Stonean.{u} ⥤ CondensedSet.{u} :=   Stonean.toCompHaus ⋙ compHausToCondensed",
+      "description": "This defines a functor that represents the Yoneda presheaf as a condensed set specifically for Stonean spaces."
+    }
+  },
+  "Equivalence.lean": {
+    "Condensed.StoneanProfinite.stoneanToProfiniteEffectivePresentation": {
+      "type": "definition",
+      "code": "Condensed.StoneanProfinite.stoneanToProfiniteEffectivePresentation.{u_1} (X : Profinite) :\n  Stonean.toProfinite.EffectivePresentation X",
+      "comment": "An effective presentation of an `X : Profinite` with respect to the inclusion functor from `Stonean`\n",
+      "explanatories": {
+        "Profinite.effectiveEpi_tfae": "In the category of profinite spaces, a morphism is an effective epimorphism if and only if it is an epimorphism and also surjective.",
+        "Iff.mpr": "If two propositions are equivalent and one of them is true, then the other must also be true.",
+        "Stonean.effectiveEpi_tfae": "The statement establishes the logical equivalence between being an effective epimorphism, an epimorphism, and being surjective in the context of morphisms in Stonean spaces.",
+        "Profinite.presentation": "This defines a Stonean space associated with a profinite space that includes an epimorphism mapping onto the original profinite space.",
+        "Profinite.presentation.π": "This defines a morphism from the presentation of a profinite space to the space itself, reflecting the relationship between the two."
+      },
+      "fullDefinition": "noncomputable def stoneanToProfiniteEffectivePresentation (X : Profinite) :     Stonean.toProfinite.EffectivePresentation X where   p := X.presentation   f := Profinite.presentation.π X   effectiveEpi := ((Profinite.effectiveEpi_tfae _).out 0 1).mpr (inferInstance : Epi _)",
+      "description": "This defines an effective presentation of a profinite object in the category of Stonean spaces with respect to the inclusion functor from Stonean to profinite spaces."
+    },
+    "Condensed.ProfiniteCompHaus.equivalence": {
+      "type": "definition",
+      "code": "Condensed.ProfiniteCompHaus.equivalence.{u, u_1, u_2} (A : Type u_1) [Category.{u_2, u_1} A]\n  [∀ (X : CompHausᵒᵖ), HasLimitsOfShape (StructuredArrow X profiniteToCompHaus.op) A] :\n  Sheaf (coherentTopology Profinite) A ≌ Condensed A",
+      "comment": "The equivalence from coherent sheaves on `Profinite` to coherent sheaves on `CompHaus`\n(i.e. condensed sets). ",
+      "explanatories": {
+        "profiniteToCompHaus": "This definition indicates a fully faithful functor that embeds the category of profinite spaces into the category of compact Hausdorff spaces."
+      },
+      "fullDefinition": "def equivalence (A : Type*) [Category A]     [∀ X, HasLimitsOfShape (StructuredArrow X profiniteToCompHaus.op) A] :     Sheaf (coherentTopology Profinite) A ≌ Condensed.{u} A :=   coherentTopology.equivalence' profiniteToCompHaus A",
+      "description": "This establishes an equivalence between coherent sheaves on profinite spaces and coherent sheaves on compact Hausdorff spaces, which are represented as condensed sets."
+    },
+    "Condensed.StoneanCompHaus.equivalence": {
+      "type": "definition",
+      "code": "Condensed.StoneanCompHaus.equivalence.{u, u_1, u_2} (A : Type u_1) [Category.{u_2, u_1} A]\n  [∀ (X : CompHausᵒᵖ), HasLimitsOfShape (StructuredArrow X Stonean.toCompHaus.op) A] :\n  Sheaf (coherentTopology Stonean) A ≌ Condensed A",
+      "comment": "The equivalence from coherent sheaves on `Stonean` to coherent sheaves on `CompHaus`\n(i.e. condensed sets). ",
+      "explanatories": {
+        "Stonean.toCompHaus": "This defines a functor that maps Stonean spaces to compact Hausdorff spaces, effectively forgetting some structure of the former.",
+        "Condensed.ProfiniteCompHaus.equivalence": "This establishes an equivalence between coherent sheaves on profinite spaces and coherent sheaves on compact Hausdorff spaces, which are represented as condensed sets."
+      },
+      "fullDefinition": "def equivalence (A : Type*) [Category A]     [∀ X, HasLimitsOfShape (StructuredArrow X Stonean.toCompHaus.op) A] :     Sheaf (coherentTopology Stonean) A ≌ Condensed.{u} A :=   coherentTopology.equivalence' Stonean.toCompHaus A",
+      "description": "This establishes an equivalence between coherent sheaves on Stonean spaces and coherent sheaves on compact Hausdorff spaces, represented as condensed sets."
+    }
+  },
+  "Solid.lean": {
+    "Condensed.finFree": {
+      "type": "definition",
+      "code": "Condensed.finFree.{u} (R : Type (u + 1)) [Ring R] : FintypeCat ⥤ CondensedMod R",
+      "comment": "The free condensed abelian group on a finite set. ",
+      "explanatories": {
+        "FintypeCat.toProfinite": "This definition specifies a functor that maps finite types to profinite spaces by assigning them the discrete topology.",
+        "profiniteToCondensed": "This defines a functor that represents the Yoneda presheaf as a condensed set specifically for profinite spaces.",
+        "Condensed.free": "This defines a functor that associates to any condensed set the free condensed module over that set with respect to a given ring, serving as the left adjoint to the forgetful functor."
+      },
+      "fullDefinition": "abbrev finFree : FintypeCat.{u} ⥤ CondensedMod.{u} R :=   FintypeCat.toProfinite ⋙ profiniteToCondensed ⋙ free R",
+      "description": "This defines a functor that assigns to each finite type the free condensed module over that set with respect to a given ring, representing the free condensed abelian group on a finite set."
+    },
+    "Condensed.profiniteSolid": {
+      "type": "definition",
+      "code": "Condensed.profiniteSolid.{u} (R : Type (u + 1)) [Ring R] : Profinite ⥤ CondensedMod R",
+      "comment": "The functor sending a profinite space `S` to the condensed abelian group `R[S]^\\solid`. ",
+      "explanatories": {
+        "FintypeCat.toProfinite": "This definition specifies a functor that maps finite types to profinite spaces by assigning them the discrete topology.",
+        "CategoryTheory.Functor.rightKanExtension": "This definition specifies a functor that represents a chosen right Kan extension of one functor with respect to another when the appropriate right Kan extension condition is satisfied."
+      },
+      "fullDefinition": "def profiniteSolid : Profinite.{u} ⥤ CondensedMod.{u} R :=   Functor.rightKanExtension FintypeCat.toProfinite (finFree R)",
+      "description": "This defines a functor that maps each profinite space to its corresponding condensed abelian group, specifically the solidification of the internal hom from that space."
+    },
+    "Condensed.profiniteSolidCounit": {
+      "type": "definition",
+      "code": "Condensed.profiniteSolidCounit.{u} (R : Type (u + 1)) [Ring R] : FintypeCat.toProfinite ⋙ profiniteSolid R ⟶ finFree R",
+      "comment": "The natural transformation `FintypeCat.toProfinite ⋙ profiniteSolid R ⟶ finFree R`\nwhich is part of the assertion that `profiniteSolid R` is the (pointwise) right\nKan extension of `finFree R` along `FintypeCat.toProfinite`. ",
+      "explanatories": {
+        "FintypeCat.toProfinite": "This definition specifies a functor that maps finite types to profinite spaces by assigning them the discrete topology.",
+        "Condensed.finFree": "This defines a functor that assigns to each finite type the free condensed module over that set with respect to a given ring, representing the free condensed abelian group on a finite set.",
+        "CategoryTheory.Functor.rightKanExtensionCounit": "This definition specifies a natural transformation that serves as the counit for a right Kan extension of a functor, relating the composition of the original functor and its right Kan extension back to the original functor itself."
+      },
+      "fullDefinition": "def profiniteSolidCounit : FintypeCat.toProfinite ⋙ profiniteSolid R ⟶ finFree R :=   Functor.rightKanExtensionCounit FintypeCat.toProfinite (finFree R)",
+      "description": "This defines a natural transformation demonstrating that the functor mapping finite types to profinite spaces followed by its corresponding condensed abelian group is a right Kan extension of the functor assigning free condensed modules over finite types."
+    },
+    "Condensed.profiniteFree": {
+      "type": "definition",
+      "code": "Condensed.profiniteFree.{u} (R : Type (u + 1)) [Ring R] : Profinite ⥤ CondensedMod R",
+      "comment": "The free condensed abelian group on a profinite space. ",
+      "explanatories": {
+        "profiniteToCondensed": "This defines a functor that represents the Yoneda presheaf as a condensed set specifically for profinite spaces.",
+        "Condensed.free": "This defines a functor that associates to any condensed set the free condensed module over that set with respect to a given ring, serving as the left adjoint to the forgetful functor."
+      },
+      "fullDefinition": "abbrev profiniteFree : Profinite.{u} ⥤ CondensedMod.{u} R :=   profiniteToCondensed ⋙ free R",
+      "description": "This defines a functor that associates each profinite space with its corresponding free condensed abelian group."
+    },
+    "Condensed.profiniteSolidification": {
+      "type": "definition",
+      "code": "Condensed.profiniteSolidification.{u} (R : Type (u + 1)) [Ring R] : profiniteFree R ⟶ profiniteSolid R",
+      "comment": "The natural transformation `R[S] ⟶ R[S]^\\solid`. ",
+      "explanatories": {
+        "Condensed.profiniteFree": "This defines a functor that associates each profinite space with its corresponding free condensed abelian group.",
+        "CategoryTheory.Functor.liftOfIsRightKanExtension": "This definition describes a mapping from one functor to another that is induced by a natural transformation, under the condition that the first functor is a right Kan extension along a specified functor."
+      },
+      "fullDefinition": "def profiniteSolidification : profiniteFree R ⟶ profiniteSolid.{u} R :=   (profiniteSolid R).liftOfIsRightKanExtension (profiniteSolidCounit R) _ (𝟙 _)",
+      "description": "This defines a natural transformation that maps the free condensed abelian group associated with a profinite space to its solidified counterpart."
+    }
+  },
+  "Explicit.lean": {
+    "Condensed.ofSheafStonean": {
+      "type": "definition",
+      "code": "Condensed.ofSheafStonean.{u, u_1, u_2} {A : Type u_1} [Category.{u_2, u_1} A]\n  [∀ (X : CompHausᵒᵖ), HasLimitsOfShape (StructuredArrow X Stonean.toCompHaus.op) A] (F : Stoneanᵒᵖ ⥤ A)\n  [PreservesFiniteProducts F] : Condensed A",
+      "comment": "The condensed object associated to a finite-product-preserving presheaf on `Stonean`. ",
+      "explanatories": {
+        "Condensed.StoneanCompHaus.equivalence": "This establishes an equivalence between coherent sheaves on Stonean spaces and coherent sheaves on compact Hausdorff spaces, represented as condensed sets.",
+        "CategoryTheory.Presheaf.isSheaf_iff_preservesFiniteProducts_of_projective": "This theorem establishes an equivalence between a presheaf being a sheaf with respect to a coherent topology and the condition that the presheaf preserves finite products, given that the underlying category is projective and satisfies certain regularity and extensive properties.",
+        "Condensed.ProfiniteCompHaus.equivalence": "This establishes an equivalence between coherent sheaves on profinite spaces and coherent sheaves on compact Hausdorff spaces, which are represented as condensed sets.",
+        "CategoryTheory.Sheaf.val": "This definition specifies the functor representing the underlying presheaf of a given sheaf with respect to a specified Grothendieck topology.",
+        "CategoryTheory.Sheaf.cond": "This theorem states that a sheaf associated with a Grothendieck topology is characterized by its underlying presheaf satisfying the sheaf condition for that topology."
+      },
+      "fullDefinition": "noncomputable def ofSheafStonean     [∀ X, HasLimitsOfShape (StructuredArrow X Stonean.toCompHaus.op) A]     (F : Stonean.{u}ᵒᵖ ⥤ A) [PreservesFiniteProducts F] :     Condensed A :=   StoneanCompHaus.equivalence A |>.functor.obj {     val := F     cond := by       rw [isSheaf_iff_preservesFiniteProducts_of_projective F]       exact ⟨⟨fun _ _ ↦ inferInstance⟩⟩ }",
+      "description": "This defines a condensed object that arises from a finite-product-preserving presheaf on the category of Stonean spaces."
+    },
+    "Condensed.ofSheafProfinite": {
+      "type": "definition",
+      "code": "Condensed.ofSheafProfinite.{u, u_1, u_2} {A : Type u_1} [Category.{u_2, u_1} A]\n  [∀ (X : CompHausᵒᵖ), HasLimitsOfShape (StructuredArrow X profiniteToCompHaus.op) A] (F : Profiniteᵒᵖ ⥤ A)\n  [PreservesFiniteProducts F] (hF : EqualizerCondition F) : Condensed A",
+      "comment": "The condensed object associated to a presheaf on `Profinite` which preserves finite products and\nsatisfies the equalizer condition.\n",
+      "explanatories": {
+        "Condensed.StoneanCompHaus.equivalence": "This establishes an equivalence between coherent sheaves on Stonean spaces and coherent sheaves on compact Hausdorff spaces, represented as condensed sets.",
+        "CategoryTheory.regularTopology.EqualizerCondition": "A contravariant functor is said to satisfy the Equalizer Condition if it maps kernel pairs of effective epimorphisms to equalizer diagrams.",
+        "Condensed.ProfiniteCompHaus.equivalence": "This establishes an equivalence between coherent sheaves on profinite spaces and coherent sheaves on compact Hausdorff spaces, which are represented as condensed sets.",
+        "CategoryTheory.Presheaf.isSheaf_iff_preservesFiniteProducts_and_equalizerCondition": "This theorem states that a presheaf is a sheaf with respect to a coherent topology if and only if it satisfies conditions related to preserving finite products and the equalizer condition under specific assumptions on the underlying category.",
+        "CategoryTheory.Sheaf.val": "This definition specifies the functor representing the underlying presheaf of a given sheaf with respect to a specified Grothendieck topology.",
+        "CategoryTheory.Sheaf.cond": "This theorem states that a sheaf associated with a Grothendieck topology is characterized by its underlying presheaf satisfying the sheaf condition for that topology."
+      },
+      "fullDefinition": "noncomputable def ofSheafProfinite     [∀ X, HasLimitsOfShape (StructuredArrow X profiniteToCompHaus.op) A]     (F : Profinite.{u}ᵒᵖ ⥤ A) [PreservesFiniteProducts F]     (hF : EqualizerCondition F) : Condensed A :=   ProfiniteCompHaus.equivalence A |>.functor.obj {     val := F     cond := by       rw [isSheaf_iff_preservesFiniteProducts_and_equalizerCondition F]       exact ⟨⟨⟨fun _ _ ↦ inferInstance⟩⟩, hF⟩ }",
+      "description": "This defines a condensed object that is derived from a presheaf on profinite spaces which preserves finite products and meets the equalizer condition."
+    },
+    "Condensed.ofSheafCompHaus": {
+      "type": "definition",
+      "code": "Condensed.ofSheafCompHaus.{u, u_1, u_2} {A : Type u_1} [Category.{u_2, u_1} A] (F : CompHausᵒᵖ ⥤ A)\n  [PreservesFiniteProducts F] (hF : EqualizerCondition F) : Condensed A",
+      "comment": "The condensed object associated to a presheaf on `CompHaus` which preserves finite products and\nsatisfies the equalizer condition.\n",
+      "explanatories": {
+        "CategoryTheory.regularTopology.EqualizerCondition": "A contravariant functor is said to satisfy the Equalizer Condition if it maps kernel pairs of effective epimorphisms to equalizer diagrams.",
+        "CategoryTheory.Presheaf.isSheaf_iff_preservesFiniteProducts_and_equalizerCondition": "This theorem states that a presheaf is a sheaf with respect to a coherent topology if and only if it satisfies conditions related to preserving finite products and the equalizer condition under specific assumptions on the underlying category.",
+        "CategoryTheory.Sheaf.val": "This definition specifies the functor representing the underlying presheaf of a given sheaf with respect to a specified Grothendieck topology.",
+        "CategoryTheory.Sheaf.cond": "This theorem states that a sheaf associated with a Grothendieck topology is characterized by its underlying presheaf satisfying the sheaf condition for that topology."
+      },
+      "fullDefinition": "noncomputable def ofSheafCompHaus     (F : CompHaus.{u}ᵒᵖ ⥤ A) [PreservesFiniteProducts F]     (hF : EqualizerCondition F) : Condensed A where   val := F   cond := by     rw [isSheaf_iff_preservesFiniteProducts_and_equalizerCondition F]     exact ⟨⟨⟨fun _ _ ↦ inferInstance⟩⟩, hF⟩",
+      "description": "This defines a condensed object that originates from a presheaf on compact Hausdorff spaces which preserves finite products and meets the equalizer condition."
+    }
+  },
+  "Epi.lean": {
+    "Condensed.epi_iff_locallySurjective_on_compHaus": {
+      "type": "theorem",
+      "code": "Condensed.epi_iff_locallySurjective_on_compHaus.{u, u', v'} (A : Type u') [Category.{v', u'} A] [ConcreteCategory A]\n  [HasFunctorialSurjectiveInjectiveFactorization A] [(coherentTopology CompHaus).WEqualsLocallyBijective A]\n  [HasSheafify (coherentTopology CompHaus) A] [(coherentTopology CompHaus).HasSheafCompose (CategoryTheory.forget A)]\n  [Balanced (Sheaf (coherentTopology CompHaus) A)] [PreservesFiniteProducts (CategoryTheory.forget A)]\n  {X Y : Condensed A} (f : X ⟶ Y) :\n  Epi f ↔\n    ∀ (S : CompHaus) (y : (CategoryTheory.forget A).obj (Y.val.obj (op S))),\n      ∃ S' φ, ∃ (_ : Function.Surjective ⇑φ), ∃ x, (f.val.app (op S')) x = (Y.val.map (op φ)) y",
+      "comment": null,
+      "explanatories": {
+        "CategoryTheory.ConcreteCategory.HasFunctorialSurjectiveInjectiveFactorization": "This definition describes the property that every morphism in a concrete category can be decomposed into a surjective map followed by an injective map in a functorial manner.",
+        "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe.",
+        "Opposite.op": "This theorem establishes the canonical mapping from an original type to its opposite category.",
+        "Function.Surjective": "This definition identifies a function as surjective if every element in the output set can be achieved by applying the function to at least one element from the input set."
+      },
+      "fullDefinition": null,
+      "description": "This theorem states that a morphism in a category of condensed objects is an epimorphism if and only if it is locally surjective on compact Hausdorff spaces."
+    },
+    "Condensed.epi_iff_surjective_on_stonean": {
+      "type": "theorem",
+      "code": "Condensed.epi_iff_surjective_on_stonean.{u, u', v'} (A : Type u') [Category.{v', u'} A] [ConcreteCategory A]\n  [HasFunctorialSurjectiveInjectiveFactorization A] [PreservesFiniteProducts (CategoryTheory.forget A)]\n  [∀ (X : CompHausᵒᵖ), HasLimitsOfShape (StructuredArrow X Stonean.toCompHaus.op) A] {X Y : Condensed A} (f : X ⟶ Y)\n  [(extensiveTopology Stonean).WEqualsLocallyBijective A] [HasSheafify (extensiveTopology Stonean) A]\n  [(extensiveTopology Stonean).HasSheafCompose (CategoryTheory.forget A)]\n  [Balanced (Sheaf (extensiveTopology Stonean) A)] :\n  Epi f ↔ ∀ (S : Stonean), Function.Surjective ⇑(f.val.app (op S.compHaus))",
+      "comment": null,
+      "explanatories": {
+        "CategoryTheory.ConcreteCategory.HasFunctorialSurjectiveInjectiveFactorization": "This definition describes the property that every morphism in a concrete category can be decomposed into a surjective map followed by an injective map in a functorial manner.",
+        "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe.",
+        "Opposite.op": "This theorem establishes the canonical mapping from an original type to its opposite category.",
+        "Function.Surjective": "This definition identifies a function as surjective if every element in the output set can be achieved by applying the function to at least one element from the input set."
+      },
+      "fullDefinition": null,
+      "description": "This theorem asserts that a morphism in a category of condensed objects is an epimorphism if and only if it is surjective when evaluated on all Stonean spaces."
+    }
+  },
+  "Light": {
+    "Basic.lean": {
+      "LightCondensed": {
+        "type": "definition",
+        "code": "LightCondensed.{u, v, w} (C : Type w) [Category.{v, w} C] : Type (max (max (max (u + 1) w) u) v)",
+        "comment": "`LightCondensed.{u} C` is the category of light condensed objects in a category `C`, which are\ndefined as sheaves on `LightProfinite.{u}` with respect to the coherent Grothendieck topology.\n",
+        "explanatories": {},
+        "fullDefinition": "def LightCondensed (C : Type w) [Category.{v} C] :=   Sheaf (coherentTopology LightProfinite.{u}) C",
+        "description": "This defines a category comprising light condensed objects that can be characterized as sheaves over a specific profinite category with a coherent topology."
+      }
+    },
+    "Discrete.lean": {
+      "LightCondensed.discrete": {
+        "type": "definition",
+        "code": "LightCondensed.discrete.{u, w} (C : Type w) [Category.{u, w} C] [HasSheafify (coherentTopology LightProfinite) C] :\n  C ⥤ LightCondensed C",
+        "comment": "The discrete condensed object associated to an object of `C` is the constant sheaf at that object.\n",
+        "explanatories": {
+          "CategoryTheory.constantSheaf": "This defines a functor that assigns to each object of a category a constant sheaf formed by the sheafification of the constant presheaf at that object within a given Grothendieck topology."
+        },
+        "fullDefinition": "noncomputable def LightCondensed.discrete : C ⥤ LightCondensed.{u} C := constantSheaf _ C",
+        "description": "This establishes a functor that associates each object in a category with its corresponding discrete condensed object viewed as a constant sheaf."
+      },
+      "LightCondensed.underlying": {
+        "type": "definition",
+        "code": "LightCondensed.underlying.{u, w} (C : Type w) [Category.{u, w} C] : LightCondensed C ⥤ C",
+        "comment": "The underlying object of a condensed object in `C` is the condensed object evaluated at a point.\nThis can be viewed as a sort of forgetful functor from `Condensed C` to `C`\n",
+        "explanatories": {
+          "Opposite.op": "This theorem establishes the canonical mapping from an original type to its opposite category.",
+          "LightProfinite.of": "This definition creates a light profinite space from any type that is equipped with the structures of a compact, Hausdorff, totally disconnected, and second countable topological space."
+        },
+        "fullDefinition": "noncomputable def LightCondensed.underlying : LightCondensed.{u} C ⥤ C :=   (sheafSections _ _).obj (op (LightProfinite.of PUnit))",
+        "description": "This defines a functor that extracts the underlying object from a condensed object by evaluating it at a specific point."
+      },
+      "LightCondSet.discrete": {
+        "type": "definition",
+        "code": "LightCondSet.discrete.{u} : Type u ⥤ LightCondensed (Type u)",
+        "comment": "A version of `LightCondensed.discrete` in the `LightCondSet` namespace ",
+        "explanatories": {
+          "LightCondensed.discrete": "This establishes a functor that associates each object in a category with its corresponding discrete condensed object viewed as a constant sheaf."
+        },
+        "fullDefinition": "noncomputable abbrev LightCondSet.discrete := LightCondensed.discrete (Type u)",
+        "description": "This defines a functor that provides a discrete condensed object for each type in the context of light condensed sets."
+      },
+      "LightCondSet.underlying": {
+        "type": "definition",
+        "code": "LightCondSet.underlying.{u} : LightCondensed (Type u) ⥤ Type u",
+        "comment": "A version of `LightCondensed.underlying` in the `LightCondSet` namespace ",
+        "explanatories": {
+          "LightCondensed.underlying": "This defines a functor that extracts the underlying object from a condensed object by evaluating it at a specific point."
+        },
+        "fullDefinition": "noncomputable abbrev LightCondSet.underlying := LightCondensed.underlying (Type u)",
+        "description": "This defines a functor that retrieves the underlying type from a condensed object within the framework of light condensed sets."
+      },
+      "LightCondensed.discreteUnderlyingAdj": {
+        "type": "definition",
+        "code": "LightCondensed.discreteUnderlyingAdj.{u, w} (C : Type w) [Category.{u, w} C]\n  [HasSheafify (coherentTopology LightProfinite) C] : LightCondensed.discrete C ⊣ LightCondensed.underlying C",
+        "comment": "Discreteness is left adjoint to the forgetful functor. When `C` is `Type*`, this is analogous to\n`TopCat.adj₁ : TopCat.discrete ⊣ forget TopCat`.  \n",
+        "explanatories": {
+          "LightCondensed.underlying": "This defines a functor that extracts the underlying object from a condensed object by evaluating it at a specific point.",
+          "LightProfinite.isTerminalPUnit": "This definition states that the one-element space is a terminal object in the category of light profinite spaces.",
+          "LightCondSet.discrete": "This defines a functor that provides a discrete condensed object for each type in the context of light condensed sets.",
+          "LightCondSet.underlying": "This defines a functor that retrieves the underlying type from a condensed object within the framework of light condensed sets."
+        },
+        "fullDefinition": "noncomputable def LightCondensed.discreteUnderlyingAdj : discrete C ⊣ underlying C :=   constantSheafAdj _ _ LightProfinite.isTerminalPUnit",
+        "description": "This establishes an adjunction between the functor that assigns a discrete condensed object to any category and the functor that retrieves the underlying object from a condensed object."
+      }
+    },
+    "Module.lean": {
+      "LightCondMod": {
+        "type": "definition",
+        "code": "LightCondMod.{u} (R : Type u) [Ring R] : Type (u + 1)",
+        "comment": "The category of condensed `R`-modules, defined as sheaves of `R`-modules over\n`CompHaus` with respect to the coherent Grothendieck topology.\n",
+        "explanatories": {},
+        "fullDefinition": "abbrev LightCondMod := LightCondensed.{u} (ModuleCat.{u} R)",
+        "description": "This defines the category of condensed modules over a ring, which are structured as sheaves of modules within a specific Grothendieck topology."
+      },
+      "LightCondensed.free": {
+        "type": "definition",
+        "code": "LightCondensed.free.{u} (R : Type u) [Ring R] : LightCondSet ⥤ LightCondMod R",
+        "comment": "The left adjoint to the forgetful functor. The *free condensed `R`-module* on a condensed set.\n",
+        "explanatories": {
+          "LightCondMod": "This defines the category of condensed modules over a ring, which are structured as sheaves of modules within a specific Grothendieck topology.",
+          "CategoryTheory.Sheaf.composeAndSheafify": "This definition introduces a functor that transforms a sheaf in one category into a sheaf in another category by composing it with a functor and sheafifying the result.",
+          "ModuleCat.free": "This definition represents a functor that constructs free modules over a ring from types by associating each type element with a generator of the module."
+        },
+        "fullDefinition": "def LightCondensed.free : LightCondSet ⥤ LightCondMod R :=   Sheaf.composeAndSheafify _ (ModuleCat.free R)",
+        "description": "This defines the free condensed module over a condensed set, serving as the left adjoint to the forgetful functor."
+      },
+      "LightCondensed.forget": {
+        "type": "definition",
+        "code": "LightCondensed.forget.{u} (R : Type u) [Ring R] : LightCondMod R ⥤ LightCondSet",
+        "comment": "The forgetful functor from condensed `R`-modules to condensed sets. ",
+        "explanatories": {
+          "LightCondMod": "This defines the category of condensed modules over a ring, which are structured as sheaves of modules within a specific Grothendieck topology.",
+          "CategoryTheory.sheafCompose": "The definition establishes a functor that connects the categories of sheaves for two different types based on a functor that supports composition for a given Grothendieck topology.",
+          "CategoryTheory.forget": "This definition describes a forgetful functor that maps objects from a concrete category to their underlying types in a specific universe."
+        },
+        "fullDefinition": "def LightCondensed.forget : LightCondMod R ⥤ LightCondSet :=   sheafCompose _ (CategoryTheory.forget _)",
+        "description": "This defines the forgetful functor that maps condensed modules over a ring to condensed sets."
+      },
+      "LightCondAb": {
+        "type": "definition",
+        "code": "LightCondAb : Type 1",
+        "comment": "The category of condensed abelian groups, defined as sheaves of abelian groups over\n`CompHaus` with respect to the coherent Grothendieck topology.\n",
+        "explanatories": {
+          "LightCondMod": "This defines the category of condensed modules over a ring, which are structured as sheaves of modules within a specific Grothendieck topology."
+        },
+        "fullDefinition": "abbrev LightCondAb := LightCondMod ℤ",
+        "description": "This defines the category of condensed abelian groups, which are structured as sheaves of abelian groups within a specific Grothendieck topology."
+      }
+    },
+    "Functors.lean": {
+      "lightProfiniteToLightCondSet": {
+        "type": "definition",
+        "code": "lightProfiniteToLightCondSet.{u} : LightProfinite ⥤ LightCondSet",
+        "comment": "The functor from `LightProfinite.{u}` to `LightCondSet.{u}` given by the Yoneda sheaf. ",
+        "explanatories": {
+          "CategoryTheory.Sheaf.Subcanonical.yoneda": "This definition provides a Yoneda functor that maps a category into the sheaf category under a subcanonical Grothendieck topology."
+        },
+        "fullDefinition": "def lightProfiniteToLightCondSet : LightProfinite.{u} ⥤ LightCondSet.{u} :=   (coherentTopology.subcanonical LightProfinite).yoneda",
+        "description": "This defines a functor that maps from the category of light profinite spaces to the category of light condensed sets, utilizing the Yoneda sheaf construction."
+      }
+    },
+    "Explicit.lean": {
+      "LightCondensed.ofSheafLightProfinite": {
+        "type": "definition",
+        "code": "LightCondensed.ofSheafLightProfinite.{u, u_1, u_2} {A : Type u_1} [Category.{u_2, u_1} A] (F : LightProfiniteᵒᵖ ⥤ A)\n  [PreservesFiniteProducts F] (hF : EqualizerCondition F) : LightCondensed A",
+        "comment": "The light condensed object associated to a presheaf on `LightProfinite` which preserves finite\nproducts and satisfies the equalizer condition.\n",
+        "explanatories": {
+          "CategoryTheory.regularTopology.EqualizerCondition": "A contravariant functor is said to satisfy the Equalizer Condition if it maps kernel pairs of effective epimorphisms to equalizer diagrams.",
+          "CategoryTheory.Presheaf.isSheaf_iff_preservesFiniteProducts_and_equalizerCondition": "This theorem states that a presheaf is a sheaf with respect to a coherent topology if and only if it satisfies conditions related to preserving finite products and the equalizer condition under specific assumptions on the underlying category.",
+          "CategoryTheory.Sheaf.val": "This definition specifies the functor representing the underlying presheaf of a given sheaf with respect to a specified Grothendieck topology.",
+          "CategoryTheory.Sheaf.cond": "This theorem states that a sheaf associated with a Grothendieck topology is characterized by its underlying presheaf satisfying the sheaf condition for that topology."
+        },
+        "fullDefinition": "noncomputable def ofSheafLightProfinite (F : LightProfinite.{u}ᵒᵖ ⥤ A) [PreservesFiniteProducts F]     (hF : EqualizerCondition F) : LightCondensed A where   val := F   cond := by     rw [isSheaf_iff_preservesFiniteProducts_and_equalizerCondition F]     exact ⟨⟨⟨fun _ _ ↦ inferInstance⟩⟩, hF⟩",
+        "description": "This defines a light condensed object derived from a presheaf on a specific category, given that it preserves finite products and meets the equalizer condition."
+      },
+      "LightCondMod.ofSheafLightProfinite": {
+        "type": "definition",
+        "code": "LightCondMod.ofSheafLightProfinite.{u} (R : Type u) [Ring R] (F : LightProfiniteᵒᵖ ⥤ ModuleCat R)\n  [PreservesFiniteProducts F] (hF : EqualizerCondition F) : LightCondMod R",
+        "comment": "A `LightCondAb` version of `LightCondensed.ofSheafLightProfinite`. ",
+        "explanatories": {
+          "CategoryTheory.regularTopology.EqualizerCondition": "A contravariant functor is said to satisfy the Equalizer Condition if it maps kernel pairs of effective epimorphisms to equalizer diagrams.",
+          "LightCondensed.ofSheafLightProfinite": "This defines a light condensed object derived from a presheaf on a specific category, given that it preserves finite products and meets the equalizer condition."
+        },
+        "fullDefinition": "noncomputable abbrev ofSheafLightProfinite (F : LightProfinite.{u}ᵒᵖ ⥤ ModuleCat.{u} R)     [PreservesFiniteProducts F] (hF : EqualizerCondition F) : LightCondMod.{u} R :=   LightCondensed.ofSheafLightProfinite F hF",
+        "description": "This defines a light condensed module associated with a presheaf on a category, contingent upon preserving finite products and satisfying the equalizer condition."
+      }
+    },
+    "TopComparison.lean": {
+      "TopCat.toLightCondSet": {
+        "type": "definition",
+        "code": "TopCat.toLightCondSet.{u} (X : TopCat) : LightCondSet",
+        "comment": "Associate to a `u`-small topological space the corresponding light condensed set, given by\n`yonedaPresheaf`.\n",
+        "explanatories": {
+          "equalizerCondition_yonedaPresheaf": "This theorem demonstrates that under certain conditions on a category and its morphisms, the Yoneda presheaf satisfies the equalizer condition necessary to qualify as a sheaf for the regular topology.",
+          "LightProfinite.effectiveEpi_iff_surjective": "An effective epimorphism in light profinite spaces is equivalent to being a surjective function.",
+          "QuotientMap.of_surjective_continuous": "This theorem states that a continuous surjective map from a compact space to a Hausdorff space qualifies as a quotient map.",
+          "ContinuousMap.continuous": "This theorem states that a continuous map between two topological spaces induces a continuous function when viewed as a function."
+        },
+        "fullDefinition": "noncomputable def TopCat.toLightCondSet (X : TopCat.{u}) : LightCondSet.{u} :=   @LightCondSet.ofSheafLightProfinite (yonedaPresheaf LightProfinite.toTopCat.{u} X) _ (by     apply equalizerCondition_yonedaPresheaf LightProfinite.toTopCat.{u} X     intro Z B π he     rw [LightProfinite.effectiveEpi_iff_surjective] at he     apply QuotientMap.of_surjective_continuous he π.continuous)",
+        "description": "This defines a mapping that associates a small topological space with its corresponding light condensed set via a specific construction."
+      }
+    }
+  },
+  "TopComparison.lean": {
+    "factorsThrough_of_pullbackCondition": {
+      "type": "theorem",
+      "code": "factorsThrough_of_pullbackCondition.{w, w', v, u} {C : Type u} [Category.{v, u} C] (G : C ⥤ TopCat) (X : Type w')\n  [TopologicalSpace X] {Z B : C} {π : Z ⟶ B} [HasPullback π π] [PreservesLimit (cospan π π) G] {a : C(↑(G.obj Z), X)}\n  (ha : ⇑a ∘ ⇑(G.map (pullback.fst π π)) = ⇑a ∘ ⇑(G.map (pullback.snd π π))) : Function.FactorsThrough ⇑a ⇑(G.map π)",
+      "comment": "An auxiliary lemma to that allows us to use `QuotientMap.lift` in the proof of\n`equalizerCondition_yonedaPresheaf`.\n",
+      "explanatories": {
+        "CategoryTheory.Limits.HasPullback": "This definition specifies the property of a category having a pullback for a given pair of morphisms from two objects to a common object.",
+        "CategoryTheory.Limits.pullback.fst": "This definition describes the first projection map from the pullback object associated with a pair of morphisms to the first object of one of the morphisms.",
+        "CategoryTheory.Limits.pullback.snd": "This definition specifies the morphism from the pullback object to one of its original objects, representing the second projection of the pullback for a given pair of morphisms.",
+        "Function.FactorsThrough": "This defines a concept where one function can be said to factor through another if equal outputs of the second function imply equal outputs of the first function."
+      },
+      "fullDefinition": null,
+      "description": "This lemma establishes a condition under which a morphism factors through another morphism in the context of a pullback in a category, given certain assumptions about the morphisms involved and their properties."
+    },
+    "equalizerCondition_yonedaPresheaf": {
+      "type": "theorem",
+      "code": "equalizerCondition_yonedaPresheaf.{w, w', v, u} {C : Type u} [Category.{v, u} C] (G : C ⥤ TopCat) (X : Type w')\n  [TopologicalSpace X] [(Z B : C) → (π : Z ⟶ B) → [inst : EffectiveEpi π] → PreservesLimit (cospan π π) G]\n  (hq : ∀ (Z B : C) (π : Z ⟶ B) [inst : EffectiveEpi π], QuotientMap ⇑(G.map π)) :\n  EqualizerCondition (yonedaPresheaf G X)",
+      "comment": "If `G` preserves the relevant pullbacks and every effective epi in `C` is a quotient map (which is\nthe case when `C` is `CompHaus` or `Profinite`), then `yonedaPresheaf` satisfies the equalizer\ncondition which is required to be a sheaf for the regular topology.\n",
+      "explanatories": {
+        "QuotientMap": "A function between topological spaces is defined as a quotient map if it is surjective and the openness of sets is preserved through its preimages.",
+        "CategoryTheory.regularTopology.EqualizerCondition": "A contravariant functor is said to satisfy the Equalizer Condition if it maps kernel pairs of effective epimorphisms to equalizer diagrams."
+      },
+      "fullDefinition": null,
+      "description": "This theorem demonstrates that under certain conditions on a category and its morphisms, the Yoneda presheaf satisfies the equalizer condition necessary to qualify as a sheaf for the regular topology."
+    },
+    "TopCat.toCondensedSet": {
+      "type": "definition",
+      "code": "TopCat.toCondensedSet.{u} (X : TopCat) : CondensedSet",
+      "comment": "Associate to a `(u+1)`-small topological space the corresponding condensed set, given by\n`yonedaPresheaf`.\n",
+      "explanatories": {
+        "And.intro": "This states that if two propositions are true, then their conjunction is also true.",
+        "Exists.intro": "If there is an element that satisfies a property, then it can be used to demonstrate the existence of at least one such element with that property.",
+        "Bool.true": "The statement identifies the boolean value representing true, which is distinct from the logical proposition denoting truth.",
+        "equalizerCondition_yonedaPresheaf": "This theorem demonstrates that under certain conditions on a category and its morphisms, the Yoneda presheaf satisfies the equalizer condition necessary to qualify as a sheaf for the regular topology.",
+        "CompHaus.effectiveEpi_tfae": "In the category of compact Hausdorff spaces, having a morphism that is an effective epimorphism, an epimorphism, and a surjective function are equivalent properties.",
+        "QuotientMap.of_surjective_continuous": "This theorem states that a continuous surjective map from a compact space to a Hausdorff space qualifies as a quotient map.",
+        "ContinuousMap.continuous": "This theorem states that a continuous map between two topological spaces induces a continuous function when viewed as a function."
+      },
+      "fullDefinition": "noncomputable def TopCat.toCondensedSet (X : TopCat.{u+1}) : CondensedSet.{u} :=   @CondensedSet.ofSheafCompHaus (yonedaPresheaf.{u, u+1, u, u+1} compHausToTop.{u} X) _ (by     apply (config := { allowSynthFailures := true }) equalizerCondition_yonedaPresheaf       compHausToTop.{u} X     intro Z B π he     rw [((CompHaus.effectiveEpi_tfae π).out 0 2 :)] at he     apply QuotientMap.of_surjective_continuous he π.continuous )",
+      "description": "This definition establishes a method for associating a compact condensed set to a small topological space through the Yoneda presheaf construction."
+    }
+  }
+}

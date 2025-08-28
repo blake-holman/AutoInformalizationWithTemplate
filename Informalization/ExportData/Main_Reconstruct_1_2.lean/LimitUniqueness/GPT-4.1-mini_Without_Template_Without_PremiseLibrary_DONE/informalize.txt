@@ -1,0 +1,91 @@
+[appliedTactic]
+have : ∀ ε > 0, |a - b| < ε := by
+      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、
+      intro ε εpos
+      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2
+      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)
+      let ⟨n₁,n₁h⟩ := n₁eps
+      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。
+      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)
+      let ⟨n₂,n₂h⟩ := n₂eps
+      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、
+      let n := max n₁ n₂
+      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]
+      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.
+      calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+[answer]
+Assuming an arbitrary positive number, demonstrate that the distance between \( a \) and \( b \) is less than this number by using the fact that the sequence converges to both \( a \) and \( b \). Specifically, identify indices beyond which the terms of the sequence are each within half of this positive number from \( a \) and \( b \), respectively. Then, by choosing an index greater than or equal to the maximum of these two indices, show that the distance between \( a \) and \( b \) is bounded above by the sum of these two halves, which equals the original positive number. This establishes that the distance between \( a \) and \( b \) is less than any positive number, thereby introducing the assumption that for every positive number, the distance between \( a \) and \( b \) is smaller than it.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume an arbitrary positive real number \( \varepsilon \). We will now show that the distance between \( a \) and \( b \) is less than \( \varepsilon \).
+[appliedTactic]
+have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) 
+[answer]
+Establish that there exists a natural number \( n_0 \) such that for all \( n \) greater than or equal to \( n_0 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \). This follows from the fact that the sequence \( x \) converges to \( a \), and since \( \varepsilon \) is positive, half of \( \varepsilon \) is also positive, allowing the application of the convergence property at \( \varepsilon / 2 \).
+[appliedTactic]
+exact half_pos  εpos 
+[answer]
+The proof is completed by using the fact that since ε is positive, half of ε is also positive.
+[appliedTactic]
+let ⟨n₁,n₁h⟩ :=  n₁eps 
+[answer]
+From the existence of a natural number \( n_1 \) such that for all \( n \) greater than or equal to \( n_1 \), the distance between \( x(n) \) and \( a \) is less than half of \( \varepsilon \), introduce this specific \( n_1 \) and the corresponding property into the proof.
+[appliedTactic]
+have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) 
+[answer]
+Establish that there exists a natural number beyond which all terms of the sequence are within half of ε from \( b \). This follows from the fact that the sequence converges to \( b \) and that half of ε is positive, ensuring such an index exists where the sequence terms are close enough to \( b \).
+[appliedTactic]
+exact half_pos  εpos 
+[answer]
+The proof is completed by applying the fact that half of a positive number is also positive, using the assumption that \( \varepsilon \) is greater than zero.
+[appliedTactic]
+let ⟨n₂,n₂h⟩ :=  n₂eps 
+[answer]
+From the assumption that there exists a natural number beyond which the values of the sequence are within half of ε from \(b\), let \(n_2\) be such a number and \(n_2h\) be the statement that for all indices greater than or equal to \(n_2\), the sequence values differ from \(b\) by less than half of ε.
+[appliedTactic]
+let n := max n₁  n₂ 
+[answer]
+Define \( n \) as the maximum of the two natural numbers \( n_1 \) and \( n_2 \).
+[appliedTactic]
+have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] 
+[answer]
+Establish that the chosen natural number \( n \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \) by rewriting the inequality in terms of the corresponding less-than-or-equal relation.
+[appliedTactic]
+rw [ge_iff_le ] 
+[answer]
+The proof rewrites the inequality involving "greater than or equal to" into an equivalent statement using "less than or equal to," thereby simplifying the goal and allowing it to be resolved immediately.
+[appliedTactic]
+calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+[answer]
+By rewriting the difference between \( a \) and \( b \) as the sum of the differences \( (a - x_n) \) and \( (x_n - b) \), it follows that the absolute value of \( a - b \) is at most the sum of the absolute values of these two differences. Using the given bounds on these terms for indices greater than or equal to \( n \), this sum is shown to be less than \( \varepsilon/2 + \varepsilon/2 \), which equals \( \varepsilon \). Thus, it is established that the distance between \( a \) and \( b \) is less than \( \varepsilon \).
+[appliedTactic]
+rw [add_sub,sub_add_cancel ] 
+[answer]
+The expression involving the difference between \( a \) and \( b \) was rewritten by decomposing it into the sum of two parts: the difference between \( a \) and the value of the sequence at \( n \), and the difference between the sequence value at \( n \) and \( b \). This was achieved by applying the properties that allow rearranging sums and differences so that the original difference is expressed as the sum of these two differences, facilitating further analysis.
+[appliedTactic]
+rw [abs_sub_comm ] 
+[answer]
+The expression involving the absolute value of the difference between \( a \) and \( x_n \) was rewritten by swapping the order of the terms inside the absolute value, changing it from the absolute value of \( x_n - a \) to the absolute value of \( a - x_n \). This adjustment uses the property that the absolute value of a difference remains the same when the terms are reversed, thereby modifying the goal to involve \( |a - x_n| \) instead of \( |x_n - a| \).
+[appliedTactic]
+exact abs_add (a - x n) (x n - b ) 
+[answer]
+The proof is completed by applying the inequality that the absolute value of a sum is at most the sum of the absolute values, specifically to the expressions \(a - x_n\) and \(x_n - b\).
+[appliedTactic]
+exact eq_of_sub_eq_zero (abs_eps_zero (a - b) this ) 
+[answer]
+The proof is completed by showing that the difference between \(a\) and \(b\) is zero, which follows from the fact that for every positive number, the absolute value of their difference is smaller than that number, thereby establishing that \(a\) equals \(b\).

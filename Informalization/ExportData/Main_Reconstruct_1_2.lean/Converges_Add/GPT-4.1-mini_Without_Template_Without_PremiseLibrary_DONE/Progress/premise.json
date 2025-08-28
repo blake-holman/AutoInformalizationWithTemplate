@@ -1,0 +1,72 @@
+{
+  "let ⟨a, convxa⟩ :=  conx ": [],
+  "let ⟨b, convyb⟩ :=  cony ": [],
+  "have : ConvergesTo (x + y) (a + b) := by\n      -- ⭐️ このとき任意の ε > 0に対して\n      intro ε εpos\n      -- ⭐️ n₁, n₂ ∈ ℕ があって、\n      -- ⭐️ n ≥ n₁ → |x_n - a| < ε / 2\n      -- ⭐️ n ≥ n₂ → |y_n - b| < ε / 2 となる。\n      let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos)\n      let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos)\n      -- ⭐️ n₁, n₂の大きいほうをn₀とすれば、\n      let n₀ := max n₁ n₂\n      -- ⭐️ n ≥ n₀ のとき\n      have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by\n        intro n ngen₀\n        calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves ε\n      -- ⭐️となり、\n      exact ⟨n₀, this ⟩ ": [
+    "add_lt_add.{u_1} {α : Type u_1} [Add α] [Preorder α] [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b c d : α} (h₁ : a < b)\n  (h₂ : c < d) : a + c < b + d",
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2",
+    "le_of_max_le_right.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : b ≤ c",
+    "le_trans.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b ≤ c → a ≤ c",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "le_refl.{u} {α : Type u} [Preorder α] (a : α) : a ≤ a",
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+    "add_sub_add_comm.{u_1} {α : Type u_1} [SubtractionCommMonoid α] (a b c d : α) : a + b - (c + d) = a - c + (b - d)",
+    "le_of_max_le_left.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : a ≤ c",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Nat.le_refl (n : ℕ) : n ≤ n",
+    "add_halves.{u_2} {α : Type u_2} [LinearOrderedSemifield α] (a : α) : a / 2 + a / 2 = a",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop",
+    "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+  ],
+  "intro ε  εpos ": [],
+  "let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos ) ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "apply half_pos  εpos ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos ) ": [
+    "half_pos.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a : α} (h : 0 < a) : 0 < a / 2"
+  ],
+  "let n₀ := max n₁  n₂ ": [
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α"
+  ],
+  "have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by\n        intro n ngen₀\n        calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves  ε ": [
+    "add_lt_add.{u_1} {α : Type u_1} [Add α] [Preorder α] [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b c d : α} (h₁ : a < b)\n  (h₂ : c < d) : a + c < b + d",
+    "le_of_max_le_right.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : b ≤ c",
+    "le_trans.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b ≤ c → a ≤ c",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "le_refl.{u} {α : Type u} [Preorder α] (a : α) : a ≤ a",
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+    "add_sub_add_comm.{u_1} {α : Type u_1} [SubtractionCommMonoid α] (a b c d : α) : a + b - (c + d) = a - c + (b - d)",
+    "le_of_max_le_left.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : a ≤ c",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Nat.le_refl (n : ℕ) : n ≤ n",
+    "add_halves.{u_2} {α : Type u_2} [LinearOrderedSemifield α] (a : α) : a / 2 + a / 2 = a",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+  ],
+  "intro n  ngen₀ ": [],
+  "calc\n          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by\n            rw [add_sub_add_comm]\n            apply abs_add\n          _ < ε / 2 + ε / 2 := by\n            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)\n            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))\n          _ = ε := add_halves  ε ": [],
+  "rw [add_sub_add_comm ] ": [
+    "add_sub_add_comm.{u_1} {α : Type u_1} [SubtractionCommMonoid α] (a b c d : α) : a + b - (c + d) = a - c + (b - d)"
+  ],
+  "apply  abs_add ": [
+    "abs_add.{u_1} {α : Type u_1} [LinearOrderedAddCommGroup α] (a b : α) : |a + b| ≤ |a| + |b|"
+  ],
+  "have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) ": [
+    "Max.max.{u} {α : Type u} [self : Max α] : α → α → α",
+    "le_refl.{u} {α : Type u} [Preorder α] (a : α) : a ≤ a",
+    "Nat.le_refl (n : ℕ) : n ≤ n"
+  ],
+  "apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀) ) ": [
+    "add_lt_add.{u_1} {α : Type u_1} [Add α] [Preorder α] [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x < x_1] {a b c d : α} (h₁ : a < b)\n  (h₂ : c < d) : a + c < b + d",
+    "le_trans.{u} {α : Type u} [Preorder α] {a b c : α} : a ≤ b → b ≤ c → a ≤ c",
+    "le_of_max_le_right.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : b ≤ c",
+    "le_of_max_le_left.{u} {α : Type u} [LinearOrder α] {a b c : α} (h : max a b ≤ c) : a ≤ c"
+  ],
+  "exact ⟨n₀, this ⟩ ": [],
+  "exact Limit_add x y conx  cony ": [
+    "Limit_add (x y : ℕ → ℝ) (conx : IsConverges x) (cony : IsConverges y) : Lim.sLim (x + y) = Lim.sLim x + Lim.sLim y"
+  ]
+}

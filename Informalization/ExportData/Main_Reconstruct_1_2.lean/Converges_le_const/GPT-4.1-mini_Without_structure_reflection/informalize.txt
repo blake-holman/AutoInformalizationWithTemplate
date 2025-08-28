@@ -1,0 +1,42 @@
+[appliedTactic]
+intro  xnlea 
+[answer]
+Assume that for every natural number \( n \), the value \( x(n) \) is less than or equal to \( a \). From now on, we will show that the limit of the sequence \( x \) is less than or equal to \( a \).
+[appliedTactic]
+let y :ℕ → ℝ := (fun _ => a ) 
+[answer]
+Let \( y \) be the constant function from natural numbers to real numbers that takes the value \( a \) for every input.
+[appliedTactic]
+have xnleyn : ∀n, x n ≤ y n := by
+      intro n
+      exact xnlea  n 
+[answer]
+Show that for every natural number \( n \), the value of the sequence \( x \) at \( n \) is less than or equal to the value of the sequence \( y \) at \( n \).
+[appliedTactic]
+intro  n 
+[answer]
+Assume that \( n \) is a natural number. From now on, we will show that the value of \( x \) at \( n \) is less than or equal to the value of \( y \) at \( n \).
+[appliedTactic]
+exact xnlea  n 
+[answer]
+The proof is completed from the assumption that for every natural number \( n \), the value of \( x(n) \) is less than or equal to \( a \).
+[appliedTactic]
+have convya : ConvergesTo y a := Converges_Const y a (fun n => rfl ) 
+[answer]
+Show that the constant sequence defined by \( y \), which takes the value \( a \) at every term, converges to \( a \). This can be proved by noting that a constant sequence always converges to the constant value it takes, since each term is equal to \( a \).
+[appliedTactic]
+have convy : IsConverges y := ⟨a, convya ⟩ 
+[answer]
+Show that the constant sequence \( y \), defined by \( y(n) = a \) for all \( n \), is convergent. This can be proved by noting that the sequence \( y \) converges to \( a \) by definition, since every term of \( y \) equals \( a \).
+[appliedTactic]
+have := Converges_Le x y convx convy  xnleyn 
+[answer]
+Show that the limit of the sequence \( x \) is less than or equal to the limit of the sequence \( y \). This can be proved by using the fact that both sequences converge and that each term of \( x \) is less than or equal to the corresponding term of \( y \), which implies the limit of \( x \) is less than or equal to the limit of \( y \).
+[appliedTactic]
+rw [← (Converges_sLim_iff y convy a).1 convya ] 
+[answer]
+By using the assumption that the sequence \( y \) converges to \( a \) and the fact that a sequence converges to a limit if and only if that limit equals its defined limit, the goal of proving that the limit of \( x \) is less than or equal to \( a \) becomes the goal of proving that the limit of \( x \) is less than or equal to the limit of \( y \).
+[appliedTactic]
+exact  this 
+[answer]
+The proof is completed from the assumptions that the sequence \(x\) converges, that each term of \(x\) is less than or equal to the corresponding term of the constant sequence \(y\) defined by \(a\), and that the limit of \(y\) is \(a\).

@@ -1,0 +1,260 @@
+{
+  "Extra.lean": {
+    "Lean.Parser.ppSpace": {
+      "type": "definition",
+      "code": "Lean.Parser.ppSpace : Parser.Parser",
+      "comment": "No-op parser that advises the pretty printer to emit a space/soft line break. ",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def ppSpace : Parser := skip /-- No-op parser that advises the pretty printer to emit a hard line break. -/ @[inline] def ppLine : Parser := skip /-- No-op parser combinator that advises the pretty printer to emit a `Format.fill` node. -/ @[inline] def ppRealFill : Parser → Parser := id /-- No-op parser combinator that advises the pretty printer to emit a `Format.group` node. -/ @[inline] def ppRealGroup : Parser → Parser := id /-- No-op parser combinator that advises the pretty printer to indent the given syntax without grouping it. -/ @[inline] def ppIndent : Parser → Parser := id /--   No-op parser combinator that advises the pretty printer to group and indent the given syntax.   By default, only syntax categories are grouped. -/ @[inline] def ppGroup (p : Parser) : Parser := ppRealFill (ppIndent p) /--   No-op parser combinator that advises the pretty printer to dedent the given syntax.   Dedenting can in particular be used to counteract automatic indentation. -/ @[inline] def ppDedent : Parser → Parser := id",
+      "description": "A parser that signals the pretty printer to insert a space or a soft line break during formatting."
+    },
+    "Lean.Parser.ppRealGroup": {
+      "type": "definition",
+      "code": "Lean.Parser.ppRealGroup : Parser → Parser",
+      "comment": "No-op parser combinator that advises the pretty printer to emit a `Format.group` node. ",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def ppRealGroup : Parser → Parser := id /-- No-op parser combinator that advises the pretty printer to indent the given syntax without grouping it. -/ @[inline] def ppIndent : Parser → Parser := id /--   No-op parser combinator that advises the pretty printer to group and indent the given syntax.   By default, only syntax categories are grouped. -/ @[inline] def ppGroup (p : Parser) : Parser := ppRealFill (ppIndent p) /--   No-op parser combinator that advises the pretty printer to dedent the given syntax.   Dedenting can in particular be used to counteract automatic indentation. -/ @[inline] def ppDedent : Parser → Parser := id",
+      "description": "A parser combinator that informs the pretty printer to generate a grouped format node during output."
+    },
+    "Lean.Parser.many1Indent": {
+      "type": "definition",
+      "code": "Lean.Parser.many1Indent (p : Parser) : Parser",
+      "comment": "The parser `many1Indent(p)` is equivalent to `withPosition((colGe p)+)`. This has the effect of\nparsing one or more occurrences of `p`, where each subsequent `p` parse needs to be indented\nthe same or more than the first parse.\n\nThis parser has arity 1, and returns a list of the results from `p`.\n`p` is \"auto-grouped\" if it is not arity 1. ",
+      "explanatories": {},
+      "fullDefinition": "@[run_builtin_parser_attribute_hooks, inline] def many1Indent (p : Parser) : Parser :=   withPosition $ many1 (checkColGe \"irrelevant\" >> p)",
+      "description": "A parser that matches one or more occurrences of another parser while requiring each occurrence to be at the same or greater indentation level than the first."
+    },
+    "Lean.Parser.ppGroup": {
+      "type": "definition",
+      "code": "Lean.Parser.ppGroup (p : Parser) : Parser",
+      "comment": "No-op parser combinator that advises the pretty printer to group and indent the given syntax.\nBy default, only syntax categories are grouped. ",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def ppGroup (p : Parser) : Parser := ppRealFill (ppIndent p) /--   No-op parser combinator that advises the pretty printer to dedent the given syntax.   Dedenting can in particular be used to counteract automatic indentation. -/ @[inline] def ppDedent : Parser → Parser := id",
+      "description": "A parser combinator that instructs the pretty printer to group and indent the specified syntax during formatting."
+    },
+    "Lean.Parser.ppAllowUngrouped": {
+      "type": "definition",
+      "code": "Lean.Parser.ppAllowUngrouped : Parser",
+      "comment": "No-op parser combinator that allows the pretty printer to omit the group and\nindent operation in the enclosing category parser.\n```\nsyntax ppAllowUngrouped \"by \" tacticSeq : term\n-- allows a `by` after `:=` without linebreak in between:\ntheorem foo : True := by\n  trivial\n```\n",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def ppAllowUngrouped : Parser := skip",
+      "description": "A parser combinator that permits the pretty printer to skip grouping and indentation for the containing category parser."
+    },
+    "Lean.Parser.ppLine": {
+      "type": "definition",
+      "code": "Lean.Parser.ppLine : Parser.Parser",
+      "comment": "No-op parser that advises the pretty printer to emit a hard line break. ",
+      "explanatories": {},
+      "fullDefinition": "@[inline] def ppLine : Parser := skip /-- No-op parser combinator that advises the pretty printer to emit a `Format.fill` node. -/ @[inline] def ppRealFill : Parser → Parser := id /-- No-op parser combinator that advises the pretty printer to emit a `Format.group` node. -/ @[inline] def ppRealGroup : Parser → Parser := id /-- No-op parser combinator that advises the pretty printer to indent the given syntax without grouping it. -/ @[inline] def ppIndent : Parser → Parser := id /--   No-op parser combinator that advises the pretty printer to group and indent the given syntax.   By default, only syntax categories are grouped. -/ @[inline] def ppGroup (p : Parser) : Parser := ppRealFill (ppIndent p) /--   No-op parser combinator that advises the pretty printer to dedent the given syntax.   Dedenting can in particular be used to counteract automatic indentation. -/ @[inline] def ppDedent : Parser → Parser := id",
+      "description": "A parser that instructs the pretty printer to produce a hard line break in the output."
+    },
+    "Lean.Parser.many1": {
+      "type": "definition",
+      "code": "Lean.Parser.many1 (p : Parser) : Parser",
+      "comment": "The parser `many1(p)`, or `p+`, repeats `p` until it fails, and returns the list of results.\n`p` must succeed at least once, or this parser will fail.\n\nNote that this parser produces the same parse tree as the `many(p)` / `p*` combinator,\nand one matches both `p*` and `p+` using `$[ .. ]*` syntax in a syntax match.\n(There is no `$[ .. ]+` syntax.)\n\nThe argument `p` is \"auto-grouped\", meaning that if the arity is greater than 1 it will be\nautomatically replaced by `group(p)` to ensure that it produces exactly 1 value.\n\nThis parser has arity 1: it produces a `nullKind` node containing one argument for each\ninvocation of `p` (or `group(p)`). ",
+      "explanatories": {},
+      "fullDefinition": "@[run_builtin_parser_attribute_hooks] def many1 (p : Parser) : Parser :=   many1NoAntiquot (withAntiquotSpliceAndSuffix `many p (symbol \"*\"))",
+      "description": "A parser that repeatedly applies another parser at least once, returning a list of results until the parser fails."
+    }
+  },
+  "Basic.lean": {
+    "Lean.Parser.withPosition": {
+      "type": "definition",
+      "code": "Lean.Parser.withPosition : Parser → Parser",
+      "comment": "`withPosition(p)` runs `p` while setting the \"saved position\" to the current position.\nThis has no effect on its own, but various other parsers access this position to achieve some\ncomposite effect:\n\n* `colGt`, `colGe`, `colEq` compare the column of the saved position to the current position,\n  used to implement Python-style indentation sensitive blocks\n* `lineEq` ensures that the current position is still on the same line as the saved position,\n  used to implement composite tokens\n\nThe saved position is only available in the read-only state, which is why this is a scoping parser:\nafter the `withPosition(..)` block the saved position will be restored to its original value.\n\nThis parser has the same arity as `p` - it just forwards the results of `p`. ",
+      "explanatories": {},
+      "fullDefinition": "def withPosition : Parser → Parser := withFn fun f c s =>     adaptCacheableContextFn ({ · with savedPos? := s.pos }) f c s",
+      "description": "A parser that tracks the current position during its execution, allowing other parsers to utilize this information for indentation-sensitive processing and ensuring correct token formation."
+    },
+    "Lean.Parser.unicodeSymbol": {
+      "type": "definition",
+      "code": "Lean.Parser.unicodeSymbol (sym asciiSym : String) : Parser",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def unicodeSymbol (sym asciiSym : String) : Parser :=   tokenWithAntiquot (unicodeSymbolNoAntiquot sym asciiSym)",
+      "description": "A parser that recognizes a specified Unicode symbol, which is defined alongside its ASCII representation."
+    },
+    "Lean.Parser.takeWhile1Fn": {
+      "type": "definition",
+      "code": "Lean.Parser.takeWhile1Fn (p : Char → Bool) (errorMsg : String) : ParserFn",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def takeWhile1Fn (p : Char → Bool) (errorMsg : String) : ParserFn :=   andthenFn (satisfyFn p errorMsg) (takeWhileFn p)",
+      "description": "A parser function that processes one or more characters from the input as long as they satisfy a given condition, returning an error message if no characters match."
+    },
+    "Lean.Parser.takeWhileFn": {
+      "type": "definition",
+      "code": "Lean.Parser.takeWhileFn (p : Char → Bool) : ParserFn",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def takeWhileFn (p : Char → Bool) : ParserFn :=   takeUntilFn (fun c => !p c)",
+      "description": "A parser function that processes an input string by continuously consuming characters as long as they satisfy a specified condition."
+    },
+    "Lean.Parser.node": {
+      "type": "definition",
+      "code": "Lean.Parser.node (n : SyntaxNodeKind) (p : Parser) : Parser",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def node (n : SyntaxNodeKind) (p : Parser) : Parser := {   info := nodeInfo n p.info,   fn   := nodeFn n p.fn }",
+      "description": "A parser that creates a syntax tree node of a specified kind from the parsed input according to the provided parser."
+    },
+    "Lean.Parser.mkAntiquot": {
+      "type": "definition",
+      "code": "Lean.Parser.mkAntiquot (name : String) (kind : SyntaxNodeKind) (anonymous : Bool := true)\n  (isPseudoKind : Bool := false) : Parser",
+      "comment": "Define parser for `$e` (if `anonymous == true`) and `$e:name`.\n`kind` is embedded in the antiquotation's kind, and checked at syntax `match` unless `isPseudoKind` is true.\nAntiquotations can be escaped as in `$$e`, which produces the syntax tree for `$e`. ",
+      "explanatories": {},
+      "fullDefinition": "def mkAntiquot (name : String) (kind : SyntaxNodeKind) (anonymous := true) (isPseudoKind := false) : Parser :=   let kind := kind ++ (if isPseudoKind then `pseudo else .anonymous) ++ `antiquot   let nameP := node `antiquotName <| checkNoWsBefore (\"no space before ':\" ++ name ++ \"'\") >> symbol \":\" >> nonReservedSymbol name   -- if parsing the kind fails and `anonymous` is true, check that we're not ignoring a different   -- antiquotation kind via `noImmediateColon`   let nameP := if anonymous then nameP <|> checkNoImmediateColon >> pushNone else nameP   -- antiquotations are not part of the \"standard\" syntax, so hide \"expected '$'\" on error   leadingNode kind maxPrec <| atomic <|     setExpected [] \"$\" >>     manyNoAntiquot (checkNoWsBefore \"\" >> \"$\") >>     checkNoWsBefore \"no space before spliced term\" >> antiquotExpr >>     nameP",
+      "description": "A parser that handles antiquotations in a specified format, allowing for both named and anonymous instances while enabling escape sequences."
+    },
+    "Lean.Parser.withAntiquotFn": {
+      "type": "definition",
+      "code": "Lean.Parser.withAntiquotFn (antiquotP p : ParserFn) (isCatAntiquot : Bool := false) : ParserFn",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def withAntiquotFn (antiquotP p : ParserFn) (isCatAntiquot := false) : ParserFn := fun c s =>   -- fast check that is false in most cases   if c.input.get s.pos == '$' then     -- Do not allow antiquotation choice nodes here as `antiquotP` is the strictly more general     -- antiquotation than any in `p`.     -- If it is a category antiquotation, do not backtrack into the category at all as that would     -- run *all* parsers of the category, and trailing parsers will later be applied anyway.     orelseFnCore (antiquotBehavior := if isCatAntiquot then .acceptLhs else .takeLongest) antiquotP p c s   else     p c s",
+      "description": "A parser function that incorporates an antiquotation mechanism into the parsing process, with an optional flag to indicate if the antiquotation is categorical."
+    },
+    "Lean.Parser.termParser": {
+      "type": "definition",
+      "code": "Lean.Parser.termParser (prec : Nat := 0) : Parser",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def termParser (prec : Nat := 0) : Parser :=   categoryParser `term prec",
+      "description": "A parser that processes terms with a specified precedence, defaulting to zero if no value is provided."
+    }
+  },
+  "Types.lean": {
+    "Lean.Parser.maxPrec": {
+      "type": "definition",
+      "code": "Lean.Parser.maxPrec : ℕ",
+      "comment": "Maximal (and function application) precedence.\nIn the standard lean language, no parser has precedence higher than `maxPrec`.\n\nNote that nothing prevents users from using a higher precedence, but we strongly\ndiscourage them from doing it. ",
+      "explanatories": {},
+      "fullDefinition": "def maxPrec  : Nat := eval_prec max def argPrec  : Nat := eval_prec arg def leadPrec : Nat := eval_prec lead def minPrec  : Nat := eval_prec min",
+      "description": "The highest precedence level for parsers in the Lean language, which no other parser can exceed."
+    },
+    "Lean.Parser.leadPrec": {
+      "type": "definition",
+      "code": "Lean.Parser.leadPrec : ℕ",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def leadPrec : Nat := eval_prec lead def minPrec  : Nat := eval_prec min",
+      "description": "The precedence level for leading operators in the Lean language's parser."
+    },
+    "Lean.Parser.ParserFn.run": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserFn.run (p : ParserFn) (ictx : InputContext) (pmctx : ParserModuleContext) (tokens : TokenTable)\n  (s : ParserState) : ParserState",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def ParserFn.run (p : ParserFn) (ictx : InputContext) (pmctx : ParserModuleContext) (tokens : TokenTable) (s : ParserState) : ParserState :=   p { pmctx with     prec           := 0     toInputContext := ictx     tokens   } s",
+      "description": "The function that executes a parser with a given input context, parser module context, token table, and parser state, returning the updated parser state."
+    },
+    "Lean.Parser.ParserFn": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserFn : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def ParserFn := ParserContext → ParserState → ParserState",
+      "description": "The type representing a parser function in the Lean language."
+    },
+    "Lean.Parser.ParserState.pos": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserState.pos (self : ParserState) : String.Pos",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "pos      : String.Pos := 0   cache    : ParserCache   errorMsg : Option Error := none   recoveredErrors : Array (String.Pos × SyntaxStack × Error) := #[]",
+      "description": "The position within the parser state in the Lean language."
+    },
+    "Lean.Parser.ParserState.hasError": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserState.hasError (s : ParserState) : Bool",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def hasError (s : ParserState) : Bool :=   s.errorMsg != none",
+      "description": "A function that checks for errors in a parser state in the Lean language."
+    },
+    "Lean.Parser.ParserState.errorMsg": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserState.errorMsg (self : ParserState) : Option Error",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "errorMsg : Option Error := none   recoveredErrors : Array (String.Pos × SyntaxStack × Error) := #[]",
+      "description": "The function that retrieves the optional error message associated with a parser's state in the Lean language."
+    },
+    "Lean.Parser.InputContext.input": {
+      "type": "definition",
+      "code": "Lean.Parser.InputContext.input (self : InputContext) : String",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "input    : String   fileName : String   fileMap  : FileMap   deriving Inhabited",
+      "description": "The input string associated with the parser context in the Lean language."
+    },
+    "Lean.Parser.ParserContextCore.toParserModuleContext": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserContextCore.toParserModuleContext (self : ParserContextCore) : ParserModuleContext",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "",
+      "description": "A function that converts a core parser context into a parser module context in the Lean language."
+    },
+    "Lean.Parser.ParserContextCore.tokens": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserContextCore.tokens (self : ParserContextCore) : TokenTable",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "tokens : TokenTable",
+      "description": "A method that retrieves the token table associated with a given parser context in the Lean language."
+    },
+    "Lean.Parser.ParserState.pushSyntax": {
+      "type": "definition",
+      "code": "Lean.Parser.ParserState.pushSyntax (s : ParserState) (n : Syntax) : ParserState",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def pushSyntax (s : ParserState) (n : Syntax) : ParserState :=   { s with stxStack := s.stxStack.push n }",
+      "description": "A function that adds syntax to the parser state in the Lean language."
+    },
+    "Lean.Parser.FirstTokens.tokens": {
+      "type": "theorem",
+      "code": "Lean.Parser.FirstTokens.tokens : List Token → FirstTokens",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": null,
+      "description": "A function that generates the first tokens from a given list of tokens in the Lean language."
+    },
+    "Lean.Parser.Parser.fn": {
+      "type": "definition",
+      "code": "Lean.Parser.Parser.fn (self : Parser) : ParserFn",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "fn   : ParserFn   deriving Inhabited",
+      "description": "The function that retrieves the parser function associated with a given parser in the Lean language."
+    }
+  },
+  "Extension.lean": {
+    "Lean.Parser.mkInputContext": {
+      "type": "definition",
+      "code": "Lean.Parser.mkInputContext (input fileName : String) (normalizeLineEndings : Bool := true) : InputContext",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def mkInputContext (input : String) (fileName : String) (normalizeLineEndings := true) : InputContext :=   let input' := if normalizeLineEndings then input.crlfToLf else input   { input    := input',     fileName := fileName,     fileMap  := input'.toFileMap }",
+      "description": "The function that creates an input context from a specified file name, with an option to normalize line endings."
+    }
+  },
+  "Term.lean": {
+    "Lean.Parser.Term.optType": {
+      "type": "definition",
+      "code": "Lean.Parser.Term.optType : Parser",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def optType : Parser := optional typeSpec /-- `@x` disables automatic insertion of implicit parameters of the constant `x`. `@e` for any term `e` also disables the insertion of implicit lambdas at this position. -/ @[builtin_term_parser] def explicit := leading_parser   \"@\" >> termParser maxPrec /-- `.(e)` marks an \"inaccessible pattern\", which does not influence evaluation of the pattern match, but may be necessary for type-checking. In contrast to regular patterns, `e` may be an arbitrary term of the appropriate type. -/ @[builtin_term_parser] def inaccessible := leading_parser   \".(\" >> withoutPosition termParser >> \")\" def binderType (requireType := false) : Parser :=   if requireType then node nullKind (\" : \" >> termParser) else optional (\" : \" >> termParser) def binderTactic  := leading_parser   atomic (symbol \" := \" >> \" by \") >> Tactic.tacticSeq def binderDefault := leading_parser   \" := \" >> termParser",
+      "description": "A parser that optionally processes a type in the Lean language."
+    },
+    "Lean.Parser.Term.binderIdent": {
+      "type": "definition",
+      "code": "Lean.Parser.Term.binderIdent : Parser",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def binderIdent : Parser  := ident <|> hole /-- A temporary placeholder for a missing proof or value. -/ @[builtin_term_parser] def «sorry» := leading_parser   \"sorry\" /-- A placeholder for an implicit lambda abstraction's variable. The lambda abstraction is scoped to the surrounding parentheses. For example, `(· + ·)` is equivalent to `fun x y => x + y`. -/ @[builtin_term_parser] def cdot   := leading_parser   symbol \"·\" <|> \".\" /-- Type ascription notation: `(0 : Int)` instructs Lean to process `0` as a value of type `Int`. An empty type ascription `(e :)` elaborates `e` without the expected type. This is occasionally useful when Lean's heuristics for filling arguments from the expected type do not yield the right result. -/ @[builtin_term_parser] def typeAscription := leading_parser   \"(\" >> (withoutPosition (withoutForbidden (termParser >> \" :\" >> optional (ppSpace >> termParser)))) >> \")\" /-- Tuple notation; `()` is short for `Unit.unit`, `(a, b, c)` for `Prod.mk a (Prod.mk b c)`, etc. -/ @[builtin_term_parser] def tuple := leading_parser   \"(\" >> optional (withoutPosition (withoutForbidden (termParser >> \", \" >> sepBy1 termParser \", \" (allowTrailingSep := true)))) >> \")\" /-- Parentheses, used for grouping expressions (e.g., `a * (b + c)`). Can also be used for creating simple functions when combined with `·`. Here are some examples:   - `(· + 1)` is shorthand for `fun x => x + 1`   - `(· + ·)` is shorthand for `fun x y => x + y`   - `(f · a b)` is shorthand for `fun x => f x a b`   - `(h (· + 1) ·)` is shorthand for `fun x => h (fun y => y + 1) x`   - also applies to other parentheses-like notations such as `(·, 1)` -/ @[builtin_term_parser] def paren := leading_parser   \"(\" >> withoutPosition (withoutForbidden (ppDedentIfGrouped termParser)) >> \")\" /-- The *anonymous constructor* `⟨e, ...⟩` is equivalent to `c e ...` if the expected type is an inductive type with a single constructor `c`. If more terms are given than `c` has parameters, the remaining arguments are turned into a new anonymous constructor application. For example, `⟨a, b, c⟩ : α × (β × γ)` is equivalent to `⟨a, ⟨b, c⟩⟩`. -/ @[builtin_term_parser] def anonymousCtor := leading_parser   \"⟨\" >> withoutPosition (withoutForbidden (sepBy termParser \", \" (allowTrailingSep := true))) >> \"⟩\" def optIdent : Parser :=   optional (atomic (ident >> \" : \")) def fromTerm   := leading_parser   \"from \" >> termParser def showRhs := fromTerm <|> byTactic' /-- A `sufficesDecl` represents everything that comes after the `suffices` keyword: an optional `x :`, then a term `ty`, then `from val` or `by tac`. -/ def sufficesDecl := leading_parser   (atomic (group (binderIdent >> \" : \")) <|> hygieneInfo) >> termParser >> ppSpace >> showRhs @[builtin_term_parser] def «suffices» := leading_parser:leadPrec   withPosition (\"suffices \" >> sufficesDecl) >> optSemicolon termParser @[builtin_term_parser] def «show»     := leading_parser:leadPrec \"show \" >> termParser >> ppSpace >> showRhs def structInstArrayRef := leading_parser   \"[\" >> withoutPosition termParser >> \"]\" def structInstLVal   := leading_parser   (ident <|> fieldIdx <|> structInstArrayRef) >>   many (group (\".\" >> (ident <|> fieldIdx)) <|> structInstArrayRef) def structInstField  := ppGroup $ leading_parser   structInstLVal >> \" := \" >> termParser def structInstFieldAbbrev := leading_parser   -- `x` is an abbreviation for `x := x`   atomic (ident >> notFollowedBy (\".\" <|> \":=\" <|> symbol \"[\") \"invalid field abbreviation\") def optEllipsis      := leading_parser   optional \" ..\" /-- Structure instance. `{ x := e, ... }` assigns `e` to field `x`, which may be inherited. If `e` is itself a variable called `x`, it can be elided: `fun y => { x := 1, y }`. A *structure update* of an existing value can be given via `with`: `{ point with x := 1 }`. The structure type can be specified if not inferable: `{ x := 1, y := 2 : Point }`. -/ @[builtin_term_parser] def structInst := leading_parser   \"{ \" >> withoutPosition (optional (atomic (sepBy1 termParser \", \" >> \" with \"))     >> sepByIndent (structInstFieldAbbrev <|> structInstField) \", \" (allowTrailingSep := true)     >> optEllipsis     >> optional (\" : \" >> termParser)) >> \" }\" def typeSpec := leading_parser \" : \" >> termParser def optType : Parser := optional typeSpec /-- `@x` disables automatic insertion of implicit parameters of the constant `x`. `@e` for any term `e` also disables the insertion of implicit lambdas at this position. -/ @[builtin_term_parser] def explicit := leading_parser   \"@\" >> termParser maxPrec /-- `.(e)` marks an \"inaccessible pattern\", which does not influence evaluation of the pattern match, but may be necessary for type-checking. In contrast to regular patterns, `e` may be an arbitrary term of the appropriate type. -/ @[builtin_term_parser] def inaccessible := leading_parser   \".(\" >> withoutPosition termParser >> \")\" def binderType (requireType := false) : Parser :=   if requireType then node nullKind (\" : \" >> termParser) else optional (\" : \" >> termParser) def binderTactic  := leading_parser   atomic (symbol \" := \" >> \" by \") >> Tactic.tacticSeq def binderDefault := leading_parser   \" := \" >> termParser",
+      "description": "A parser that identifies binders in the Lean language."
+    }
+  }
+}

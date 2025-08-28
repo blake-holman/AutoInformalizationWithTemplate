@@ -1,0 +1,146 @@
+{
+  "measure": {
+    "type": "definition",
+    "code": "measure.{u} {α : Sort u} (f : α → ℕ) : WellFoundedRelation α",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "abbrev measure {α : Sort u} (f : α → Nat) : WellFoundedRelation α :=   invImage f Nat.lt_wfRel",
+    "description": "A function mapping elements from a type to natural numbers defines a well-founded relation on that type."
+  },
+  "WellFoundedRelation.wf": {
+    "type": "theorem",
+    "code": "WellFoundedRelation.wf.{u} {α : Sort u} [self : WellFoundedRelation α] : WellFounded WellFoundedRelation.rel",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "Every well-founded relation is guaranteed to be well-founded in the sense of having no infinite descending sequences."
+  },
+  "WellFounded.fix": {
+    "type": "definition",
+    "code": "WellFounded.fix.{u, v} {α : Sort u} {C : α → Sort v} {r : α → α → Prop} (hwf : WellFounded r)\n  (F : (x : α) → ((y : α) → r y x → C y) → C x) (x : α) : C x",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "noncomputable def fix (hwf : WellFounded r) (F : ∀ x, (∀ y, r y x → C y) → C x) (x : α) : C x :=   fixF F x (apply hwf x)",
+    "description": "A function for defining a unique fixed point in a well-founded context allows for constructing a value based on prior values related through a specified relation."
+  },
+  "WellFoundedRelation.mk": {
+    "type": "theorem",
+    "code": "WellFoundedRelation.mk.{u} {α : Sort u} (rel : α → α → Prop) (wf : WellFounded rel) : WellFoundedRelation α",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A well-founded relation can be constructed from a given relation that is known to be well-founded."
+  },
+  "Acc.intro": {
+    "type": "theorem",
+    "code": "Acc.intro.{u} {α : Sort u} {r : α → α → Prop} (x : α) (h : ∀ (y : α), r y x → Acc r y) : Acc r x",
+    "comment": "A value is accessible if for all `y` such that `r y x`, `y` is also accessible.\nNote that if there exists no `y` such that `r y x`, then `x` is accessible. Such an `x` is called a\n_base case_.\n",
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A value is considered accessible if all related values are also accessible under a given relation, establishing a basis for cases with no related values."
+  },
+  "WellFounded.intro": {
+    "type": "theorem",
+    "code": "WellFounded.intro.{u} {α : Sort u} {r : α → α → Prop} (h : ∀ (a : α), Acc r a) : WellFounded r",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A relation is considered well-founded if every element associated with it is accessible."
+  },
+  "WellFounded.induction": {
+    "type": "theorem",
+    "code": "WellFounded.induction.{u} {α : Sort u} {r : α → α → Prop} (hwf : WellFounded r) {C : α → Prop} (a : α)\n  (h : ∀ (x : α), (∀ (y : α), r y x → C y) → C x) : C a",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A property can be proven for an element in a well-founded relation by showing it holds for all related elements, thereby concluding it holds for the specific element in question."
+  },
+  "WellFounded.fix_eq": {
+    "type": "theorem",
+    "code": "WellFounded.fix_eq.{u, v} {α : Sort u} {C : α → Sort v} {r : α → α → Prop} (hwf : WellFounded r)\n  (F : (x : α) → ((y : α) → r y x → C y) → C x) (x : α) : hwf.fix F x = F x fun y x => hwf.fix F y",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "The fixed point of a well-founded relation with a specified function equals the result of applying that function to its argument and the fixed points of all related arguments."
+  },
+  "Prod.Lex.left": {
+    "type": "theorem",
+    "code": "Prod.Lex.left.{u, v} {α : Type u} {β : Type v} {ra : α → α → Prop} {rb : β → β → Prop} {a₁ : α} (b₁ : β) {a₂ : α}\n  (b₂ : β) (h : ra a₁ a₂) : Prod.Lex ra rb (a₁, b₁) (a₂, b₂)",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "If one element is related to another via a specified relation, then the pair consisting of that element and a second element is also related to another pair in a lexicographic order defined by those relations."
+  },
+  "Prod.Lex.right": {
+    "type": "theorem",
+    "code": "Prod.Lex.right.{u, v} {α : Type u} {β : Type v} {ra : α → α → Prop} {rb : β → β → Prop} (a : α) {b₁ b₂ : β}\n  (h : rb b₁ b₂) : Prod.Lex ra rb (a, b₁) (a, b₂)",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "If two elements in a second type are related according to a specified relation, then their ordered pairs with a constant element from the first type are also related under the lexicographic order defined on pairs."
+  },
+  "PSigma.Lex.left": {
+    "type": "theorem",
+    "code": "PSigma.Lex.left.{u, v} {α : Sort u} {β : α → Sort v} {r : α → α → Prop} {s : (a : α) → β a → β a → Prop} {a₁ : α}\n  (b₁ : β a₁) {a₂ : α} (b₂ : β a₂) : r a₁ a₂ → PSigma.Lex r s ⟨a₁, b₁⟩ ⟨a₂, b₂⟩",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A pair of values is lexicographically ordered according to a specified relation if the first components are related by that relation and any corresponding second components satisfy a designated ordering."
+  },
+  "PSigma.Lex.right": {
+    "type": "theorem",
+    "code": "PSigma.Lex.right.{u, v} {α : Sort u} {β : α → Sort v} {r : α → α → Prop} {s : (a : α) → β a → β a → Prop} (a : α)\n  {b₁ b₂ : β a} : s a b₁ b₂ → PSigma.Lex r s ⟨a, b₁⟩ ⟨a, b₂⟩",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "If a relation holds between two elements in a dependent type for a fixed first component, then this relation extends to the corresponding elements in the dependent sum type."
+  },
+  "WellFounded.apply": {
+    "type": "theorem",
+    "code": "WellFounded.apply.{u} {α : Sort u} {r : α → α → Prop} (wf : WellFounded r) (a : α) : Acc r a",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "From a well-founded relation, the accessibility of a specified element can be established."
+  },
+  "Prod.lex_def": {
+    "type": "theorem",
+    "code": "Prod.lex_def.{u, v} {α : Type u} {β : Type v} (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :\n  Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A pair of elements is related under the lexicographic order if the first elements are related or if they are equal and the second elements are related."
+  },
+  "Acc.recOn": {
+    "type": "definition",
+    "code": "Acc.recOn.{u_1, u} {α : Sort u} {r : α → α → Prop} {motive : (a : α) → Acc r a → Sort u_1} :\n  {a : α} →\n    (t : Acc r a) →\n      ((x : α) → (h : ∀ (y : α), r y x → Acc r y) → ((y : α) → (a : r y x) → motive y ⋯) → motive x ⋯) → motive a t",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "inductive Acc {α : Sort u} (r : α → α → Prop) : α → Prop where   /--   A value is accessible if for all `y` such that `r y x`, `y` is also accessible.   Note that if there exists no `y` such that `r y x`, then `x` is accessible. Such an `x` is called a   _base case_.   -/   | intro (x : α) (h : (y : α) → r y x → Acc r y) : Acc r x",
+    "description": "A recursive function processes accessible values based on a specified motive, allowing for reasoning about each value and its related values within a defined structure."
+  },
+  "InvImage.wf": {
+    "type": "theorem",
+    "code": "InvImage.wf.{u, v} {α : Sort u} {β : Sort v} {r : β → β → Prop} (f : α → β) (h : WellFounded r) :\n  WellFounded (InvImage r f)",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "The image of a well-founded relation under a function remains well-founded."
+  },
+  "Subrelation.wf": {
+    "type": "theorem",
+    "code": "Subrelation.wf.{u} {α : Sort u} {r q : α → α → Prop} (h₁ : Subrelation q r) (h₂ : WellFounded r) : WellFounded q",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": null,
+    "description": "A subrelation of a well-founded relation is also well-founded."
+  },
+  "WellFoundedRelation.rel": {
+    "type": "definition",
+    "code": "WellFoundedRelation.rel.{u} {α : Sort u} [self : WellFoundedRelation α] : α → α → Prop",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "rel : α → α → Prop   wf  : WellFounded rel",
+    "description": "The relation defining a well-founded ordering on a type derives from the well-founded relation over that type."
+  }
+}

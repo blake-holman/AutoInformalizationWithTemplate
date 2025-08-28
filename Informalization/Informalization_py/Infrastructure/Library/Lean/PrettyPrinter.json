@@ -1,0 +1,86 @@
+{
+  "Parenthesizer.lean": {
+    "Lean.PrettyPrinter.Parenthesizer": {
+      "type": "definition",
+      "code": "Lean.PrettyPrinter.Parenthesizer : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev Parenthesizer := ParenthesizerM Unit",
+      "description": "A type representing a component of the pretty printer that handles the placement of parentheses."
+    },
+    "Lean.PrettyPrinter.Parenthesizer.node.parenthesizer": {
+      "type": "definition",
+      "code": "Lean.PrettyPrinter.Parenthesizer.node.parenthesizer (k : SyntaxNodeKind) (p : Parenthesizer) : Parenthesizer",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def node.parenthesizer (k : SyntaxNodeKind) (p : Parenthesizer) : Parenthesizer := do   checkKind k   visitArgs p",
+      "description": "A function that retrieves a parenthesizer associated with a specific kind of syntax node."
+    }
+  },
+  "Formatter.lean": {
+    "Lean.PrettyPrinter.Formatter": {
+      "type": "definition",
+      "code": "Lean.PrettyPrinter.Formatter : Type",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "abbrev Formatter := FormatterM Unit",
+      "description": "A type representing a component of the pretty printer responsible for formatting."
+    },
+    "Lean.PrettyPrinter.Formatter.node.formatter": {
+      "type": "definition",
+      "code": "Lean.PrettyPrinter.Formatter.node.formatter (k : SyntaxNodeKind) (p : Formatter) : Formatter",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "def node.formatter (k : SyntaxNodeKind) (p : Formatter) : Formatter := do   checkKind k;   visitArgs p",
+      "description": "A function that generates a formatter based on a given syntax node kind and an existing formatter."
+    },
+    "Lean.PrettyPrinter.Formatter.State.stack": {
+      "type": "definition",
+      "code": "Lean.PrettyPrinter.Formatter.State.stack (self : Formatter.State) : Array Format",
+      "comment": null,
+      "explanatories": {},
+      "fullDefinition": "stack    : Array Format := #[]",
+      "description": "A function that retrieves the format stack from the state of the formatter."
+    }
+  },
+  "Delaborator": {
+    "Basic.lean": {
+      "Lean.PrettyPrinter.Delaborator.Delab": {
+        "type": "definition",
+        "code": "Lean.PrettyPrinter.Delaborator.Delab : Type",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "abbrev Delab := DelabM Term",
+        "description": "A type representing a component responsible for the delaboration process in the pretty printer."
+      },
+      "Lean.PrettyPrinter.Delaborator.whenPPOption": {
+        "type": "definition",
+        "code": "Lean.PrettyPrinter.Delaborator.whenPPOption (opt : Lean.Options → Bool) (d : Delab) : Delab",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def whenPPOption (opt : Options → Bool) (d : Delab) : Delab := do   let b ← getPPOption opt   if b then d else failure",
+        "description": "A function that modifies delaboration behavior based on a given option from the Lean configuration settings."
+      }
+    },
+    "Options.lean": {
+      "Lean.getPPNotation": {
+        "type": "definition",
+        "code": "Lean.getPPNotation (o : Lean.Options) : Bool",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def getPPNotation (o : Options) : Bool := o.get pp.notation.name (!getPPAll o) def getPPUnicodeFun (o : Options) : Bool := o.get pp.unicode.fun.name false def getPPMatch (o : Options) : Bool := o.get pp.match.name (!getPPAll o) def getPPFieldNotation (o : Options) : Bool := o.get pp.fieldNotation.name (!getPPAll o) def getPPFieldNotationGeneralized (o : Options) : Bool := o.get pp.fieldNotation.generalized.name pp.fieldNotation.generalized.defValue def getPPStructureInstances (o : Options) : Bool := o.get pp.structureInstances.name (!getPPAll o) def getPPStructureInstancesFlatten (o : Options) : Bool := o.get pp.structureInstances.flatten.name pp.structureInstances.flatten.defValue def getPPStructureInstanceType (o : Options) : Bool := o.get pp.structureInstanceTypes.name (getPPAll o) def getPPTagAppFns (o : Options) : Bool := o.get pp.tagAppFns.name (getPPAll o) def getPPUniverses (o : Options) : Bool := o.get pp.universes.name (getPPAll o) def getPPFullNames (o : Options) : Bool := o.get pp.fullNames.name (getPPAll o) def getPPPrivateNames (o : Options) : Bool := o.get pp.privateNames.name (getPPAll o) def getPPInstantiateMVars (o : Options) : Bool := o.get pp.instantiateMVars.name pp.instantiateMVars.defValue def getPPMVars (o : Options) : Bool := o.get pp.mvars.name pp.mvars.defValue def getPPMVarsWithType (o : Options) : Bool := o.get pp.mvars.withType.name pp.mvars.withType.defValue def getPPBeta (o : Options) : Bool := o.get pp.beta.name pp.beta.defValue def getPPSafeShadowing (o : Options) : Bool := o.get pp.safeShadowing.name pp.safeShadowing.defValue def getPPProofs (o : Options) : Bool := o.get pp.proofs.name (pp.proofs.defValue || getPPAll o) def getPPProofsWithType (o : Options) : Bool := o.get pp.proofs.withType.name pp.proofs.withType.defValue def getPPProofsThreshold (o : Options) : Nat := o.get pp.proofs.threshold.name pp.proofs.threshold.defValue def getPPMotivesPi (o : Options) : Bool := o.get pp.motives.pi.name pp.motives.pi.defValue def getPPMotivesNonConst (o : Options) : Bool := o.get pp.motives.nonConst.name pp.motives.nonConst.defValue def getPPMotivesAll (o : Options) : Bool := o.get pp.motives.all.name pp.motives.all.defValue def getPPInstances (o : Options) : Bool := o.get pp.instances.name pp.instances.defValue def getPPInstanceTypes (o : Options) : Bool := o.get pp.instanceTypes.name pp.instanceTypes.defValue def getPPDeepTerms (o : Options) : Bool := o.get pp.deepTerms.name (pp.deepTerms.defValue || getPPAll o) def getPPDeepTermsThreshold (o : Options) : Nat := o.get pp.deepTerms.threshold.name pp.deepTerms.threshold.defValue",
+        "description": "A function that checks whether a specific notation is enabled in the Lean configuration options."
+      }
+    },
+    "Builtins.lean": {
+      "Lean.PrettyPrinter.Delaborator.delabForall": {
+        "type": "definition",
+        "code": "Lean.PrettyPrinter.Delaborator.delabForall : Delab",
+        "comment": null,
+        "explanatories": {},
+        "fullDefinition": "def delabForall : Delab := do   delabForallBinders fun curNames dependent stxBody => do     let e ← getExpr     let prop ← try isProp e catch _ => pure false     let stxT ← withBindingDomain delab     let group ← match e.binderInfo with     | BinderInfo.implicit       => `(bracketedBinderF|{$curNames* : $stxT})     | BinderInfo.strictImplicit => `(bracketedBinderF|⦃$curNames* : $stxT⦄)     -- here `curNames.size == 1`     | BinderInfo.instImplicit   => `(bracketedBinderF|[$curNames.back : $stxT])     | _                         =>       -- NOTE: non-dependent arrows are available only for the default binder info       if dependent then         if prop && !(← getPPOption getPPPiBinderTypes) then           return ← `(∀ $curNames:ident*, $stxBody)         else           `(bracketedBinderF|($curNames* : $stxT))       else         return ← curNames.foldrM (fun _ stxBody => `($stxT → $stxBody)) stxBody     if prop then       match stxBody with       | `(∀ $groups*, $stxBody) => `(∀ $group $groups*, $stxBody)       | _                       => `(∀ $group, $stxBody)     else       `($group:bracketedBinder → $stxBody)",
+        "description": "A tool that converts a universal quantification expression into a more detailed or expanded representation in the context of the Lean pretty printer."
+      }
+    }
+  }
+}

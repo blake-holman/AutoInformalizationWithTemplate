@@ -1,0 +1,190 @@
+[appliedTactic]
+have : IsConverges (x + y) := by
+      let ⟨a, convxa⟩ := conx
+      let ⟨b, convyb⟩ := cony
+      apply Exists.intro (a + b)
+      intro ε εpos
+      let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos)
+      let n₀ := max n₁ n₂
+      apply Exists.intro n₀
+      intro n nlen₀
+      calc
+        |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+          rw [add_sub_add_comm]
+          apply abs_add
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+[answer]
+Show that the sequence formed by adding the corresponding terms of \( x \) and \( y \) converges to the sum of their respective limits.
+[appliedTactic]
+let ⟨a, convxa⟩ :=  conx 
+[answer]
+Let \( a \) be the limit to which the sequence \( x \) converges.
+[appliedTactic]
+let ⟨b, convyb⟩ :=  cony 
+[answer]
+Let \( b \) be the limit of the sequence \( y \).
+[appliedTactic]
+apply Exists.intro (a + b ) 
+[answer]
+From the definition that a sequence is convergent if there exists a real number to which it converges, in order to establish that the sum of the sequences \( x \) and \( y \) is convergent, it suffices to prove that the sum \( x + y \) converges to the sum of the limits \( a + b \).
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon > 0 \). From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of the difference between \( (x + y)(n) \) and \( a + b \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos ) 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the value of \( x_n \) is within half of \( \varepsilon \) from \( a \).
+[appliedTactic]
+let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos ) 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the distance between \( y_n \) and \( b \) is less than half of \( \varepsilon \).
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the assumption that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), in order to establish that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the absolute value of the difference between \( (x + y)_n \) and \( a + b \) is less than \( \varepsilon \), it suffices to prove that for all \( n \geq n_0 \), this inequality holds.
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between the \( n \)-th term of the sum of the sequences \( x \) and \( y \) and the sum \( a + b \) is less than \( \varepsilon \).
+[appliedTactic]
+calc
+        |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+          rw [add_sub_add_comm]
+          apply abs_add
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+[answer]
+By calculation, it is shown that \( |x_n + y_n - (a + b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon. \)
+[appliedTactic]
+rw [add_sub_add_comm ] 
+[answer]
+By using the property that the difference of sums can be rearranged as the sum of differences, the goal of proving the absolute value of \( x_n + y_n - (a + b) \) is at most the sum of the absolute values of \( x_n - a \) and \( y_n - b \) becomes proving the absolute value of \( (x_n - a) + (y_n - b) \) is at most the sum of the absolute values of \( x_n - a \) and \( y_n - b \).
+[appliedTactic]
+apply  abs_add 
+[answer]
+From the triangle inequality stating that the absolute value of a sum is at most the sum of the absolute values, in order to establish that the absolute value of \( x_n - a + (y_n - b) \) is less than or equal to the sum of the absolute values of \( x_n - a \) and \( y_n - b \), it suffices to prove no further goals since this inequality directly applies.
+[appliedTactic]
+have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) 
+[answer]
+Show that \( n_0 \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \). This can be proved by noting that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), and any element is always less than or equal to itself, so \( n_0 \geq \max(n_1, n_2) \) holds by reflexivity.
+[appliedTactic]
+apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀) ) 
+[answer]
+From the theorems asserting the transitivity of inequalities and the properties of maximum elements, and using the assumptions that for all indices greater than or equal to \( n_1 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \), and similarly for \( y_n \) and \( b \) beyond \( n_2 \), in order to establish that the sum of the distances \( |x_n - a| + |y_n - b| \) is less than the sum of two halves of \( \varepsilon \), it suffices to prove this inequality directly for \( n \) greater than or equal to the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply LimitUniqueness (x + y ) 
+[answer]
+From the fact that a convergent sequence has a unique limit and the assumptions that the sequences \( x \), \( y \), and their sum \( x + y \) all converge, in order to establish that the limit of \( x + y \) equals the sum of the limits of \( x \) and \( y \), it suffices to prove separately that the sequence \( x + y \) converges to its limit and that it also converges to the sum of the limits of \( x \) and \( y \).
+[appliedTactic]
+. exact Limit_def (x + y)  this 
+[answer]
+We prove the case where the sequence \( x + y \) converges to its limit.
+[appliedTactic]
+exact Limit_def (x + y)  this 
+[answer]
+The proof is completed from the theorem that every convergent sequence of real numbers converges to its defined limit and the assumption that the sequence \(x + y\) is convergent.
+[appliedTactic]
+. intro ε εpos
+      let ⟨a, convxa⟩ := conx
+      let ⟨b, convyb⟩ := cony
+      let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos)
+      let n₀ := max n₁ n₂
+      apply Exists.intro n₀
+      intro n nlen₀
+      calc
+        |(x + y) n - (Lim.sLim x + Lim.sLim y)| = |(x n -Lim.sLim x ) + (y n - Lim.sLim y)| := by
+          rw [Pi.add_apply,add_sub_add_comm]
+        _ ≤ |x n - Lim.sLim x| + |y n - Lim.sLim y| := abs_add _ _
+        _ = |x n - a| + |y n - b| := by
+          have h1: Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa
+          have h2: Lim.sLim y = b := (Converges_sLim_iff y cony b).1 convyb
+          rw [h1, h2]
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+[answer]
+We prove that the sum of the two sequences converges to the sum of their limits.
+[appliedTactic]
+intro ε  εpos 
+[answer]
+Assume that \( \varepsilon \) is a positive real number. From now on, we will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( (x + y)_n \) and the sum of the limits of \( x \) and \( y \) is less than \( \varepsilon \).
+[appliedTactic]
+let ⟨a, convxa⟩ :=  conx 
+[answer]
+Let \( a \) be the limit to which the sequence \( x \) converges.
+[appliedTactic]
+let ⟨b, convyb⟩ :=  cony 
+[answer]
+Let \( b \) be such that the sequence \( y \) converges to \( b \).
+[appliedTactic]
+let ⟨n₁,h1⟩ := convxa (ε/2) (half_pos εpos ) 
+[answer]
+Let \( n_1 \) be such that for all \( n \geq n_1 \), the distance between \( x_n \) and \( a \) is less than half of \( \varepsilon \).
+[appliedTactic]
+let ⟨n₂,h2⟩ := convyb (ε/2) (half_pos εpos ) 
+[answer]
+Let \( n_2 \) be such that for all \( n \geq n_2 \), the distance between \( y_n \) and \( b \) is less than half of \( \varepsilon \).
+[appliedTactic]
+let n₀ := max n₁  n₂ 
+[answer]
+Let \( n_0 \) be the maximum of \( n_1 \) and \( n_2 \).
+[appliedTactic]
+apply Exists.intro  n₀ 
+[answer]
+From the assumption that \( n_0 \) is the maximum of \( n_1 \) and \( n_2 \), in order to establish the existence of some \( n_0 \) such that for all \( n \geq n_0 \), the absolute difference between the sum of the sequences and the sum of their limits is less than \( \varepsilon \), it suffices to prove that for all \( n \geq n_0 \), this absolute difference is less than \( \varepsilon \).
+[appliedTactic]
+intro n  nlen₀ 
+[answer]
+Assume that \( n \) is a natural number greater than or equal to \( n_0 \). From now on, we will show that the absolute value of the difference between the \( n \)-th term of the sum of the sequences and the sum of their limits is less than \( \varepsilon \).
+[appliedTactic]
+calc
+        |(x + y) n - (Lim.sLim x + Lim.sLim y)| = |(x n -Lim.sLim x ) + (y n - Lim.sLim y)| := by
+          rw [Pi.add_apply,add_sub_add_comm]
+        _ ≤ |x n - Lim.sLim x| + |y n - Lim.sLim y| := abs_add _ _
+        _ = |x n - a| + |y n - b| := by
+          have h1: Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa
+          have h2: Lim.sLim y = b := (Converges_sLim_iff y cony b).1 convyb
+          rw [h1, h2]
+        _ < ε / 2 + ε / 2 := by
+          have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+          apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀))
+        _ = ε := add_halves'  ε 
+[answer]
+By calculation, it is shown that \( |(x + y)_n - (\lim x + \lim y)| = |(x_n - \lim x) + (y_n - \lim y)| \leq |x_n - \lim x| + |y_n - \lim y| = |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon. \)
+[appliedTactic]
+rw [Pi.add_apply,add_sub_add_comm ] 
+[answer]
+By rewriting the expression for the sum of two functions pointwise and applying the commutativity property of subtraction over addition, we complete the proof.
+[appliedTactic]
+have h1: Lim.sLim x = a := (Converges_sLim_iff x conx a).1  convxa 
+[answer]
+Show that the limit of the sequence \( x \) is equal to \( a \). This can be proved by using the fact that a sequence converges to a given limit if and only if that limit is equal to the defined limit of the sequence, and since it is given that \( x \) converges to \( a \), it follows that the limit of \( x \) is \( a \).
+[appliedTactic]
+have h2: Lim.sLim y = b := (Converges_sLim_iff y cony b).1  convyb 
+[answer]
+Show that the limit of the sequence \( y \) is equal to \( b \). This can be proved by using the equivalence that a sequence converges to a limit if and only if that limit is equal to the defined limit of the sequence, together with the fact that \( y \) converges to \( b \).
+[appliedTactic]
+rw [h1, h2 ] 
+[answer]
+By substituting the known limits of the sequences \( x \) and \( y \) for their respective limit expressions, we complete the proof.
+[appliedTactic]
+have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂ ) 
+[answer]
+Show that \( n_0 \) is greater than or equal to the maximum of \( n_1 \) and \( n_2 \). This follows directly from the fact that \( n_0 \) is defined as the maximum of \( n_1 \) and \( n_2 \), and by the reflexivity property of the less than or equal relation, any element is always less than or equal to itself.
+[appliedTactic]
+apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) nlen₀)) (h2 n (le_trans (le_of_max_le_right this) nlen₀) ) 
+[answer]
+From the theorems that the sum of two strictly lesser pairs is less than the sum of their respective greater pairs, the transitivity of inequalities, and the properties of the maximum function, together with the assumptions that for all indices greater than or equal to \( n_1 \), the difference between \( x_n \) and \( a \) is less than half of \( \varepsilon \), and for all indices greater than or equal to \( n_2 \), the difference between \( y_n \) and \( b \) is less than half of \( \varepsilon \), in order to establish that the sum of the absolute differences between \( x_n \) and \( a \) and between \( y_n \) and \( b \) is less than the sum of their halves of \( \varepsilon \), it suffices to prove this inequality for all \( n \) greater than or equal to the maximum of \( n_1 \) and \( n_2 \).

@@ -1,0 +1,52 @@
+[
+  {
+    "AppliedTactic": "intro aSup  bSup ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\n⊢ Supremum S a → Supremum S b → a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GivenPremises": [],
+    "Result": "Assume that \\( a \\) is a supremum of the set \\( S \\) and that \\( b \\) is also a supremum of the set \\( S \\). From now on, we will show that \\( a \\) and \\( b \\) are equal.",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "rw [Supremum] at  * ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  Supremum S a\nbSup :  Supremum S b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GivenPremises": [
+      "Supremum : A real number is the supremum of a set if it is the least upper bound that is greater than or equal to every element in the set."
+    ],
+    "Result": "By expanding the definition of the supremum, the assumptions that \\( a \\) and \\( b \\) are supremums of the set \\( S \\) are restated as \\( a \\) and \\( b \\) being upper bounds of \\( S \\) such that any other upper bound of \\( S \\) is greater than or equal to \\( a \\) and \\( b \\), respectively. This reformulates the goal of proving \\( a = b \\) in terms of these properties of least upper bounds.",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": "have aleb: a ≤ b := aSup.right b  bSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GivenPremises": [
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+    ],
+    "Result": "Establish that \\( a \\) is less than or equal to \\( b \\) by using the properties of upper bounds for the set \\( S \\). Specifically, since \\( a \\) is an upper bound of \\( S \\) and \\( b \\) is also an upper bound, the minimality condition on \\( a \\) implies that \\( a \\) cannot exceed \\( b \\). This is concluded by extracting the relevant parts of the assumptions about \\( a \\) and \\( b \\) being upper bounds and applying the ordering condition that any upper bound must be at least \\( a \\).",
+    "Evaluation":"Correct"
+  },
+  {
+    "AppliedTactic": "have blea: b ≤ a := bSup.right a  aSup.left ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\n⊢ a = b",
+    "GoalsAfter": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GivenPremises": [
+      "And.right : This theorem allows for the extraction of the second component from a conjunction when given a proof of that conjunction.",
+      "And.left : From a conjunction of two propositions, it is possible to extract and prove the first proposition."
+    ],
+    "Result": "Establish that \\( b \\) is less than or equal to \\( a \\) by using the fact that \\( b \\) is an upper bound of the set and that \\( a \\) is also an upper bound. Since \\( a \\) satisfies the property of being an upper bound, it follows that \\( b \\) cannot exceed \\( a \\). This introduces the inequality \\( b \\leq a \\) as a new assumption in the proof.",
+    "Evaluation":"Unnecessary Mention"
+  },
+  {
+    "AppliedTactic": "apply le_antisymm aleb  blea ",
+    "GoalsBefore": "S :  Set ℝ\na b :  ℝ\naSup :  UpperBound S a ∧ ∀ (y : ℝ), UpperBound S y → a ≤ y\nbSup :  UpperBound S b ∧ ∀ (y : ℝ), UpperBound S y → b ≤ y\naleb :  a ≤ b\nblea :  b ≤ a\n⊢ a = b",
+    "GoalsAfter": "no goals",
+    "GivenPremises": [
+      "le_antisymm : This theorem establishes that in a partial order, if one element is less than or equal to another and vice versa, then the two elements must be equal."
+    ],
+    "Result": "Since \\( a \\) is less than or equal to \\( b \\) and \\( b \\) is less than or equal to \\( a \\), it follows from the antisymmetry property of the order relation that \\( a \\) and \\( b \\) are equal. This completes the proof.",
+    "Evaluation":"Correct"
+  }
+]

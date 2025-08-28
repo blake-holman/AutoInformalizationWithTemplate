@@ -1,0 +1,66 @@
+{
+  "Lean.Name.toString": {
+    "type": "definition",
+    "code": "Lean.Name.toString (n : Name) (escape : Bool := true) : String",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "protected def toString (n : Name) (escape := true) : String :=   -- never escape \"prettified\" inaccessible names or macro scopes or pseudo-syntax introduced by the delaborator   toStringWithSep \".\" (escape && !n.isInaccessibleUserName && !n.hasMacroScopes && !maybePseudoSyntax) n where   maybePseudoSyntax :=     if let .str _ s := n.getRoot then       -- could be pseudo-syntax for loose bvar or universe mvar, output as is       \"#\".isPrefixOf s || \"?\".isPrefixOf s     else       false",
+    "description": "This function converts an identifier into its string representation, with an option to escape special characters."
+  },
+  "Lean.mkIdent": {
+    "type": "definition",
+    "code": "Lean.mkIdent (val : Lean.Name) : Lean.Ident",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def mkIdent (val : Name) : Ident :=   ⟨Syntax.ident SourceInfo.none (toString val).toSubstring val []⟩",
+    "description": "This function creates an identifier from a name."
+  },
+  "Lean.Syntax.Term": {
+    "type": "definition",
+    "code": "Lean.Syntax.Term : Type",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "abbrev Term := TSyntax `term abbrev Command := TSyntax `command protected abbrev Level := TSyntax `level protected abbrev Tactic := TSyntax `tactic abbrev Prec := TSyntax `prec abbrev Prio := TSyntax `prio abbrev Ident := TSyntax identKind abbrev StrLit := TSyntax strLitKind abbrev CharLit := TSyntax charLitKind abbrev NameLit := TSyntax nameLitKind abbrev ScientificLit := TSyntax scientificLitKind abbrev NumLit := TSyntax numLitKind abbrev HygieneInfo := TSyntax hygieneInfoKind",
+    "description": "This definition establishes a type that represents a term in the syntax of a programming language."
+  },
+  "Lean.TSyntax.getId": {
+    "type": "definition",
+    "code": "Lean.TSyntax.getId (s : Ident) : Name",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getId (s : Ident) : Name :=   s.raw.getId",
+    "description": "This function retrieves the name associated with a given identifier."
+  },
+  "Lean.Syntax.isNatLit?": {
+    "type": "definition",
+    "code": "Lean.Syntax.isNatLit? (s : Syntax) : Option Nat",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def isNatLit? (s : Syntax) : Option Nat :=   isNatLitAux numLitKind s",
+    "description": "This function checks if a given syntax element represents a natural number literal and returns that number if it does."
+  },
+  "Lean.TSyntax.getNat": {
+    "type": "definition",
+    "code": "Lean.TSyntax.getNat (s : NumLit) : Nat",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def getNat (s : NumLit) : Nat :=   s.raw.isNatLit?.getD 0",
+    "description": "This function retrieves the natural number value from a numeric literal in the syntax representation."
+  },
+  "Lean.Quote.quote": {
+    "type": "definition",
+    "code": "Lean.Quote.quote {α : Type} {k : optParam SyntaxNodeKind `term} [self : Quote α k] : α → TSyntax k",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "quote : α → TSyntax k",
+    "description": "This function generates a syntax tree representation of a given value, incorporating optional specifications for the kind of syntax node."
+  },
+  "Lean.Syntax.isStrLit?": {
+    "type": "definition",
+    "code": "Lean.Syntax.isStrLit? (stx : Lean.Syntax) : Option String",
+    "comment": "If the provided `Syntax` is a string literal, returns the string it represents.\n\nEven if the `Syntax` is a `str` node, the function may return `none` if its internally ill-formed.\nThe parser should always create well-formed `str` nodes.\n",
+    "explanatories": {},
+    "fullDefinition": "def isStrLit? (stx : Syntax) : Option String :=   match isLit? strLitKind stx with   | some val => decodeStrLit val   | _        => none",
+    "description": "This function determines whether a syntax element is a string literal and returns the corresponding string if it is valid."
+  }
+}

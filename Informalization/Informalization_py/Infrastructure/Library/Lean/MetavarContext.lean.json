@@ -1,0 +1,26 @@
+{
+  "Lean.instantiateMVars": {
+    "type": "definition",
+    "code": "Lean.instantiateMVars {m : Type → Type} [Monad m] [MonadMCtx m] (e : Expr) : m Expr",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def instantiateMVars [Monad m] [MonadMCtx m] (e : Expr) : m Expr := do   if !e.hasMVar then     return e   else     let (r, mctx) := instantiateMVarsCore (← getMCtx) e     modifyMCtx fun _ => mctx     return r",
+    "description": "A function that replaces mutable variables in an expression with their current values within a computational monad context."
+  },
+  "Lean.LocalInstance.className": {
+    "type": "definition",
+    "code": "Lean.LocalInstance.className (self : LocalInstance) : Name",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "className : Name   fvar      : Expr   deriving Inhabited",
+    "description": "A method that retrieves the class name associated with a local instance in a type system."
+  },
+  "Lean.MVarId.assign": {
+    "type": "definition",
+    "code": "Lean.MVarId.assign {m : Type → Type} [MonadMCtx m] (mvarId : MVarId) (val : Expr) : m Unit",
+    "comment": "Add `mvarId := x` to the metavariable assignment.\nThis method does not check whether `mvarId` is already assigned, nor it checks whether\na cycle is being introduced, or whether the expression has the right type.\nThis is a low-level API, and it is safer to use `isDefEq (mkMVar mvarId) x`.\n",
+    "explanatories": {},
+    "fullDefinition": "def _root_.Lean.MVarId.assign [MonadMCtx m] (mvarId : MVarId) (val : Expr) : m Unit :=   modifyMCtx fun m => { m with eAssignment := m.eAssignment.insert mvarId val }",
+    "description": "A method that assigns a value to a specified mutable variable without performing any checks for pre-existing assignments or type correctness."
+  }
+}

@@ -1,0 +1,56 @@
+[applied Tactic]
+have n₁eps := xlima (ε / 2) (by exact half_pos εpos ) 
+
+[answer]
+We will show that there exists a natural number \( n_0 \) such that for all \( n \geq n_0 \), the distance between \( x(n) \) and \( a \) is less than \( \frac{\varepsilon}{2} \). Since the sequence \( x \) converges to \( a \), for the positive number \( \frac{\varepsilon}{2} \) there exists such an \( n_0 \) by the definition of convergence. Moreover, because \( \varepsilon > 0 \), dividing it by 2 yields another positive number \( \frac{\varepsilon}{2} > 0 \), ensuring the validity of this choice. Hence, the required \( n_0 \) exists and the desired inequality holds for all \( n \geq n_0 \).
+[applied Tactic]
+have n₂eps := xlimb (ε / 2) (by exact half_pos εpos ) 
+
+[answer]
+We will show that there exists a natural number from which onward all terms of the sequence lie within half of ε from the limit point b. Since the sequence converges to b, for any positive number, in particular for ε/2 > 0, there exists a natural number N such that for all n ≥ N, the distance between the nth term and b is less than ε/2. This follows because ε is positive, so its half is also positive, allowing us to apply the convergence criterion with ε/2. Hence, beyond this index N, all terms of the sequence remain within ε/2 of b, as required.
+[applied Tactic]
+have : n ≥ max n₁ n₂ := by rw [ge_iff_le ] 
+
+[answer]
+We will show that the chosen natural number \( n \) is at least as large as the maximum of \( n_1 \) and \( n_2 \). To do this, we rewrite the original statement \( n \geq \max(n_1, n_2) \) in its equivalent form \( \max(n_1, n_2) \leq n \). Recognizing this equivalence simplifies the comparison, allowing us to conclude directly that \( n \) is indeed greater than or equal to the maximum of \( n_1 \) and \( n_2 \), thereby establishing the desired result.
+[applied Tactic]
+calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+
+[answer]
+We will show that the absolute value of the difference between \( a \) and \( b \) is bounded above by \( \varepsilon \). To begin, we express the difference \( a - b \) as the sum \( (a - x_n) + (x_n - b) \) by introducing the intermediate term \( x_n \). This rearrangement is justified by the properties of addition and subtraction, allowing us to rewrite the original difference without altering its value. Next, we note that the absolute value satisfies symmetry in subtraction, so \( |a - x_n| = |x_n - a| \), which permits us to work with these terms more flexibly. Applying the triangle inequality, we then have that the absolute value of \( a - b \) is at most the sum of the absolute values of \( a - x_n \) and \( x_n - b \). Finally, using the given bounds that each of these absolute values is less than half of \( \varepsilon \) for sufficiently large indices \( n \), we conclude that their sum is less than \( \varepsilon \), thereby establishing the desired inequality.
+[applied Tactic]
+have : ∀ ε > 0, |a - b| < ε := by
+      -- ⭐️ 任意に ε > 0 をとると、x_n → a かつ x_n → b から、
+      intro ε εpos
+      -- ⭐️ あるn₁, n₂で n ≥ n₂ → |x_n - a| < ε/2
+      have n₁eps := xlima (ε / 2) (by exact half_pos εpos)
+      let ⟨n₁,n₁h⟩ := n₁eps
+      -- ⭐️ n ≥ n₂ → |x_n - b| < ε/2 をみたすものがある。
+      have n₂eps := xlimb (ε / 2) (by exact half_pos εpos)
+      let ⟨n₂,n₂h⟩ := n₂eps
+      -- ⭐️ 従って n ≥ max {n₁, n₂} とすれば、
+      let n := max n₁ n₂
+      have : n ≥ max n₁ n₂ := by rw [ge_iff_le]
+      -- ⭐️ |a - b| = |(a - x_n) + (x_n - b)| ≤ |x_n - a| + |x_n - b| < ε/2 + ε/2 = ε となる.
+      calc
+        |a - b| = |(a - x n) + (x n - b)| := by
+          rw [add_sub,sub_add_cancel]
+        _ ≤  |x n - a| + |x n - b| := by
+          rw [abs_sub_comm]
+          exact abs_add (a - x n) (x n - b)
+        _ < ε / 2 + ε / 2 := (add_lt_add (n₁h n (le_of_max_le_left this)) (n₂h n (le_of_max_le_right this)))
+        _ = ε := add_halves  ε 
+
+[answer]
+We will show that if a sequence converges to both \(a\) and \(b\), then the distance between \(a\) and \(b\) must be zero. Let \(\varepsilon > 0\) be arbitrary. Since the sequence \( (x_n) \) converges to \(a\), by the definition of convergence there exists a natural number \(n_1\) such that for all \( n \geq n_1 \), the distance between \(x_n\) and \(a\) is less than \(\frac{\varepsilon}{2}\). Similarly, because the sequence also converges to \(b\), there is a natural number \(n_2\) such that for all \( n \geq n_2 \), the distance between \(x_n\) and \(b\) is less than \(\frac{\varepsilon}{2}\). Let \(n = \max(n_1, n_2)\). Then, for all \( n \geq n \), both inequalities hold simultaneously. Using the triangle inequality, we have
+\[
+|a - b| = |a - x_n + x_n - b| \leq |a - x_n| + |x_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]
+Since \(\varepsilon\) was arbitrary, it follows that the distance between \(a\) and \(b\) is less than every positive \(\varepsilon\), and thus \(a = b\).

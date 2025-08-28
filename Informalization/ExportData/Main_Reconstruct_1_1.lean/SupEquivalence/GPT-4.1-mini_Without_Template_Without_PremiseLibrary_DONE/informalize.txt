@@ -1,0 +1,229 @@
+[appliedTactic]
+have left : (sSup A = a₀) → (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) := by
+      -- a₀がAの上限であれば、
+      intro ssup
+      -- 書きやすい形に書き換える
+      have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2 ssup
+      -- ⭐️ (2)の前半はもちろん成り立っているので、
+      have lleft : UpperBound A a₀ := ssup.left
+      -- ⭐️ 後半だけ示せばよい。
+      suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by
+        exact ⟨lleft,lright⟩
+      -- ⭐️ もし(2)の後半が成り立っていないと、
+      by_contra h; push_neg at h
+      -- ⭐️ある ε > 0に対して a₀ - ε がAの上界になってしまうので、
+      have : ∃ε > 0, UpperBound A (a₀ - ε) := by
+        let ⟨ε, εpos,h2⟩ := h
+        apply Exists.intro ε
+        apply And.intro
+        . exact εpos
+        . intro k kinA
+          exact h2 k kinA
+      let ⟨ε,εpos,h3⟩ := this
+      -- ⭐️ a₀がAの最小上界である
+      have a₀MinUBA:= ssup.right (a₀ - ε) h3
+      -- ⭐️ という仮定に反する
+       linarith 
+[answer]
+Assuming that the supremum of the set \( A \) is \( a_0 \), first rewrite this assumption into an equivalent form involving the supremum concept. From this, deduce that \( a_0 \) is an upper bound of \( A \). To complete the proof, it suffices to show that for every positive number \( \varepsilon \), there exists an element in \( A \) that is greater than \( a_0 - \varepsilon \). Suppose, for the sake of contradiction, that this is not the case. Then there would exist some positive \( \varepsilon \) such that \( a_0 - \varepsilon \) is an upper bound of \( A \). This contradicts the minimality of \( a_0 \) as the least upper bound of \( A \). Therefore, the original statement holds: if the supremum of \( A \) is \( a_0 \), then \( a_0 \) is an upper bound of \( A \) and for every positive \( \varepsilon \), there exists an element of \( A \) exceeding \( a_0 - \varepsilon \).
+[appliedTactic]
+intro  ssup 
+[answer]
+Assume that the supremum of the set \( A \) is equal to \( a_0 \). Under this assumption, we aim to prove that \( a_0 \) is an upper bound of \( A \) and that for every positive number \( \varepsilon \), there exists an element in \( A \) that is greater than \( a_0 - \varepsilon \).
+[appliedTactic]
+have ssup := (Sup_sSup_iff AnotEmpty ABoundAbove a₀).2  ssup 
+[answer]
+Establish that the real number \( a_0 \) is the supremum of the set \( A \) by using the fact that \( a_0 \) equals the least upper bound of \( A \). This equivalence allows us to conclude that \( a_0 \) serves as an upper bound for \( A \) and satisfies the property that for every positive number \( \varepsilon \), there exists an element in \( A \) that is greater than \( a_0 - \varepsilon \).
+[appliedTactic]
+have lleft : UpperBound A a₀ :=  ssup.left 
+[answer]
+Establish that \( a_0 \) is an upper bound of the set \( A \) by extracting this fact from the definition of \( a_0 \) being the supremum of \( A \). This introduces the assumption that \( a_0 \) bounds all elements of \( A \) from above.
+[appliedTactic]
+suffices lright : ∀ε > 0, ∃a ∈ A, a₀ - ε < a by
+        exact ⟨lleft,lright ⟩ 
+[answer]
+The proof now focuses on showing that for every positive number \( \varepsilon \), there exists an element \( a \) in the set \( A \) such that \( a \) is greater than \( a_0 - \varepsilon \). Having already established that \( a_0 \) is an upper bound for \( A \), it suffices to prove this property to complete the demonstration that \( a_0 \) is indeed the least upper bound of \( A \).
+[appliedTactic]
+exact ⟨lleft,lright ⟩ 
+[answer]
+The proof is completed by establishing both that \( a_0 \) is an upper bound of the set \( A \) and that for every positive number \( \varepsilon \), there exists an element in \( A \) that is greater than \( a_0 - \varepsilon \).
+[appliedTactic]
+by_contra  h 
+[answer]
+Assume that there exists some positive distance from \( a_0 \) such that no element of \( A \) lies within that distance below \( a_0 \), and show that this assumption leads to a contradiction.
+[appliedTactic]
+push_neg at  h 
+[answer]
+The negation of the statement "for every positive ε, there exists an element of the set greater than \( a_0 - \varepsilon \)" is transformed into the existence of a positive ε such that every element of the set is less than or equal to \( a_0 - \varepsilon \).
+[appliedTactic]
+have : ∃ε > 0, UpperBound A (a₀ - ε) := by
+        let ⟨ε, εpos,h2⟩ := h
+        apply Exists.intro ε
+        apply And.intro
+        . exact εpos
+        . intro k kinA
+          exact h2 k  kinA 
+[answer]
+Establish that there exists a positive number ε such that this number serves as an upper bound for the set \( A \) when subtracted from \( a_0 \); that is, \( a_0 - \varepsilon \) is an upper bound of \( A \). This is done by taking the given positive ε and showing that every element of \( A \) is less than or equal to \( a_0 - \varepsilon \), thereby confirming that \( a_0 - \varepsilon \) indeed bounds \( A \) from above.
+[appliedTactic]
+let ⟨ε, εpos,h2⟩ :=  h 
+[answer]
+From the assumption that there exists a positive number ε such that every element of the set is at most \(a_0 - \varepsilon\), introduce this ε along with the facts that ε is positive and that all elements of the set are bounded above by \(a_0 - \varepsilon\).
+[appliedTactic]
+apply Exists.intro  ε 
+[answer]
+By introducing the specific positive number ε as a witness for the existential quantifier, the goal is transformed into proving that ε is positive and that the set is bounded above by the quantity obtained by subtracting ε from a₀.
+[appliedTactic]
+apply  And.intro 
+[answer]
+The tactic splits the goal of proving a conjunction into two separate subgoals: one to prove that \( \varepsilon \) is positive, and another to prove that \( a_0 - \varepsilon \) is an upper bound of the set \( A \).
+[appliedTactic]
+. exact  εpos 
+[answer]
+We conclude the proof of the positivity of ε by directly invoking the existing assumption that ε is greater than zero.
+[appliedTactic]
+exact  εpos 
+[answer]
+The proof is completed by directly using the fact that the number ε is greater than zero.
+[appliedTactic]
+. intro k kinA
+          exact h2 k  kinA 
+[answer]
+We assume an arbitrary element \( k \) of the set \( A \) and use the given fact that every element of \( A \) is less than or equal to \( a_0 - \varepsilon \) to conclude that \( a_0 - \varepsilon \) is an upper bound for \( A \).
+[appliedTactic]
+intro k  kinA 
+[answer]
+Assume an arbitrary element \( k \) of the set \( A \). We will now show that this element \( k \) is less than or equal to \( a_0 - \varepsilon \).
+[appliedTactic]
+exact h2 k  kinA 
+[answer]
+The proof is completed by applying the fact that every element of the set \( A \) is less than or equal to \( a_0 \) minus a positive number \( \varepsilon \), specifically showing that the element \( k \) in \( A \) satisfies this inequality.
+[appliedTactic]
+let ⟨ε,εpos,h3⟩ :=  this 
+[answer]
+From the existence of a positive number ε such that the set is bounded above by \(a_0 - \varepsilon\), introduce ε as such a positive number and record that \(a_0 - \varepsilon\) is an upper bound of the set.
+[appliedTactic]
+have a₀MinUBA:= ssup.right (a₀ - ε)  h3 
+[answer]
+Establish that the supposed supremum \( a_0 \) is less than or equal to \( a_0 - \varepsilon \), where \( \varepsilon \) is a positive number. This follows from the fact that \( a_0 - \varepsilon \) is an upper bound for the set, which contradicts the assumption that \( a_0 \) is the least upper bound, leading toward a contradiction.
+[appliedTactic]
+ linarith 
+[answer]
+The assumption that there exists a positive number ε such that all elements of the set are less than or equal to \( a_0 - \varepsilon \) contradicts the fact that \( a_0 \) is an upper bound of the set. Since \( a_0 \) cannot be less than or equal to \( a_0 - \varepsilon \) when ε is positive, this leads to a contradiction, completing the proof.
+[appliedTactic]
+have right :  (UpperBound A a₀ ∧ ∀ε > 0, ∃ a ∈ A, a₀ - ε < a) → (sSup A = a₀) := by
+      -- ⭐️ a₀が(2)の条件を満たしているとき、
+      intro h1
+      -- Aの任意の上界xに対して a₀ ≤ xであることを言えばよい。
+      suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by
+        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h⟩
+      intro x ub
+      -- ⭐️ もし a₀ ≤ x でないとすると、
+      by_contra h2; push_neg at h2
+      -- ⭐️ ε := a₀ - x
+      let ε := a₀ - x
+      -- ⭐️ >0 となり
+      have εpos : ε > 0 := by
+        rw [gt_iff_lt,sub_pos]; exact h2
+      -- ⭐️ (2) より x = a₀ - ε
+      have : x = a₀ - ε := by ring
+      -- ⭐️ < a なる a ∈ A が存在する
+      have : ∃a ∈ A, x < a := by
+        let ⟨a,ainA,p⟩ := (h1.right ε εpos)
+        rw [this]
+        exact ⟨a, ainA, p⟩
+      -- ⭐️ ことになり、
+      let ⟨a,ainA,xlta⟩ := this
+      -- ⭐️ x が Aの上界であること
+      have := ub a ainA
+      -- ⭐️ に矛盾する。
+       linarith 
+[answer]
+Assuming that the given conditions hold, namely that the value \( a_0 \) is an upper bound of the set \( A \) and that for every positive number \( \varepsilon \), there exists an element in \( A \) greater than \( a_0 - \varepsilon \), we prove that \( a_0 \) is the least upper bound of \( A \).
+
+To do this, it suffices to show that for any upper bound \( x \) of \( A \), the value \( a_0 \) is less than or equal to \( x \). Suppose, for the sake of contradiction, that \( a_0 \) is not less than or equal to \( x \). Then the difference \( \varepsilon = a_0 - x \) is positive. By the assumption, there exists an element in \( A \) that is greater than \( a_0 - \varepsilon \), which equals \( x \). This contradicts the fact that \( x \) is an upper bound of \( A \). Therefore, no such \( x \) can exist, and \( a_0 \) must be less than or equal to every upper bound of \( A \), establishing that \( a_0 \) is the least upper bound of \( A \).
+[appliedTactic]
+intro  h1 
+[answer]
+Assume that \( a_0 \) is an upper bound of the set \( A \) and that for every positive number \( \varepsilon \), there exists an element of \( A \) greater than \( a_0 - \varepsilon \). Under these assumptions, we will show that \( a_0 \) is the least upper bound of \( A \).
+[appliedTactic]
+suffices h : ∀x, (UpperBound A x → a₀ ≤ x) by
+        exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ 
+[answer]
+Assume that for every real number \( x \), if \( x \) is an upper bound of the set \( A \), then \( a_0 \) is less than or equal to \( x \). Using this assumption together with the fact that \( a_0 \) is an upper bound of \( A \) and that values of \( A \) come arbitrarily close to \( a_0 \) from below, we conclude that \( a_0 \) is the supremum of \( A \). From now on, the goal is to prove this property about all upper bounds of \( A \).
+[appliedTactic]
+exact (Sup_sSup_iff AnotEmpty ABoundAbove a₀).1 ⟨h1.left,h ⟩ 
+[answer]
+The proof is completed by showing that the supremum of the set \( A \) equals \( a_0 \), using the fact that \( a_0 \) is an upper bound of \( A \) and that for every positive distance, there exists an element of \( A \) arbitrarily close to \( a_0 \) from below, together with the property that \( a_0 \) is less than or equal to any upper bound of \( A \).
+[appliedTactic]
+intro x  ub 
+[answer]
+Assume an arbitrary real number \( x \) that serves as an upper bound for the set \( A \). We now aim to prove that the number \( a_0 \) is less than or equal to this \( x \).
+[appliedTactic]
+by_contra  h2 
+[answer]
+Assume that \( a_0 \) is not less than or equal to \( x \) and show a contradiction.
+[appliedTactic]
+push_neg at  h2 
+[answer]
+The assumption that \( a_0 \) is not less than or equal to \( x \) is rewritten as \( x \) being less than \( a_0 \).
+[appliedTactic]
+let ε := a₀ -  x 
+[answer]
+Define ε as the difference between \(a_0\) and \(x\), that is, set ε equal to \(a_0 - x\).
+[appliedTactic]
+have εpos : ε > 0 := by
+        rw [gt_iff_lt,sub_pos]; exact  h2 
+[answer]
+Establish that the difference between \( a_0 \) and \( x \), denoted by \( \varepsilon \), is positive by using the fact that \( x \) is less than \( a_0 \).
+[appliedTactic]
+rw [gt_iff_lt,sub_pos ] 
+[answer]
+The goal of proving that the difference between \( a_0 \) and \( x \) is positive is transformed into proving that \( x \) is less than \( a_0 \), by using the equivalence between a positive difference and the corresponding inequality between the two numbers.
+[appliedTactic]
+exact  h2 
+[answer]
+The proof is completed by directly using the fact that \( x \) is less than \( a_0 \).
+[appliedTactic]
+have : x = a₀ - ε := by  ring 
+[answer]
+Express that \( x \) equals \( a_0 \) minus \( \varepsilon \), where \( \varepsilon \) is defined as the difference between \( a_0 \) and \( x \).
+[appliedTactic]
+ ring 
+[answer]
+The equality expressing \( x \) as the difference between \( a_0 \) and \( \varepsilon \) is confirmed by a straightforward algebraic simplification, completing this step of the proof.
+[appliedTactic]
+have : ∃a ∈ A, x < a := by
+        let ⟨a,ainA,p⟩ := (h1.right ε εpos)
+        rw [this]
+        exact ⟨a, ainA, p ⟩ 
+[answer]
+Establish that there exists an element in the set \( A \) which is greater than \( x \) by using the fact that for the positive number \( \varepsilon = a_0 - x \), there is an element in \( A \) exceeding \( a_0 - \varepsilon \). This follows from the property that for every positive distance from \( a_0 \), the set \( A \) contains an element within that distance.
+[appliedTactic]
+let ⟨a,ainA,p⟩ := (h1.right ε εpos ) 
+[answer]
+From the fact that for every positive number ε there exists an element \(a\) in the set \(A\) such that \(a\) is greater than \(a_0 - \varepsilon\), apply this to the specific positive number \(\varepsilon = a_0 - x\) to obtain an element \(a\) in \(A\) satisfying \(a > a_0 - \varepsilon\).
+[appliedTactic]
+rw [this ] 
+[answer]
+By substituting the expression for \( x \) with \( a_0 - \varepsilon \) in the goal, the statement that there exists an element in the set \( A \) greater than \( x \) is rewritten as the existence of an element in \( A \) greater than \( a_0 - \varepsilon \).
+[appliedTactic]
+exact ⟨a, ainA, p ⟩ 
+[answer]
+The proof is completed by providing a specific element \( a \) from the set \( A \) that lies within the required range, thus demonstrating the existence of an element in \( A \) greater than \( a_0 - \varepsilon \).
+[appliedTactic]
+let ⟨a,ainA,xlta⟩ :=  this 
+[answer]
+From the statement that there exists an element of the set \( A \) greater than \( x \), introduce such an element \( a \) in \( A \) with the property that \( x < a \).
+[appliedTactic]
+have := ub a  ainA 
+[answer]
+Use the fact that \(x\) is an upper bound for the set \(A\) to deduce that the element \(a\), which belongs to \(A\) and is greater than \(x\), must also be less than or equal to \(x\). This introduces a contradiction because it simultaneously asserts that \(a\) is both greater than and less than or equal to \(x\).
+[appliedTactic]
+ linarith 
+[answer]
+Given that \( a \) is an element of the set \( A \) and \( x \) is an upper bound for \( A \), the assumption that \( a \leq x \) contradicts the fact that \( x < a \). This contradiction arises from the properties of the supremum and the chosen values. Therefore, the proof is complete.
+[appliedTactic]
+exact Iff.intro left  right 
+[answer]
+The proof is completed by establishing the equivalence between the statement that the supremum of \( A \) is \( a_0 \) and the condition that \( a_0 \) is an upper bound of \( A \) with the property that for every positive number, there exists an element of \( A \) arbitrarily close to \( a_0 \) from below. This is done by demonstrating each implication separately and then combining them to conclude the equivalence.

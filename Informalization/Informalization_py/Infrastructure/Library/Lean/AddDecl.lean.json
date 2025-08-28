@@ -1,0 +1,18 @@
+{
+  "Lean.addAndCompile": {
+    "type": "definition",
+    "code": "Lean.addAndCompile (decl : Declaration) : CoreM Unit",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def addAndCompile (decl : Declaration) : CoreM Unit := do   addDecl decl   compileDecl decl",
+    "description": "A function that adds a declaration to a context and compiles it."
+  },
+  "Lean.addDecl": {
+    "type": "definition",
+    "code": "Lean.addDecl (decl : Declaration) : CoreM Unit",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def addDecl (decl : Declaration) : CoreM Unit := do   profileitM Exception \"type checking\" (← getOptions) do     withTraceNode `Kernel (fun _ => return m!\"typechecking declaration\") do       if !(← MonadLog.hasErrors) && decl.hasSorry then         logWarning \"declaration uses 'sorry'\"       match (← getEnv).addDecl (← getOptions) decl (← read).cancelTk? with       | .ok    env => setEnv env       | .error ex  => throwKernelException ex",
+    "description": "A function that adds a declaration to a context."
+  }
+}

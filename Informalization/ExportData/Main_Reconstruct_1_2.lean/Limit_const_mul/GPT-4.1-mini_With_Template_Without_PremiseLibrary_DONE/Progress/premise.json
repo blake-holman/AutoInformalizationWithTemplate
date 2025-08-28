@@ -1,0 +1,116 @@
+{
+  "let ⟨a,convxa⟩ :=  conx ": [],
+  "have : IsConverges (fun n => α * (x n)) := by\n          apply Exists.intro (α * a)\n          intro ε εpos\n          let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))\n          apply Exists.intro n₀\n          intro n nlen₀\n          calc\n            |α * (x n) - α * a| = |α| * |x n - a| := by\n              rw [← mul_sub, abs_mul]\n            _ ≤ (|α| * ε /(|α| + 1))  := by\n              rw [← mul_div]\n              by_cases h1 :|α| > 0\n              . rw [mul_le_mul_left h1]\n                apply le_of_lt\n                exact h n nlen₀\n              . push_neg at h1\n                rw [abs_nonpos_iff] at h1\n                rw [h1,abs_zero,zero_mul,zero_mul]\n            _ < ε := by\n              rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]\n              rw [one_mul,lt_add_iff_pos_right]\n              exact  zero_lt_one ": [
+    "div_pos.{u_1} {α : Type u_1} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b) : 0 < a / b",
+    "Right.add_pos_of_nonneg_of_pos.{u_1} {α : Type u_1} [AddZeroClass α] [Preorder α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] {a b : α} (ha : 0 ≤ a) (hb : 0 < b) :\n  0 < a + b",
+    "lt_add_iff_pos_right.{u_1} {α : Type u_1} [AddZeroClass α] [LT α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1] (a : α) {b : α} : a < a + b ↔ 0 < b",
+    "mul_sub.{u} {α : Type u} [NonUnitalNonAssocRing α] (a b c : α) : a * (b - c) = a * b - a * c",
+    "mul_comm.{u_1} {G : Type u_1} [CommMagma G] (a b : G) : a * b = b * a",
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0",
+    "abs_mul.{u_1} {α : Type u_1} [LinearOrderedRing α] (a b : α) : |a * b| = |a| * |b|",
+    "abs_zero.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |0| = 0",
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "one_mul.{u} {M : Type u} [MulOneClass M] (a : M) : 1 * a = a",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "mul_div.{u_3} {G : Type u_3} [DivInvMonoid G] (a b c : G) : a * (b / c) = a * b / c",
+    "mul_le_mul_left.{u_1} {α : Type u_1} {a b c : α} [Mul α] [Zero α] [Preorder α] [PosMulMono α] [PosMulReflectLE α]\n  (a0 : 0 < a) : a * b ≤ a * c ↔ b ≤ c",
+    "mul_lt_iff_lt_one_right.{u_1} {α : Type u_1} {a b : α} [MulOneClass α] [Zero α] [Preorder α] [PosMulStrictMono α]\n  [PosMulReflectLT α] (a0 : 0 < a) : a * b < a ↔ b < 1",
+    "div_lt_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : b / c < a ↔ b < a * c",
+    "abs_nonpos_iff.{u_1} {α : Type u_1} [AddGroup α] [LinearOrder α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] {a : α}\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |a| ≤ 0 ↔ a = 0",
+    "IsConverges (x : ℕ → ℝ) : Prop",
+    "abs_nonneg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (a : α) : 0 ≤ |a|",
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b"
+  ],
+  "apply Exists.intro (α * a ) ": [
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "IsConverges : IsConverges (x : ℕ → ℝ) : Prop",
+    "ConvergesTo : ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop"
+  ],
+  "intro ε  εpos ": [
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α"
+  ],
+  "let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ) ": [
+    "div_pos.{u_1} {α : Type u_1} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b) : 0 < a / b",
+    "Right.add_pos_of_nonneg_of_pos.{u_1} {α : Type u_1} [AddZeroClass α] [Preorder α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] {a b : α} (ha : 0 ≤ a) (hb : 0 < b) :\n  0 < a + b",
+    "abs_nonneg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (a : α) : 0 ≤ |a|"
+  ],
+  " norm_num ": [],
+  "apply Exists.intro  n₀ ": [
+    "Iff.intro {a b : Prop} (mp : a → b) (mpr : b → a) : a ↔ b",
+    "And.intro {a b : Prop} (left : a) (right : b) : a ∧ b",
+    "Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p",
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α"
+  ],
+  "intro n  nlen₀ ": [
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α"
+  ],
+  "calc\n            |α * (x n) - α * a| = |α| * |x n - a| := by\n              rw [← mul_sub, abs_mul]\n            _ ≤ (|α| * ε /(|α| + 1))  := by\n              rw [← mul_div]\n              by_cases h1 :|α| > 0\n              . rw [mul_le_mul_left h1]\n                apply le_of_lt\n                exact h n nlen₀\n              . push_neg at h1\n                rw [abs_nonpos_iff] at h1\n                rw [h1,abs_zero,zero_mul,zero_mul]\n            _ < ε := by\n              rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]\n              rw [one_mul,lt_add_iff_pos_right]\n              exact  zero_lt_one ": [],
+  "rw [← mul_sub, abs_mul ] ": [
+    "abs_mul.{u_1} {α : Type u_1} [LinearOrderedRing α] (a b : α) : |a * b| = |a| * |b|",
+    "mul_sub.{u} {α : Type u} [NonUnitalNonAssocRing α] (a b c : α) : a * (b - c) = a * b - a * c"
+  ],
+  "rw [← mul_div ] ": [
+    "mul_div.{u_3} {G : Type u_3} [DivInvMonoid G] (a b c : G) : a * (b / c) = a * b / c"
+  ],
+  "by_cases h1 :|α| >  0 ": [],
+  ". rw [mul_le_mul_left h1]\n                apply le_of_lt\n                exact h n  nlen₀ ": [],
+  "rw [mul_le_mul_left h1 ] ": [
+    "mul_le_mul_left.{u_1} {α : Type u_1} {a b c : α} [Mul α] [Zero α] [Preorder α] [PosMulMono α] [PosMulReflectLE α]\n  (a0 : 0 < a) : a * b ≤ a * c ↔ b ≤ c"
+  ],
+  "apply  le_of_lt ": [
+    "le_of_lt.{u} {α : Type u} [Preorder α] {a b : α} : a < b → a ≤ b"
+  ],
+  "exact h n  nlen₀ ": [],
+  ". push_neg at h1\n                rw [abs_nonpos_iff] at h1\n                rw [h1,abs_zero,zero_mul,zero_mul ] ": [],
+  "push_neg at  h1 ": [],
+  "rw [abs_nonpos_iff] at  h1 ": [
+    "abs_nonpos_iff.{u_1} {α : Type u_1} [AddGroup α] [LinearOrder α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] {a : α}\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |a| ≤ 0 ↔ a = 0"
+  ],
+  "rw [h1,abs_zero,zero_mul,zero_mul ] ": [
+    "abs_zero.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] : |0| = 0",
+    "MulZeroClass.zero_mul.{u} {M₀ : Type u} [self : MulZeroClass M₀] (a : M₀) : 0 * a = 0"
+  ],
+  "rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)) ] ": [
+    "Right.add_pos_of_nonneg_of_pos.{u_1} {α : Type u_1} [AddZeroClass α] [Preorder α]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] {a b : α} (ha : 0 ≤ a) (hb : 0 < b) :\n  0 < a + b",
+    "div_lt_iff.{u_2} {α : Type u_2} [LinearOrderedSemifield α] {a b c : α} (hc : 0 < c) : b / c < a ↔ b < a * c",
+    "abs_nonneg.{u_1} {α : Type u_1} [Lattice α] [AddGroup α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1]\n  [CovariantClass α α (Function.swap fun x x_1 => x + x_1) fun x x_1 => x ≤ x_1] (a : α) : 0 ≤ |a|",
+    "mul_lt_iff_lt_one_right.{u_1} {α : Type u_1} {a b : α} [MulOneClass α] [Zero α] [Preorder α] [PosMulStrictMono α]\n  [PosMulReflectLT α] (a0 : 0 < a) : a * b < a ↔ b < 1"
+  ],
+  "rw [one_mul,lt_add_iff_pos_right ] ": [
+    "lt_add_iff_pos_right.{u_1} {α : Type u_1} [AddZeroClass α] [LT α]\n  [CovariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1]\n  [ContravariantClass α α (fun x x_1 => x + x_1) fun x x_1 => x < x_1] (a : α) {b : α} : a < a + b ↔ 0 < b",
+    "one_mul.{u} {M : Type u} [MulOneClass M] (a : M) : 1 * a = a"
+  ],
+  "exact  zero_lt_one ": [
+    "zero_lt_one.{u_1} {α : Type u_1} [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero 1] : 0 < 1"
+  ],
+  "apply LimitUniqueness (fun n => α * (x n) ) ": [
+    "LimitUniqueness (x : ℕ → ℝ) (a b : ℝ) (xlima : ConvergesTo x a) (xlimb : ConvergesTo x b) : a = b",
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α",
+    "ConvergesTo : ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop"
+  ],
+  ". exact Limit_def (fun n => α * (x n))  this ": [
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α",
+    "ConvergesTo : ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop"
+  ],
+  "exact Limit_def (fun n => α * (x n))  this ": [
+    "Limit_def (x : ℕ → ℝ) (conv : IsConverges x) : ConvergesTo x (Lim.sLim x)"
+  ],
+  ". intro ε εpos\n        let ⟨n₀, h⟩ := convxa (ε / (|α| + 1)) (div_pos εpos (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num)))\n        apply Exists.intro n₀\n        intro n nlen₀\n        have : Lim.sLim x = a := (Converges_sLim_iff x conx a).1 convxa\n        rw [this]\n        calc\n          |α * (x n) - α * a| = |α| * |x n - a| := by\n            rw [← mul_sub, abs_mul]\n          _ ≤ (|α| * ε /(|α| + 1))  := by\n            rw [← mul_div]\n            by_cases h1 :|α| > 0\n            . rw [mul_le_mul_left h1]\n              apply le_of_lt\n              exact h n nlen₀\n            . push_neg at h1\n              rw [abs_nonpos_iff] at h1\n              rw [h1,abs_zero,zero_mul,zero_mul]\n          _ < ε := by\n            rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]\n            rw [one_mul,lt_add_iff_pos_right]\n            exact  zero_lt_one ": [
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α",
+    "ConvergesTo : ConvergesTo (x : ℕ → ℝ) (a : ℝ) : Prop"
+  ],
+  "have : Lim.sLim x = a := (Converges_sLim_iff x conx a).1  convxa ": [
+    "Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α",
+    "Converges_sLim_iff (x : ℕ → ℝ) (conv : IsConverges x) (a : ℝ) : ConvergesTo x a ↔ Lim.sLim x = a"
+  ],
+  "rw [this ] ": [
+    "Lim.sLim : Lim.sLim.{u_1} {α : Type u_1} [self : Lim α] : (ℕ → α) → α"
+  ],
+  "calc\n          |α * (x n) - α * a| = |α| * |x n - a| := by\n            rw [← mul_sub, abs_mul]\n          _ ≤ (|α| * ε /(|α| + 1))  := by\n            rw [← mul_div]\n            by_cases h1 :|α| > 0\n            . rw [mul_le_mul_left h1]\n              apply le_of_lt\n              exact h n nlen₀\n            . push_neg at h1\n              rw [abs_nonpos_iff] at h1\n              rw [h1,abs_zero,zero_mul,zero_mul]\n          _ < ε := by\n            rw [mul_comm,← mul_div,mul_lt_iff_lt_one_right εpos, div_lt_iff (Right.add_pos_of_nonneg_of_pos (abs_nonneg α) (by norm_num))]\n            rw [one_mul,lt_add_iff_pos_right]\n            exact  zero_lt_one ": [],
+  ". rw [mul_le_mul_left h1]\n              apply le_of_lt\n              exact h n  nlen₀ ": [],
+  ". push_neg at h1\n              rw [abs_nonpos_iff] at h1\n              rw [h1,abs_zero,zero_mul,zero_mul ] ": []
+}

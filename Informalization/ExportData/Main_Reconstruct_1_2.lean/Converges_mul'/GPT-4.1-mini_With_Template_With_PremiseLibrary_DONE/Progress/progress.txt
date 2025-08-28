@@ -1,0 +1,238 @@
+[applied Tactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+
+[answer]
+We will show that the maximum of \( m_1 \) and 1 is greater than zero. To do this, we note that the statement \(\max(m_1, 1) > 0\) is equivalent to the assertion that either \( m_1 > 0 \) or \( 1 > 0 \), since a value is less than the maximum of two numbers if and only if it is less than at least one of them. Considering the case where \( 1 > 0 \), it is clear that this inequality holds, as zero is less than one. Therefore, we conclude that the maximum of \( m_1 \) and 1 is indeed greater than zero.
+[applied Tactic]
+. intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that for every natural number \( n \), the absolute value of \( x(n) \) is at most the maximum of \( m_1 \) and 1. To this end, note that an element is less than or equal to the maximum of two values if and only if it is less than or equal to at least one of those values; hence, it suffices to show that \( |x(n)| \leq m_1 \) or \( |x(n)| \leq 1 \). We consider the case where \( |x(n)| \leq m_1 \), and under the assumption that this holds for every natural number \( n \), the proof is complete.
+[applied Tactic]
+have m1h: ∃M > 0, ∀n, |x n| ≤ M := by
+      let ⟨m1,h2⟩ := ConvergentSequenceBounded x ⟨a ,convxa⟩
+      -- m1 が0 の場合も考えてm1 と 1 のうち大きいほうを使う
+      apply Exists.intro (max m1 1)
+      rw [UpperBound] at h2
+      simp at h2
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that there exists a positive number \( M \) such that for every natural number \( n \), the absolute value of \( x(n) \) is less than or equal to \( M \). Let \( m_1 \) be an upper bound for the set of absolute values of the terms of the sequence \( x \). To establish the existence of such an \( M \), we consider the number \( \max(m_1, 1) \) and show that it is positive and that for all \( n \), \( |x(n)| \leq \max(m_1, 1) \).
+
+By definition, since \( m_1 \) is an upper bound, for every natural number \( n \), \( |x(n)| \leq m_1 \). The maximum of \( m_1 \) and 1 is positive because either \( m_1 > 0 \) or \( 1 > 0 \), and since \( 1 > 0 \) holds trivially, it follows that \( \max(m_1,1) > 0 \). Moreover, given that an element is less than or equal to the maximum of two numbers if and only if it is less than or equal to at least one of them, it follows that for every \( n \), \( |x(n)| \leq m_1 \leq \max(m_1,1) \). Hence, setting \( M = \max(m_1, 1) \) yields a positive number bounding the absolute values of all terms \( x(n) \). This completes the proof.
+[applied Tactic]
+. rw [gt_iff_lt,lt_max_iff]
+        right;  norm_num 
+
+[answer]
+We will show that the maximum of \( m_2 \) and 1 is greater than 0. To do this, we note that proving \(\max(m_2, 1) > 0\) is equivalent to proving that either \( m_2 > 0 \) or \( 1 > 0 \). Since it is clear that \( 1 > 0 \), the claim immediately follows.
+[applied Tactic]
+. intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that for every natural number \( n \), the absolute value of \( y(n) \) is at most the maximum of \( m_2 \) and 1. By the definition of an upper bound, the assumption that \( m_2 \) bounds the set of absolute values \( \{|y_n|\} \) means that for every natural number \( a \), \( |y(a)| \leq m_2 \). Since a number is less than or equal to the maximum of two values if and only if it is less than or equal to at least one of them, it suffices to prove that \( |y(n)| \leq m_2 \) or \( |y(n)| \leq 1 \). From the assumption, we have \( |y(n)| \leq m_2 \) for all \( n \), so the desired inequality \( |y(n)| \leq \max(m_2, 1) \) holds. This completes the proof.
+[applied Tactic]
+have m2h : ∃M > 0, ∀n, |y n| ≤ M := by
+      let ⟨m2,h2⟩ := ConvergentSequenceBounded y ⟨b,convyb⟩
+      apply Exists.intro (max m2 1)
+      apply And.intro
+      . rw [gt_iff_lt,lt_max_iff]
+        right; norm_num
+      . intro n
+        rw [UpperBound] at h2; simp at h2
+        rw [le_max_iff]
+        left
+        exact h2  n 
+
+[answer]
+We will show that there exists a positive real number \( M \) such that for every natural number \( n \), the absolute value of \( y(n) \) is at most \( M \). To this end, let \( m_2 \) be a real number that serves as an upper bound for the absolute values of the terms of the sequence \( y \). Consider the number \( M = \max(m_2, 1) \). Since the maximum of two positive numbers is positive and \( 1 > 0 \), it follows that \( M > 0 \). Next, we show that for every natural number \( n \), the absolute value \( |y(n)| \) is bounded above by \( M \). By the definition of \( m_2 \) as an upper bound, we have \( |y(n)| \leq m_2 \) for all \( n \). Since \( |y(n)| \leq m_2 \) implies \( |y(n)| \leq \max(m_2, 1) = M \), it follows that the desired inequality holds for all \( n \). Thus, we have established the existence of a positive real number \( M \) that bounds the absolute values of \( y(n) \) for every natural number \( n \), completing the proof.
+[applied Tactic]
+have Mpos : 0 < 2 * M := by
+        rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+        left
+        rw [lt_max_iff]
+        left
+        exact  hm1.left 
+
+[answer]
+We will show that \(2 \times M\) is positive. To do this, we begin by noting that a positive factor multiplied by another number is positive if and only if that number itself is positive. Thus, proving \(2 \times M > 0\) reduces to showing that the maximum of \(m_1\) and \(m_2\) is positive or that the absolute value of \(b\) is positive. Focusing on the maximum of \(m_1\) and \(m_2\), we observe that a number is less than this maximum if and only if it is less than at least one of the two numbers. Therefore, to prove that zero is less than the maximum of \(m_1\) and \(m_2\), it suffices to show that zero is less than either \(m_1\) or \(m_2\). By assuming \(m_1 > 0\), the inequality is established, and the proof is complete.
+[applied Tactic]
+have ε2Mpos : 0 < ε / (2 * M) := by
+      have Mpos : 0 < 2 * M := by
+        rw [mul_pos_iff_of_pos_left (by norm_num), lt_max_iff]
+        left
+        rw [lt_max_iff]
+        left
+        exact hm1.left
+      apply (lt_div_iff Mpos).2
+      rw [zero_mul]; exact  εpos 
+
+[answer]
+We will show that \(\frac{\varepsilon}{2M}\) is positive. First, we establish that \(2M\) is positive. Since \(2\) is positive, it suffices to show that the maximum of \(m_1\) and \(m_2\) is positive or that \(|b|\) is positive. Focusing on the maximum of \(m_1\) and \(m_2\), we note that zero is less than the maximum if and only if zero is less than at least one of \(m_1\) or \(m_2\). Assuming \(m_1 > 0\), this implies \(2M > 0\). Next, by the theorem relating inequalities involving division by a positive number, to prove that \(\frac{\varepsilon}{2M} > 0\), it suffices to show that \(0 \times 2M < \varepsilon\). Since \(0 \times 2M = 0\), this reduces to proving \(0 < \varepsilon\), which holds by assumption. Therefore, \(\frac{\varepsilon}{2M}\) is positive, completing the proof.
+[applied Tactic]
+have m1leM : m1 ≤ M := by
+          rw [le_max_iff]
+          left
+          rw [le_max_iff]
+          left
+          exact le_refl  m1 
+
+[answer]
+We will show that \( m_1 \leq M \). To do this, we use the fact that an element is less than or equal to the maximum of two others if and only if it is less than or equal to at least one of those two elements. Thus, proving \( m_1 \leq M \) reduces to proving \( m_1 \leq \max(m_1, m_2) \) or \( m_1 \leq |b| \). Focusing on the first case, we note that \( m_1 \leq \max(m_1, m_2) \) holds if and only if \( m_1 \leq m_1 \) or \( m_1 \leq m_2 \). Since the inequality \( m_1 \leq m_1 \) is trivially true for any real number, this establishes \( m_1 \leq \max(m_1, m_2) \). Hence, the original inequality \( m_1 \leq M \) holds, completing the proof.
+[applied Tactic]
+have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+          have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+          exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b) ) 
+
+[answer]
+We will show that \(|x_n| \cdot |y_n - b| \leq M |y_n - b|\). First, observe that \(|x_n|\) is bounded above by \(m_1\) for all \(n\), and since \(m_1 \leq M\), it follows by transitivity that \(|x_n| \leq M\). Next, since absolute values are non-negative, and \(M\) is non-negative, multiplying both sides of the inequality \(|x_n| \leq M\) by the non-negative quantity \(|y_n - b|\) preserves the inequality. Therefore, \(|x_n| \cdot |y_n - b| \leq M \cdot |y_n - b|\), as required.
+[applied Tactic]
+have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+          rw [mul_comm]
+          exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a) ) 
+
+[answer]
+We will show that \(|x_n - a| \cdot |b| \leq M |x_n - a|\). By the commutativity of multiplication, this is equivalent to proving that \(|b| \cdot |x_n - a| \leq M |x_n - a|\). Since absolute values are always non-negative, multiplying both sides of the inequality by the non-negative quantity \(|x_n - a|\) preserves the inequality. Thus, the desired inequality follows directly from these properties.
+[applied Tactic]
+have Mpos : 0 < M := by
+          rw [lt_max_iff]; left;
+          rw [lt_max_iff]; left; exact  hm1.left 
+
+[answer]
+We will show that \( M \) is greater than zero. To do this, note that since a number is less than the maximum of two others if and only if it is less than at least one of them, proving \( 0 < M \) reduces to proving that \( 0 < \max(m_1, m_2) \) or \( 0 < |b| \). Focusing on the term \( \max(m_1, m_2) \), we again use the fact that \( 0 < \max(m_1, m_2) \) if and only if \( 0 < m_1 \) or \( 0 < m_2 \). By considering the case \( 0 < m_1 \), and assuming this holds, the proof is complete because it establishes that \( M \), which depends on these quantities, is indeed greater than zero.
+[applied Tactic]
+have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl  n2 
+
+[answer]
+We will show that the chosen index \( n_0 \) is greater than or equal to \( n_2 \). By observing that \( n_0 \geq n_2 \) is equivalent to \( n_2 \leq n_0 \), and using the characterization that an element is less than or equal to the maximum of two others if and only if it is less than or equal to at least one of them, it suffices to prove that \( n_2 \leq n_1 \) or \( n_2 \leq n_2 \). Since the inequality \( n_2 \leq n_2 \) trivially holds for any \( n_2 \), the desired conclusion follows immediately, completing the proof.
+[applied Tactic]
+have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl n2
+          exact cn2 n (ge_trans ngen₀ n0gen2 ) 
+
+[answer]
+We will show that multiplying \( M \) by the absolute difference between \( y_n \) and \( b \) is less than multiplying \( M \) by \( \frac{\varepsilon}{2M} \). Since \( M \) is positive, and multiplying both sides of an inequality by a positive number preserves the inequality, it suffices to prove that the absolute value \( |y_n - b| \) is less than \( \frac{\varepsilon}{2M} \). To establish this, we first observe that the chosen index \( n_0 \) is greater than or equal to \( n_2 \). Noting that \( n_0 \geq n_2 \) is equivalent to \( n_2 \leq n_0 \), and recognizing that an element less than or equal to the maximum of two others means it is less than or equal to at least one of them, it suffices to show \( n_2 \leq n_1 \) or \( n_2 \leq n_2 \). The latter inequality \( n_2 \leq n_2 \) trivially holds, so \( n_0 \geq n_2 \) follows immediately. Given that for all indices \( n \geq n_2 \), we have \( |y_n - b| < \frac{\varepsilon}{2M} \), and since \( n \geq n_0 \geq n_2 \), it follows that \( |y_n - b| < \frac{\varepsilon}{2M} \). Multiplying both sides by \( M \) completes the proof.
+[applied Tactic]
+have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl  n1 
+
+[answer]
+We will show that the chosen index \( n_0 \) is greater than or equal to the index \( n_1 \). To do this, we first observe that proving \( n_0 \geq n_1 \) is equivalent to showing \( n_1 \leq n_0 \). Furthermore, since an element is less than or equal to the maximum of two elements if and only if it is less than or equal to at least one of them, it suffices to prove that \( n_1 \leq n_1 \) or \( n_1 \leq n_2 \). Considering the case \( n_1 \leq n_1 \), this inequality holds trivially because every natural number is less than or equal to itself. Hence, the desired inequality \( n_0 \geq n_1 \) follows directly.
+[applied Tactic]
+have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl n1
+          exact cn1 n (ge_trans ngen₀ n0gen1 ) 
+
+[answer]
+We will show that multiplying the positive constant \( M \) by the absolute difference \( |x_n - a| \) is less than \( M \) times the fraction \( \frac{\varepsilon}{2M} \). Since \( M \) is positive, multiplying both sides of the inequality \( |x_n - a| < \frac{\varepsilon}{2M} \) by \( M \) preserves the inequality, thus it suffices to prove the latter. To establish this, we consider the chosen index \( n_0 \), which by definition is the maximum of \( n_1 \) and \( n_2 \). We demonstrate that \( n_0 \geq n_1 \) by noting that \( n_1 \leq n_0 \) holds because \( n_1 \) is less than or equal to the maximum of \( n_1 \) and \( n_2 \); in particular, \( n_1 \leq n_1 \) trivially holds. Finally, using the assumption that for all \( n \geq n_1 \), the inequality \( |x_n - a| < \frac{\varepsilon}{2M} \) holds, and the fact that \( n \geq n_0 \geq n_1 \), we conclude by transitivity that \( |x_n - a| < \frac{\varepsilon}{2M} \), completing the proof.
+[applied Tactic]
+have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos ) 
+
+[answer]
+We will show that \( M \) is not equal to zero. Assume, for the sake of contradiction, that \( M = 0 \). However, from the given assumptions, \( M \) is greater than zero. By the theorem stating that if one element is less than another, then those two elements cannot be equal, and using the symmetry of inequality, it follows directly that \( M \neq 0 \). This contradiction confirms that \( M \) is indeed not equal to zero.
+[applied Tactic]
+have : M * (ε / (2 * M)) = ε / 2 := by
+          have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos)
+          rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm ] 
+
+[answer]
+We will show that multiplying \( M \) by the quotient \(\frac{\varepsilon}{2M}\) equals \(\frac{\varepsilon}{2}\). First, we establish that \( M \neq 0 \). Assuming the contrary, that \( M = 0 \), contradicts the given assumption that \( M > 0 \). By the theorem stating that if one element is less than another, they cannot be equal, and by symmetry of inequality, it follows that \( M \neq 0 \). Having confirmed \( M \) is nonzero, we use the commutativity of multiplication and the fact that multiplying a nonzero element by its inverse yields one to conclude:
+\[
+M \times \frac{\varepsilon}{2M} = \frac{\varepsilon}{2} \times \left( M \times \frac{1}{M} \right) = \frac{\varepsilon}{2} \times 1 = \frac{\varepsilon}{2},
+\]
+thus completing the proof.
+[applied Tactic]
+calc
+      |x n * y n - a * b| = |(x n * y n - x n * b) + (x n * b - a * b)| := by
+        rw [sub_add_sub_cancel]
+      _ ≤ |(x n * y n - x n * b)| + |(x n * b - a * b)| := abs_add _ _
+      _ = |(x n)| * |y n - b| + |x n - a| * |b| := by
+        rw [← sub_mul,← mul_sub,abs_mul,abs_mul]
+      _ ≤ M * |y n - b| + M * |x n - a| := by
+        have m1leM : m1 ≤ M := by
+          rw [le_max_iff]
+          left
+          rw [le_max_iff]
+          left
+          exact le_refl m1
+        have k1 : |x n| * |y n - b| ≤ M * |y n - b| := by
+          have : |x n| ≤ M := le_trans (hm1.right n) m1leM
+          exact mul_le_mul_of_nonneg_right this (abs_nonneg (y n - b))
+        have k2 : |x n - a| * |b| ≤ M * |x n - a| := by
+          rw [mul_comm]
+          exact mul_le_mul_of_nonneg_right Mgeabsb (abs_nonneg (x n - a))
+        exact add_le_add k1 k2
+      _ < ε /2 + ε /2 := by
+        have Mpos : 0 < M := by
+          rw [lt_max_iff]; left;
+          rw [lt_max_iff]; left; exact hm1.left
+        have k1 :  M * |y n - b| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen2 : n₀ ≥ n2 := by
+            rw [ge_iff_le,le_max_iff]
+            right
+            exact le_refl n2
+          exact cn2 n (ge_trans ngen₀ n0gen2)
+        have k2 : M * |x n - a| < M * (ε/ (2 * M)) := by
+          apply (mul_lt_mul_left Mpos).2
+          have n0gen1 : n₀ ≥ n1 := by
+            rw [ge_iff_le,le_max_iff]
+            left; exact le_refl n1
+          exact cn1 n (ge_trans ngen₀ n0gen1)
+        have : M * (ε / (2 * M)) = ε / 2 := by
+          have : M ≠ 0 := by
+            exact Ne.symm (ne_of_lt Mpos)
+          rw [mul_div,div_eq_inv_mul,mul_inv,← mul_assoc,mul_comm,mul_assoc,inv_mul_cancel this,mul_one,div_eq_inv_mul,mul_comm]
+        rw [this] at k1 k2
+        exact add_lt_add k1 k2
+      _ = ε := by
+        exact add_halves  ε 
+
+[answer]
+We will show that \( |x_n y_n - a b| < \varepsilon \) for given sequences \((x_n)\) and \((y_n)\) converging to \(a\) and \(b\), respectively. Starting from the expression \( |x_n y_n - a b| = |(x_n y_n - x_n b) + (x_n b - a b)| \), we apply the triangle inequality to obtain
+\[
+|x_n y_n - a b| \leq |x_n||y_n - b| + |x_n - a||b|.
+\]
+Next, we observe that \(|x_n|\) is bounded by some \(m_1\), and \(M\) is defined as the maximum of \(m_1\), \(m_2\) (a similar bound for \(|y_n|\)), and \(|b|\). Since \(m_1 \leq M\), it follows that \(|x_n| \leq M\), and similarly \(|b| \leq M\). Multiplying these bounds by the respective differences preserves the inequalities, yielding
+\[
+|x_n||y_n - b| \leq M |y_n - b| \quad \text{and} \quad |x_n - a||b| \leq M |x_n - a|.
+\]
+We note that \(M > 0\) because it is the maximum of strictly positive quantities or absolute values. To establish that each term is less than \(\frac{\varepsilon}{2}\), we find indices \(n_1\) and \(n_2\) such that for all \(n \geq n_1\), \(|x_n - a| < \frac{\varepsilon}{2M}\) and for all \(n \geq n_2\), \(|y_n - b| < \frac{\varepsilon}{2M}\). Setting \(n_0 = \max(n_1, n_2)\), for all \(n \geq n_0\), both inequalities hold simultaneously due to the ordering properties of indices.
+
+Multiplying these inequalities by \(M\), and using the fact that \(M \times \frac{\varepsilon}{2M} = \frac{\varepsilon}{2}\) (since \(M \neq 0\)), we conclude that
+\[
+M |y_n - b| < \frac{\varepsilon}{2} \quad \text{and} \quad M |x_n - a| < \frac{\varepsilon}{2}.
+\]
+Therefore,
+\[
+|x_n y_n - a b| \leq M |y_n - b| + M |x_n - a| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon,
+\]
+which completes the proof.

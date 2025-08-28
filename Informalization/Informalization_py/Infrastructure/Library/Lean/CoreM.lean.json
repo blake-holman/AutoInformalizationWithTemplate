@@ -1,0 +1,26 @@
+{
+  "Lean.Core.CoreM": {
+    "type": "definition",
+    "code": "Lean.Core.CoreM (α : Type) : Type",
+    "comment": "CoreM is a monad for manipulating the Lean environment.\nIt is the base monad for `MetaM`.\nThe main features it provides are:\n- name generator state\n- environment state\n- Lean options context\n- the current open namespace\n",
+    "explanatories": {},
+    "fullDefinition": "abbrev CoreM := ReaderT Context <| StateRefT State (EIO Exception)",
+    "description": "A monadic structure that allows for manipulation of the Lean environment, providing functionality for name generation, environment state, options context, and current namespace management."
+  },
+  "Lean.compileDecl": {
+    "type": "definition",
+    "code": "Lean.compileDecl (decl : Declaration) : CoreM Unit",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def compileDecl (decl : Declaration) : CoreM Unit := do   let opts ← getOptions   let decls := Compiler.getDeclNamesForCodeGen decl   if compiler.enableNew.get opts then     compileDeclsNew decls   let res ← withTraceNode `compiler (fun _ => return m!\"compiling old: {decls}\") do     return (← getEnv).compileDecl opts decl   match res with   | Except.ok env => setEnv env   | Except.error (KernelException.other msg) =>     checkUnsupported decl -- Generate nicer error message for unsupported recursors and axioms     throwError msg   | Except.error ex =>     throwKernelException ex",
+    "description": "A function that compiles a declaration within the Lean environment using a monadic structure designed for such manipulations."
+  },
+  "Lean.Core.mkFreshUserName": {
+    "type": "definition",
+    "code": "Lean.Core.mkFreshUserName (n : Name) : CoreM Name",
+    "comment": null,
+    "explanatories": {},
+    "fullDefinition": "def mkFreshUserName (n : Name) : CoreM Name :=   mkFreshNameImp n",
+    "description": "A function that generates a new user name in the Lean environment based on a specified base name."
+  }
+}

@@ -1,0 +1,71 @@
+[applied Tactic]
+let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that if \(\varepsilon > 0\), then \(\frac{\varepsilon}{2} > 0\). Since \(\varepsilon\) is positive by assumption, it follows from the property of positive real numbers that half of \(\varepsilon\) is also positive. Consequently, for any \(n \geq n_1\), the distance between \(x_n\) and \(a\) being less than \(\frac{\varepsilon}{2}\) ensures it is less than a positive number, completing the proof.
+[applied Tactic]
+let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos ) 
+
+[answer]
+We will show that for the given positive number \(\varepsilon\), there exists an index \(n_2\) such that for all \(n \geq n_2\), the sequence values \(y_n\) lie within \(\frac{\varepsilon}{2}\) of the limit \(b\). Since \(\varepsilon > 0\), it follows immediately that \(\frac{\varepsilon}{2} > 0\) as well. Therefore, by choosing \(n_2\) appropriately, we ensure that for all \(n \geq n_2\), the distance \(|y_n - b|\) is less than \(\frac{\varepsilon}{2}\), completing the desired part of the proof.
+[applied Tactic]
+calc
+          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+            rw [add_sub_add_comm]
+            apply abs_add
+          _ < ε / 2 + ε / 2 := by
+            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))
+          _ = ε := add_halves  ε 
+
+[answer]
+We will show that for sequences \((x_n)\) and \((y_n)\) converging to limits \(a\) and \(b\) respectively, the sequence \((x_n + y_n)\) converges to \(a + b\). By considering the absolute value \( |x_n + y_n - (a + b)| \), we rewrite it as \( |(x_n - a) + (y_n - b)| \). Applying the triangle inequality, this is bounded above by \( |x_n - a| + |y_n - b| \). Given that for any \(\varepsilon > 0\), there exist indices \(n_1\) and \(n_2\) such that \( |x_n - a| < \varepsilon/2 \) for all \(n \geq n_1\) and \( |y_n - b| < \varepsilon/2 \) for all \(n \geq n_2\), we define \( n_0 = \max(n_1, n_2) \), so \( n_0 \geq n_1 \) and \( n_0 \geq n_2 \) trivially hold. Therefore, for all \( n \geq n_0 \), both inequalities hold simultaneously, and thus \( |x_n + y_n - (a + b)| \leq |x_n - a| + |y_n - b| < \varepsilon/2 + \varepsilon/2 = \varepsilon \). This completes the proof that the sum sequence converges to the sum of the limits.
+[applied Tactic]
+have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by
+        intro n ngen₀
+        calc
+          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+            rw [add_sub_add_comm]
+            apply abs_add
+          _ < ε / 2 + ε / 2 := by
+            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))
+          _ = ε := add_halves  ε 
+
+[answer]
+We will show that for every natural number \( n \) greater than or equal to some \( n_0 \), the absolute value of the difference between \( x_n + y_n \) and \( a + b \) is less than an arbitrary positive number \(\varepsilon\). Since the sequences \((x_n)\) and \((y_n)\) converge to \( a \) and \( b \) respectively, for any \(\varepsilon > 0\), there exist indices \( n_1 \) and \( n_2 \) such that \( |x_n - a| < \varepsilon/2 \) for all \( n \geq n_1 \), and \( |y_n - b| < \varepsilon/2 \) for all \( n \geq n_2 \). Defining \( n_0 = \max(n_1, n_2) \), it follows that for all \( n \geq n_0 \), both inequalities hold simultaneously. By applying the triangle inequality, we have  
+\[
+|x_n + y_n - (a + b)| = |(x_n - a) + (y_n - b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]  
+Hence, for all \( n \geq n_0 \), the sequence \( (x_n + y_n) \) lies within \(\varepsilon\) of \( a + b \), proving that \( (x_n + y_n) \) converges to \( a + b \).
+[applied Tactic]
+have : ConvergesTo (x + y) (a + b) := by
+      -- ⭐️ このとき任意の ε > 0に対して
+      intro ε εpos
+      -- ⭐️ n₁, n₂ ∈ ℕ があって、
+      -- ⭐️ n ≥ n₁ → |x_n - a| < ε / 2
+      -- ⭐️ n ≥ n₂ → |y_n - b| < ε / 2 となる。
+      let ⟨n₁,h1⟩ := convxa (ε / 2) (by apply half_pos εpos)
+      let ⟨n₂,h2⟩ := convyb (ε / 2) (by apply half_pos εpos)
+      -- ⭐️ n₁, n₂の大きいほうをn₀とすれば、
+      let n₀ := max n₁ n₂
+      -- ⭐️ n ≥ n₀ のとき
+      have : ∀ n ≥ n₀, |(x n + y n) - (a + b)| < ε := by
+        intro n ngen₀
+        calc
+          |x n + y n - (a + b)| ≤ |x n - a| + |y n - b| := by
+            rw [add_sub_add_comm]
+            apply abs_add
+          _ < ε / 2 + ε / 2 := by
+            have : n₀ ≥ max n₁ n₂ := Nat.le_refl (max n₁ n₂)
+            apply add_lt_add (h1 n (le_trans (le_of_max_le_left this) ngen₀)) (h2 n (le_trans (le_of_max_le_right this) ngen₀))
+          _ = ε := add_halves ε
+      -- ⭐️となり、
+      exact ⟨n₀, this ⟩ 
+
+[answer]
+We will show that the sequence \((x_n + y_n)\), formed by adding the terms of two convergent sequences \((x_n)\) and \((y_n)\) with limits \(a\) and \(b\) respectively, converges to the sum \(a + b\). Assume \(\varepsilon > 0\) is given. Since \(\varepsilon\) is positive, so is \(\frac{\varepsilon}{2}\). By the convergence of \((x_n)\) to \(a\), there exists an index \(n_1\) such that for all \(n \geq n_1\), \(|x_n - a| < \frac{\varepsilon}{2}\). Similarly, by the convergence of \((y_n)\) to \(b\), there exists \(n_2\) such that for all \(n \geq n_2\), \(|y_n - b| < \frac{\varepsilon}{2}\). Letting \(n_0 = \max(n_1, n_2)\), it follows that for all \(n \geq n_0\), both inequalities hold simultaneously. Applying the triangle inequality gives
+\[
+|x_n + y_n - (a + b)| = |(x_n - a) + (y_n - b)| \leq |x_n - a| + |y_n - b| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\]
+Hence, for all \(n \geq n_0\), the terms \(x_n + y_n\) lie within \(\varepsilon\) of \(a + b\), proving that the sequence \((x_n + y_n)\) converges to \(a + b\). This completes the proof.
