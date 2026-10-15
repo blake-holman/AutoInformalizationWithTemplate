@@ -73,8 +73,6 @@ private def extractAppliedModuleInfo (context : ContextInfo) (info : Info) : IO 
     let exprExplicit? ← match info with
       | Elab.Info.ofTermInfo ti =>
         pure <| some <| ← (Meta.ppExpr ti.expr)
-      | Elab.Info.ofOmissionInfo { toTermInfo := ti, ..} =>
-        pure <| some <| ← (Meta.ppExpr ti.expr)
       | Elab.Info.ofFieldInfo fi => pure <| some <| fi.fieldName.toString
       | _ => pure none
     return (AppliedModuleInfo.mk type? exprExplicit? (← info.docString?))
@@ -113,7 +111,7 @@ private def extractTacticInfo (contextInfo : ContextInfo) (tacticInfo : TacticIn
               pure ()
             else
               let mut command := stxs[0]!.prettyPrint.pretty
-              if i.stx.getKind == ``Lean.Parser.Tactic.rewriteSeq ∨ i.stx.getKind == ``Mathlib.Tactic.nthRewriteSeq then
+              if i.stx.getKind == ``Lean.Parser.Tactic.rewriteSeq then
                 command := "rw_element"
               if tacticInfo.stx.getKind == ``Batteries.Tactic.seq_focus ∨ tacticInfo.stx.getKind == ``Lean.Parser.Tactic.«tactic_<;>_» then
                 command := "<;>"
@@ -160,8 +158,8 @@ private def extractTermInfo (context : ContextInfo) (termInfo : TermInfo) (envir
           | ConstantInfo.recInfo _ => "recursor"
       | none => none
   let fileMap ← getFileMap
-  let positionBefore : Option String.Pos := termInfo.toElabInfo.stx.getPos?
-  let positionAfter : Option String.Pos := termInfo.toElabInfo.stx.getTailPos?
+  let positionBefore : Option String.Pos.Raw := termInfo.toElabInfo.stx.getPos?
+  let positionAfter : Option String.Pos.Raw := termInfo.toElabInfo.stx.getTailPos?
   let declarationRanges ← withEnv environment $ findDeclarationRanges? fullName
   let definitionStartPos : Option Position :=
     match declarationRanges with
@@ -172,16 +170,16 @@ private def extractTermInfo (context : ContextInfo) (termInfo : TermInfo) (envir
       | some declRanges => declRanges.selectionRange.endPos
       | none => none
   let moduleName :=
-    if let some moduleIndex := environment.const2ModIdx.find? fullName then
+    if let some moduleIndex := environment.const2ModIdx[fullName]? then
       environment.header.moduleNames[moduleIndex.toNat]!
     else
       environment.header.mainModule
   let mut definitionPath := toString $ ← PathModule.findLeanFile moduleName
   if definitionPath.startsWith "./" then
     -- ./ を除く
-    definitionPath := definitionPath.drop 2
+    definitionPath := (definitionPath.drop 2).toString
   if definitionPath.startsWith "/lake/" then
-    definitionPath := (mkFilePath [".lake", (definitionPath.drop 6)]).toString
+    definitionPath := (mkFilePath [".lake", (definitionPath.drop 6).toString]).toString
   definitionPath := toString $ ← PathModule.getAbsolutePath (mkFilePath [definitionPath])
   let pb : Option Position := match positionBefore with
     | some info => fileMap.toPosition info

@@ -92,5 +92,5 @@ def prettyPrintGoals(contextInfo : ContextInfo) (goals : List MVarId) : IO Strin
     return "no goals"
   else
     let formattedGoals := contextInfo.runMetaM {} (return Std.Format.prefixJoin "\n\n" (← goals.mapM (prettyPrintGoal ·)))
-    return (← formattedGoals).pretty.trim
+    return (← formattedGoals).pretty.trimAscii.toString
 end PrettyPrint

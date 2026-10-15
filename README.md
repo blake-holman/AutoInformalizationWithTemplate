@@ -1,5 +1,55 @@
 # Natural Language Translation of Formal Proofs through Informalization of Proof Steps and Recursive Summarization along Proof Structure
 
+## Lean 4.34 fork
+
+This fork ports the extractor to `leanprover/lean4:v4.34.0-rc2` and pins Mathlib to
+`85e3a25e006c35636f0e53b0e9296caca2685bc0`. The original tactic templates and model
+prompts are unchanged.
+
+Install the Python dependencies and build the extractor:
+
+```bash
+source make_env.sh
+cd ExportInfos
+lake exe cache get
+lake build
+cd ..
+```
+
+The build produces Lean modules; extraction runs through `lean --run` and does not
+require native compilation of all of Mathlib.
+
+Extract a file from another already-built project using the same toolchain:
+
+```bash
+python scripts/extract_project.py \
+  --project /path/to/project \
+  --output /path/to/proof-data \
+  MyProject/MyProof.lean
+```
+
+This command uses that project's compiled dependencies and source search paths.
+It writes syntax trees, tactic goals, premise references, and import paths under
+the output directory without changing the proof files. It makes no API calls.
+The existing Python loaders and proof-tree reconstruction accept these exports.
+External-project extraction is separate from the original model-generation CLI,
+which still expects inputs under `ExportInfos/LeanExportInfos`.
+
+Run the offline extraction checks after building:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The checks load the exports through the Python pipeline, reconstruct two theorem
+proof trees, resolve premise source paths, and ensure an invalid Lean proof fails
+without exporting proof data.
+
+The upstream examples, saved output, and instructions below are historical and
+were produced with Lean 4.10. Updating all example proofs is outside this port.
+
+-----
+
 ## Objective
 
 We aim to create a framework that outputs human-readable natural language mathematical proofs from formal proofs. By doing so, we intend to solve one of the major challenges in autoformalization technology: the scarcity of data.

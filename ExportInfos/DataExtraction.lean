@@ -14,35 +14,14 @@ namespace ImportInfo
 /--
 ファイルの入力情報を文字列として取得する。
 -/
-def getImportInfos(header : Lean.Syntax) : IO String := do
-  let mut imports := ""
-  -- header を import 情報のリストに変換
-  let importList := Lean.Elab.headerToImports header
-  for importInfo in importList do
-    -- oleanファイルのパスを取得
-    let oleanPath ← findOLean importInfo.module
-    if oleanPath.isRelative then
-      let sourceFilePath := PathModule.fetchSourceFile oleanPath
-      if ! (← sourceFilePath.pathExists) then
-        throw $ IO.userError s!"Import File doesn't exist. path : {sourceFilePath}"
-      -- パスがあるなら imports に保存
-      imports := imports ++ "\n" ++ sourceFilePath.toString
-    else if ! (oleanPath.toString.endsWith (System.mkFilePath ["lib","lean","Init.olean"]).toString) then
-      let mut path := (PathModule.packageDirectoryPath / "lean4").toString ++ System.FilePath.pathSeparator.toString
-      let mut isFound := false
-      for component in (oleanPath.withExtension "lean").components do
-        if (component == "lib") then
-          path := path ++ "src"
-          continue
-        if isFound then
-          path := path ++ System.FilePath.pathSeparator.toString ++ component
-      let replacedStr := System.FilePath.pathSeparator.toString ++ (System.mkFilePath ["lean4", "src", "lean", "Lake"]).toString
-      let replaceStr := System.FilePath.pathSeparator.toString ++ (System.mkFilePath ["lean4", "src", "lean", "lake", "Lake"]).toString
-      path := path.replace replacedStr replaceStr
-      if ! (← System.FilePath.mk path |>.pathExists) then
-        throw $ IO.userError s!"Import File doesn't exist. path : {path}"
-      imports := imports ++ "\n" ++ path
-  return imports.trim
+def getImportInfos(header : Lean.Elab.HeaderSyntax) : IO String := do
+  let mut paths : Array String := #[]
+  for info in header.imports do
+    if info.module != `Init then
+      let path := (← PathModule.findLeanFile info.module).toString
+      if !paths.contains path then
+        paths := paths.push path
+  return "\n".intercalate paths.toList
 end ImportInfo
 namespace Export
 
@@ -60,7 +39,7 @@ def printErrorMessage(msg : MessageLog) : IO Unit := do
 ファイルの出力を行う。
 -/
 
-def exportInfos (filePath : FilePath) (header : Syntax) (ast : Array Syntax) (tacticInfo : Array TacticTraceInfo) (premiseInfo : Array PremiseTraceInfo): IO Unit := do
+def exportInfos (filePath : FilePath) (header : Lean.Elab.HeaderSyntax) (ast : Array Syntax) (tacticInfo : Array TacticTraceInfo) (premiseInfo : Array PremiseTraceInfo): IO Unit := do
   let currentDir ← IO.currentDir
   assert! currentDir.fileName != "lean4"
   let absPath := (← PathModule.getAbsolutePath filePath)
@@ -68,7 +47,7 @@ def exportInfos (filePath : FilePath) (header : Syntax) (ast : Array Syntax) (ta
   match relativePath? with
     | none => throw $ IO.userError "relative path does not exists."
     | some path =>
-      let parentDirectoryName := "Export"
+      let parentDirectoryName := (← IO.getEnv "INFORMALIZATION_EXPORT_DIR").getD "Export"
       let astJsonPath := mkFilePath [parentDirectoryName, path.toString, "abstractSyntaxTreeInfo.json"]
       let tacticInfoJsonPath := mkFilePath [parentDirectoryName, path.toString, "tacticInfo.json"]
       let premiseInfoJsonPath := mkFilePath [parentDirectoryName, path.toString, "premiseInfo.json"]
@@ -78,7 +57,7 @@ def exportInfos (filePath : FilePath) (header : Syntax) (ast : Array Syntax) (ta
       IO.FS.writeFile astJsonPath (toJson ast).pretty
       IO.FS.writeFile tacticInfoJsonPath (toJson tacticInfo).pretty
       IO.FS.writeFile premiseInfoJsonPath (toJson premiseInfo).pretty
-      let depPath := mkFilePath ["Export", path.toString, "dep_paths.txt"]
+      let depPath := mkFilePath [parentDirectoryName, path.toString, "dep_paths.txt"]
       PathModule.makeParentDirectories depPath
       IO.FS.writeFile depPath (← ImportInfo.getImportInfos header)
 end Export
@@ -106,6 +85,7 @@ unsafe def extractDataFromFile(path : System.FilePath) : IO Unit := do
   let commandState := { Command.mkState environment msg {} with infoState.enabled := true }
   -- コマンドを実行
   let state ← IO.processCommands inputContext parserState commandState
+  Export.printErrorMessage state.commandState.messages
   let environment' := state.commandState.env
   let commands := state.commands.pop
   -- ファイル内の全ての木構造を抽出

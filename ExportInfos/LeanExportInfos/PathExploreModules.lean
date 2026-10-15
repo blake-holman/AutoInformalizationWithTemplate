@@ -56,7 +56,7 @@ private def trimPath (path : FilePath) : FilePath :=
 ライブラリディレクトリ (lib) までのパスを取得する。
 -/
 def libraryDirectoryPath : FilePath :=
-  System.mkFilePath [buildDirectoryPath.toString, "lib"]
+  System.mkFilePath [buildDirectoryPath.toString, "lib", "lean"]
 
 /--
 絶対パスを構成する。
@@ -85,8 +85,8 @@ def fetchBuildFile (subDirectory : FilePath) (path : FilePath) (extension : Stri
         | some relativePath =>
           match relativePath.components with
             | [] => none
-            | head :: remain => System.mkFilePath [packageDirectoryPath.toString, head, buildDirectoryPath.toString, subDirectory.toString, (System.mkFilePath remain).toString]
-        | none => System.mkFilePath [buildDirectoryPath.toString, subDirectory.toString, trimmedPath.toString]
+            | head :: remain => System.mkFilePath [packageDirectoryPath.toString, head, buildDirectoryPath.toString, subDirectory.toString, "lean", (System.mkFilePath remain).toString]
+        | none => System.mkFilePath [buildDirectoryPath.toString, subDirectory.toString, "lean", trimmedPath.toString]
 /--
 oleanのファイルパスからソースとなる lean コードへのパスを取得する。
 -/
@@ -113,7 +113,7 @@ def fetchSourceFile(oleanFilePath : System.FilePath) : System.FilePath :=
         let separator := (System.mkFilePath ["build", "lib"]).toString
         System.mkFilePath [packageDirectoryPath.toString, packageName, (relative.toString.splitOn separator |>.tail!.head!)]
       | none =>
-        getRelativePart pathComponents (System.mkFilePath [buildDirectoryPath.toString, "lib"]) |> Option.get!
+        getRelativePart pathComponents (System.mkFilePath [buildDirectoryPath.toString, "lib", "lean"]) |> Option.get!
 
 /--
 親パスに含まれていて、かつディレクトリが存在しないようなコンポーネントすべてのディレクトリを作成する。
@@ -126,17 +126,5 @@ def makeParentDirectories (path : FilePath) : IO Unit := do
 モジュール名からLeanファイルのパスを取得する。
 -/
 def findLeanFile (moduleName : Name) : IO FilePath := do
-  let moduleNameStr := moduleName.toString
-  if moduleNameStr.startsWith "«lake-packages»." then
-    return FilePath.mk (moduleNameStr.replace "«lake-packages»" "lake-packages" |>.replace "." "/" )|>.withExtension "lean"
-  if moduleNameStr.startsWith "«.lake»." then
-    return FilePath.mk (moduleNameStr.replace "«.lake»" ".lake" |>.replace "." "/") |>.withExtension "lean"
-  let oleanPath ← Lean.findOLean moduleName
-  let leanPath := oleanPath.toString.replace (mkFilePath [".lake","build","lib"]).toString ""
-  let mut path := FilePath.mk leanPath |>.withExtension "lean"
-  let leanLib ← getLibDir (← getBuildDir)
-  if let some p := getRelativePart path leanLib then
-    path := mkFilePath [(← findSysroot).toString, "src", "lean", p.toString]
-  assert! ← path.pathExists
-  return path
+  Lean.findLean (← Lean.getSrcSearchPath) moduleName
 end PathModule
