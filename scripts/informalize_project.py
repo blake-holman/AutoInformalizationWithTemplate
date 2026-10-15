@@ -30,31 +30,36 @@ async def main(args):
     original = api_module.OpenAIAPICommunicator
     semaphore = asyncio.Semaphore(3)
     calls = []
+    attempts = 0
+    configuration = original().request_identity
+    metadata_path = output / "backend.json"
+    if metadata_path.exists():
+        if json.loads(metadata_path.read_text()) != configuration:
+            raise RuntimeError("Output directory belongs to another model or backend; use a new directory")
+    elif any(output.iterdir()):
+        raise RuntimeError("Existing output has no backend identity; use a new output directory")
+    save(metadata_path, configuration)
 
     class RecordedCommunicator(original):
         async def get_response(self, messages, temperature=1.0):
+            nonlocal attempts
             messages = list(messages)
-            request = {"model": self.model, "temperature": temperature, "messages": messages}
+            request = {**self.request_identity, "requested_temperature": temperature, "messages": messages}
             key = hashlib.sha256(json.dumps(request, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
             path = output / "requests" / (key + ".json")
             if path.exists():
                 from openai.types.chat import ChatCompletionMessage
                 return ChatCompletionMessage.model_validate(json.loads(path.read_text())["message"])
-            if len(calls) >= 300:
-                raise RuntimeError("Run stopped at the 300-request limit")
             async with semaphore:
-                try:
-                    response = await self.client.chat.completions.create(**request)
-                except Exception as error:
-                    # API errors can include credential fragments; do not log their text.
-                    code = getattr(error, "code", None)
-                    status = getattr(error, "status_code", None)
-                    raise RuntimeError(f"OpenAI request failed: {type(error).__name__}; status={status}; code={code}") from None
-                message = response.choices[0].message
+                if attempts >= 300:
+                    raise RuntimeError("Run stopped at the 300-request limit")
+                attempts += 1
+                message = await super().get_response(messages, temperature)
                 record = {"request": request, "message": message.model_dump(),
-                          "response_model": response.model, "usage": response.usage.model_dump() if response.usage else None}
+                          "response_model": self.model, **self.last_response_metadata}
                 save(path, record)
-                calls.append({"cache": path.name, "model": response.model, "usage": record["usage"]})
+                calls.append({"cache": path.name, "model": self.model, "usage": record["usage"],
+                              "backend": self.backend, "authentication": "chatgpt"})
                 save(output / "calls.json", calls)
                 print(f"MODEL_CALL {len(calls)}", flush=True)
                 return message
@@ -154,7 +159,7 @@ async def main(args):
         (output / "combined-proof.txt").write_text(combined.content)
     save(output / "result.json", {"status": "complete", "theorems": [name for name, _ in results],
          "fork_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-         "new_api_calls": len(calls), "model": "gpt-4.1-mini", "combined": args.combine})
+         "new_model_calls": len(calls), **configuration, "combined": args.combine})
 
 
 if __name__ == "__main__":
