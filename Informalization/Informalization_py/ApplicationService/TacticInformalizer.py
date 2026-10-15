@@ -95,7 +95,7 @@ class TacticInformalizer():
                         answers.append("")
                     elif examples.state == TacticExampleState.NotExists:
                         # raise RuntimeError(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
-                        print(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
+                        raise RuntimeError(f"Unsupported tactic: {tacticInfo.tacticCommand}")
                     # 前処理が必要なコマンドへの対応
                     else:
                         # premiseを取得する 場合分けの · など、premiseが返って不必要になるtacticはこの工程を無視する
@@ -160,7 +160,7 @@ class TacticInformalizer():
                         answers.append("")
                     elif examples.state == TacticExampleState.NotExists:
                         # raise RuntimeError(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
-                        print(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
+                        raise RuntimeError(f"Unsupported tactic: {tacticInfo.tacticCommand}")
                     # 前処理が必要なコマンドへの対応
                     else:
                         # premiseを取得する 場合分けの · など、premiseが返って不必要になるtacticはこの工程を無視する
@@ -512,7 +512,7 @@ class TacticInformalizer():
                         answers.append("")
                     elif examples.state == TacticExampleState.NotExists:
                         # raise RuntimeError(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
-                        print(f"Examples aren't implemented! : {tacticInfo.tacticCommand}")
+                        raise RuntimeError(f"Unsupported tactic: {tacticInfo.tacticCommand}")
                     # 前処理が必要なコマンドへの対応
                     else:
                         if tacticInfo.tacticCommand in self.__preprocess_tactic_dict__.keys():

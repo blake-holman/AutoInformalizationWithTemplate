@@ -23,7 +23,7 @@ class PremiseDescriptor:
     async def proc_description(self, target : PremiseInfo, premises : List[PremiseInfo], definitionPath : Path) -> str:
         # すでにあるものは処理しない
         if self.__library__.check_existence(target):
-            return
+            return self.__library__.get_data(target).description
         # 定義抽出
         premiseSource = self.__premise_extractor__.extract_premise_data(target)
         # 依存定義を抽出
